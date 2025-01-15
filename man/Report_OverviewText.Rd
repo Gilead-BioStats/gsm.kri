@@ -9,6 +9,12 @@ Report_OverviewText(lSetup, dfResults, lStudy)
 \arguments{
 \item{lSetup}{`list` that is produced by `Report_StudyInfo()`.}
 
+\item{dfResults}{`data.frame` A stacked summary of analysis pipeline output.
+Created by passing a list of results returned by [Summarize()] to
+[BindResults()]. Expected columns: `GroupID`, `GroupLevel`, `Numerator`,
+`Denominator`, `Metric`, `Score`, `Flag`, `MetricID`, `StudyID`,
+`SnapshotDate`.}
+
 \item{lStudy}{`list` contains study-level metadata.}
 }
 \description{

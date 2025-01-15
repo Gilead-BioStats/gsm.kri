@@ -21,6 +21,19 @@ renderWidget_FlagOverTime(
 \code{'400px'}, \code{'auto'}) or a number, which will be coerced to a
 string and have \code{'px'} appended.}
 
+\item{dfResults}{`data.frame` A stacked summary of analysis pipeline output.
+Created by passing a list of results returned by [Summarize()] to
+[BindResults()]. Expected columns: `GroupID`, `GroupLevel`, `Numerator`,
+`Denominator`, `Metric`, `Score`, `Flag`, `MetricID`, `StudyID`,
+`SnapshotDate`.}
+
+\item{dfMetrics}{`data.frame` Metric-specific metadata for use in charts and
+reporting. Created by passing an `lWorkflow` object to [MakeMetric()].
+Expected columns: `File`, `MetricID`, `Group`, `Abbreviation`, `Metric`,
+`Numerator`, `Denominator`, `Model`, `Score`, and `Threshold`. For more
+details see the Data Model vignette: `vignette("DataModel", package =
+"gsm")`.}
+
 \item{strGroupLevel}{`character` Value for the group level. Default: "Site".}
 }
 \description{

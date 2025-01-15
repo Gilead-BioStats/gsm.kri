@@ -13,6 +13,12 @@ Visualize_Score(
 )
 }
 \arguments{
+\item{dfResults}{`data.frame` A stacked summary of analysis pipeline output.
+Created by passing a list of results returned by [Summarize()] to
+[BindResults()]. Expected columns: `GroupID`, `GroupLevel`, `Numerator`,
+`Denominator`, `Metric`, `Score`, `Flag`, `MetricID`, `StudyID`,
+`SnapshotDate`.}
+
 \item{vThreshold}{`numeric` Threshold specification, a vector of length 2 that defaults to NULL.}
 
 \item{strType}{`character` One of `"KRI"` or `"score"`.}

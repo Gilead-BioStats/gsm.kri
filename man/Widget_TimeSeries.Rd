@@ -16,6 +16,23 @@ Widget_TimeSeries(
 )
 }
 \arguments{
+\item{dfResults}{`data.frame` A stacked summary of analysis pipeline output.
+Created by passing a list of results returned by [Summarize()] to
+[BindResults()]. Expected columns: `GroupID`, `GroupLevel`, `Numerator`,
+`Denominator`, `Metric`, `Score`, `Flag`, `MetricID`, `StudyID`,
+`SnapshotDate`.}
+
+\item{lMetric}{`list` Metric-specific metadata for use in charts and
+reporting. Created by passing an `lWorkflow` object to [MakeMetric()] and
+turing it into a list. Expected columns: `File`,`MetricID`, `Group`,
+`Abbreviation`, `Metric`, `Numerator`, `Denominator`, `Model`, `Score`, and
+`strThreshold`. For more details see the Data Model vignette:
+`vignette("DataModel", package = "gsm")`.}
+
+\item{dfGroups}{`data.frame` Group-level metadata dictionary. Created by
+passing CTMS site and study data to [MakeLongMeta()]. Expected columns:
+`GroupID`, `GroupLevel`, `Param`, `Value`.}
+
 \item{vThreshold}{`numeric` Threshold value(s).}
 
 \item{strOutcome}{`character` Outcome variable. Default: 'Score'.}
@@ -23,6 +40,8 @@ Widget_TimeSeries(
 \item{bAddGroupSelect}{`logical` Add a dropdown to highlight sites? Default: `TRUE`.}
 
 \item{strShinyGroupSelectID}{`character` Element ID of group select in Shiny context. Default: `'GroupID'`.}
+
+\item{bDebug}{`logical` Print debug messages? Default: `FALSE`.}
 }
 \description{
 `r lifecycle::badge("stable")`

@@ -10,6 +10,13 @@ MakeParamLabels(dfGroups, lParamLabels = NULL)
 MakeParamLabelsList(chrParams, lParamLabels = NULL)
 }
 \arguments{
+\item{dfGroups}{`data.frame` Group-level metadata dictionary. Created by
+passing CTMS site and study data to [MakeLongMeta()]. Expected columns:
+`GroupID`, `GroupLevel`, `Param`, `Value`.}
+
+\item{lParamLabels}{`list` Labels for parameters, with the parameters as
+names, and the label as value.}
+
 \item{chrParams}{A character vector of parameters, or a list that can be
 coerced to a character vector.}
 }

@@ -13,6 +13,10 @@ Report_StudyInfo(
 )
 }
 \arguments{
+\item{dfGroups}{`data.frame` Group-level metadata dictionary. Created by
+passing CTMS site and study data to [MakeLongMeta()]. Expected columns:
+`GroupID`, `GroupLevel`, `Param`, `Value`.}
+
 \item{lStudyLabels}{`list` A list containing study labels. Default is NULL.}
 
 \item{strId}{`character` A string to identify the output table.}

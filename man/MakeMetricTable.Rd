@@ -15,6 +15,10 @@ MakeMetricTable(
 \arguments{
 \item{dfResults}{`r gloss_param("dfResults")` `r gloss_extra("dfResults_filtered")`}
 
+\item{dfGroups}{`data.frame` Group-level metadata dictionary. Created by
+passing CTMS site and study data to [MakeLongMeta()]. Expected columns:
+`GroupID`, `GroupLevel`, `Param`, `Value`.}
+
 \item{strGroupLevel}{group level for the table}
 
 \item{strGroupDetailsParams}{one or more parameters from dfGroups to be added
