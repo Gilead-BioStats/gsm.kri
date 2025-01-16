@@ -14,17 +14,17 @@
 #'
 #' @examples
 #' ## Filter data to one metric
-#' reportingResults_filter <- reportingResults %>%
+#' reportingResults_filter <- gsm::reportingResults %>%
 #'   dplyr::filter(MetricID == "Analysis_kri0001")
 #'
-#' reportingMetrics_filter <- reportingMetrics %>%
+#' reportingMetrics_filter <- gsm::reportingMetrics %>%
 #'   dplyr::filter(MetricID == "Analysis_kri0001") %>%
 #'   as.list()
 #'
 #' Widget_TimeSeries(
 #'   dfResults = reportingResults_filter,
 #'   lMetric = reportingMetrics_filter,
-#'   dfGroups = reportingGroups,
+#'   dfGroups = gsm::reportingGroups,
 #'   vThreshold = reportingMetrics_filter$Threshold
 #' )
 #'

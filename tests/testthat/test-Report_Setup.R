@@ -1,8 +1,8 @@
 test_that("Test with valid input and one group", {
   result <- Report_Setup(
-    dfGroups = reportingGroups,
-    dfMetrics = reportingMetrics,
-    dfResults = reportingResults
+    dfGroups = gsm::reportingGroups,
+    dfMetrics = gsm::reportingMetrics,
+    dfResults = gsm::reportingResults
   )
 
   expect_equal(result$GroupLevel, "Site")
@@ -13,15 +13,15 @@ test_that("Test with valid input and one group", {
 })
 
 test_that("Test with missing SnapshotDate and protocol number/title", {
-  reportingResults_alt <- reportingResults %>%
+  reportingResults_alt <- gsm::reportingResults %>%
     select(-SnapshotDate)
-  reportingGroups_alt <- reportingGroups %>%
+  reportingGroups_alt <- gsm::reportingGroups %>%
     filter(!Param %in% c("protocol_title", "protocol_number"))
 
   expect_message(
     {
       today <- Sys.Date()
-      result <- Report_Setup(reportingGroups_alt, reportingMetrics, reportingResults_alt)
+      result <- Report_Setup(reportingGroups_alt, gsm::reportingMetrics, reportingResults_alt)
     },
     "No `SnapshotDate`"
   )
@@ -33,10 +33,10 @@ test_that("Test with missing SnapshotDate and protocol number/title", {
 })
 
 test_that("Test StudyID output with missing protocol number", {
-  reportingGroups_alt <- reportingGroups %>%
+  reportingGroups_alt <- gsm::reportingGroups %>%
     filter(Param != "protocol_number")
 
-  result <- Report_Setup(reportingGroups_alt, reportingMetrics, reportingResults)
+  result <- Report_Setup(reportingGroups_alt, gsm::reportingMetrics, gsm::reportingResults)
 
   expect_equal(result$GroupLevel, "Site")
   expect_equal(result$SnapshotDate, as.Date("2012-12-31"))
@@ -51,7 +51,7 @@ test_that("dfSummary empty data frame", {
   expect_message(
     {
       today <- Sys.Date()
-      result <- Report_Setup(reportingGroups, reportingMetrics, dfSummary)
+      result <- Report_Setup(gsm::reportingGroups, gsm::reportingMetrics, dfSummary)
     },
     "No `SnapshotDate`"
   )
@@ -62,18 +62,18 @@ test_that("dfSummary empty data frame", {
 })
 
 test_that("Makes StudyLabel properly", {
-  result <- Report_Setup(reportingGroups, reportingMetrics, reportingResults)
+  result <- Report_Setup(gsm::reportingGroups, gsm::reportingMetrics, gsm::reportingResults)
   expect_equal(result$StudyLabel, glue::glue("{result$StudyID} ({result$lStudy$nickname})"))
 
-  reportingGroups_alt1 <- reportingGroups %>%
+  reportingGroups_alt1 <- gsm::reportingGroups %>%
     filter(Param != "nickname")
 
-  result1 <- Report_Setup(reportingGroups_alt1, reportingMetrics, reportingResults)
+  result1 <- Report_Setup(reportingGroups_alt1, gsm::reportingMetrics, gsm::reportingResults)
   expect_equal(result1$StudyLabel, result1$StudyID)
 
-  reportingGroups_alt2 <- reportingGroups
+  reportingGroups_alt2 <- gsm::reportingGroups
   reportingGroups_alt2[reportingGroups_alt2$Param == "nickname", ]$Value <- NA
 
-  result2 <- Report_Setup(reportingGroups_alt2, reportingMetrics, reportingResults)
+  result2 <- Report_Setup(reportingGroups_alt2, gsm::reportingMetrics, gsm::reportingResults)
   expect_equal(result2$StudyLabel, result2$StudyID)
 })

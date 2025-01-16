@@ -58,10 +58,10 @@ The function creates all available charts for a metric using the data provided
 }
 \examples{
 lCharts <- Visualize_Metric(
-  dfResults = reportingResults,
-  dfBounds = reportingBounds,
-  dfGroups = reportingGroups,
-  dfMetrics = reportingMetrics,
+  dfResults = gsm::reportingResults,
+  dfBounds = gsm::reportingBounds,
+  dfGroups = gsm::reportingGroups,
+  dfMetrics = gsm::reportingMetrics,
   strMetricID = "Analysis_kri0001"
 )
 

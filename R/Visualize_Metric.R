@@ -18,10 +18,10 @@
 #'
 #' @examples
 #' lCharts <- Visualize_Metric(
-#'   dfResults = reportingResults,
-#'   dfBounds = reportingBounds,
-#'   dfGroups = reportingGroups,
-#'   dfMetrics = reportingMetrics,
+#'   dfResults = gsm::reportingResults,
+#'   dfBounds = gsm::reportingBounds,
+#'   dfGroups = gsm::reportingGroups,
+#'   dfMetrics = gsm::reportingMetrics,
 #'   strMetricID = "Analysis_kri0001"
 #' )
 #'

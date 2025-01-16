@@ -20,10 +20,10 @@
 #' @examples
 #' # site-level report
 #' Report_MetricTable(
-#'   dfResults = reportingResults %>%
+#'   dfResults = gsm::reportingResults %>%
 #'     dplyr::filter(.data$MetricID == "Analysis_kri0001") %>%
 #'     FilterByLatestSnapshotDate(),
-#'   dfGroups = reportingGroups
+#'   dfGroups = gsm::reportingGroups
 #' )
 #'
 #' @export

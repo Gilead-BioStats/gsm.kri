@@ -40,10 +40,10 @@ data based on provided conditions.
 \examples{
 # site-level report
 MakeMetricTable(
-  dfResults = reportingResults \%>\%
+  dfResults = gsm::reportingResults \%>\%
     dplyr::filter(.data$MetricID == "Analysis_kri0001") \%>\%
     FilterByLatestSnapshotDate(),
-  dfGroups = reportingGroups
+  dfGroups = gsm::reportingGroups
 )
 
 }

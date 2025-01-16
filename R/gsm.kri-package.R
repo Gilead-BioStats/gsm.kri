@@ -1,5 +1,6 @@
 ## usethis namespace: start
 #' @import dplyr
+#' @import ggplot2
 #' @import gsm
 #' @import gt
 #' @import purrr
@@ -13,6 +14,8 @@
 #' @importFrom cli cli_alert_warning
 #' @importFrom cli cli_text
 #' @importFrom cli cli_warn
+#' @importFrom glue glue
+#' @importFrom glue glue_collapse
 #' @importFrom htmltools h1
 #' @importFrom htmltools h2
 #' @importFrom htmltools h3
@@ -28,5 +31,8 @@
 #' @importFrom htmlwidgets shinyWidgetOutput
 #' @importFrom jsonlite fromJSON
 #' @importFrom jsonlite toJSON
+#' @importFrom lifecycle deprecated
+#' @importFrom stats reorder
+#' @importFrom stats setNames
 ## usethis namespace: end
 NULL

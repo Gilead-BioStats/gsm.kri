@@ -51,17 +51,17 @@ and the outcome (numerator, denominator, metric, or score) on the y-axis.
 }
 \examples{
 ## Filter data to one metric and snapshot
-reportingResults_filter <- reportingResults \%>\%
+reportingResults_filter <- gsm::reportingResults \%>\%
   dplyr::filter(MetricID == "Analysis_kri0001" & SnapshotDate == max(SnapshotDate))
 
-reportingMetrics_filter <- reportingMetrics \%>\%
+reportingMetrics_filter <- gsm::reportingMetrics \%>\%
   dplyr::filter(MetricID == "Analysis_kri0001") \%>\%
   as.list()
 
 ## Make chart
 Widget_BarChart(
   dfResults = reportingResults_filter,
-  dfGroups = reportingGroups,
+  dfGroups = gsm::reportingGroups,
   lMetric = reportingMetrics_filter,
   vThreshold = reportingMetrics_filter$Threshold
 )

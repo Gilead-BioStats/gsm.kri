@@ -18,25 +18,26 @@
 #' @examples
 #' # site-level report
 #' Widget_GroupOverview(
-#'   dfResults = FilterByLatestSnapshotDate(reportingResults),
-#'   dfMetrics = reportingMetrics,
-#'   dfGroups = reportingGroups
+#'   dfResults = FilterByLatestSnapshotDate(gsm::reportingResults),
+#'   dfMetrics = gsm::reportingMetrics,
+#'   dfGroups = gsm::reportingGroups
 #' )
 #'
 #' # filter site-level report to all flags
 #' Widget_GroupOverview(
-#'   dfResults = FilterByLatestSnapshotDate(reportingResults),
-#'   dfMetrics = reportingMetrics,
-#'   dfGroups = reportingGroups,
+#'   dfResults = FilterByLatestSnapshotDate(gsm::reportingResults),
+#'   dfMetrics = gsm::reportingMetrics,
+#'   dfGroups = gsm::reportingGroups,
 #'   strGroupSubset = "all"
 #' )
 #'
 #' # country-level report
+#' reportingMetrics <- gsm::reportingMetrics
 #' reportingMetrics$GroupLevel <- "Country"
 #' Widget_GroupOverview(
-#'   dfResults = FilterByLatestSnapshotDate(reportingResults),
-#'   dfMetrics = reportingMetrics,
-#'   dfGroups = reportingGroups,
+#'   dfResults = FilterByLatestSnapshotDate(gsm::reportingResults),
+#'   dfMetrics = gsm::reportingMetrics,
+#'   dfGroups = gsm::reportingGroups,
 #'   strGroupLevel = "Country"
 #' )
 #'

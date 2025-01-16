@@ -43,10 +43,10 @@ group-level plot object.
 \examples{
 
 ## Filter sample data to only one metric
-reportingResults_filter <- reportingResults \%>\%
+reportingResults_filter <- gsm::reportingResults \%>\%
   dplyr::filter(MetricID == "Analysis_kri0001")
 
-reportingBounds_filter <- reportingBounds \%>\%
+reportingBounds_filter <- gsm::reportingBounds \%>\%
   dplyr::filter(MetricID == "Analysis_kri0001")
 
 ## Output- filtered to one snapshot date

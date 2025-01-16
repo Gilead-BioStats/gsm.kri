@@ -1,5 +1,5 @@
 test_that("Report_FlagOverTime returns the expected object", {
-  dfResults <- reportingResults %>%
+  dfResults <- gsm::reportingResults %>%
     # Use a subset to keep things fast.
     dplyr::filter(
       .data$GroupID %in% c("0X005", "0X007", "0X159"),
@@ -14,7 +14,7 @@ test_that("Report_FlagOverTime returns the expected object", {
         lubridate::rollbackward() %>%
         lubridate::rollbackward()
     )
-  dfMetrics <- reportingMetrics
+  dfMetrics <- gsm::reportingMetrics
   x <- Report_FlagOverTime(dfResults, dfMetrics)
   expect_s3_class(x, "gt_tbl")
   expect_snapshot({

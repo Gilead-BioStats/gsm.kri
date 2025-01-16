@@ -45,25 +45,25 @@ A widget that generates a table of flags over time using
 \examples{
 # Include all risk signals, irrespective flag value.
 Widget_FlagOverTime(
-  dfResults = reportingResults,
-  dfMetrics = reportingMetrics
+  dfResults = gsm::reportingResults,
+  dfMetrics = gsm::reportingMetrics
 )
 
 # Include risk signals that were ever flagged.
 Widget_FlagOverTime(
   dfResults = FilterByFlags(
-    reportingResults
+    gsm::reportingResults
   ),
-  dfMetrics = reportingMetrics
+  dfMetrics = gsm::reportingMetrics
 )
 
 # Include risk signals that were only flagged in the most recent snapshot.
 Widget_FlagOverTime(
   dfResults = FilterByFlags(
-    reportingResults,
+    gsm::reportingResults,
     bCurrentlyFlagged = TRUE
   ),
-  dfMetrics = reportingMetrics,
+  dfMetrics = gsm::reportingMetrics,
   bExcludeEver = TRUE
 )
 

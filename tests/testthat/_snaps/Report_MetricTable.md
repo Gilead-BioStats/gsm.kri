@@ -1,7 +1,7 @@
 # Output is expected object
 
     Code
-      x <- Report_MetricTable(reportingResults_filt, reportingGroups)
+      x <- Report_MetricTable(reportingResults_filt, gsm::reportingGroups)
       str(x, max.level = 2)
     Output
       List of 3

@@ -1,6 +1,6 @@
 test_that("Empty data frames return default message", {
-  dfResults_empty <- reportingResults[-c(1:nrow(reportingResults)), ]
-  dfGroups_empty <- reportingGroups[-c(1:nrow(reportingGroups)), ]
+  dfResults_empty <- gsm::reportingResults[-c(1:nrow(gsm::reportingResults)), ]
+  dfGroups_empty <- gsm::reportingGroups[-c(1:nrow(gsm::reportingGroups)), ]
   expect_equal(
     Report_MetricTable(dfResults_empty, dfGroups_empty),
     htmltools::tags$p("Nothing flagged for this KRI.")
@@ -9,11 +9,11 @@ test_that("Empty data frames return default message", {
 
 test_that("Default message when nothing flagged", {
   dfResults <- dplyr::filter(
-    reportingResults,
+    gsm::reportingResults,
     MetricID == "kri0001",
     Flag == 0
   )
-  dfGroups <- reportingGroups
+  dfGroups <- gsm::reportingGroups
   expect_equal(
     Report_MetricTable(dfResults, dfGroups),
     htmltools::tags$p("Nothing flagged for this KRI.")
@@ -21,36 +21,36 @@ test_that("Default message when nothing flagged", {
 })
 
 test_that("Correct data structure when proper dataframe is passed", {
-  reportingResults_filt <- reportingResults %>%
-    dplyr::filter(MetricID == unique(reportingResults$MetricID)[1])
-  result <- Report_MetricTable(reportingResults_filt, reportingGroups)
+  reportingResults_filt <- gsm::reportingResults %>%
+    dplyr::filter(MetricID == unique(gsm::reportingResults$MetricID)[1])
+  result <- Report_MetricTable(reportingResults_filt, gsm::reportingGroups)
   expect_s3_class(result, "gt_tbl")
   expect_true(is.character(result$`_data`$Group))
   expect_true(all(result$`_data`$Metric >= 0 & result$`_data`$Metric < 1))
 })
 
 test_that("Flag filtering works correctly", {
-  reportingResults_filt <- reportingResults %>%
-    dplyr::filter(MetricID == unique(reportingResults$MetricID)[1])
-  result <- Report_MetricTable(reportingResults_filt, reportingGroups)
+  reportingResults_filt <- gsm::reportingResults %>%
+    dplyr::filter(MetricID == unique(gsm::reportingResults$MetricID)[1])
+  result <- Report_MetricTable(reportingResults_filt, gsm::reportingGroups)
   expect_s3_class(result, "gt_tbl")
   expect_true(all(result$`_data`$Flag != 0))
 })
 
 test_that("Score rounding works correctly", {
-  reportingResults_filt <- reportingResults %>%
-    dplyr::filter(MetricID == unique(reportingResults$MetricID)[1])
-  result <- Report_MetricTable(reportingResults_filt, reportingGroups)
+  reportingResults_filt <- gsm::reportingResults %>%
+    dplyr::filter(MetricID == unique(gsm::reportingResults$MetricID)[1])
+  result <- Report_MetricTable(reportingResults_filt, gsm::reportingGroups)
   expect_true(any(grepl("0.05", result)))
 })
 
 test_that("Errors out when multiple MetricIDs passed in", {
-  expect_error(Report_MetricTable(reportingResults, reportingGroups))
+  expect_error(Report_MetricTable(gsm::reportingResults, gsm::reportingGroups))
 })
 
 test_that("Runs with just results with NULL group argument", {
-  reportingResults_filt <- reportingResults %>%
-    dplyr::filter(MetricID == unique(reportingResults$MetricID)[1])
+  reportingResults_filt <- gsm::reportingResults %>%
+    dplyr::filter(MetricID == unique(gsm::reportingResults$MetricID)[1])
   result <- Report_MetricTable(reportingResults_filt)
   expect_s3_class(result, "gt_tbl")
 })
@@ -60,10 +60,10 @@ test_that("Output is expected object", {
   red_flags <- c("0X113", "0X025")
   amber_flags <- c("0X119", "0X046")
 
-  reportingResults_filt <- reportingResults %>%
+  reportingResults_filt <- gsm::reportingResults %>%
     FilterByLatestSnapshotDate() %>%
     dplyr::filter(
-      MetricID == unique(reportingResults$MetricID)[[1]],
+      MetricID == unique(gsm::reportingResults$MetricID)[[1]],
       GroupID %in% c(zero_flags, red_flags, amber_flags)
     ) %>%
     # Add an NA row back for representation.
@@ -82,7 +82,7 @@ test_that("Output is expected object", {
       )
     )
   expect_snapshot({
-    x <- Report_MetricTable(reportingResults_filt, reportingGroups)
+    x <- Report_MetricTable(reportingResults_filt, gsm::reportingGroups)
     str(x, max.level = 2)
   })
 })

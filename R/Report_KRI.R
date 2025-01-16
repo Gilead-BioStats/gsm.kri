@@ -17,35 +17,35 @@
 #' \dontrun{
 #' # Run site-level KRI report.
 #' lChartsSite <- MakeCharts(
-#'   dfResults = reportingResults,
-#'   dfGroups = reportingGroups,
-#'   dfMetrics = reportingMetrics,
-#'   dfBounds = reportingBounds
+#'   dfResults = gsm::reportingResults,
+#'   dfGroups = gsm::reportingGroups,
+#'   dfMetrics = gsm::reportingMetrics,
+#'   dfBounds = gsm::reportingBounds
 #' )
 #'
 #' strOutputFile <- "StandardSiteReport.html"
 #' kri_report_path <- Report_KRI(
 #'   lCharts = lChartsSite,
-#'   dfResults = reportingResults,
-#'   dfGroups = reportingGroups,
-#'   dfMetrics = reportingMetrics,
+#'   dfResults = gsm::reportingResults,
+#'   dfGroups = gsm::reportingGroups,
+#'   dfMetrics = gsm::reportingMetrics,
 #'   strOutputFile = strOutputFile
 #' )
 #'
 #' # Run country-level KRI report.
 #' lChartsCountry <- MakeCharts(
-#'   dfResults = reportingResults_country,
-#'   dfGroups = reportingGroups_country,
-#'   dfMetrics = reportingMetrics_country,
-#'   dfBounds = reportingBounds_country
+#'   dfResults = gsm::reportingResults_country,
+#'   dfGroups = gsm::reportingGroups_country,
+#'   dfMetrics = gsm::reportingMetrics_country,
+#'   dfBounds = gsm::reportingBounds_country
 #' )
 #'
 #' strOutputFile <- "StandardCountryReport.html"
 #' kri_report_path <- Report_KRI(
 #'   lCharts = lChartsCountry,
-#'   dfResults = reportingResults_country,
-#'   dfGroups = reportingGroups_country,
-#'   dfMetrics = reportingMetrics_country,
+#'   dfResults = gsm::reportingResults_country,
+#'   dfGroups = gsm::reportingGroups_country,
+#'   dfMetrics = gsm::reportingMetrics_country,
 #'   strOutputFile = strOutputFile
 #' )
 #' }

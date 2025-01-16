@@ -13,7 +13,7 @@
 #'
 #' @examples
 #' ## Filter data to one metric and snapshot
-#' reportingResults_filter <- reportingResults %>%
+#' reportingResults_filter <- gsm::reportingResults %>%
 #'   dplyr::filter(MetricID == "Analysis_kri0001" & SnapshotDate == max(SnapshotDate))
 #'
 #' Visualize_Score(dfResults = reportingResults_filter)
