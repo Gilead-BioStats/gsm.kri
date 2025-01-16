@@ -16,6 +16,10 @@ Imports:
     cli,
     dplyr,
     gsm,
+    gt,
+    htmltools,
+    htmlwidgets,
+    jsonlite,
     log4r,
     purrr,
     tidyr

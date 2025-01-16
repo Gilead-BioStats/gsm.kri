@@ -26,6 +26,9 @@ details see the Data Model vignette: `vignette("DataModel", package =
 
 \item{strGroupLevel}{A string specifying the group type.}
 }
+\value{
+An object of class `gt_tbl`.
+}
 \description{
 `r lifecycle::badge("stable")`
 
