@@ -30,10 +30,18 @@ Imports:
     log4r,
     magrittr,
     purrr,
+    rlang,
+    rmarkdown,
+    stringr,
+    tibble,
     tidyr
 Suggests: 
     testthat (>= 3.0.0),
-    clindata
+    clindata,
+    knitr,
+    lubridate,
+    fontawesome,
+    withr
 Remotes:
     gsm=Gilead-Biostats/gsm
     clindata=Gilead-Biostats/clindata

@@ -41,14 +41,14 @@ Widget_BarChart <- function(
   strShinyGroupSelectID = "GroupID",
   bDebug = FALSE
 ) {
-  gsm:::stop_if(cnd = !is.data.frame(dfResults), message = "dfResults is not a data.frame")
-  gsm:::stop_if(cnd = !(is.null(lMetric) || (is.list(lMetric) && !is.data.frame(lMetric))), message = "lMetric must be a list, but not a data.frame")
-  gsm:::stop_if(cnd = !(is.null(dfGroups) || is.data.frame(dfGroups)), message = "dfGroups is not a data.frame")
-  gsm:::stop_if(cnd = !length(strOutcome) == 1, message = "strOutcome must be length 1")
-  gsm:::stop_if(cnd = !is.character(strOutcome), message = "strOutcome is not a character")
-  gsm:::stop_if(cnd = !is.logical(bAddGroupSelect), message = "bAddGroupSelect is not a logical")
-  gsm:::stop_if(cnd = !is.character(strShinyGroupSelectID), message = "strShinyGroupSelectID is not a character")
-  gsm:::stop_if(cnd = !is.logical(bDebug), message = "bDebug is not a logical")
+  stop_if(cnd = !is.data.frame(dfResults), message = "dfResults is not a data.frame")
+  stop_if(cnd = !(is.null(lMetric) || (is.list(lMetric) && !is.data.frame(lMetric))), message = "lMetric must be a list, but not a data.frame")
+  stop_if(cnd = !(is.null(dfGroups) || is.data.frame(dfGroups)), message = "dfGroups is not a data.frame")
+  stop_if(cnd = !length(strOutcome) == 1, message = "strOutcome must be length 1")
+  stop_if(cnd = !is.character(strOutcome), message = "strOutcome is not a character")
+  stop_if(cnd = !is.logical(bAddGroupSelect), message = "bAddGroupSelect is not a logical")
+  stop_if(cnd = !is.character(strShinyGroupSelectID), message = "strShinyGroupSelectID is not a character")
+  stop_if(cnd = !is.logical(bDebug), message = "bDebug is not a logical")
 
   # Parse `vThreshold` from comma-delimited character string to numeric vector.
   if (!is.null(vThreshold)) {
