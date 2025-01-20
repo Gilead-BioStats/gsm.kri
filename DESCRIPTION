@@ -22,6 +22,7 @@ Imports:
     ggplot2,
     glue,
     gsm,
+    gsm.mapping,
     gt,
     htmltools,
     htmlwidgets,
@@ -43,6 +44,7 @@ Suggests:
     fontawesome,
     withr
 Remotes:
-    gsm=Gilead-Biostats/gsm,
-    clindata=Gilead-Biostats/clindata
+    gsm=Gilead-BioStats/gsm@fix-2013,
+    gsm.mapping=Gilead-BioStats/gsm.mapping,
+    clindata=Gilead-BioStats/clindata
 Config/testthat/edition: 3
