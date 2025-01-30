@@ -65,9 +65,9 @@ steps:
       dfAnalyzed: Analysis_Analyzed
       vThreshold: vThreshold
       vFlag:
-        - 0
-        - 1
         - 2
+        - 1
+        - 0
   - output: Analysis_Summary
     name: Summarize
     params:
