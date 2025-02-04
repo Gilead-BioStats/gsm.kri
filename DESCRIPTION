@@ -43,6 +43,6 @@ Suggests:
     fontawesome,
     withr
 Remotes:
-    gsm=Gilead-BioStats/gsm@fix-2013,
+    gsm=Gilead-BioStats/gsm@gsm-core-test,
     clindata=Gilead-BioStats/clindata
 Config/testthat/edition: 3
