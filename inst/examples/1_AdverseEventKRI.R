@@ -13,7 +13,7 @@ dfInput <- Input_Rate(
 
 dfTransformed <- Transform_Rate(dfInput)
 dfAnalyzed <- Analyze_NormalApprox(dfTransformed, strType = "rate")
-dfFlagged <- Flag_NormalApprox(dfAnalyzed, vThreshold = c(-3,-2,2,3))
+dfFlagged <- Flag(dfAnalyzed, vThreshold = c(-3,-2,2,3))
 dfSummarized <- Summarize(dfFlagged)
 
 table(dfSummarized$Flag)
@@ -32,7 +32,7 @@ SAE_KRI <- Input_Rate(
 ) %>%
   Transform_Rate %>%
   Analyze_NormalApprox(strType = "rate") %>%
-  Flag_NormalApprox(vThreshold = c(-3,-2,2,3)) %>%
+  Flag(vThreshold = c(-3,-2,2,3)) %>%
   Summarize
 
 table(SAE_KRI$Flag)
