@@ -18,19 +18,19 @@ knitr::opts_chunk$set(
 library(gsm.kri)
 ```
 
-# Overview
+## Overview
 
 Below is my attempt to document all of the updates needed in {gsm} to release a new metric (using PK as an example). Anything I'm missing? 
 
-# PK Analytics Step-by-Step
+## PK Analytics Step-by-Step
 
 Once a subject level data listing is provided from a source system (e.g. for PK = DART) and those tables have been added to our monthly snapshots, we have the following analytics tasks to complete before a new metric (KRI/QTL, etc) can be put in to production
 
-* Make needed updates to gsm data model
+### Make needed updates to gsm data model
     * For PK, we need to add a PK data domain to the data model:
         * Add support for new PK tables in `gsm.datasim` (Not Started)
         * Track new requirements in `gsm.mapping` using a new YAML mapping for PK (Not Started)
-* Create a KRI workflow
+### Create a KRI workflow
     * For PK, we need to create workflows and update several of the analysis existing analysis functions to meet new requirements:
         * Create/Customize 2 new YAML workflow files (one for non-windowed, one for windowed) workflows capture (Done)
              * Metric metadata (description, numerator, denomiator, etc) , including a unique KRI ID - typically the next available number following the same format as existing KRIs in the package (i.e. kri0013 in gsm and kri0002ep for endpoints)
@@ -40,17 +40,20 @@ Once a subject level data listing is provided from a source system (e.g. for PK 
         * Update the gsm flag function to be more generic (ie, support 85/90 thresholds instead of -3/-2/2/3) (Done)
         * We Improve support for “Identity” analysis since no Z-score is used in PK KRIs (Done)
         * Add support for showing thresholds on scatter plots for “Identity” analysis (Not Started)
-* Add new metrics to apps/reports
+
+#### Add qualification test(s) ensuring that the metric is behaving as expected for test data.  
+### Steps to incorporate metric into reporting outputs
+
+#### Add new metrics to apps/reports
     * Haven’t discussed for PK, but at a minimum we’ll need to 
         * Add PK Metrics to existing KRI reports OR create a new “Data Quality Report” 
         * Add PK to {gsm.app} as a standard KRI OR create a new module with custom functionality
-* Generate Risk signals for GRAIL
+#### Generate Risk signals for GRAIL
     * Not started for PK
         * Update GRAIL to add default actions
-* Add support in ADO (if needed) 
+#### Add support in ADO (if needed) 
     * No custom implementation needed for PK?
-* Add qualification test(s) insuring that the metric is behaving as expected for test data.  
-* Update Study scripts to add the metrics
+#### Update Study scripts to add the metrics
        * For PK, this would involve adding a mapping YAML for PK and YAMLS for non-windowed and windowed KRIs to all studies where the metrics would run. And then re-running reports using the update packages mentioned above. 
 
 
