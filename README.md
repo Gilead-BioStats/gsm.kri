@@ -31,7 +31,7 @@ pak::pak("Gilead-BioStats/gsm.kri@dev")
 
 ## Sample Code
 
-This is a basic example showing how to  which shows you how to solve a common problem:
+This is a basic example showing how to create interactive widget visualizations based on reporting outputs from the `{gsm.reporting}` package:
 
 ``` r
 library(gsm.kri)
