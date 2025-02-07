@@ -20,7 +20,7 @@ library(gsm.kri)
 
 ## Overview
 
-Below is my attempt to document all of the updates needed in {gsm} to release a new metric (using PK as an example). Anything I'm missing? 
+This vignette outlines all of the updates needed in {gsm.mapping} and {gsm.kri} to release a new metric and incorporate it into a report. Throughout this vignette, we will use a PK metric as an example. 
 
 ## PK Analytics Step-by-Step
 
@@ -35,6 +35,7 @@ Once a subject level data listing is provided from a source system and those tab
   - Add support in ADO (if needed)
   - Update Study scripts to add the metrics
 
+Below we get into more detail for each of these steps
 
 ### Make needed updates to gsm data model
     * For PK, we need to add a PK data domain to the data model:
