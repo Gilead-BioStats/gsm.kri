@@ -24,7 +24,17 @@ Below is my attempt to document all of the updates needed in {gsm} to release a 
 
 ## PK Analytics Step-by-Step
 
-Once a subject level data listing is provided from a source system (e.g. for PK = DART) and those tables have been added to our monthly snapshots, we have the following analytics tasks to complete before a new metric (KRI/QTL, etc) can be put in to production
+Once a subject level data listing is provided from a source system and those tables have been added to our monthly snapshots, we have the following analytics tasks to complete before a new metric (KRI/QTL, etc) can be put in to production. 
+
+1. Make needed updates to gsm data model
+2. Create a KRI workflow
+3.  Add qualification test(s) ensuring that the metric is behaving as expected for test data.  
+4.  Steps to incorporate metric into optional reporting outputs
+  - Add new metrics to apps/reports
+  - Generate Risk signals for GRAIL
+  - Add support in ADO (if needed)
+  - Update Study scripts to add the metrics
+
 
 ### Make needed updates to gsm data model
     * For PK, we need to add a PK data domain to the data model:
@@ -55,5 +65,4 @@ Once a subject level data listing is provided from a source system (e.g. for PK 
     * No custom implementation needed for PK?
 #### Update Study scripts to add the metrics
        * For PK, this would involve adding a mapping YAML for PK and YAMLS for non-windowed and windowed KRIs to all studies where the metrics would run. And then re-running reports using the update packages mentioned above. 
-
 
