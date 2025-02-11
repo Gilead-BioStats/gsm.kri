@@ -84,7 +84,7 @@ metrics_wf <- MakeWorkflowList(strPath = "workflow/2_metrics", strPackage = "gsm
 analyzed <- RunWorkflows(metrics_wf, mapped)
 
 # Step 3 - Create Reporting Layer - create reports using metrics data
-reporting_wf <- MakeWorkflowList(strPath = "workflow/3_reporting", strPackage = "gsm.mapping")
+reporting_wf <- MakeWorkflowList(strPath = "workflow/3_reporting", strPackage = "gsm.reporting")
 reporting <- RunWorkflows(reporting_wf, c(mapped, list(lAnalyzed = analyzed,
                                                        lWorkflows = metrics_wf)))
 
