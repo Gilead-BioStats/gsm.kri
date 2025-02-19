@@ -3,7 +3,7 @@ meta:
   ID: cou0009
   GroupLevel: Country
   Abbreviation: OQRY
-  Metric: Outstanding Query Rate
+  Metric: Delayed Query Resolution Rate
   Numerator: Queries Open > 30 Days
   Denominator: Total Queries
   Model: Normal Approximation
