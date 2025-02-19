@@ -20,7 +20,9 @@ library(gsm.kri)
 
 ## Overview
 
-This vignette outlines all of the updates needed in {gsm.mapping} and {gsm.kri} to release a new metric and incorporate it into a report. Throughout this vignette, we will use a PK metric as an example. 
+This vignette outlines all of the updates needed in {gsm.mapping} and {gsm.kri} to release a new Key Risk Indicator (KRI) and incorporate it into a report. 
+
+#> Throughout this vignette, we will use the PK metric as an example. 
 
 ## PK Analytics Step-by-Step
 
@@ -37,33 +39,71 @@ Once a subject level data listing is provided from a source system and those tab
 
 Below we get into more detail for each of these steps
 
-### Make needed updates to gsm data model
-    * For PK, we need to add a PK data domain to the data model:
-        * Add support for new PK tables in `gsm.datasim` (Not Started)
-        * Track new requirements in `gsm.mapping` using a new YAML mapping for PK (Not Started)
-### Create a KRI workflow
-    * For PK, we need to create workflows and update several of the analysis existing analysis functions to meet new requirements:
-        * Create/Customize 2 new YAML workflow files (one for non-windowed, one for windowed) workflows capture (Done)
-             * Metric metadata (description, numerator, denomiator, etc) , including a unique KRI ID - typically the next available number following the same format as existing KRIs in the package (i.e. kri0013 in gsm and kri0002ep for endpoints)
-             * Metric Data Specification aligning with the data model updates mentioned above
-             * Metric workflow, specifying which functions and parameters used to calculate the metric, typically following the standard gsm analysis workflow. 
-        * Create parallel workflows for country level metrics, if needed. (Not Started)
-        * Update the gsm flag function to be more generic (ie, support 85/90 thresholds instead of -3/-2/2/3) (Done)
-        * We Improve support for “Identity” analysis since no Z-score is used in PK KRIs (Done)
-        * Add support for showing thresholds on scatter plots for “Identity” analysis (Not Started)
+### Make updates to the gsm data model
 
-#### Add qualification test(s) ensuring that the metric is behaving as expected for test data.  
+For each KRI, there will be data requirements that need to be specified as the first step to incorporating the KRI into a final report. The first step in this process is to ensure that the data is programmatically available to be pulled down from a centralized data store. Once this is confirmed, an issue is to be filed in `{gsm.mapping}` repo using the `Add New Domain` issue template and filling in the relevant information.
+
+With the issue filed, and the requirements laid out, a specification mapping file is created that indicates the name of each data source, and all required fields from each respective data source along with their data types. An example of this specification yaml file is below. More details about the construction of these files can be found in `{gsm.mapping}` package documentation.
+
+```
+meta:
+  Type: Mapped
+  ID: PD
+  Description: Protocol Deviation Data Mapping 
+  Priority: 1
+spec: 
+  Raw_PD:
+    subjid:
+      type: character
+      source_col: subjectenrollmentnumber
+    deemedimportant:
+      type: character
+steps:
+  - output: Mapped_PD
+    name: =
+    params:
+      lhs: Mapped_PD
+      rhs: Raw_PD
+```
+
+It is possible that some of the domains that are needed for a given KRI may already be mapped in `{gsm.mapping}`. In this case, check the existing spec for that domain for all relevant fields, and if any are missing, create an issue to `Edit Existing Domain`, and fill in all fields. Once the edits have been made following the [Contributor Guidelines](), submit a Pull Request to merge in the edits required for adding this new KRI.
+
+Add support for new tables in `gsm.datasim` for use in the gismo test environment.
+  
+### Create a KRI workflow
+
+[Vignette](link to Analysis step-by-step vignette here)
+
+- For PK, we need to create workflows and update several of the analysis existing analysis functions to meet new requirements:
+ - Create/Customize 2 new YAML workflow files (one for non-windowed, one for windowed) workflows capture 
+   - Metric metadata (description, numerator, denominator, etc) , including a unique KRI ID - typically the next available number following the same format as existing KRIs in the package (i.e. kri0013 in gsm and kri0002ep for endpoints)
+   - Metric Data Specification aligning with the data model updates mentioned above
+   - Metric workflow, specifying which functions and parameters used to calculate the metric, typically following the standard gsm analysis workflow. 
+ - Create parallel workflows for country level metrics, if needed. 
+ - Update the gsm flag function to be more generic (ie, support 85/90 thresholds instead of -3/-2/2/3) 
+ - We Improve support for “Identity” analysis since no Z-score is used in PK KRIs 
+ - Add support for showing thresholds on scatter plots for “Identity” analysis 
+
+#### Add qualification test(s) 
+
+To ensure that the metric is behaving as expected for test data, a new test or multiple tests must be written and documented in the
+`{gsm.qc}` package. `{gsm.qc}` uses the `{qcthat}` framework, which is detailed in the package documentation [here](https://gilead-biostats.github.io/qcthat/).
+
+
 ### Steps to incorporate metric into reporting outputs
 
 #### Add new metrics to apps/reports
-    * Haven’t discussed for PK, but at a minimum we’ll need to 
-        * Add PK Metrics to existing KRI reports OR create a new “Data Quality Report” 
-        * Add PK to {gsm.app} as a standard KRI OR create a new module with custom functionality
+- Haven’t discussed for PK, but at a minimum we’ll need to 
+  - Add PK Metrics to existing KRI reports OR create a new “Data Quality Report” 
+  - Add PK to {gsm.app} as a standard KRI OR create a new module with custom functionality
+  
 #### Generate Risk signals for GRAIL
-    * Not started for PK
-        * Update GRAIL to add default actions
+- Not started for PK
+  - Update GRAIL to add default actions
+  
 #### Add support in ADO (if needed) 
-    * No custom implementation needed for PK?
+- No custom implementation needed for PK?
+
 #### Update Study scripts to add the metrics
-       * For PK, this would involve adding a mapping YAML for PK and YAMLS for non-windowed and windowed KRIs to all studies where the metrics would run. And then re-running reports using the update packages mentioned above. 
+- For PK, this would involve adding a mapping YAML for PK and YAMLS for non-windowed and windowed KRIs to all studies where the metrics would run. And then re-running reports using the update packages mentioned above. 
 
