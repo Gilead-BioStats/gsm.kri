@@ -14,10 +14,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(gsm.kri)
-```
-
 ## Overview
 
 This vignette outlines the necessary analytics tasks required before a new Key Risk Indicator (KRI), Quality Tolerance Limit (QTL), or similar metric can be put into production. Once a subject-level data listing is received from the source system and incorporated into our monthly snapshots, a structured workflow ensures seamless integration of the new metric. This process includes updates to the GSM data model, creation of a KRI workflow, qualification testing, and incorporation into reporting outputs. By following these steps, we maintain data integrity, ensure metric accuracy, and support risk signal generation and reporting functionalities. 
@@ -29,12 +25,11 @@ Once a subject level data listing is provided from a source system and those tab
 
 1. Make needed updates to gsm data model
 2. Create a KRI workflow
-3.  Add qualification test(s) ensuring that the metric is behaving as expected for test data.  
-4.  Steps to incorporate metric into optional reporting outputs
-  - Add new metrics to apps/reports
-  - Generate Risk signals for GRAIL
-  - Add support in ADO (if needed)
-  - Update Study scripts to add the metrics
+3. Add qualification test(s) ensuring that the metric is behaving as expected for test data.  
+4. Steps to incorporate metric into optional reporting outputs
+    - Add new metrics to apps/reports
+    - Generate Risk signals for `{grail}`
+    - Update existing Study scripts to add the metrics
 
 Below we get into more detail for each of these steps
 
@@ -76,20 +71,20 @@ To implement a new Key Risk Indicator (KRI) within the system, we must establish
 #### Creating and Customizing YAML Workflow Files
 The first step is to create or modify YAML workflow files that define the new KRI. These files include:
 
-- Metric Metadata: Define key details such as the metric’s description, numerator, denominator, and other relevant specifications. Each KRI must have a unique identifier that follows the existing naming convention (e.g., kri0013 for GSM or kri0002ep for endpoints).
-- Metric Data Specification: Ensure the data specifications align with updates made to the data model. This step guarantees consistency in data interpretation and calculation.
-- Metric Workflow Definition: Specify the functions and parameters required to calculate the metric. This typically follows the standard GSM analysis workflow, ensuring consistency with existing metrics.
+- **Metric Metadata:** Define key details such as the metric’s description, numerator, denominator, and other relevant specifications. Each KRI must have a unique identifier that follows the existing naming convention (e.g., `kri0013` for `{gsm.kri}` or `kri0002ep` for `{gsm.endpoints}`).
+- **Metric Data Specification:** Ensure the data specifications align with updates made to the data model. This step guarantees consistency in data interpretation and calculation.
+- **Metric Workflow Definition:** Specify the functions and parameters required to calculate the metric. This typically follows the standard GSM analysis workflow, ensuring consistency with existing metrics.
 
 #### Creating Country-Level Workflows (If Applicable)
-If country-level metrics are needed, parallel workflows must be created within the gsm.kri package. These workflows allow for localized risk assessment and reporting, providing granularity in data analysis.
+If country-level metrics are needed, parallel workflows must be created within the `{gsm.kri}` package. These workflows allow for localized risk assessment and reporting, providing granularity in data analysis.
 
 #### Updating Core Analytical Functions
 The next step involves updating `{gsm.core}` analytics functions to ensure they can accurately compute the new KRI. This may include modifying existing logic, incorporating additional parameters, or adjusting calculations to reflect the new metric’s requirements. This step may not be necessary for every new metric.
 
 #### Enhancing Visualization and Reporting Functionality
-Finally, any necessary updates should be made to the gsm.kri and rbm-viz packages to support visualization and widget functionality. This ensures that the new KRI is correctly represented in dashboards and reports, providing clear and actionable insights for stakeholders. This step may not be necessary for every new metric.
+Finally, any necessary updates should be made to the `{gsm.kri}` and `{rbm-viz}` packages to support visualization and widget functionality. This ensures that the new KRI is correctly represented in dashboards and reports, providing clear and actionable insights for stakeholders. This step may not be necessary for every new metric.
 
-By following these steps, we ensure that the new KRI is seamlessly integrated into our analytics framework, maintaining consistency, accuracy, and usability across the system.
+By following these steps, we ensure that the new metric is seamlessly integrated into our analytics framework, maintaining consistency, accuracy, and usability across the system.
 
 #### Add qualification test(s) 
 
@@ -97,12 +92,18 @@ To ensure that the metric is behaving as expected for test data, a new test or m
 `{gsm.qc}` package. `{gsm.qc}` uses the `{qcthat}` framework, which is detailed in the package documentation [here](https://gilead-biostats.github.io/qcthat/).
 
 
-### Steps to incorporate metric into reporting outputs
+### Steps to Incorporate a Metric into Reporting Outputs
+Once the new Key Risk Indicator (KRI) has been integrated into the analytics framework, it must be incorporated into reporting outputs to ensure visibility and usability. This process involves updating existing reports or creating new ones and integrating the metric into the application.
 
-#### Add new metrics to apps/reports
-- Haven’t discussed for PK, but at a minimum we’ll need to 
-  - Add PK Metrics to existing KRI reports OR create a new “Data Quality Report” 
-  - Add PK to {gsm.app} as a standard KRI OR create a new module with custom functionality
+#### Adding New Metric(s) to Reports
+- **Integrate into Existing Reports:** If the new metric aligns with the structure of current KRI reports, add it to the appropriate reports to maintain consistency in analysis and visualization.
+- **Create a New Report (If Needed):** If the new metric requires unique data representation or analysis, develop a standalone report tailored to its specifications. This ensures that the metric is properly contextualized for stakeholders.
+
+#### Updating the Application for Metric Integration
+- **Add the Metric to {gsm.app}:** If the metric follows standard KRI functionality, integrate it into the existing application as a standard KRI. This ensures that it is accessible and consistent with other KRIs.
+- **Develop a New Module (If Required):** If the metric requires specialized functionality beyond the existing KRI framework, create a new module within {gsm.app} to support its unique requirements. This may involve custom visualizations, interactions, or calculations specific to the new metric.
+
+By following these steps, we ensure that the new KRI is effectively incorporated into reporting modules and applications, enabling the study team to monitor and evaluate the metric for a given study.
   
 #### Generate Risk signals for GRAIL
 Not started for PK
