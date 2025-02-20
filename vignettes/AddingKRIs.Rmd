@@ -102,16 +102,14 @@ Once the new Key Risk Indicator (KRI) has been integrated into the analytics fra
 #### Updating the Application for Metric Integration
 - **Add the Metric to {gsm.app}:** If the metric follows standard KRI functionality, integrate it into the existing application as a standard KRI. This ensures that it is accessible and consistent with other KRIs.
 - **Develop a New Module (If Required):** If the metric requires specialized functionality beyond the existing KRI framework, create a new module within {gsm.app} to support its unique requirements. This may involve custom visualizations, interactions, or calculations specific to the new metric.
-
-By following these steps, we ensure that the new KRI is effectively incorporated into reporting modules and applications, enabling the study team to monitor and evaluate the metric for a given study.
   
-#### Generate Risk signals for GRAIL
-Not started for PK
-  - Update GRAIL to add default actions
-  
-#### Add support in ADO (if needed) 
-No custom implementation needed for PK?
+#### Generate Risk signals for `{grail}`
+In order to incorporate this metric into the ticketing system used by the risk advisers to address flagged sites or participaants, `{grail}` must be updated to add default actions for risk signals produced by this metric. 
 
 #### Update Study scripts to add the metrics
-For PK, this would involve adding a mapping YAML for PK and YAMLS for non-windowed and windowed KRIs to all studies where the metrics would run. And then re-running reports using the update packages mentioned above. 
+To ensure that the new Key Risk Indicator (KRI) is correctly integrated into ongoing studies, we must update existing study scripts. These scripts are responsible for processing study-level data, generating risk signals, and ensuring that the new metric is included in all relevant analyses.
 
+Review the current study scripts to determine which ones require modifications to accommodate the new metric.
+Identify any dependencies or interactions between the new metric and existing KRIs, ensuring that all calculations remain consistent, and the Priority tag in the `meta` yamls are appropriately assigned.
+
+By following these steps, we ensure that the new KRI is effectively incorporated into reporting modules and applications, enabling the study team to monitor and evaluate the metric for a given study.
