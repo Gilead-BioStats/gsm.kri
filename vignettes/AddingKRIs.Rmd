@@ -93,7 +93,7 @@ To ensure that the metric is behaving as expected for test data, a new test or m
 
 
 ### Steps to Incorporate a Metric into Reporting Outputs
-Once the new Key Risk Indicator (KRI) has been integrated into the analytics framework, it must be incorporated into reporting outputs to ensure visibility and usability. This process involves updating existing reports or creating new ones and integrating the metric into the application.
+Once the new Key Risk Indicator (KRI) has been integrated into the analytics framework, it must be incorporated into reporting outputs to ensure visibility and usability. This process involves updating existing reports or creating new ones and integrating the metric into the application specified in `{gsm.app}`.
 
 #### Adding New Metric(s) to Reports
 - **Integrate into Existing Reports:** If the new metric aligns with the structure of current KRI reports, add it to the appropriate reports to maintain consistency in analysis and visualization.
