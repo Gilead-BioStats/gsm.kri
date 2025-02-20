@@ -20,11 +20,10 @@ library(gsm.kri)
 
 ## Overview
 
-This vignette outlines all of the updates needed in {gsm.mapping} and {gsm.kri} to release a new Key Risk Indicator (KRI) and incorporate it into a report. 
+This vignette outlines the necessary analytics tasks required before a new Key Risk Indicator (KRI), Quality Tolerance Limit (QTL), or similar metric can be put into production. Once a subject-level data listing is received from the source system and incorporated into our monthly snapshots, a structured workflow ensures seamless integration of the new metric. This process includes updates to the GSM data model, creation of a KRI workflow, qualification testing, and incorporation into reporting outputs. By following these steps, we maintain data integrity, ensure metric accuracy, and support risk signal generation and reporting functionalities. 
 
-#> Throughout this vignette, we will use the PK metric as an example. 
 
-## PK Analytics Step-by-Step
+## Adding a new KRI Step-by-Step
 
 Once a subject level data listing is provided from a source system and those tables have been added to our monthly snapshots, we have the following analytics tasks to complete before a new metric (KRI/QTL, etc) can be put in to production. 
 
@@ -70,19 +69,27 @@ It is possible that some of the domains that are needed for a given KRI may alre
 
 Add support for new tables in `gsm.datasim` for use in the gismo test environment.
   
-### Create a KRI workflow
+### Creating a KRI Workflow
 
-[Vignette](link to Analysis step-by-step vignette here)
+To implement a new Key Risk Indicator (KRI) within the system, we must establish workflows and update several existing analytical functions to align with the new requirements. This process ensures that the new KRI is accurately integrated into our analytics framework and reporting structure. A more in depth discussion of the Analytics pipeline is outlined in this [vignette](link to step-by-step analytics vignette in gsm.core)
 
-- For PK, we need to create workflows and update several of the analysis existing analysis functions to meet new requirements:
- - Create/Customize 2 new YAML workflow files (one for non-windowed, one for windowed) workflows capture 
-   - Metric metadata (description, numerator, denominator, etc) , including a unique KRI ID - typically the next available number following the same format as existing KRIs in the package (i.e. kri0013 in gsm and kri0002ep for endpoints)
-   - Metric Data Specification aligning with the data model updates mentioned above
-   - Metric workflow, specifying which functions and parameters used to calculate the metric, typically following the standard gsm analysis workflow. 
- - Create parallel workflows for country level metrics, if needed. 
- - Update the gsm flag function to be more generic (ie, support 85/90 thresholds instead of -3/-2/2/3) 
- - We Improve support for “Identity” analysis since no Z-score is used in PK KRIs 
- - Add support for showing thresholds on scatter plots for “Identity” analysis 
+#### Creating and Customizing YAML Workflow Files
+The first step is to create or modify YAML workflow files that define the new KRI. These files include:
+
+- Metric Metadata: Define key details such as the metric’s description, numerator, denominator, and other relevant specifications. Each KRI must have a unique identifier that follows the existing naming convention (e.g., kri0013 for GSM or kri0002ep for endpoints).
+- Metric Data Specification: Ensure the data specifications align with updates made to the data model. This step guarantees consistency in data interpretation and calculation.
+- Metric Workflow Definition: Specify the functions and parameters required to calculate the metric. This typically follows the standard GSM analysis workflow, ensuring consistency with existing metrics.
+
+#### Creating Country-Level Workflows (If Applicable)
+If country-level metrics are needed, parallel workflows must be created within the gsm.kri package. These workflows allow for localized risk assessment and reporting, providing granularity in data analysis.
+
+#### Updating Core Analytical Functions
+The next step involves updating `{gsm.core}` analytics functions to ensure they can accurately compute the new KRI. This may include modifying existing logic, incorporating additional parameters, or adjusting calculations to reflect the new metric’s requirements. This step may not be necessary for every new metric.
+
+#### Enhancing Visualization and Reporting Functionality
+Finally, any necessary updates should be made to the gsm.kri and rbm-viz packages to support visualization and widget functionality. This ensures that the new KRI is correctly represented in dashboards and reports, providing clear and actionable insights for stakeholders. This step may not be necessary for every new metric.
+
+By following these steps, we ensure that the new KRI is seamlessly integrated into our analytics framework, maintaining consistency, accuracy, and usability across the system.
 
 #### Add qualification test(s) 
 
@@ -98,12 +105,12 @@ To ensure that the metric is behaving as expected for test data, a new test or m
   - Add PK to {gsm.app} as a standard KRI OR create a new module with custom functionality
   
 #### Generate Risk signals for GRAIL
-- Not started for PK
+Not started for PK
   - Update GRAIL to add default actions
   
 #### Add support in ADO (if needed) 
-- No custom implementation needed for PK?
+No custom implementation needed for PK?
 
 #### Update Study scripts to add the metrics
-- For PK, this would involve adding a mapping YAML for PK and YAMLS for non-windowed and windowed KRIs to all studies where the metrics would run. And then re-running reports using the update packages mentioned above. 
+For PK, this would involve adding a mapping YAML for PK and YAMLS for non-windowed and windowed KRIs to all studies where the metrics would run. And then re-running reports using the update packages mentioned above. 
 
