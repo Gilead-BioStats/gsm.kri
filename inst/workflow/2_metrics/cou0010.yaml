@@ -3,7 +3,7 @@ meta:
   ID: cou0010
   GroupLevel: Country
   Abbreviation: ODAT
-  Metric: Outstanding Data Entry Rate
+  Metric: Delayed Data Entry Rate
   Numerator: Data Pages Entered > 10 Days
   Denominator: Total Data Pages
   Model: Normal Approximation
