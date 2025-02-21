@@ -24,7 +24,7 @@ spec:
       type: character
 steps:
   - output: vThreshold
-    name: ParseThreshold
+    name: gsm::ParseThreshold
     params:
       strThreshold: Threshold
   - output: Temp_DROPOUT
@@ -33,7 +33,7 @@ steps:
       df: Mapped_STUDCOMP
       strQuery: "SELECT * FROM df WHERE compyn = 'N'"
   - output: Analysis_Input
-    name: Input_Rate
+    name: gsm::Input_Rate
     params:
       dfSubjects: Mapped_SUBJ
       dfNumerator: Temp_DROPOUT
@@ -44,7 +44,7 @@ steps:
       strNumeratorMethod: Count
       strDenominatorMethod: Count
   - output: Analysis_Transformed
-    name: Transform_Rate
+    name: gsm::Transform_Rate
     params:
       dfInput: Analysis_Input
   - output: Analysis_Analyzed
@@ -53,12 +53,12 @@ steps:
       dfTransformed: Analysis_Transformed
       strType: AnalysisType
   - output: Analysis_Flagged
-    name: Flag_NormalApprox
+    name: gsm::Flag_NormalApprox
     params:
       dfAnalyzed: Analysis_Analyzed
       vThreshold: vThreshold
   - output: Analysis_Summary
-    name: Summarize
+    name: gsm::Summarize
     params:
       dfFlagged: Analysis_Flagged
       nMinDenominator: nMinDenominator

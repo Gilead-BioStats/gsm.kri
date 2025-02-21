@@ -39,24 +39,24 @@ spec:
       type: numeric
 steps:
   - output: Reporting_Results_Site
-    name: RunQuery
+    name: gsm::RunQuery
     params:
       df: Reporting_Results
       strQuery: "SELECT * FROM df WHERE GroupLevel == 'Site'"
   - output: Reporting_Metrics_Site
-    name: RunQuery
+    name: gsm::RunQuery
     params:
       df: Reporting_Metrics
       strQuery: "SELECT * FROM df WHERE GroupLevel == 'Site'"
   - output: lCharts_Site
-    name: MakeCharts
+    name: gsm.kri::MakeCharts
     params:
       dfResults: Reporting_Results_Site
       dfGroups: Reporting_Groups
       dfBounds: Reporting_Bounds
       dfMetrics: Reporting_Metrics_Site
   - output: lReport
-    name: Report_KRI
+    name: gsm.kri::Report_KRI
     params:
       lCharts: lCharts_Site
       dfResults: Reporting_Results_Site
