@@ -1,6 +1,5 @@
 #### 3.1 - Create a KRI Report using 12 standard metrics in a step-by-step workflow
 library(gsm)
-library(gsm.reporting)
 library(gsm.mapping)
 library(gsm.reporting)
 library(dplyr)
