@@ -3,7 +3,7 @@ meta:
   ID: kri0010
   GroupLevel: Site
   Abbreviation: ODAT
-  Metric: Outstanding Data Entry Rate
+  Metric: Delayed Data Entry Rate
   Numerator: Data Pages Entered > 10 Days
   Denominator: Total Data Pages
   Model: Normal Approximation
