@@ -34,3 +34,8 @@ jobs:
           token: ${{secrets.GITHUB_TOKEN}}
           repository: Gilead-BioStats/gsm.qc
           event-type: [qualification]
+          client-payload: '{
+          "GH_TOKEN": "${{ secrets.GITHUB_TOKEN }}",
+          "repository": "${{ github.repository }}",
+          "release_tag": "${{ github.ref_name }}",
+          }'
