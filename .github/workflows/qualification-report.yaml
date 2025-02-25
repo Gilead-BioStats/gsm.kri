@@ -11,7 +11,7 @@ jobs:
   qualification-report:
     runs-on: ubuntu-latest
     env:
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_PAT: ${{ secrets.GH_TOKEN }}
 
     steps:
       - uses: actions/checkout@v4
@@ -24,7 +24,7 @@ jobs:
       - name: qualification report trigger
         uses: peter-evans/repository-dispatch@main
         with:
-          token: ${{secrets.GITHUB_TOKEN}}
+          token: ${{secrets.GH_TOKEN}}
           repository: Gilead-BioStats/gsm.qc@fix-5
           event-type: qualification
           client-payload: '{
