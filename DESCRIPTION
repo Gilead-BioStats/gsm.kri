@@ -46,5 +46,5 @@ Suggests:
 Remotes:
     gsm=Gilead-BioStats/gsm@gsm-core-test,
     clindata=Gilead-BioStats/clindata,
-    gsm.qc=Gilead-BioStats/gsm.qc@fix-5
+    gsm.qc=Gilead-BioStats/gsm.qc
 Config/testthat/edition: 3
