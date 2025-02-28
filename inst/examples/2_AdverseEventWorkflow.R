@@ -1,7 +1,7 @@
 #### Example 2.1 - Configurable Adverse Event Workflow
 
 # Define YAML workflow
-AE_workflow <- read_yaml(text=
+AE_workflow <- yaml::read_yaml(text=
 'meta:
   Type: Analysis
   ID: kri0001
@@ -73,10 +73,28 @@ steps:
       Analysis_Summary: Analysis_Summary
 ')
 
+# Simulate some data
+set.seed(1)
+
+basic_sim <- gsm.datasim::generate_rawdata_for_single_study(
+  SnapshotCount = 1,
+  SnapshotWidth = "months",
+  ParticipantCount = 30,
+  SiteCount = 5,
+  StudyID = "ABC",
+  workflow_path = "workflow/1_mappings",
+  mappings = c("AE", "STUDY", "SITE", "SUBJ"),
+  package = "gsm.mapping",
+  desired_specs = NULL
+)
+
+dm <- basic_sim$`2012-01-31`$Raw_SUBJ
+ae <- basic_sim$`2012-01-31`$Raw_AE
+
 # Run the workflow
 AE_data <-list(
-  Mapped_SUBJ= clindata::rawplus_dm,
-  Mapped_AE= clindata::rawplus_ae
+  Mapped_SUBJ= dm,
+  Mapped_AE= ae
 )
 AE_KRI <- RunWorkflow(lWorkflow = AE_workflow, lData = AE_data)
 
