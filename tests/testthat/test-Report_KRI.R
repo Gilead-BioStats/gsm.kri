@@ -14,8 +14,22 @@ dfSummary <- tibble::tibble(
   MetricID = rep("kri0001", 5)
 )
 
-dfStudy <- clindata::ctms_study %>% rename(StudyID = protocol_number)
-dfSite <- clindata::ctms_site %>% rename(SiteID = site_num)
+set.seed(1)
+
+basic_sim <- gsm.datasim::generate_rawdata_for_single_study(
+  SnapshotCount = 1,
+  SnapshotWidth = "months",
+  ParticipantCount = 30,
+  SiteCount = 5,
+  StudyID = "ABC",
+  workflow_path = "workflow/1_mappings",
+  mappings = c("STUDY", "SITE", "SUBJ"),
+  package = "gsm.mapping",
+  desired_specs = NULL
+)
+
+dfStudy <- basic_sim[[1]]$Raw_STUDY %>% rename(StudyID = protocol_number)
+dfSite <- basic_sim[[1]]$Raw_SITE %>% rename(SiteID = site_num)
 dfMetrics <- tibble::tibble(
   metric = "Adverse Event Rate",
   workflowid = "kri0001",
