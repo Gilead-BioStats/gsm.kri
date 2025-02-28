@@ -3,6 +3,8 @@ library(gsm.datasim)
 library(gsm.mapping)
 devtools::load_all()
 
+set.seed(1)
+
 basic_sim <- gsm.datasim::generate_rawdata_for_single_study(
   SnapshotCount = 1,
   SnapshotWidth = "months",

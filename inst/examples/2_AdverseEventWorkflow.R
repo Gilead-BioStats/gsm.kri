@@ -1,3 +1,8 @@
+library(gsm)
+library(gsm.datasim)
+library(gsm.mapping)
+library(yaml)
+devtools::load_all()
 #### Example 2.1 - Configurable Adverse Event Workflow
 
 # Define YAML workflow
