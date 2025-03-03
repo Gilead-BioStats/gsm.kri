@@ -39,10 +39,6 @@ jobs:
 
       - name: run qualification tests
         run: |
-          install.packages("remotes")
-          install.packages("devtools")
-          devtools::install(dependencies = T)
-          remotes::install_github("Gilead-BioStats/gsm.qc@dev", dependencies = T, upgrade = "never")
           source(system.file("tests/testqualification/test_qualification.R", package = "gsm.qc"))
         shell: Rscript {0}
 
