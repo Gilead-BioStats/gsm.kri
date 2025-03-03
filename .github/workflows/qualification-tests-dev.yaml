@@ -37,14 +37,15 @@ jobs:
           extra-packages: any::rcmdcheck, any::devtools, any::here, local::.
           needs: qualification
 
-      - name: run qualification tests
-        run: |
-          source(system.file("tests/testqualification/test_qualification.R", package = "gsm.qc"))
-        shell: Rscript {0}
-
-      - name: Upload check results
-        if: failure()
-        uses: actions/upload-artifact@main
+     - name: qualification report trigger
+        uses: peter-evans/repository-dispatch@v3
         with:
-          name: ${{ runner.os }}-r${{ matrix.config.r }}-results
-          path: check
+          token: ${{secrets.GITHUB_TOKEN}}
+          repository: Gilead-BioStats/gsm.qc
+          event-type: qualification
+          client-payload: '{
+          "GH_TOKEN": "${{ secrets.GITHUB_TOKEN }}",
+          "repository": "${{ github.repository }}",
+          "release_tag": "${{ github.ref_name }}"
+          }'
+
