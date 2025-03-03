@@ -37,7 +37,7 @@ jobs:
           extra-packages: any::rcmdcheck, any::devtools, any::here, local::.
           needs: qualification
 
-     - name: qualification report trigger
+      - name: qualification report trigger
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{secrets.GITHUB_TOKEN}}
