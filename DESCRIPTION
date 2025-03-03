@@ -37,7 +37,6 @@ Imports:
     tidyr
 Suggests: 
     testthat (>= 3.0.0),
-    gsm.qc,
     clindata,
     knitr,
     lubridate,
@@ -45,6 +44,6 @@ Suggests:
     withr
 Remotes:
     gsm=Gilead-BioStats/gsm@gsm-core-test,
-    clindata=Gilead-BioStats/clindata,
-    gsm.qc=Gilead-BioStats/gsm.qc
+    clindata=Gilead-BioStats/clindata
+Config/Needs/qualification: Gilead-BioStats/gsm.qc
 Config/testthat/edition: 3
