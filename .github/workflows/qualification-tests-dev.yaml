@@ -40,14 +40,10 @@ jobs:
       - name: qualification report trigger
         uses: peter-evans/repository-dispatch@v3
         with:
-          token: ${{secrets.GITHUB_TOKEN}}
+          token: ${{secrets.GH_TOKEN}}
           repository: Gilead-BioStats/gsm.qc
-          event-type: qualification
-          client-payload: '{
-          "GH_TOKEN": "${{ secrets.GITHUB_TOKEN }}",
-          "repository": "${{ github.repository }}",
-          "release_tag": "${{ github.ref_name }}"
-          }'
+          event-type: qualification-test
+
 
       - name: Upload check results
         if: failure()
