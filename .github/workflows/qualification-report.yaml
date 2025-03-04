@@ -1,7 +1,7 @@
 on:
   release:
     types: [published]
-  push:
+  pull-request:
     branches: main
   workflow_dispatch:
 
