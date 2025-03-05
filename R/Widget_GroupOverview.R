@@ -93,7 +93,7 @@ Widget_GroupOverview <- function(
       )
     ),
     width = "100%",
-    package = "gsm"
+    package = "gsm.kri"
   )
 
   if (bDebug) {
@@ -127,7 +127,7 @@ Widget_GroupOverview <- function(
 #'
 #' @export
 Widget_GroupOverviewOutput <- function(outputId, width = "100%", height = "400px") {
-  htmlwidgets::shinyWidgetOutput(outputId, "Widget_GroupOverview", width, height, package = "gsm")
+  htmlwidgets::shinyWidgetOutput(outputId, "Widget_GroupOverview", width, height, package = "gsm.kri")
 }
 
 #' @rdname Widget_GroupOverview-shiny

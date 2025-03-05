@@ -162,8 +162,8 @@ params$dfMetrics %>%
 ```
 
 ```{r echo=FALSE}
-group_dropdown <- system.file('report', 'lib', 'overallGroupDropdown.js', package = "gsm")
-dropdown_drag <- system.file('report', 'lib', 'dragOverallGroupDropdown.js', package = "gsm")
+group_dropdown <- system.file('report', 'lib', 'overallGroupDropdown.js', package = "gsm.kri")
+dropdown_drag <- system.file('report', 'lib', 'dragOverallGroupDropdown.js', package = "gsm.kri")
 ```
 
 ```{js, file={group_dropdown}, echo=FALSE}

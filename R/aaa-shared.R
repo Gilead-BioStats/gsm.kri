@@ -32,7 +32,7 @@
 #'   turing it into a list. Expected columns: `File`,`MetricID`, `Group`,
 #'   `Abbreviation`, `Metric`, `Numerator`, `Denominator`, `Model`, `Score`, and
 #'   `strThreshold`. For more details see the Data Model vignette:
-#'   `vignette("DataModel", package = "gsm")`.
+#'   `vignette("DataModel", package = "gsm.kri")`.
 #' @param lParamLabels `list` Labels for parameters, with the parameters as
 #'   names, and the label as value.
 #' @param bDebug `logical` Print debug messages? Default: `FALSE`.

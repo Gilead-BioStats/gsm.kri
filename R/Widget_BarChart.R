@@ -86,7 +86,7 @@ Widget_BarChart <- function(
         auto_unbox = TRUE
       )
     ),
-    package = "gsm"
+    package = "gsm.kri"
   )
 
   if (bDebug) {
@@ -120,7 +120,7 @@ Widget_BarChart <- function(
 #'
 #' @export
 Widget_BarChartOutput <- function(outputId, width = "100%", height = "400px") {
-  htmlwidgets::shinyWidgetOutput(outputId, "Widget_BarChart", width, height, package = "gsm")
+  htmlwidgets::shinyWidgetOutput(outputId, "Widget_BarChart", width, height, package = "gsm.kri")
 }
 
 #' @rdname Widget_BarChart-shiny
