@@ -45,4 +45,5 @@ Suggests:
 Remotes:
     gsm=Gilead-BioStats/gsm@gsm-core-test,
     gsm.datasim=Gilead-BioStats/gsm.datasim@fix-34
+Config/Needs/qualification: Gilead-BioStats/gsm.qc@dev
 Config/testthat/edition: 3
