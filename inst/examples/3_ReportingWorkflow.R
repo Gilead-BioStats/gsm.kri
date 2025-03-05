@@ -71,7 +71,7 @@ lReports <- RunWorkflows(module_wf, reporting)
 
 #### 3.2 - Automate data ingestion using Ingest() and CombineSpecs()
 # Step 0 - Data Ingestion - standardize tables/columns names
-mappings_wf <- MakeWorkflowList(strName = core_mappings, strPath = "workflow/1_mappings", strPackage = "gsm.mapping")
+mappings_wf <- MakeWorkflowList(strNames = core_mappings, strPath = "workflow/1_mappings", strPackage = "gsm.mapping")
 mappings_spec <- CombineSpecs(mappings_wf)
 lRaw <- Ingest(lSource, mappings_spec)
 
