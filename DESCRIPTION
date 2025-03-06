@@ -42,6 +42,6 @@ Suggests:
     fontawesome,
     withr
 Remotes:
-    gsm=Gilead-BioStats/gsm@fix-2036
+    gsm=Gilead-BioStats/gsm@dev
 Config/Needs/qualification: Gilead-BioStats/gsm.qc@dev
 Config/testthat/edition: 3
