@@ -83,7 +83,7 @@ Report_KRI <- function(
   }
 
   RenderRmd(
-    strInputPath = system.file("report", "Report_KRI.Rmd", package = "gsm"),
+    strInputPath = system.file("report", "Report_KRI.Rmd", package = "gsm.kri"),
     strOutputFile = strOutputFile,
     strOutputDir = strOutputDir,
     lParams = list(
