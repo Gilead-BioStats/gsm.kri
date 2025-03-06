@@ -72,7 +72,7 @@ Widget_FlagOverTime <- function(
     name = "Widget_FlagOverTime",
     x,
     width = "100%",
-    package = "gsm"
+    package = "gsm.kri"
   )
 
   if (bDebug) {
@@ -111,7 +111,7 @@ Widget_FlagOverTimeOutput <- function(
     "Widget_FlagOverTime",
     width,
     height,
-    package = "gsm"
+    package = "gsm.kri"
   )
 }
 
