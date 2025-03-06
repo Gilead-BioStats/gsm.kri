@@ -1,24 +1,9 @@
 library(gsm)
-library(gsm.datasim)
 library(gsm.mapping)
 devtools::load_all()
 
-set.seed(1)
-
-basic_sim <- gsm.datasim::generate_rawdata_for_single_study(
-  SnapshotCount = 1,
-  SnapshotWidth = "months",
-  ParticipantCount = 30,
-  SiteCount = 5,
-  StudyID = "ABC",
-  workflow_path = "workflow/1_mappings",
-  mappings = c("AE", "STUDY", "SITE", "SUBJ"),
-  package = "gsm.mapping",
-  desired_specs = NULL
-)
-
-dm <- basic_sim$`2012-01-31`$Raw_SUBJ
-ae <- basic_sim$`2012-01-31`$Raw_AE
+dm <- gsm::lSource$Raw_SUBJ
+ae <-  gsm::lSource$Raw_AE
 
 #### Example 1.1 - Generate an Adverse Event Metric using the standard {gsm} workflow
 

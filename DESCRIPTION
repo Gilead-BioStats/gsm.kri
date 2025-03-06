@@ -37,13 +37,11 @@ Imports:
     tidyr
 Suggests: 
     testthat (>= 3.0.0),
-    gsm.datasim,
     knitr,
     lubridate,
     fontawesome,
     withr
 Remotes:
-    gsm=Gilead-BioStats/gsm@gsm-core-test,
-    gsm.datasim=Gilead-BioStats/gsm.datasim@fix-34
+    gsm=Gilead-BioStats/gsm@fix-2036
 Config/Needs/qualification: Gilead-BioStats/gsm.qc@dev
 Config/testthat/edition: 3
