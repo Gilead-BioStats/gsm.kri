@@ -53,7 +53,9 @@ lRaw <- list(
 )
 
 # Step 1 - Create Mapped Data Layer - filter, aggregate and join raw data to create mapped data layer
-mappings_wf <- MakeWorkflowList(strPath = "workflow/1_mappings", strPackage = "gsm.mapping")
+mappings_wf <- MakeWorkflowList(strPath = "workflow/1_mappings",
+                                strNames = c("SUBJ", "AE", "PD", "LB", "STUDCOMP", "SDRGCOMP", "DATACHG", "DATAENT", "QUERY", "ENROLL", "SITE", "STUDY", "COUNTRY"),
+                                strPackage = "gsm.mapping")
 mapped <- RunWorkflows(mappings_wf, lRaw)
 
 # Step 2 - Create Metrics - calculate metrics using mapped data
@@ -66,12 +68,14 @@ reporting <- RunWorkflows(reporting_wf, c(mapped, list(lAnalyzed = analyzed,
                                                        lWorkflows = metrics_wf)))
 
 # Step 4 - Create KRI Reports - create KRI report using reporting data
-module_wf <- MakeWorkflowList(strPath = "workflow/4_modules", strPackage = "gsm.kri")
+module_wf <- MakeWorkflowList(strPath = "inst/workflow/4_modules", strPackage = "gsm.kri")
 lReports <- RunWorkflows(module_wf, reporting)
 
 #### 3.2 - Automate data ingestion using Ingest() and CombineSpecs()
 # Step 0 - Data Ingestion - standardize tables/columns names
-mappings_wf <- MakeWorkflowList(strPath = "workflow/1_mappings", strPackage = "gsm.mapping")
+mappings_wf <- MakeWorkflowList(strPath = "workflow/1_mappings",
+                                strNames = c("SUBJ", "AE", "PD", "LB", "STUDCOMP", "SDRGCOMP", "DATACHG", "DATAENT", "QUERY", "ENROLL", "SITE", "STUDY", "COUNTRY"),
+                                strPackage = "gsm.mapping")
 mappings_spec <- CombineSpecs(mappings_wf)
 lRaw <- Ingest(lSource, mappings_spec)
 

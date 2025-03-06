@@ -72,7 +72,7 @@ Widget_ScatterPlot <- function(
         auto_unbox = TRUE
       )
     ),
-    package = "gsm"
+    package = "gsm.kri"
   )
 
   if (bDebug) {
@@ -106,7 +106,7 @@ Widget_ScatterPlot <- function(
 #'
 #' @export
 Widget_ScatterPlotOutput <- function(outputId, width = "100%", height = "400px") {
-  htmlwidgets::shinyWidgetOutput(outputId, "Widget_ScatterPlot", width, height, package = "gsm")
+  htmlwidgets::shinyWidgetOutput(outputId, "Widget_ScatterPlot", width, height, package = "gsm.kri")
 }
 
 #' @rdname Widget_ScatterPlot-shiny
