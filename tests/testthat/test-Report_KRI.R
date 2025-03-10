@@ -14,8 +14,8 @@ dfSummary <- tibble::tibble(
   MetricID = rep("kri0001", 5)
 )
 
-dfStudy <- gsm::lSource$Raw_STUDY %>% rename(StudyID = protocol_number)
-dfSite <- gsm::lSource$Raw_SITE %>% rename(SiteID = site_num)
+dfStudy <- gsm.core::lSource$Raw_STUDY %>% rename(StudyID = protocol_number)
+dfSite <- gsm.core::lSource$Raw_SITE %>% rename(SiteID = site_num)
 dfMetrics <- tibble::tibble(
   metric = "Adverse Event Rate",
   workflowid = "kri0001",

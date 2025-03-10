@@ -1,9 +1,9 @@
-library(gsm)
+library(gsm.core)
 library(gsm.mapping)
 devtools::load_all()
 
-dm <- gsm::lSource$Raw_SUBJ
-ae <-  gsm::lSource$Raw_AE
+dm <- gsm.core::lSource$Raw_SUBJ
+ae <-  gsm.core::lSource$Raw_AE
 
 #### Example 1.1 - Generate an Adverse Event Metric using the standard {gsm} workflow
 

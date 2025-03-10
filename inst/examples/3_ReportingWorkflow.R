@@ -1,5 +1,5 @@
 #### 3.1 - Create a KRI Report using 12 standard metrics in a step-by-step workflow
-library(gsm)
+library(gsm.core)
 library(gsm.mapping)
 library(yaml)
 devtools::load_all()
@@ -8,22 +8,22 @@ core_mappings <- c("AE", "COUNTRY", "DATACHG", "DATAENT", "ENROLL", "LB",
                    "PD", "QUERY", "STUDY", "STUDCOMP", "SDRGCOMP", "SITE", "SUBJ")
 
 lRaw <- list(
-  Raw_SUBJ = gsm::lSource$Raw_SUBJ,
-  Raw_AE = gsm::lSource$Raw_AE,
-  Raw_PD = gsm::lSource$Raw_PD %>%
+  Raw_SUBJ = gsm.core::lSource$Raw_SUBJ,
+  Raw_AE = gsm.core::lSource$Raw_AE,
+  Raw_PD = gsm.core::lSource$Raw_PD %>%
     rename(subjid = subjectenrollmentnumber),
-  Raw_LB = gsm::lSource$Raw_LB,
-  Raw_STUDCOMP = gsm::lSource$Raw_STUDCOMP %>%
+  Raw_LB = gsm.core::lSource$Raw_LB,
+  Raw_STUDCOMP = gsm.core::lSource$Raw_STUDCOMP %>%
     select(subjid, compyn),
-  Raw_SDRGCOMP = gsm::lSource$Raw_SDRGCOMP,
-  Raw_DATACHG = gsm::lSource$Raw_DATACHG %>%
+  Raw_SDRGCOMP = gsm.core::lSource$Raw_SDRGCOMP,
+  Raw_DATACHG = gsm.core::lSource$Raw_DATACHG %>%
     rename(subject_nsv = subjectname),
-  Raw_DATAENT = gsm::lSource$Raw_DATAENT %>%
+  Raw_DATAENT = gsm.core::lSource$Raw_DATAENT %>%
     rename(subject_nsv = subjectname),
-  Raw_QUERY = gsm::lSource$Raw_QUERY %>%
+  Raw_QUERY = gsm.core::lSource$Raw_QUERY %>%
     rename(subject_nsv = subjectname),
-  Raw_ENROLL = gsm::lSource$Raw_ENROLL,
-  Raw_SITE = gsm::lSource$Raw_SITE %>%
+  Raw_ENROLL = gsm.core::lSource$Raw_ENROLL,
+  Raw_SITE = gsm.core::lSource$Raw_SITE %>%
     rename(studyid = protocol) %>%
     rename(invid = pi_number) %>%
     rename(InvestigatorFirstName = pi_first_name) %>%
@@ -32,7 +32,7 @@ lRaw <- list(
     rename(State = state) %>%
     rename(Country = country) %>%
     rename(Status = site_status),
-  Raw_STUDY = gsm::lSource$Raw_STUDY %>%
+  Raw_STUDY = gsm.core::lSource$Raw_STUDY %>%
     rename(studyid = protocol_number) %>%
     rename(Status = status)
 )
@@ -58,7 +58,7 @@ lReports <- RunWorkflows(module_wf, reporting)
 # Step 0 - Data Ingestion - standardize tables/columns names
 mappings_wf <- MakeWorkflowList(strNames = core_mappings, strPath = "workflow/1_mappings", strPackage = "gsm.mapping")
 mappings_spec <- CombineSpecs(mappings_wf)
-lRaw <- Ingest(gsm::lSource, mappings_spec)
+lRaw <- Ingest(gsm.core::lSource, mappings_spec)
 
 # Step 1 - Create Mapped Data Layer - filter, aggregate and join raw data to create mapped data layer
 mapped <- RunWorkflows(mappings_wf, lRaw)
@@ -89,15 +89,15 @@ lReports <- RunWorkflows(module_wf, reporting)
 
 #### 3.3 Site-Level KRI Report with multiple SnapshotDate
 lCharts <- MakeCharts(
-  dfResults = gsm::reportingResults,
-  dfGroups = gsm::reportingGroups,
-  dfMetrics = gsm::reportingMetrics,
-  dfBounds = gsm::reportingBounds
+  dfResults = gsm.core::reportingResults,
+  dfGroups = gsm.core::reportingGroups,
+  dfMetrics = gsm.core::reportingMetrics,
+  dfBounds = gsm.core::reportingBounds
 )
 
 kri_report_path <- Report_KRI(
   lCharts = lCharts,
-  dfResults =  FilterByLatestSnapshotDate(gsm::reportingResults),
-  dfGroups =  gsm::reportingGroups,
-  dfMetrics = gsm::reportingMetrics
+  dfResults =  FilterByLatestSnapshotDate(gsm.core::reportingResults),
+  dfGroups =  gsm.core::reportingGroups,
+  dfMetrics = gsm.core::reportingMetrics
 )

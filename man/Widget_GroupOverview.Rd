@@ -26,7 +26,7 @@ reporting. Created by passing an `lWorkflow` object to [MakeMetric()].
 Expected columns: `File`, `MetricID`, `Group`, `Abbreviation`, `Metric`,
 `Numerator`, `Denominator`, `Model`, `Score`, and `Threshold`. For more
 details see the Data Model vignette: `vignette("DataModel", package =
-"gsm")`.}
+"gsm.core")`.}
 
 \item{dfGroups}{`data.frame` Group-level metadata dictionary. Created by
 passing CTMS site and study data to [MakeLongMeta()]. Expected columns:
@@ -53,26 +53,26 @@ metrics.
 \examples{
 # site-level report
 Widget_GroupOverview(
-  dfResults = FilterByLatestSnapshotDate(gsm::reportingResults),
-  dfMetrics = gsm::reportingMetrics,
-  dfGroups = gsm::reportingGroups
+  dfResults = FilterByLatestSnapshotDate(gsm.core::reportingResults),
+  dfMetrics = gsm.core::reportingMetrics,
+  dfGroups = gsm.core::reportingGroups
 )
 
 # filter site-level report to all flags
 Widget_GroupOverview(
-  dfResults = FilterByLatestSnapshotDate(gsm::reportingResults),
-  dfMetrics = gsm::reportingMetrics,
-  dfGroups = gsm::reportingGroups,
+  dfResults = FilterByLatestSnapshotDate(gsm.core::reportingResults),
+  dfMetrics = gsm.core::reportingMetrics,
+  dfGroups = gsm.core::reportingGroups,
   strGroupSubset = "all"
 )
 
 # country-level report
-reportingMetrics <- gsm::reportingMetrics
+reportingMetrics <- gsm.core::reportingMetrics
 reportingMetrics$GroupLevel <- "Country"
 Widget_GroupOverview(
-  dfResults = FilterByLatestSnapshotDate(gsm::reportingResults),
-  dfMetrics = gsm::reportingMetrics,
-  dfGroups = gsm::reportingGroups,
+  dfResults = FilterByLatestSnapshotDate(gsm.core::reportingResults),
+  dfMetrics = gsm.core::reportingMetrics,
+  dfGroups = gsm.core::reportingGroups,
   strGroupLevel = "Country"
 )
 

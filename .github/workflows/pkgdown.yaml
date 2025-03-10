@@ -46,34 +46,34 @@ jobs:
           dir.create(here::here("pkgdown", "assets"), recursive = TRUE)
 
           lCharts <- MakeCharts(
-            dfResults = gsm::reportingResults,
-            dfGroups = gsm::reportingGroups,
-            dfMetrics = gsm::reportingMetrics,
-            dfBounds = gsm::reportingBounds
+            dfResults = gsm.core::reportingResults,
+            dfGroups = gsm.core::reportingGroups,
+            dfMetrics = gsm.core::reportingMetrics,
+            dfBounds = gsm.core::reportingBounds
           )
 
           Report_KRI(
             lCharts = lCharts,
-            dfResults =  FilterByLatestSnapshotDate(gsm::reportingResults),
-            dfGroups =  gsm::reportingGroups,
-            dfMetrics = gsm::reportingMetrics,
+            dfResults =  FilterByLatestSnapshotDate(gsm.core::reportingResults),
+            dfGroups =  gsm.core::reportingGroups,
+            dfMetrics = gsm.core::reportingMetrics,
             strOutputDir = here::here("pkgdown", "assets"),
             strOutputFile = "report_kri_site.html"
           )
 
           ## Country Report
             lCharts_country <- MakeCharts(
-            dfResults = gsm::reportingResults_country,
-            dfGroups = gsm::reportingGroups_country,
-            dfMetrics = gsm::reportingMetrics_country,
-            dfBounds = gsm::reportingBounds_country
+            dfResults = gsm.core::reportingResults_country,
+            dfGroups = gsm.core::reportingGroups_country,
+            dfMetrics = gsm.core::reportingMetrics_country,
+            dfBounds = gsm.core::reportingBounds_country
           )
 
           Report_KRI(
             lCharts = lCharts_country,
-            dfResults =  FilterByLatestSnapshotDate(gsm::reportingResults_country),
-            dfGroups =  gsm::reportingGroups_country,
-            dfMetrics = gsm::reportingMetrics_country,
+            dfResults =  FilterByLatestSnapshotDate(gsm.core::reportingResults_country),
+            dfGroups =  gsm.core::reportingGroups_country,
+            dfMetrics = gsm.core::reportingMetrics_country,
             strOutputDir = here::here("pkgdown", "assets"),
             strOutputFile = "report_kri_country.html"
           )

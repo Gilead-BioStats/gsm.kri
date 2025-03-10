@@ -9,7 +9,7 @@ reporting. Created by passing an `lWorkflow` object to [MakeMetric()].
 Expected columns: `File`, `MetricID`, `Group`, `Abbreviation`, `Metric`,
 `Numerator`, `Denominator`, `Model`, `Score`, and `Threshold`. For more
 details see the Data Model vignette: `vignette("DataModel", package =
-"gsm")`.}
+"gsm.core")`.}
 
 \item{dfResults}{`data.frame` A stacked summary of analysis pipeline output.
 Created by passing a list of results returned by [Summarize()] to
