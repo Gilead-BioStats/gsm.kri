@@ -65,7 +65,7 @@ FilterByFlags <- function(
     group_by(.data$GroupID, .data$MetricID) %>%
     mutate(
       flagsum = sum(abs(.data$Flag), na.rm = TRUE),
-      flaglatest = Flag[SnapshotDate == max(SnapshotDate)]
+      flaglatest = Flag[.data$SnapshotDate == max(.data$SnapshotDate)]
     ) %>%
     ungroup() %>%
     filter(
