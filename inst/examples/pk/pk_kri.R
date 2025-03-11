@@ -38,7 +38,7 @@ Widget_BarChart(
 
 # Example 2 - KRI with custom flagging based on 90% threshold
 
-pk_kri_alt <- gsm::RunWorkflows(
+pk_kri_alt <- gsm.core::RunWorkflows(
   lWorkflow = MakeWorkflowList(strName = "kri0013a.yaml"),
   lData = pk_data
 )

@@ -52,20 +52,20 @@ on the x-axis and the numerator on the y-axis.
 }
 \examples{
 ## Filter data to one metric and snapshot
-reportingResults_filter <- gsm::reportingResults \%>\%
+reportingResults_filter <- gsm.core::reportingResults \%>\%
   dplyr::filter(MetricID == "Analysis_kri0001" & SnapshotDate == max(SnapshotDate))
 
-reportingMetrics_filter <- gsm::reportingMetrics \%>\%
+reportingMetrics_filter <- gsm.core::reportingMetrics \%>\%
   dplyr::filter(MetricID == "Analysis_kri0001") \%>\%
   as.list()
 
-reportingBounds_filter <- gsm::reportingBounds \%>\%
+reportingBounds_filter <- gsm.core::reportingBounds \%>\%
   dplyr::filter(MetricID == "Analysis_kri0001" & SnapshotDate == max(SnapshotDate))
 
 Widget_ScatterPlot(
   dfResults = reportingResults_filter,
   lMetric = reportingMetrics_filter,
-  dfGroups = gsm::reportingGroups,
+  dfGroups = gsm.core::reportingGroups,
   dfBounds = reportingBounds_filter
 )
 

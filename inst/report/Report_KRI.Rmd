@@ -20,7 +20,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
 
 ```{r, results='asis', echo=FALSE, message=FALSE, warning=FALSE}
-library(gsm)
+library(gsm.core)
 library(gt)
 
 setup <- Report_Setup(

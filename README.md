@@ -35,7 +35,7 @@ This is a basic example showing how to create interactive widget visualizations 
 
 ``` r
 library(gsm.kri)
-library(gsm)
+library(gsm.core)
 
 #### Visualize SAE Metric distribution using Bar Charts using provided htmlwidgets
 labels <- list(  
@@ -53,7 +53,7 @@ Widget_BarChart(dfResults = SAE_KRI, lMetric=labels, strOutcome="Score")
 Widget_BarChart(dfResults = SAE_KRI, lMetric=labels, strOutcome="Numerator")
 
 ### Create SAE Scatter plot with confidence bounds
-dfBounds <- gsm::reportingBounds %>%
+dfBounds <- gsm.core::reportingBounds %>%
               dplyr::filter(MetricID == "Analysis_kri0002" & SnapshotDate == "2012-12-31")
 Widget_ScatterPlot(SAE_KRI, lMetric = labels, dfBounds = dfBounds)
 
@@ -62,18 +62,18 @@ Widget_ScatterPlot(SAE_KRI, lMetric = labels, dfBounds = dfBounds)
 # First, create a list of charts using data output from `{gsm.reporting}` 
 # For this example, we are using sample reporting data from `{gsm}`
 lCharts <- MakeCharts(
-  dfResults = gsm::reportingResults,
-  dfGroups = gsm::reportingGroups,
-  dfMetrics = gsm::reportingMetrics,
-  dfBounds = gsm::reportingBounds
+  dfResults = gsm.core::reportingResults,
+  dfGroups = gsm.core::reportingGroups,
+  dfMetrics = gsm.core::reportingMetrics,
+  dfBounds = gsm.core::reportingBounds
 )
 
 # Feed charts and reporting data into `Report_KRI()` to create the html report.
 kri_report_path <- Report_KRI(
   lCharts = lCharts,
-  dfResults =  FilterByLatestSnapshotDate(gsm::reportingResults),
-  dfGroups =  gsm::reportingGroups,
-  dfMetrics = gsm::reportingMetrics
+  dfResults =  FilterByLatestSnapshotDate(gsm.core::reportingResults),
+  dfGroups =  gsm.core::reportingGroups,
+  dfMetrics = gsm.core::reportingMetrics
 )
 ```
 Full reports for a sample trial run with [`{clindata}`](https://github.com/Gilead-BioStats/clindata) are provided below:

@@ -28,7 +28,7 @@ reporting. Created by passing an `lWorkflow` object to [MakeMetric()].
 Expected columns: `File`, `MetricID`, `Group`, `Abbreviation`, `Metric`,
 `Numerator`, `Denominator`, `Model`, `Score`, and `Threshold`. For more
 details see the Data Model vignette: `vignette("DataModel", package =
-"gsm")`.}
+"gsm.core")`.}
 
 \item{bDebug}{`logical` Print debug messages? Default: `FALSE`.}
 }

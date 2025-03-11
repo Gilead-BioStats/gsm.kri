@@ -12,20 +12,20 @@
 #'
 #' @examples
 #' ## Filter data to one metric and snapshot
-#' reportingResults_filter <- gsm::reportingResults %>%
+#' reportingResults_filter <- gsm.core::reportingResults %>%
 #'   dplyr::filter(MetricID == "Analysis_kri0001" & SnapshotDate == max(SnapshotDate))
 #'
-#' reportingMetrics_filter <- gsm::reportingMetrics %>%
+#' reportingMetrics_filter <- gsm.core::reportingMetrics %>%
 #'   dplyr::filter(MetricID == "Analysis_kri0001") %>%
 #'   as.list()
 #'
-#' reportingBounds_filter <- gsm::reportingBounds %>%
+#' reportingBounds_filter <- gsm.core::reportingBounds %>%
 #'   dplyr::filter(MetricID == "Analysis_kri0001" & SnapshotDate == max(SnapshotDate))
 #'
 #' Widget_ScatterPlot(
 #'   dfResults = reportingResults_filter,
 #'   lMetric = reportingMetrics_filter,
-#'   dfGroups = gsm::reportingGroups,
+#'   dfGroups = gsm.core::reportingGroups,
 #'   dfBounds = reportingBounds_filter
 #' )
 #'
@@ -40,13 +40,13 @@ Widget_ScatterPlot <- function(
   strShinyGroupSelectID = "GroupID",
   bDebug = FALSE
 ) {
-  gsm::stop_if(cnd = !is.data.frame(dfResults), "dfResults is not a data.frame")
-  gsm::stop_if(cnd = !(is.null(lMetric) || (is.list(lMetric) && !is.data.frame(lMetric))), "lMetric must be a list, but not a data.frame")
-  gsm::stop_if(cnd = !(is.null(dfGroups) || is.data.frame(dfGroups)), "dfGroups is not a data.frame")
-  gsm::stop_if(cnd = !(is.null(dfBounds) || is.data.frame(dfBounds)), "dfBounds is not a data.frame")
-  gsm::stop_if(cnd = !is.logical(bAddGroupSelect), "bAddGroupSelect is not a logical")
-  gsm::stop_if(cnd = !is.character(strShinyGroupSelectID), "strShinyGroupSelectID is not a character")
-  gsm::stop_if(cnd = !is.logical(bDebug), "bDebug is not a logical")
+  gsm.core::stop_if(cnd = !is.data.frame(dfResults), "dfResults is not a data.frame")
+  gsm.core::stop_if(cnd = !(is.null(lMetric) || (is.list(lMetric) && !is.data.frame(lMetric))), "lMetric must be a list, but not a data.frame")
+  gsm.core::stop_if(cnd = !(is.null(dfGroups) || is.data.frame(dfGroups)), "dfGroups is not a data.frame")
+  gsm.core::stop_if(cnd = !(is.null(dfBounds) || is.data.frame(dfBounds)), "dfBounds is not a data.frame")
+  gsm.core::stop_if(cnd = !is.logical(bAddGroupSelect), "bAddGroupSelect is not a logical")
+  gsm.core::stop_if(cnd = !is.character(strShinyGroupSelectID), "strShinyGroupSelectID is not a character")
+  gsm.core::stop_if(cnd = !is.logical(bDebug), "bDebug is not a logical")
 
   # define widget inputs
   input <- list(

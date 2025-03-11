@@ -1,7 +1,7 @@
 test_that("[ FilterByFlags ] returns group/metric combinations with a flag at any snapshot.", {
-  dfResultsFlaggedActual <- FilterByFlags(gsm::reportingResults)
+  dfResultsFlaggedActual <- FilterByFlags(gsm.core::reportingResults)
 
-  strRiskSignals <- gsm::reportingResults %>%
+  strRiskSignals <- gsm.core::reportingResults %>%
     filter(
       .data$Flag != 0
     ) %>%
@@ -15,7 +15,7 @@ test_that("[ FilterByFlags ] returns group/metric combinations with a flag at an
       riskSignalID
     )
 
-  dfResultsFlaggedExpected <- gsm::reportingResults %>%
+  dfResultsFlaggedExpected <- gsm.core::reportingResults %>%
     filter(
       paste(.data$GroupID, .data$MetricID, sep = "_") %in% strRiskSignals
     ) %>%
@@ -28,9 +28,9 @@ test_that("[ FilterByFlags ] returns group/metric combinations with a flag at an
 })
 
 test_that("[ FilterByFlags ] returns group/metric combinations with a flag at most recent snapshot.", {
-  dfResultsFlaggedActual <- FilterByFlags(gsm::reportingResults, bCurrentlyFlagged = TRUE)
+  dfResultsFlaggedActual <- FilterByFlags(gsm.core::reportingResults, bCurrentlyFlagged = TRUE)
 
-  strRiskSignals <- gsm::reportingResults %>%
+  strRiskSignals <- gsm.core::reportingResults %>%
     FilterByLatestSnapshotDate() %>%
     filter(
       .data$Flag != 0
@@ -45,7 +45,7 @@ test_that("[ FilterByFlags ] returns group/metric combinations with a flag at mo
       riskSignalID
     )
 
-  dfResultsFlaggedExpected <- gsm::reportingResults %>%
+  dfResultsFlaggedExpected <- gsm.core::reportingResults %>%
     filter(
       paste(.data$GroupID, .data$MetricID, sep = "_") %in% strRiskSignals
     ) %>%

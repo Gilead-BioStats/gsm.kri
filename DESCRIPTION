@@ -17,11 +17,10 @@ RoxygenNote: 7.3.2
 Depends:
     R (>= 4.0)
 Imports: 
-    cli,
     dplyr,
     ggplot2,
     glue,
-    gsm,
+    gsm.core,
     gt,
     htmltools,
     htmlwidgets,
@@ -42,6 +41,6 @@ Suggests:
     fontawesome,
     withr
 Remotes:
-    gsm=Gilead-BioStats/gsm@dev
+    gsm.core=Gilead-BioStats/gsm.core@dev
 Config/Needs/qualification: Gilead-BioStats/gsm.qc@dev
 Config/testthat/edition: 3

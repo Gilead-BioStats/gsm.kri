@@ -1,7 +1,7 @@
 # Output is expected object
 
     Code
-      MakeMetricTable(reportingResults_filt, gsm::reportingGroups)
+      MakeMetricTable(reportingResults_filt, gsm.core::reportingGroups)
     Output
                StudyID GroupID         MetricID          Group SnapshotDate Enrolled
       1 AA-AA-000-0000   0X052 Analysis_kri0001 0X052 (Agenar)   2012-12-31        3

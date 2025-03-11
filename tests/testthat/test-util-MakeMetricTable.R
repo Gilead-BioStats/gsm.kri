@@ -1,6 +1,6 @@
 test_that("Empty dfs return empty dfs", {
-  dfResults_empty <- head(gsm::reportingResults, 0)
-  dfGroups_empty <- head(gsm::reportingGroups, 0)
+  dfResults_empty <- head(gsm.core::reportingResults, 0)
+  dfGroups_empty <- head(gsm.core::reportingGroups, 0)
   expect_equal(
     MakeMetricTable(dfResults_empty, dfGroups_empty),
     data.frame(
@@ -14,9 +14,9 @@ test_that("Empty dfs return empty dfs", {
 })
 
 test_that("Correct data structure when proper dataframe is passed", {
-  reportingResults_filt <- gsm::reportingResults %>%
-    dplyr::filter(MetricID == unique(gsm::reportingResults$MetricID)[[1]])
-  result <- MakeMetricTable(reportingResults_filt, gsm::reportingGroups)
+  reportingResults_filt <- gsm.core::reportingResults %>%
+    dplyr::filter(MetricID == unique(gsm.core::reportingResults$MetricID)[[1]])
+  result <- MakeMetricTable(reportingResults_filt, gsm.core::reportingGroups)
   expect_s3_class(result, "data.frame")
   expect_setequal(
     colnames(result),
@@ -30,12 +30,12 @@ test_that("Correct data structure when proper dataframe is passed", {
 test_that("Flag filtering works correctly", {
   # Verify that our test user is still in sample data.
   expect_gt(
-    length(grep("Nkaujiaong", gsm::reportingGroups$Value)),
+    length(grep("Nkaujiaong", gsm.core::reportingGroups$Value)),
     0
   )
-  reportingResults_filt <- gsm::reportingResults %>%
-    dplyr::filter(MetricID == unique(gsm::reportingResults$MetricID)[[1]])
-  result <- MakeMetricTable(reportingResults_filt, gsm::reportingGroups)
+  reportingResults_filt <- gsm.core::reportingResults %>%
+    dplyr::filter(MetricID == unique(gsm.core::reportingResults$MetricID)[[1]])
+  result <- MakeMetricTable(reportingResults_filt, gsm.core::reportingGroups)
   expect_s3_class(result, "data.frame")
   expect_length(
     grep("Nkaujiaong", result$Group),
@@ -44,22 +44,22 @@ test_that("Flag filtering works correctly", {
 })
 
 test_that("Score rounding works correctly", {
-  reportingResults_filt <- gsm::reportingResults %>%
-    dplyr::filter(MetricID == unique(gsm::reportingResults$MetricID)[[1]])
-  result <- MakeMetricTable(reportingResults_filt, gsm::reportingGroups)
+  reportingResults_filt <- gsm.core::reportingResults %>%
+    dplyr::filter(MetricID == unique(gsm.core::reportingResults$MetricID)[[1]])
+  result <- MakeMetricTable(reportingResults_filt, gsm.core::reportingGroups)
   expect_true(any(grepl("^\\d+\\.\\d{2}$", as.character(result$Score))))
 })
 
 test_that("Errors informatively when multiple MetricIDs passed in", {
   expect_error(
-    MakeMetricTable(gsm::reportingResults, gsm::reportingGroups)
+    MakeMetricTable(gsm.core::reportingResults, gsm.core::reportingGroups)
   )
 })
 
 test_that("Enrolled is an integer", {
-  reportingResults_filt <- gsm::reportingResults %>%
-    dplyr::filter(MetricID == unique(gsm::reportingResults$MetricID)[[1]])
-  result <- MakeMetricTable(reportingResults_filt, gsm::reportingGroups)
+  reportingResults_filt <- gsm.core::reportingResults %>%
+    dplyr::filter(MetricID == unique(gsm.core::reportingResults$MetricID)[[1]])
+  result <- MakeMetricTable(reportingResults_filt, gsm.core::reportingGroups)
   expect_type(result$Enrolled, "integer")
 })
 
@@ -67,10 +67,10 @@ test_that("Output is expected object", {
   zero_flags <- c("0X085", "0X086")
   flags <- c("0X052", "0X027", "0X166")
 
-  reportingResults_filt <- gsm::reportingResults %>%
+  reportingResults_filt <- gsm.core::reportingResults %>%
     FilterByLatestSnapshotDate() %>%
     dplyr::filter(
-      MetricID == unique(gsm::reportingResults$MetricID)[[1]],
+      MetricID == unique(gsm.core::reportingResults$MetricID)[[1]],
       GroupID %in% c(zero_flags, flags)
     ) %>%
     # Add an NA row back for representation.
@@ -89,6 +89,6 @@ test_that("Output is expected object", {
       )
     )
   expect_snapshot({
-    MakeMetricTable(reportingResults_filt, gsm::reportingGroups)
+    MakeMetricTable(reportingResults_filt, gsm.core::reportingGroups)
   })
 })

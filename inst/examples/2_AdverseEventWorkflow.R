@@ -1,4 +1,4 @@
-library(gsm)
+library(gsm.core)
 library(gsm.mapping)
 library(yaml)
 devtools::load_all()
@@ -78,8 +78,8 @@ steps:
 ')
 
 # Grab simulated data
-dm <- gsm::lSource$Raw_SUBJ
-ae <- gsm::lSource$Raw_AE
+dm <- gsm.core::lSource$Raw_SUBJ
+ae <- gsm.core::lSource$Raw_AE
 
 # Run the workflow
 AE_data <-list(

@@ -6,14 +6,14 @@ test_that("It handles different lSetup group values correctly", {
   )
 
   expect_output(
-    Report_OverviewText(lSetup, gsm::reportingResults, lStudy),
+    Report_OverviewText(lSetup, gsm.core::reportingResults, lStudy),
     "sites"
   )
 
   lSetup$GroupLevel <- "Country"
   lStudy$CountryCount <- "3"
   expect_output(
-    Report_OverviewText(lSetup, gsm::reportingResults, lStudy),
+    Report_OverviewText(lSetup, gsm.core::reportingResults, lStudy),
     "countries"
   )
 })
@@ -26,9 +26,9 @@ test_that("Data filtering checks", {
   )
   lStudy <- list(ParticipantCount = "1301", SiteCount = "176")
 
-  expect_output(Report_OverviewText(lSetup, gsm::reportingResults, lStudy), "sites have at least one red KRI")
-  expect_output(Report_OverviewText(lSetup, gsm::reportingResults, lStudy), "sites have at least one red or amber KRI")
-  expect_output(Report_OverviewText(lSetup, gsm::reportingResults, lStudy), "sites have neither red nor amber KRIs")
+  expect_output(Report_OverviewText(lSetup, gsm.core::reportingResults, lStudy), "sites have at least one red KRI")
+  expect_output(Report_OverviewText(lSetup, gsm.core::reportingResults, lStudy), "sites have at least one red or amber KRI")
+  expect_output(Report_OverviewText(lSetup, gsm.core::reportingResults, lStudy), "sites have neither red nor amber KRIs")
 })
 
 test_that("Handles empty dataframe cases", {

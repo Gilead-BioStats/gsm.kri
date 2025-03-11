@@ -17,35 +17,35 @@
 #' \dontrun{
 #' # Run site-level KRI report.
 #' lChartsSite <- MakeCharts(
-#'   dfResults = gsm::reportingResults,
-#'   dfGroups = gsm::reportingGroups,
-#'   dfMetrics = gsm::reportingMetrics,
-#'   dfBounds = gsm::reportingBounds
+#'   dfResults = gsm.core::reportingResults,
+#'   dfGroups = gsm.core::reportingGroups,
+#'   dfMetrics = gsm.core::reportingMetrics,
+#'   dfBounds = gsm.core::reportingBounds
 #' )
 #'
 #' strOutputFile <- "StandardSiteReport.html"
 #' kri_report_path <- Report_KRI(
 #'   lCharts = lChartsSite,
-#'   dfResults = gsm::reportingResults,
-#'   dfGroups = gsm::reportingGroups,
-#'   dfMetrics = gsm::reportingMetrics,
+#'   dfResults = gsm.core::reportingResults,
+#'   dfGroups = gsm.core::reportingGroups,
+#'   dfMetrics = gsm.core::reportingMetrics,
 #'   strOutputFile = strOutputFile
 #' )
 #'
 #' # Run country-level KRI report.
 #' lChartsCountry <- MakeCharts(
-#'   dfResults = gsm::reportingResults_country,
-#'   dfGroups = gsm::reportingGroups_country,
-#'   dfMetrics = gsm::reportingMetrics_country,
-#'   dfBounds = gsm::reportingBounds_country
+#'   dfResults = gsm.core::reportingResults_country,
+#'   dfGroups = gsm.core::reportingGroups_country,
+#'   dfMetrics = gsm.core::reportingMetrics_country,
+#'   dfBounds = gsm.core::reportingBounds_country
 #' )
 #'
 #' strOutputFile <- "StandardCountryReport.html"
 #' kri_report_path <- Report_KRI(
 #'   lCharts = lChartsCountry,
-#'   dfResults = gsm::reportingResults_country,
-#'   dfGroups = gsm::reportingGroups_country,
-#'   dfMetrics = gsm::reportingMetrics_country,
+#'   dfResults = gsm.core::reportingResults_country,
+#'   dfGroups = gsm.core::reportingGroups_country,
+#'   dfMetrics = gsm.core::reportingMetrics_country,
 #'   strOutputFile = strOutputFile
 #' )
 #' }
