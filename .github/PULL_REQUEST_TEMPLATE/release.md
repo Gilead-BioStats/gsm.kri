@@ -8,7 +8,7 @@
 ## Milestone
 <!--- Link to the milestone for the release. ---> 
 <!--- Make sure all relevant issues/PRs are included on the linked pages. --->
-Milestone: [v1.0.0](https://github.com/Gilead-BioStats/gsm/milestone/1)
+Milestone: [v1.0.0](https://github.com/Gilead-BioStats/gsm.kri/milestone/1)
 
 # Overall Risk Assessment 
 <!--- Complete the following Risk Assessment for this Release-->
