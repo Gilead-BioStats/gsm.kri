@@ -36,7 +36,7 @@ test_that("Generated table has correct structure and content", {
 })
 
 test_that("Works with dfGroups", {
-  output <- Report_StudyInfo(gsm::reportingGroups, NULL)
+  output <- Report_StudyInfo(gsm.core::reportingGroups, NULL)
   expect_s3_class(output, "shiny.tag.list")
   expect_true(any(grepl("Study Status", output)))
   expect_true(any(grepl("Show Details", output)))
@@ -47,7 +47,7 @@ test_that("Uses custom study labels when lStudyLabels is provided w/ dfGroups", 
   lStudyLabels <- list(
     protocol_title = "Custom Protocol Title"
   )
-  output <- Report_StudyInfo(gsm::reportingGroups, lStudyLabels)
+  output <- Report_StudyInfo(gsm.core::reportingGroups, lStudyLabels)
   expect_s3_class(output, "shiny.tag.list")
   expect_true(any(grepl("Study Status", output)))
   expect_true(any(grepl("Show Details", output)))
@@ -55,7 +55,7 @@ test_that("Uses custom study labels when lStudyLabels is provided w/ dfGroups", 
 })
 
 test_that("Generated table has correct structure and content w/dfGroups", {
-  output <- Report_StudyInfo(gsm::reportingGroups, NULL)
+  output <- Report_StudyInfo(gsm.core::reportingGroups, NULL)
   expect_s3_class(output, "shiny.tag.list")
   expect_true(any(grepl("study_table", output)))
   expect_true(any(grepl("study_table_hide", output)))

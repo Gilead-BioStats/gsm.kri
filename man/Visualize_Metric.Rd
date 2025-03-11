@@ -36,7 +36,7 @@ reporting. Created by passing an `lWorkflow` object to [MakeMetric()].
 Expected columns: `File`, `MetricID`, `Group`, `Abbreviation`, `Metric`,
 `Numerator`, `Denominator`, `Model`, `Score`, and `Threshold`. For more
 details see the Data Model vignette: `vignette("DataModel", package =
-"gsm")`.}
+"gsm.core")`.}
 
 \item{strMetricID}{`character` MetricID to subset the data.}
 
@@ -58,10 +58,10 @@ The function creates all available charts for a metric using the data provided
 }
 \examples{
 lCharts <- Visualize_Metric(
-  dfResults = gsm::reportingResults,
-  dfBounds = gsm::reportingBounds,
-  dfGroups = gsm::reportingGroups,
-  dfMetrics = gsm::reportingMetrics,
+  dfResults = gsm.core::reportingResults,
+  dfBounds = gsm.core::reportingBounds,
+  dfGroups = gsm.core::reportingGroups,
+  dfMetrics = gsm.core::reportingMetrics,
   strMetricID = "Analysis_kri0001"
 )
 

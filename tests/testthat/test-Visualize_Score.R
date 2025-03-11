@@ -1,10 +1,10 @@
 test_that("Visualize_Score stops on incorrect input types", {
   expect_error(
-    Visualize_Score(gsm::reportingResults, strTitle = 123),
+    Visualize_Score(gsm.core::reportingResults, strTitle = 123),
     "strTitle must be character"
   )
   expect_error(
-    Visualize_Score(gsm::reportingResults, bFlagFilter = "TRUE"),
+    Visualize_Score(gsm.core::reportingResults, bFlagFilter = "TRUE"),
     "bFlagFilter must be logical"
   )
   expect_error(
@@ -12,11 +12,11 @@ test_that("Visualize_Score stops on incorrect input types", {
     "dfResults must be a data.frame"
   )
   expect_error(
-    Visualize_Score(gsm::reportingResults, strType = "invalid"),
+    Visualize_Score(gsm.core::reportingResults, strType = "invalid"),
     "strType must be 'Metric' or 'Score'"
   )
   expect_error(
-    Visualize_Score(gsm::reportingResults, strType = c("Metric", "Score")),
+    Visualize_Score(gsm.core::reportingResults, strType = c("Metric", "Score")),
     "strType must be length 1"
   )
 })

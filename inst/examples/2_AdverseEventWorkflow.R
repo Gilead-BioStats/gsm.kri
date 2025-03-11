@@ -1,7 +1,11 @@
+library(gsm.core)
+library(gsm.mapping)
+library(yaml)
+devtools::load_all()
 #### Example 2.1 - Configurable Adverse Event Workflow
 
 # Define YAML workflow
-AE_workflow <- read_yaml(text=
+AE_workflow <- yaml::read_yaml(text=
 'meta:
   Type: Analysis
   ID: kri0001
@@ -73,10 +77,14 @@ steps:
       Analysis_Summary: Analysis_Summary
 ')
 
+# Grab simulated data
+dm <- gsm.core::lSource$Raw_SUBJ
+ae <- gsm.core::lSource$Raw_AE
+
 # Run the workflow
 AE_data <-list(
-  Mapped_SUBJ= clindata::rawplus_dm,
-  Mapped_AE= clindata::rawplus_ae
+  Mapped_SUBJ= dm,
+  Mapped_AE= ae
 )
 AE_KRI <- RunWorkflow(lWorkflow = AE_workflow, lData = AE_data)
 

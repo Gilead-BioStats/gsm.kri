@@ -14,10 +14,10 @@
 #' @examples
 #'
 #' ## Filter sample data to only one metric
-#' reportingResults_filter <- gsm::reportingResults %>%
+#' reportingResults_filter <- gsm.core::reportingResults %>%
 #'   dplyr::filter(MetricID == "Analysis_kri0001")
 #'
-#' reportingBounds_filter <- gsm::reportingBounds %>%
+#' reportingBounds_filter <- gsm.core::reportingBounds %>%
 #'   dplyr::filter(MetricID == "Analysis_kri0001")
 #'
 #' ## Output- filtered to one snapshot date

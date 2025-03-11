@@ -25,7 +25,7 @@ reporting. Created by passing an `lWorkflow` object to [MakeMetric()].
 Expected columns: `File`, `MetricID`, `Group`, `Abbreviation`, `Metric`,
 `Numerator`, `Denominator`, `Model`, `Score`, and `Threshold`. For more
 details see the Data Model vignette: `vignette("DataModel", package =
-"gsm")`.}
+"gsm.core")`.}
 
 \item{strGroupLevel}{`character` Value for the group level. Default: "Site".}
 
@@ -45,25 +45,25 @@ A widget that generates a table of flags over time using
 \examples{
 # Include all risk signals, irrespective flag value.
 Widget_FlagOverTime(
-  dfResults = gsm::reportingResults,
-  dfMetrics = gsm::reportingMetrics
+  dfResults = gsm.core::reportingResults,
+  dfMetrics = gsm.core::reportingMetrics
 )
 
 # Include risk signals that were ever flagged.
 Widget_FlagOverTime(
   dfResults = FilterByFlags(
-    gsm::reportingResults
+    gsm.core::reportingResults
   ),
-  dfMetrics = gsm::reportingMetrics
+  dfMetrics = gsm.core::reportingMetrics
 )
 
 # Include risk signals that were only flagged in the most recent snapshot.
 Widget_FlagOverTime(
   dfResults = FilterByFlags(
-    gsm::reportingResults,
+    gsm.core::reportingResults,
     bCurrentlyFlagged = TRUE
   ),
-  dfMetrics = gsm::reportingMetrics,
+  dfMetrics = gsm.core::reportingMetrics,
   bExcludeEver = TRUE
 )
 

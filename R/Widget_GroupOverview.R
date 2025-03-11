@@ -18,26 +18,26 @@
 #' @examples
 #' # site-level report
 #' Widget_GroupOverview(
-#'   dfResults = FilterByLatestSnapshotDate(gsm::reportingResults),
-#'   dfMetrics = gsm::reportingMetrics,
-#'   dfGroups = gsm::reportingGroups
+#'   dfResults = FilterByLatestSnapshotDate(gsm.core::reportingResults),
+#'   dfMetrics = gsm.core::reportingMetrics,
+#'   dfGroups = gsm.core::reportingGroups
 #' )
 #'
 #' # filter site-level report to all flags
 #' Widget_GroupOverview(
-#'   dfResults = FilterByLatestSnapshotDate(gsm::reportingResults),
-#'   dfMetrics = gsm::reportingMetrics,
-#'   dfGroups = gsm::reportingGroups,
+#'   dfResults = FilterByLatestSnapshotDate(gsm.core::reportingResults),
+#'   dfMetrics = gsm.core::reportingMetrics,
+#'   dfGroups = gsm.core::reportingGroups,
 #'   strGroupSubset = "all"
 #' )
 #'
 #' # country-level report
-#' reportingMetrics <- gsm::reportingMetrics
+#' reportingMetrics <- gsm.core::reportingMetrics
 #' reportingMetrics$GroupLevel <- "Country"
 #' Widget_GroupOverview(
-#'   dfResults = FilterByLatestSnapshotDate(gsm::reportingResults),
-#'   dfMetrics = gsm::reportingMetrics,
-#'   dfGroups = gsm::reportingGroups,
+#'   dfResults = FilterByLatestSnapshotDate(gsm.core::reportingResults),
+#'   dfMetrics = gsm.core::reportingMetrics,
+#'   dfGroups = gsm.core::reportingGroups,
 #'   strGroupLevel = "Country"
 #' )
 #'
@@ -52,19 +52,19 @@ Widget_GroupOverview <- function(
   strGroupLabelKey = "InvestigatorLastName",
   bDebug = FALSE
 ) {
-  gsm::stop_if(cnd = !is.data.frame(dfResults), "dfResults is not a data.frame")
-  gsm::stop_if(cnd = !is.data.frame(dfMetrics), "dfMetrics is not a data.frame")
-  gsm::stop_if(cnd = !is.data.frame(dfGroups), "dfGroups is not a data.frame")
-  gsm::stop_if(cnd = !is.character(strGroupSubset), "strGroupSubset is not a character")
-  gsm::stop_if(cnd = !is.character(strGroupLabelKey) && !is.null(strGroupLabelKey), "strGroupLabelKey is not a character or NULL")
-  gsm::stop_if(cnd = !is.logical(bDebug), "bDebug is not a logical")
+  gsm.core::stop_if(cnd = !is.data.frame(dfResults), "dfResults is not a data.frame")
+  gsm.core::stop_if(cnd = !is.data.frame(dfMetrics), "dfMetrics is not a data.frame")
+  gsm.core::stop_if(cnd = !is.data.frame(dfGroups), "dfGroups is not a data.frame")
+  gsm.core::stop_if(cnd = !is.character(strGroupSubset), "strGroupSubset is not a character")
+  gsm.core::stop_if(cnd = !is.character(strGroupLabelKey) && !is.null(strGroupLabelKey), "strGroupLabelKey is not a character or NULL")
+  gsm.core::stop_if(cnd = !is.logical(bDebug), "bDebug is not a logical")
 
   # set strGroupLevel if NULL and dfMetrics is not NULL
   if (is.null(strGroupLevel) && !is.null(dfMetrics)) {
     strGroupLevel <- unique(dfMetrics$GroupLevel)
   }
 
-  gsm::stop_if(
+  gsm.core::stop_if(
     cnd = (is.null(strGroupLevel) || length(strGroupLevel) != 1),
     message = "A single group level must be provided to create group-level output."
   )
@@ -93,7 +93,7 @@ Widget_GroupOverview <- function(
       )
     ),
     width = "100%",
-    package = "gsm"
+    package = "gsm.kri"
   )
 
   if (bDebug) {
@@ -127,7 +127,7 @@ Widget_GroupOverview <- function(
 #'
 #' @export
 Widget_GroupOverviewOutput <- function(outputId, width = "100%", height = "400px") {
-  htmlwidgets::shinyWidgetOutput(outputId, "Widget_GroupOverview", width, height, package = "gsm")
+  htmlwidgets::shinyWidgetOutput(outputId, "Widget_GroupOverview", width, height, package = "gsm.kri")
 }
 
 #' @rdname Widget_GroupOverview-shiny

@@ -1,10 +1,10 @@
 Package: gsm.kri
 Type: Package
 Title: Good Statistical Monitoring KRIs
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: c(
     person("Jeremy", "Wildfire", email = "jwildfire@gmail.com", role = c("aut", "cre")),
-    person("Laura", "Maxwell", email = "laura.maxwell@atorusresearch.com", role = c("aut"))
+    person("Laura", "Maxwell", email = "lkmaxwell23@gmail.com", role = c("aut"))
   )
 Description: More about what it does (maybe more than one line).
     Continuation lines should be indented.
@@ -17,11 +17,10 @@ RoxygenNote: 7.3.2
 Depends:
     R (>= 4.0)
 Imports: 
-    cli,
     dplyr,
     ggplot2,
     glue,
-    gsm,
+    gsm.core,
     gt,
     htmltools,
     htmlwidgets,
@@ -37,13 +36,12 @@ Imports:
     tidyr
 Suggests: 
     testthat (>= 3.0.0),
-    clindata,
     knitr,
     lubridate,
     fontawesome,
     withr
 Remotes:
-    gsm=Gilead-BioStats/gsm@gsm-core-test,
-    clindata=Gilead-BioStats/clindata
+    gsm.core=Gilead-BioStats/gsm.core@dev
+Config/Needs/qualification: Gilead-BioStats/gsm.qc@dev
 Config/testthat/edition: 3
 VignetteBuilder: knitr
