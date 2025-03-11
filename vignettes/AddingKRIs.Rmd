@@ -60,13 +60,13 @@ steps:
       rhs: Raw_PD
 ```
 
-It is possible that some of the domains that are needed for a given KRI may already be mapped in `{gsm.mapping}`. In this case, check the existing spec for that domain for all relevant fields, and if any are missing, create an issue to `Edit Existing Domain`, and fill in all fields. Once the edits have been made following the [Contributor Guidelines](), submit a Pull Request to merge in the edits required for adding this new KRI.
+It is possible that some of the domains that are needed for a given KRI may already be mapped in `{gsm.mapping}`. In this case, check the existing spec for that domain for all relevant fields, and if any are missing, create an issue to `Request New Domain or Variable`, and fill in all fields. Once the edits have been made following the [Contributor Guidelines](https://gilead-biostats.github.io/gsm.core/articles/ContributorGuidelines.html), submit a Pull Request to merge in the edits required for adding this new KRI.
 
 Add support for new tables in `gsm.datasim` for use in the gismo test environment.
   
 ### Creating a KRI Workflow
 
-To implement a new Key Risk Indicator (KRI) within the system, we must establish workflows and update several existing analytical functions to align with the new requirements. This process ensures that the new KRI is accurately integrated into our analytics framework and reporting structure. A more in depth discussion of the Analytics pipeline is outlined in this [vignette](link to step-by-step analytics vignette in gsm.core)
+To implement a new Key Risk Indicator (KRI) within the system, we must establish workflows and update several existing analytical functions to align with the new requirements. This process ensures that the new KRI is accurately integrated into our analytics framework and reporting structure. A more in depth discussion of the Analytics pipeline is outlined in this [vignette](https://gilead-biostats.github.io/gsm.core/articles/DataAnalysis.html)
 
 #### Creating and Customizing YAML Workflow Files
 The first step is to create or modify YAML workflow files that define the new KRI. These files include:
@@ -103,8 +103,8 @@ Once the new Key Risk Indicator (KRI) has been integrated into the analytics fra
 - **Add the Metric to {gsm.app}:** If the metric follows standard KRI functionality, integrate it into the existing application as a standard KRI. This ensures that it is accessible and consistent with other KRIs.
 - **Develop a New Module (If Required):** If the metric requires specialized functionality beyond the existing KRI framework, create a new module within {gsm.app} to support its unique requirements. This may involve custom visualizations, interactions, or calculations specific to the new metric.
   
-#### Generate Risk signals for `{grail}`
-In order to incorporate this metric into the ticketing system used by the risk advisers to address flagged sites or participaants, `{grail}` must be updated to add default actions for risk signals produced by this metric. 
+#### Generate Risk signals for ADO
+In order to incorporate this metric into the ticketing system used by the risk advisers to address flagged sites or participants, `{grail}` must be updated to add default actions for risk signals produced by this metric. 
 
 #### Update Study scripts to add the metrics
 To ensure that the new Key Risk Indicator (KRI) is correctly integrated into ongoing studies, we must update existing study scripts. These scripts are responsible for processing study-level data, generating risk signals, and ensuring that the new metric is included in all relevant analyses.
