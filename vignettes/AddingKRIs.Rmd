@@ -73,7 +73,7 @@ The first step is to create or modify YAML workflow files that define the new KR
 
 - **Metric Metadata:** Define key details such as the metric’s description, numerator, denominator, and other relevant specifications. Each KRI must have a unique identifier that follows the existing naming convention (e.g., `kri0013` for `{gsm.kri}` or `kri0002ep` for `{gsm.endpoints}`).
 - **Metric Data Specification:** Ensure the data specifications align with updates made to the data model. This step guarantees consistency in data interpretation and calculation.
-- **Metric Workflow Definition:** Specify the functions and parameters required to calculate the metric. This typically follows the standard GSM analysis workflow, ensuring consistency with existing metrics.
+- **Metric Workflow Definition:** Specify the functions and parameters required to calculate the metric. This typically follows the standard `{gsm.core}` [analysis workflow](https://gilead-biostats.github.io/gsm.core/articles/DataAnalysis.html), ensuring consistency with existing metrics.
 
 #### Creating Country-Level Workflows (If Applicable)
 If country-level metrics are needed, parallel workflows must be created within the `{gsm.kri}` package. These workflows allow for localized risk assessment and reporting, providing granularity in data analysis.
