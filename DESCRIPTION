@@ -45,3 +45,4 @@ Remotes:
     gsm.core=Gilead-BioStats/gsm.core@dev
 Config/Needs/qualification: Gilead-BioStats/gsm.qc@dev
 Config/testthat/edition: 3
+VignetteBuilder: knitr

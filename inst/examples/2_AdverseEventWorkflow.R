@@ -91,6 +91,21 @@ AE_KRI <- RunWorkflow(lWorkflow = AE_workflow, lData = AE_data)
 # Create Barchart from workflow
 Widget_BarChart(dfResults = AE_KRI$Analysis_Summary)
 
+# Visualize Metric distribution using Bar Charts and Scatterplots using provided htmlwidgets
+labels <- list(
+  Metric= "Adverse Event Rate",
+  Numerator= "Adverse Events",
+  Denominator= "Days on Study"
+)
+
+Widget_BarChart(dfResults = AE_KRI, lMetric=labels, strOutcome="Metric")
+Widget_BarChart(dfResults = AE_KRI, lMetric=labels, strOutcome="Score")
+Widget_BarChart(dfResults = AE_KRI, lMetric=labels, strOutcome="Numerator")
+
+dfBounds <- Analyze_NormalApprox_PredictBounds(AE_KRI, vThreshold = c(-3,-2,2,3))
+Widget_ScatterPlot(AE_KRI, lMetric = labels, dfBounds = dfBounds)
+
+
 #### Example 2.2 - Run Country-Level Metric
 AE_country_workflow <- AE_workflow
 AE_country_workflow$meta$GroupLevel <- "Country"
@@ -118,8 +133,8 @@ filterStep <- list(list(
 )
 SAE_workflow$steps <- SAE_workflow$steps %>% append(filterStep, after=0)
 
-# Run the updated workflow
-SAE_KRI <- RunWorkflow(lWorkflow = SAE_workflow, lData = AE_data )
+# Run the updated workflow and visualize
+SAE_KRI <- RunWorkflow(lWorkflow = SAE_workflow, lData = AE_data)
 Widget_BarChart(dfResults = SAE_KRI$Analysis_Summary, lMetric = SAE_workflow$meta)
 
 
