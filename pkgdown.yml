@@ -3,7 +3,7 @@ pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   AddingKRIs: AddingKRIs.html
-last_built: 2025-03-13T16:33Z
+last_built: 2025-03-13T16:39Z
 urls:
   reference: https://gilead-biostats.github.io/gsm.kri/reference
   article: https://gilead-biostats.github.io/gsm.kri/articles
