@@ -4,7 +4,8 @@ Title: Good Statistical Monitoring KRIs
 Version: 1.0.0
 Authors@R: c(
     person("Jeremy", "Wildfire", , "jwildfire@gmail.com", role = c("aut", "cre")),
-    person("Laura", "Maxwell", , "lkmaxwell23@gmail.com", role = "aut")
+    person("Laura", "Maxwell", , "lkmaxwell23@gmail.com", role = "aut"),
+    person("Gilead Sciences", role = "cph")
   )
 Description: The Good Statistical Monitoring or 'gsm' suite of R packages
     provides a framework for statistical data monitoring. 'gsm.kri'
