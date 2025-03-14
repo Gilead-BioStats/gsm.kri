@@ -1,7 +1,11 @@
+library(gsm.core)
+library(gsm.mapping)
+library(yaml)
+devtools::load_all()
 #### Example 2.1 - Configurable Adverse Event Workflow
 
 # Define YAML workflow
-AE_workflow <- read_yaml(text=
+AE_workflow <- yaml::read_yaml(text=
 'meta:
   Type: Analysis
   ID: kri0001
@@ -73,15 +77,34 @@ steps:
       Analysis_Summary: Analysis_Summary
 ')
 
+# Grab simulated data
+dm <- gsm.core::lSource$Raw_SUBJ
+ae <- gsm.core::lSource$Raw_AE
+
 # Run the workflow
 AE_data <-list(
-  Mapped_SUBJ= clindata::rawplus_dm,
-  Mapped_AE= clindata::rawplus_ae
+  Mapped_SUBJ= dm,
+  Mapped_AE= ae
 )
 AE_KRI <- RunWorkflow(lWorkflow = AE_workflow, lData = AE_data)
 
 # Create Barchart from workflow
 Widget_BarChart(dfResults = AE_KRI$Analysis_Summary)
+
+# Visualize Metric distribution using Bar Charts and Scatterplots using provided htmlwidgets
+labels <- list(
+  Metric= "Adverse Event Rate",
+  Numerator= "Adverse Events",
+  Denominator= "Days on Study"
+)
+
+Widget_BarChart(dfResults = AE_KRI, lMetric=labels, strOutcome="Metric")
+Widget_BarChart(dfResults = AE_KRI, lMetric=labels, strOutcome="Score")
+Widget_BarChart(dfResults = AE_KRI, lMetric=labels, strOutcome="Numerator")
+
+dfBounds <- Analyze_NormalApprox_PredictBounds(AE_KRI, vThreshold = c(-3,-2,2,3))
+Widget_ScatterPlot(AE_KRI, lMetric = labels, dfBounds = dfBounds)
+
 
 #### Example 2.2 - Run Country-Level Metric
 AE_country_workflow <- AE_workflow
@@ -110,8 +133,8 @@ filterStep <- list(list(
 )
 SAE_workflow$steps <- SAE_workflow$steps %>% append(filterStep, after=0)
 
-# Run the updated workflow
-SAE_KRI <- RunWorkflow(lWorkflow = SAE_workflow, lData = AE_data )
+# Run the updated workflow and visualize
+SAE_KRI <- RunWorkflow(lWorkflow = SAE_workflow, lData = AE_data)
 Widget_BarChart(dfResults = SAE_KRI$Analysis_Summary, lMetric = SAE_workflow$meta)
 
 

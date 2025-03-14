@@ -2,10 +2,10 @@ test_that("Visualize_Metric processes data correctly", {
   expect_message(
     {
       charts <- Visualize_Metric(
-        gsm::reportingResults,
-        gsm::reportingBounds,
-        gsm::reportingGroups,
-        gsm::reportingMetrics,
+        gsm.core::reportingResults,
+        gsm.core::reportingBounds,
+        gsm.core::reportingGroups,
+        gsm.core::reportingMetrics,
         strMetricID = "Analysis_kri0001"
       )
     },
@@ -26,10 +26,10 @@ test_that("Visualize_Metric handles missing MetricID", {
   expect_message(
     {
       charts <- Visualize_Metric(
-        gsm::reportingResults,
-        gsm::reportingBounds,
-        gsm::reportingGroups,
-        gsm::reportingMetrics,
+        gsm.core::reportingResults,
+        gsm.core::reportingBounds,
+        gsm.core::reportingGroups,
+        gsm.core::reportingMetrics,
         strMetricID = "Analysis_kri1000"
       )
     },
@@ -44,10 +44,10 @@ test_that("Visualize_Metric handles multiple snapshots", {
   expect_message(
     {
       charts <- Visualize_Metric(
-        gsm::reportingResults,
-        gsm::reportingBounds,
-        gsm::reportingGroups,
-        gsm::reportingMetrics,
+        gsm.core::reportingResults,
+        gsm.core::reportingBounds,
+        gsm.core::reportingGroups,
+        gsm.core::reportingMetrics,
         strMetricID = "Analysis_kri0001"
       )
     },
@@ -59,7 +59,7 @@ test_that("Visualize_Metric handles multiple snapshots", {
 })
 
 test_that("Visualize_Metric can run on just results", {
-  charts <- Visualize_Metric(filter(gsm::reportingResults, MetricID == "Analysis_kri0001"))
+  charts <- Visualize_Metric(filter(gsm.core::reportingResults, MetricID == "Analysis_kri0001"))
 
   # Test if the list contains expected chart names
   expect_true("scatterPlot" %in% names(charts))
@@ -73,7 +73,7 @@ test_that("Visualize_Metric can run on just results and MetricID", {
     {
       expect_message(
         {
-          charts <- Visualize_Metric(gsm::reportingResults, strMetricID = "Analysis_kri0001")
+          charts <- Visualize_Metric(gsm.core::reportingResults, strMetricID = "Analysis_kri0001")
         },
         "MetricID not found in dfBounds"
       )
@@ -94,10 +94,10 @@ test_that("Visualize_Metric works with bad dfBounds", {
       expect_message(
         {
           charts <- Visualize_Metric(
-            gsm::reportingResults,
+            gsm.core::reportingResults,
             strMetricID = "Analysis_kri0001",
-            dfMetrics = gsm::reportingMetrics,
-            dfBounds = dplyr::filter(gsm::reportingBounds, MetricID != "Analysis_kri0001")
+            dfMetrics = gsm.core::reportingMetrics,
+            dfBounds = dplyr::filter(gsm.core::reportingBounds, MetricID != "Analysis_kri0001")
           )
         },
         "MetricID not found in dfBounds"

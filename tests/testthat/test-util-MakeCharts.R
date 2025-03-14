@@ -20,10 +20,10 @@ test_that("MakeCharts makes charts", {
     }
   )
   charts <- MakeCharts(
-    dfResults = gsm::reportingResults,
-    dfBounds = gsm::reportingBounds,
-    dfGroups = gsm::reportingGroups,
-    dfMetrics = gsm::reportingMetrics
+    dfResults = gsm.core::reportingResults,
+    dfBounds = gsm.core::reportingBounds,
+    dfGroups = gsm.core::reportingGroups,
+    dfMetrics = gsm.core::reportingMetrics
   )
   expect_snapshot({
     str(charts, max.level = 2)

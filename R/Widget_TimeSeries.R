@@ -14,17 +14,17 @@
 #'
 #' @examples
 #' ## Filter data to one metric
-#' reportingResults_filter <- gsm::reportingResults %>%
+#' reportingResults_filter <- gsm.core::reportingResults %>%
 #'   dplyr::filter(MetricID == "Analysis_kri0001")
 #'
-#' reportingMetrics_filter <- gsm::reportingMetrics %>%
+#' reportingMetrics_filter <- gsm.core::reportingMetrics %>%
 #'   dplyr::filter(MetricID == "Analysis_kri0001") %>%
 #'   as.list()
 #'
 #' Widget_TimeSeries(
 #'   dfResults = reportingResults_filter,
 #'   lMetric = reportingMetrics_filter,
-#'   dfGroups = gsm::reportingGroups,
+#'   dfGroups = gsm.core::reportingGroups,
 #'   vThreshold = reportingMetrics_filter$Threshold
 #' )
 #'
@@ -40,14 +40,14 @@ Widget_TimeSeries <- function(
   strShinyGroupSelectID = "GroupID",
   bDebug = FALSE
 ) {
-  gsm::stop_if(cnd = !is.data.frame(dfResults), "dfResults is not a data.frame")
-  gsm::stop_if(cnd = !(is.null(lMetric) || (is.list(lMetric) && !is.data.frame(lMetric))), "lMetric must be a list, but not a data.frame")
-  gsm::stop_if(cnd = !(is.null(dfGroups) || is.data.frame(dfGroups)), "dfGroups is not a data.frame")
-  gsm::stop_if(cnd = length(strOutcome) != 1, "strOutcome must be length 1")
-  gsm::stop_if(cnd = !is.character(strOutcome), "strOutcome is not a character")
-  gsm::stop_if(cnd = !is.logical(bAddGroupSelect), "bAddGroupSelect is not a logical")
-  gsm::stop_if(cnd = !is.character(strShinyGroupSelectID), "strShinyGroupSelectID is not a character")
-  gsm::stop_if(cnd = !is.logical(bDebug), "bDebug is not a logical")
+  gsm.core::stop_if(cnd = !is.data.frame(dfResults), "dfResults is not a data.frame")
+  gsm.core::stop_if(cnd = !(is.null(lMetric) || (is.list(lMetric) && !is.data.frame(lMetric))), "lMetric must be a list, but not a data.frame")
+  gsm.core::stop_if(cnd = !(is.null(dfGroups) || is.data.frame(dfGroups)), "dfGroups is not a data.frame")
+  gsm.core::stop_if(cnd = length(strOutcome) != 1, "strOutcome must be length 1")
+  gsm.core::stop_if(cnd = !is.character(strOutcome), "strOutcome is not a character")
+  gsm.core::stop_if(cnd = !is.logical(bAddGroupSelect), "bAddGroupSelect is not a logical")
+  gsm.core::stop_if(cnd = !is.character(strShinyGroupSelectID), "strShinyGroupSelectID is not a character")
+  gsm.core::stop_if(cnd = !is.logical(bDebug), "bDebug is not a logical")
 
   # Parse `vThreshold` from comma-delimited character string to numeric vector.
   if (!is.null(vThreshold)) {
@@ -85,7 +85,7 @@ Widget_TimeSeries <- function(
         auto_unbox = TRUE
       )
     ),
-    package = "gsm"
+    package = "gsm.kri"
   )
 
   if (bDebug) {
@@ -119,7 +119,7 @@ Widget_TimeSeries <- function(
 #'
 #' @export
 Widget_TimeSeriesOutput <- function(outputId, width = "100%", height = "400px") {
-  htmlwidgets::shinyWidgetOutput(outputId, "Widget_TimeSeries", width, height, package = "gsm")
+  htmlwidgets::shinyWidgetOutput(outputId, "Widget_TimeSeries", width, height, package = "gsm.kri")
 }
 
 #' @rdname Widget_TimeSeries-shiny

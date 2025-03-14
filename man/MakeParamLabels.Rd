@@ -33,12 +33,12 @@ coerced to a character vector.}
   parameters.
 }
 \examples{
-head(gsm::reportingGroups)
-MakeParamLabels(head(gsm::reportingGroups))
+head(gsm.core::reportingGroups)
+MakeParamLabels(head(gsm.core::reportingGroups))
 MakeParamLabels(
-  head(gsm::reportingGroups),
+  head(gsm.core::reportingGroups),
   list(ParticipantCount = "Number of Participants")
 )
-MakeParamLabelsList(head(gsm::reportingGroups$Param))
+MakeParamLabelsList(head(gsm.core::reportingGroups$Param))
 
 }

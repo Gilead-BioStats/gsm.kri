@@ -14,10 +14,10 @@
 #' @examples
 #' # site-level report
 #' MakeMetricTable(
-#'   dfResults = gsm::reportingResults %>%
+#'   dfResults = gsm.core::reportingResults %>%
 #'     dplyr::filter(.data$MetricID == "Analysis_kri0001") %>%
 #'     FilterByLatestSnapshotDate(),
-#'   dfGroups = gsm::reportingGroups
+#'   dfGroups = gsm.core::reportingGroups
 #' )
 #'
 #' @export
@@ -67,7 +67,12 @@ MakeMetricTable <- function(
     )
   }
 
-  if (rlang::arg_match(strGroupLevel) == "Site" & !is.null(dfGroups)) {
+  # Include [ InvestigatorLastName ] in group label with group ID if present in data.
+  if (
+    rlang::arg_match(strGroupLevel) == "Site" &&
+      !is.null(dfGroups) &&
+      exists("InvestigatorLastName", dfResults)
+  ) {
     dfResults$Group <- glue::glue(
       "{dfResults$GroupID} ({dfResults$InvestigatorLastName})"
     )

@@ -75,14 +75,14 @@ htmlDependency_toggleTables <- function() {
       name = "toggleTables",
       version = "1.0.0",
       src = "report/lib",
-      package = "gsm",
+      package = "gsm.kri",
       script = "toggleTables.js"
     ),
     htmltools::htmlDependency(
       name = "toggleButton",
       version = "1.0.0",
       src = "report",
-      package = "gsm",
+      package = "gsm.kri",
       stylesheet = "toggleButton.css"
     )
   )

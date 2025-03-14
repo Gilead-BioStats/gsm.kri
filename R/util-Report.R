@@ -16,7 +16,7 @@
 #' @return A data frame containing the results for the most recent snapshot date.
 #'
 #' @examples
-#' reportingResults_latest <- FilterByLatestSnapshotDate(gsm::reportingResults)
+#' reportingResults_latest <- FilterByLatestSnapshotDate(gsm.core::reportingResults)
 #'
 #' @export
 
@@ -53,7 +53,7 @@ FilterByLatestSnapshotDate <- function(df, strSnapshotDate = NULL) {
 #' group's individual metric
 #'
 #' @examples
-#' reportingResults_flags <- FilterByFlags(gsm::reportingResults)
+#' reportingResults_flags <- FilterByFlags(gsm.core::reportingResults)
 #'
 #' @export
 
@@ -65,7 +65,7 @@ FilterByFlags <- function(
     group_by(.data$GroupID, .data$MetricID) %>%
     mutate(
       flagsum = sum(abs(.data$Flag), na.rm = TRUE),
-      flaglatest = Flag[SnapshotDate == max(SnapshotDate)]
+      flaglatest = Flag[.data$SnapshotDate == max(.data$SnapshotDate)]
     ) %>%
     ungroup() %>%
     filter(
