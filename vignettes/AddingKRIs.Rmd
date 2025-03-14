@@ -1,5 +1,6 @@
 ---
 title: "Step-by-Step Guide to add a new KRI"
+description: "This vignette outlines the necessary analytics tasks required before a new Key Risk Indicator (KRI), Quality Tolerance Limit (QTL), or similar metric can be put into production."
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Step-by-Step Guide to add a new KRI}
