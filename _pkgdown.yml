@@ -1,10 +1,11 @@
 url: https://gilead-biostats.github.io/gsm.kri
 template:
   bootstrap: 5
+  bootswatch: yeti
 
 navbar:
   structure:
-    left: [Reports, reference, news]
+    left: [articles, Reports, reference, news]
     right: [search, github]
   components:
     Reports:
