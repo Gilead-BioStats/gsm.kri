@@ -27,7 +27,7 @@ reporting. Created by passing an `lWorkflow` object to [MakeMetric()] and
 turing it into a list. Expected columns: `File`,`MetricID`, `Group`,
 `Abbreviation`, `Metric`, `Numerator`, `Denominator`, `Model`, `Score`, and
 `strThreshold`. For more details see the Data Model vignette:
-`vignette("DataModel", package = "gsm")`.}
+`vignette("DataModel", package = "gsm.kri")`.}
 
 \item{dfGroups}{`data.frame` Group-level metadata dictionary. Created by
 passing CTMS site and study data to [MakeLongMeta()]. Expected columns:
@@ -51,17 +51,17 @@ and the outcome (numerator, denominator, metric, or score) on the y-axis.
 }
 \examples{
 ## Filter data to one metric and snapshot
-reportingResults_filter <- gsm::reportingResults \%>\%
+reportingResults_filter <- gsm.core::reportingResults \%>\%
   dplyr::filter(MetricID == "Analysis_kri0001" & SnapshotDate == max(SnapshotDate))
 
-reportingMetrics_filter <- gsm::reportingMetrics \%>\%
+reportingMetrics_filter <- gsm.core::reportingMetrics \%>\%
   dplyr::filter(MetricID == "Analysis_kri0001") \%>\%
   as.list()
 
 ## Make chart
 Widget_BarChart(
   dfResults = reportingResults_filter,
-  dfGroups = gsm::reportingGroups,
+  dfGroups = gsm.core::reportingGroups,
   lMetric = reportingMetrics_filter,
   vThreshold = reportingMetrics_filter$Threshold
 )

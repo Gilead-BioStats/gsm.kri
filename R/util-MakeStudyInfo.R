@@ -9,8 +9,8 @@
 #' @return A data.frame containing study metadata.
 #'
 #' @examples
-#' MakeStudyInfo(gsm::reportingGroups)
-#' MakeStudyInfo(gsm::reportingGroups, list(SiteCount = "# Sites"))
+#' MakeStudyInfo(gsm.core::reportingGroups)
+#' MakeStudyInfo(gsm.core::reportingGroups, list(SiteCount = "# Sites"))
 #'
 #' @export
 MakeStudyInfo <- function(

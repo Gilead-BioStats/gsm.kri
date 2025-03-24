@@ -15,25 +15,25 @@
 #' @examples
 #' # Include all risk signals, irrespective flag value.
 #' Widget_FlagOverTime(
-#'   dfResults = gsm::reportingResults,
-#'   dfMetrics = gsm::reportingMetrics
+#'   dfResults = gsm.core::reportingResults,
+#'   dfMetrics = gsm.core::reportingMetrics
 #' )
 #'
 #' # Include risk signals that were ever flagged.
 #' Widget_FlagOverTime(
 #'   dfResults = FilterByFlags(
-#'     gsm::reportingResults
+#'     gsm.core::reportingResults
 #'   ),
-#'   dfMetrics = gsm::reportingMetrics
+#'   dfMetrics = gsm.core::reportingMetrics
 #' )
 #'
 #' # Include risk signals that were only flagged in the most recent snapshot.
 #' Widget_FlagOverTime(
 #'   dfResults = FilterByFlags(
-#'     gsm::reportingResults,
+#'     gsm.core::reportingResults,
 #'     bCurrentlyFlagged = TRUE
 #'   ),
-#'   dfMetrics = gsm::reportingMetrics,
+#'   dfMetrics = gsm.core::reportingMetrics,
 #'   bExcludeEver = TRUE
 #' )
 #'
@@ -47,11 +47,11 @@ Widget_FlagOverTime <- function(
   bExcludeEver = FALSE,
   bDebug = FALSE
 ) {
-  gsm::stop_if(cnd = !is.data.frame(dfResults), message = "dfResults is not a data.frame")
-  gsm::stop_if(cnd = !is.data.frame(dfMetrics), "dfMetrics is not a data.frame")
-  gsm::stop_if(cnd = !is.character(strGroupLevel), "strGroupLevel is not a character")
-  gsm::stop_if(cnd = !is.character(strFootnote) && !is.null(strFootnote), "strFootnote is not a character or NULL")
-  gsm::stop_if(cnd = !is.logical(bDebug), "bDebug is not a logical")
+  gsm.core::stop_if(cnd = !is.data.frame(dfResults), message = "dfResults is not a data.frame")
+  gsm.core::stop_if(cnd = !is.data.frame(dfMetrics), "dfMetrics is not a data.frame")
+  gsm.core::stop_if(cnd = !is.character(strGroupLevel), "strGroupLevel is not a character")
+  gsm.core::stop_if(cnd = !is.character(strFootnote) && !is.null(strFootnote), "strFootnote is not a character or NULL")
+  gsm.core::stop_if(cnd = !is.logical(bDebug), "bDebug is not a logical")
 
   gtFlagOverTime <- Report_FlagOverTime(
     dfResults,
@@ -72,7 +72,7 @@ Widget_FlagOverTime <- function(
     name = "Widget_FlagOverTime",
     x,
     width = "100%",
-    package = "gsm"
+    package = "gsm.kri"
   )
 
   if (bDebug) {
@@ -111,7 +111,7 @@ Widget_FlagOverTimeOutput <- function(
     "Widget_FlagOverTime",
     width,
     height,
-    package = "gsm"
+    package = "gsm.kri"
   )
 }
 

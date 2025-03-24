@@ -41,10 +41,10 @@ result in a datatable.
 \examples{
 # site-level report
 Report_MetricTable(
-  dfResults = gsm::reportingResults \%>\%
+  dfResults = gsm.core::reportingResults \%>\%
     dplyr::filter(.data$MetricID == "Analysis_kri0001") \%>\%
     FilterByLatestSnapshotDate(),
-  dfGroups = gsm::reportingGroups
+  dfGroups = gsm.core::reportingGroups
 )
 
 }

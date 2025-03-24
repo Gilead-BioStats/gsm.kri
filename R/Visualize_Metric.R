@@ -18,10 +18,10 @@
 #'
 #' @examples
 #' lCharts <- Visualize_Metric(
-#'   dfResults = gsm::reportingResults,
-#'   dfBounds = gsm::reportingBounds,
-#'   dfGroups = gsm::reportingGroups,
-#'   dfMetrics = gsm::reportingMetrics,
+#'   dfResults = gsm.core::reportingResults,
+#'   dfBounds = gsm.core::reportingBounds,
+#'   dfGroups = gsm.core::reportingGroups,
+#'   dfMetrics = gsm.core::reportingMetrics,
 #'   strMetricID = "Analysis_kri0001"
 #' )
 #'
@@ -111,7 +111,7 @@ Visualize_Metric <- function(
     vThreshold <- NULL
   } else {
     lMetric <- as.list(dfMetrics)
-    vThreshold <- ParseThreshold(lMetric$Threshold)
+    vThreshold <- ParseThreshold(lMetric$Threshold, bSort = FALSE)
   }
 
   # Cross-sectional Charts using most recent snapshot ------------------------

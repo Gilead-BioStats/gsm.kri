@@ -26,7 +26,7 @@ spec:
       type: integer
 steps:
   - output: vThreshold
-    name: ParseThreshold
+    name: gsm.core::ParseThreshold
     params:
       strThreshold: Threshold
   - output: Temp_NONIMPORTANT
@@ -35,7 +35,7 @@ steps:
       df: Mapped_PD
       strQuery: "SELECT * FROM df WHERE deemedimportant = 'No'"
   - output: Analysis_Input
-    name: Input_Rate
+    name: gsm.core::Input_Rate
     params:
       dfSubjects: Mapped_SUBJ
       dfNumerator: Temp_NONIMPORTANT
@@ -47,7 +47,7 @@ steps:
       strDenominatorMethod: Sum
       strDenominatorCol: timeonstudy
   - output: Analysis_Transformed
-    name: Transform_Rate
+    name: gsm.core::Transform_Rate
     params:
       dfInput: Analysis_Input
   - output: Analysis_Analyzed
@@ -56,12 +56,12 @@ steps:
       dfTransformed: Analysis_Transformed
       strType: AnalysisType
   - output: Analysis_Flagged
-    name: Flag
+    name: gsm.core::Flag_NormalApprox
     params:
       dfAnalyzed: Analysis_Analyzed
       vThreshold: vThreshold
   - output: Analysis_Summary
-    name: Summarize
+    name: gsm.core::Summarize
     params:
       dfFlagged: Analysis_Flagged
       nMinDenominator: nMinDenominator
