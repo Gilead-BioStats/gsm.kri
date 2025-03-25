@@ -4,7 +4,7 @@ meta:
   GroupLevel: Country
   Abbreviation: OQRY
   Metric: Delayed Query Resolution Rate
-  Numerator: Queries Open > 30 Days
+  Numerator: Queries That Were Open > 30 Days
   Denominator: Total Queries
   Model: Normal Approximation
   Score: Adjusted Z-Score
