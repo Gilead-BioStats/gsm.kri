@@ -57,7 +57,7 @@ steps:
       dfTransformed: Analysis_Transformed
       strType: AnalysisType
   - output: Analysis_Flagged
-    name: Flag_NormalApprox
+    name: Flag
     params:
       dfAnalyzed: Analysis_Analyzed
       vThreshold: vThreshold
