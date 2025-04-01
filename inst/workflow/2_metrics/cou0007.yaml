@@ -10,7 +10,8 @@ meta:
   Score: Adjusted Z-Score
   AnalysisType: binary
   Threshold: -3,-2,2,3
-  nMinDenominator: 3
+  AccrualThreshold: 3
+  AccrualMetric: Denominator
 spec:
   Mapped_SUBJ:
     subjid:
@@ -59,11 +60,12 @@ steps:
     params:
       dfAnalyzed: Analysis_Analyzed
       vThreshold: vThreshold
+      nAccrualThreshold: AccrualThreshold
+      strAccrualMetric: AccrualMetric
   - output: Analysis_Summary
     name: gsm.core::Summarize
     params:
       dfFlagged: Analysis_Flagged
-      nMinDenominator: nMinDenominator
   - output: lAnalysis
     name: list
     params:
