@@ -1,11 +1,13 @@
 #### 3.1 - Create a KRI Report using 12 standard metrics in a step-by-step workflow
 library(gsm.core)
 library(gsm.mapping)
+library(gsm.reporting)
+library(gsm.kri)
 library(yaml)
-devtools::load_all()
+
 
 core_mappings <- c("AE", "COUNTRY", "DATACHG", "DATAENT", "ENROLL", "LB",
-                   "PD", "QUERY", "STUDY", "STUDCOMP", "SDRGCOMP", "SITE", "SUBJ")
+                   "PD", "PK", "QUERY", "STUDY", "STUDCOMP", "SDRGCOMP", "SITE", "SUBJ")
 
 lRaw <- list(
   Raw_SUBJ = gsm.core::lSource$Raw_SUBJ,
@@ -13,6 +15,7 @@ lRaw <- list(
   Raw_PD = gsm.core::lSource$Raw_PD %>%
     rename(subjid = subjectenrollmentnumber),
   Raw_LB = gsm.core::lSource$Raw_LB,
+  Raw_PK = gsm.core::lSource$Raw_PK,
   Raw_STUDCOMP = gsm.core::lSource$Raw_STUDCOMP %>%
     select(subjid, compyn),
   Raw_SDRGCOMP = gsm.core::lSource$Raw_SDRGCOMP,

@@ -64,11 +64,12 @@ steps:
       dfAnalyzed: Analysis_Analyzed
       vThreshold: vThreshold
       vFlag: vFlag
+      nAccrualThreshold: AccrualThreshold
+      strAccrualMetric: AccrualMetric
   - output: Analysis_Summary
     name: Summarize
     params:
       dfFlagged: Analysis_Flagged
-      nMinDenominator: nMinDenominator
   - output: lAnalysis
     name: list
     params:

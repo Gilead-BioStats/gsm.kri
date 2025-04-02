@@ -12,7 +12,7 @@ dfInput <- Input_Rate(
   dfNumerator= ae,
   dfDenominator = dm,
   strSubjectCol = "subjid",
-  strGroupCol = "siteid",
+  strGroupCol = "invid",
   strNumeratorMethod= "Count",
   strDenominatorMethod= "Sum",
   strDenominatorCol= "timeonstudy"
