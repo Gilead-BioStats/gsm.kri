@@ -18,7 +18,8 @@ AE_workflow <- yaml::read_yaml(text=
   Score: Adjusted Z-Score
   AnalysisType: rate
   Threshold: -2,-1,2,3
-  nMinDenominator: 30
+  AccrualThreshold: 30
+  AccrualMetric: Denominator
 spec:
   Mapped_AE:
     subjid:
@@ -61,11 +62,12 @@ steps:
     params:
       dfAnalyzed: Analysis_Analyzed
       vThreshold: vThreshold
+      nAccrualThreshold: AccrualThreshold
+      strAccrualMetric: AccrualMetric
   - output: Analysis_Summary
     name: Summarize
     params:
       dfFlagged: Analysis_Flagged
-      nMinDenominator: nMinDenominator
   - output: lAnalysis
     name: list
     params:
