@@ -88,6 +88,9 @@ GroupOverViz <- Widget_GroupOverview(
   strGroupLabelKey = GroupLabelKey
 )
 
+GroupOverVizName <- paste0(fontawesome::fa("table", fill = "#337ab7"), "  Group Overview")
+attr(GroupOverViz, "chart_name") <- GroupOverVizName
+
 overview_viz <- list(groupOverview = GroupOverViz)
 
 # Add FlagOverTime Table if data has more than one snapshot
@@ -115,6 +118,9 @@ if(length(unique((params$dfResults)$SnapshotDate)) > 1){
     ),
     bExcludeEver = TRUE
   )
+
+  flagOverTimeName <- paste0(fontawesome::fa("table", fill = "#337ab7"), "  Flags Over Time")
+  attr(overview_viz$flagOverTime, "chart_name") <- flagOverTimeName
 }
 
 Report_MetricCharts(overview_viz, overview = TRUE)

@@ -38,14 +38,7 @@ Report_MetricCharts <- function(lCharts, strMetricID = "", overview = FALSE) {
     chart_key <- names(lCharts)[j]
     chart <- lCharts[[j]]
 
-    chart_name <- switch(chart_key,
-      groupOverview = paste0(fontawesome::fa("table", fill = "#337ab7"), "  Group Overview"),
-      flagOverTime = paste0(fontawesome::fa("table", fill = "#337ab7"), "  Flags Over Time"),
-      scatterPlot = paste0(fontawesome::fa("arrow-up-right-dots", fill = "#337ab7"), "  Scatter Plot"),
-      barChart = paste0(fontawesome::fa("chart-simple", fill = "#337ab7"), "  Bar Chart"),
-      timeSeries = paste0(fontawesome::fa("chart-line", fill = "#337ab7"), "  Time Series"),
-      metricTable = paste0(fontawesome::fa("table", fill = "#337ab7"), "  Metric Table")
-    )
+    chart_name <- attr(chart, "chart_name")
 
     ##### chart tab /
     chart_header <- paste("#####", chart_name, "\n")

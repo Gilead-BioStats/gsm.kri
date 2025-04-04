@@ -254,6 +254,8 @@ ChartsMetricDefault <- function(
       dfBounds = dfBounds,
       bDebug = bDebug
     )
+    scatterPlotName <- paste0(fontawesome::fa("arrow-up-right-dots", fill = "#337ab7"), "  Scatter Plot")
+    attr(lCharts$scatterPlot, "chart_name") <- scatterPlotName
 
     lCharts$barChart <- Widget_BarChart(
       dfResults = dfResults,
@@ -264,6 +266,9 @@ ChartsMetricDefault <- function(
       bDebug = bDebug
     )
 
+    barChartName <- paste0(fontawesome::fa("chart-simple", fill = "#337ab7"), "  Bar Chart")
+    attr(lCharts$barChart, "chart_name") <- barChartName
+
     if (!is.null(lMetric)) {
       lCharts$metricTable <- Report_MetricTable(
         dfResults = dfResults,
@@ -273,6 +278,9 @@ ChartsMetricDefault <- function(
     } else {
       lCharts$metricTable <- Report_MetricTable(dfResults)
     }
+
+    metricTableName <- paste0(fontawesome::fa("table", fill = "#337ab7"), "  Metric Table")
+    attr(lCharts$metricTable, "chart_name") <- metricTableName
 
     return(lCharts)
 } 
@@ -333,6 +341,9 @@ ChartsContinousDefault <- function(
     strOutcome = "Score",
     bDebug = bDebug
   )
+
+  timeSeriesName <- paste0(fontawesome::fa("chart-line", fill = "#337ab7"), "  Time Series")
+  attr(lCharts$timeSeries, "chart_name") <- timeSeriesName
 
   return(lCharts)
 }

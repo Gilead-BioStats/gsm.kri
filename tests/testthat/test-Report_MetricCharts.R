@@ -7,6 +7,10 @@ test_that("Handles all supported chart types", {
     timeSeries = dummy_chart
   )
 
+  attr(lCharts$scatterPlot, "chart_name") <- "Scatter Plot"
+  attr(lCharts$barChart, "chart_name") <- "Bar Chart"
+  attr(lCharts$timeSeries, "chart_name") <- "Time Series"
+
   expect_output(Report_MetricCharts(lCharts), "#### Summary Charts \\{.tabset\\}")
   expect_output(Report_MetricCharts(lCharts), "Scatter Plot")
   expect_output(Report_MetricCharts(lCharts), "Bar Chart")
@@ -18,6 +22,9 @@ test_that("Handles some missing chart types", {
     scatterPlot = dummy_chart,
     timeSeries = dummy_chart
   )
+
+  attr(lCharts$scatterPlot, "chart_name") <- "Scatter Plot"
+  attr(lCharts$timeSeries, "chart_name") <- "Time Series"
 
   expect_output(Report_MetricCharts(lCharts), "#### Summary Charts \\{.tabset\\}")
   expect_output(Report_MetricCharts(lCharts), "Scatter Plot")
@@ -46,6 +53,9 @@ test_that("Output formatting and no errors", {
     scatterPlot = dummy_chart,
     barChart = dummy_chart
   )
+
+  attr(lCharts$scatterPlot, "chart_name") <- "Scatter Plot"
+  attr(lCharts$barChart, "chart_name") <- "Bar Chart"
 
   output <- capture.output(Report_MetricCharts(lCharts))
   expect_true(any(grepl("Scatter Plot", output)))
