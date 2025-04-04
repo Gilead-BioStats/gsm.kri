@@ -11,6 +11,7 @@
 #'  the report will be saved in the current working directory.
 #' @param strOutputFile The output file name for the generated report. If not provided,
 #'  the report will be named based on the study ID, Group Level and Date.
+#' @param strRmdInputPath The path to the R Markdown template file. Default: system.file("report", "Report_KRI.Rmd", package = "gsm.kri")
 #'
 #' @return File path of the saved report html is returned invisibly. Save to object to view absolute output path.
 #' @examples
@@ -60,7 +61,8 @@ Report_KRI <- function(
   dfGroups = NULL,
   dfMetrics = NULL,
   strOutputDir = getwd(),
-  strOutputFile = NULL
+  strOutputFile = NULL,
+  strRmdInputPath = system.file("report", "Report_KRI.Rmd", package = "gsm.kri")
 ) {
   rlang::check_installed("rmarkdown", reason = "to run `Report_KRI()`")
   rlang::check_installed("knitr", reason = "to run `Report_KRI()`")
@@ -83,7 +85,7 @@ Report_KRI <- function(
   }
 
   RenderRmd(
-    strInputPath = system.file("report", "Report_KRI.Rmd", package = "gsm.kri"),
+    strInputPath = strRmdInputPath,
     strOutputFile = strOutputFile,
     strOutputDir = strOutputDir,
     lParams = list(

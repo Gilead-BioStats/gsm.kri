@@ -10,7 +10,8 @@ Report_KRI(
   dfGroups = NULL,
   dfMetrics = NULL,
   strOutputDir = getwd(),
-  strOutputFile = NULL
+  strOutputFile = NULL,
+  strRmdInputPath = system.file("report", "Report_KRI.Rmd", package = "gsm.kri")
 )
 }
 \arguments{
@@ -38,6 +39,8 @@ the report will be saved in the current working directory.}
 
 \item{strOutputFile}{The output file name for the generated report. If not provided,
 the report will be named based on the study ID, Group Level and Date.}
+
+\item{strRmdInputPath}{The path to the R Markdown template file. Default: system.file("report", "Report_KRI.Rmd", package = "gsm.kri")}
 }
 \value{
 File path of the saved report html is returned invisibly. Save to object to view absolute output path.
