@@ -129,11 +129,11 @@ Visualize_Metric <- function(
 
   # Cross-sectional Charts using most recent snapshot ------------------------
   lCharts <- list()
-  dfResults_latest <- gsm.kri::FilterByLatestSnapshotDate(dfResults, strSnapshotDate)
+  dfResults_latest <- FilterByLatestSnapshotDate(dfResults, strSnapshotDate)
   if (is.null(dfBounds)) {
     dfBounds_latest <- NULL
   } else {
-    dfBounds_latest <- gsm.kri::FilterByLatestSnapshotDate(dfBounds, strSnapshotDate)
+    dfBounds_latest <- FilterByLatestSnapshotDate(dfBounds, strSnapshotDate)
   }
 
   # Select chart functions ---------------------------------------------------
@@ -247,7 +247,7 @@ ChartsMetricDefault <- function(
     vThreshold,
     bDebug
 ) {                              
-    lCharts$scatterPlot <- gsm.kri::Widget_ScatterPlot(
+    lCharts$scatterPlot <- Widget_ScatterPlot(
       dfResults = dfResults,
       lMetric = lMetric,
       dfGroups = dfGroups,
@@ -255,7 +255,7 @@ ChartsMetricDefault <- function(
       bDebug = bDebug
     )
 
-    lCharts$barChart <- gsm.kri::Widget_BarChart(
+    lCharts$barChart <- Widget_BarChart(
       dfResults = dfResults,
       lMetric = lMetric,
       dfGroups = dfGroups,
@@ -265,13 +265,13 @@ ChartsMetricDefault <- function(
     )
 
     if (!is.null(lMetric)) {
-      lCharts$metricTable <- gsm.kri::Report_MetricTable(
+      lCharts$metricTable <- Report_MetricTable(
         dfResults = dfResults,
         dfGroups = dfGroups,
         strGroupLevel = lMetric$GroupLevel
       )
     } else {
-      lCharts$metricTable <- gsm.kri::Report_MetricTable(dfResults)
+      lCharts$metricTable <- Report_MetricTable(dfResults)
     }
 
     return(lCharts)
