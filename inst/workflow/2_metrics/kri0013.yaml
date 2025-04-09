@@ -19,28 +19,28 @@ spec:
       type: character
     invid:
       type: character
-  Mapped_PK: 
+  Mapped_PK:
     subjid:
       type: character
     pkperf:
       type: character
 steps:
   - output: vThreshold
-    name: ParseThreshold
+    name: gsm.core::ParseThreshold
     params:
       strThreshold: Threshold
   - output: vFlag
-    name: ParseThreshold
+    name: gsm.core::ParseThreshold
     params:
       strThreshold: Flag
       bSort: false
   - output: PK_Collected
-    name: RunQuery
+    name: gsm.core::RunQuery
     params:
       df: Mapped_PK
       strQuery: "SELECT * FROM df WHERE pkperf = 'Yes'"
   - output: Analysis_Input
-    name: Input_Rate
+    name: gsm.core::Input_Rate
     params:
       dfSubjects: Mapped_SUBJ
       dfNumerator: PK_Collected
@@ -51,15 +51,15 @@ steps:
       strNumeratorMethod: Count
       strDenominatorMethod: Count
   - output: Analysis_Transformed
-    name: Transform_Rate
+    name: gsm.core::Transform_Rate
     params:
       dfInput: Analysis_Input
   - output: Analysis_Analyzed
-    name: Analyze_Identity
+    name: gsm.core::Analyze_Identity
     params:
       dfTransformed: Analysis_Transformed
   - output: Analysis_Flagged
-    name: Flag
+    name: gsm.core::Flag
     params:
       dfAnalyzed: Analysis_Analyzed
       vThreshold: vThreshold
@@ -67,7 +67,7 @@ steps:
       nAccrualThreshold: AccrualThreshold
       strAccrualMetric: AccrualMetric
   - output: Analysis_Summary
-    name: Summarize
+    name: gsm.core::Summarize
     params:
       dfFlagged: Analysis_Flagged
   - output: lAnalysis
