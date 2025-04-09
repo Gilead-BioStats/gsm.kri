@@ -77,4 +77,3 @@ test_that("Makes StudyLabel properly", {
   result2 <- Report_Setup(reportingGroups_alt2, gsm.core::reportingMetrics, gsm.core::reportingResults)
   expect_equal(result2$StudyLabel, result2$StudyID)
 })
-
