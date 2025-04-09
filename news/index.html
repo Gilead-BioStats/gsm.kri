@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">gsm.kri</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,9 +38,16 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/Gilead-BioStats/gsm.kri/blob/v1.0.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/Gilead-BioStats/gsm.kri/blob/gsm.kri-v1.1.0-rc/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.1.0" id="gsmkri-v110">gsm.kri v1.1.0<a class="anchor" aria-label="anchor" href="#gsmkri-v110"></a></h2>
+<p>This minor release adds a new KRI along with a few other small fixes.</p>
+<ul><li>PK Compliance Rate KRI workflows have been added as workflow 0013.</li>
+<li>Remove unnecessary lower bound thresholds for the Data Quality KRIs.</li>
+<li>All workflows now use the new FlagAccrual() functionality, so AccrualMetric and AccrualThreshold have been added to the <code>meta</code> of each yaml.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.0.0" id="gsmkri-v100">gsm.kri v1.0.0<a class="anchor" aria-label="anchor" href="#gsmkri-v100"></a></h2>
 <p>We are happy to announce the first major release of the <code>gsm.kri</code> package, which houses the metric and module workflows, as well as all visualization functions and widgets for the GSM pipeline.</p>
@@ -65,14 +72,14 @@ A new vignette has been added that provides a step-by-step guide on how to add a
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.1" id="gsmkri-v001">gsm.kri v0.0.1<a class="anchor" aria-label="anchor" href="#gsmkri-v001"></a></h2>
-<p>This initial release migrates the KRI-specific functions, workflows, widgets and documentation from <a href="https://github.com/Gilead-BioStats/gsm" class="external-link">gsm</a> to <a href="https://github.com/Gilead-BioStats/gsm.kri" class="external-link">gsm.kri</a>.</p>
+<p>This initial release migrates the KRI-specific functions, workflows, widgets and documentation from <code>{gsm}</code> to <a href="https://github.com/Gilead-BioStats/gsm.kri" class="external-link">gsm.kri</a>.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Jeremy Wildfire, Laura Maxwell.</p>
+  <p>Developed by Jeremy Wildfire, Laura Maxwell, Spencer Childress.</p>
 </div>
 
 <div class="pkgdown-footer-right">
