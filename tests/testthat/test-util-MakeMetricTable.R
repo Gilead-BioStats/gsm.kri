@@ -64,8 +64,8 @@ test_that("Enrolled is an integer", {
 })
 
 test_that("Output is expected object", {
-  zero_flags <- c("0X2643", "0X5085")
-  flags <- c("0X3005", "0X8825", "0X5504")
+  zero_flags <- c("0X3989", "0X9334")
+  flags <- c("0X6073", "0X2649", "0X8764 ")
 
   reportingResults_filt <- gsm.core::reportingResults %>%
     FilterByLatestSnapshotDate() %>%
