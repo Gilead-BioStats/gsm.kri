@@ -13,7 +13,7 @@ data based on provided conditions.'></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">gsm.kri</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,7 +44,7 @@ data based on provided conditions.'></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Generate a Summary data.frame for use in reports</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Gilead-BioStats/gsm.kri/blob/52/merge/R/util-MakeMetricTable.R" class="external-link"><code>R/util-MakeMetricTable.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Gilead-BioStats/gsm.kri/blob/gsm.kri-v1.1.0-rc/R/util-MakeMetricTable.R" class="external-link"><code>R/util-MakeMetricTable.R</code></a></small>
       <div class="d-none name"><code>MakeMetricTable.Rd</code></div>
     </div>
 
@@ -108,14 +108,32 @@ Default: `c(-2, -1, 1, 2)`.</p></dd>
 <span class="r-in"><span>    <span class="fu"><a href="FilterByLatestSnapshotDate.html">FilterByLatestSnapshotDate</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  dfGroups <span class="op">=</span> <span class="fu">gsm.core</span><span class="fu">::</span><span class="va"><a href="https://gilead-biostats.github.io/gsm.core/reference/reportingGroups.html" class="external-link">reportingGroups</a></span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          StudyID GroupID         MetricID         Group SnapshotDate Enrolled</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 AA-AA-000-0000  0X3005 Analysis_kri0001 0X3005 (Deer)   2025-04-01        6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 AA-AA-000-0000  0X8825 Analysis_kri0001  0X8825 (Doe)   2025-04-01        4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 AA-AA-000-0000  0X5504 Analysis_kri0001  0X5504 (Doe)   2025-04-01        4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Numerator Denominator Metric Score Flag</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1         7         281   0.02 -1.45   -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2         4         149   0.03 -1.01   -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3         3         127   0.02 -1.00   -1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           StudyID GroupID         MetricID          Group SnapshotDate Enrolled</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  AA-AA-000-0000  0X2649 Analysis_kri0001  0X2649 (Deer)   2025-04-01        4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  AA-AA-000-0000  0X1750 Analysis_kri0001 0X1750 (Smith)   2025-04-01        7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  AA-AA-000-0000  0X6073 Analysis_kri0001 0X6073 (Smith)   2025-04-01        5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  AA-AA-000-0000  0X8764 Analysis_kri0001 0X8764 (Smith)   2025-04-01        7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  AA-AA-000-0000   0X759 Analysis_kri0001  0X759 (Smith)   2025-04-01        7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  AA-AA-000-0000  0X1982 Analysis_kri0001 0X1982 (Smith)   2025-04-01        7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  AA-AA-000-0000  0X9069 Analysis_kri0001  0X9069 (Deer)   2025-04-01        7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  AA-AA-000-0000  0X3289 Analysis_kri0001  0X3289 (Deer)   2025-04-01        5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  AA-AA-000-0000  0X8792 Analysis_kri0001 0X8792 (Smith)   2025-04-01        7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 AA-AA-000-0000  0X8609 Analysis_kri0001   0X8609 (Doe)   2025-04-01        4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 AA-AA-000-0000  0X4959 Analysis_kri0001   0X4959 (Doe)   2025-04-01        6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 AA-AA-000-0000   0X474 Analysis_kri0001    0X474 (Doe)   2025-04-01        3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Numerator Denominator Metric Score Flag</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1         19         102   0.19  2.42    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2         39         289   0.13  2.06    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3          1         133   0.01 -2.00   -1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4         14         305   0.05 -1.48   -1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5         14         303   0.05 -1.46   -1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6         19         345   0.06 -1.18   -1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7          9         192   0.05 -1.14   -1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8         13         251   0.05 -1.13   -1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9         15         280   0.05 -1.12   -1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10         2          72   0.03 -1.07   -1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11        16         285   0.06 -1.03   -1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12         4         102   0.04 -1.01   -1</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -124,7 +142,7 @@ Default: `c(-2, -1, 1, 2)`.</p></dd>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Jeremy Wildfire, Laura Maxwell.</p>
+  <p>Developed by Jeremy Wildfire, Laura Maxwell, Spencer Childress.</p>
 </div>
 
 <div class="pkgdown-footer-right">
