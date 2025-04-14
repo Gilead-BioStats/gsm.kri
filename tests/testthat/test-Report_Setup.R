@@ -6,7 +6,7 @@ test_that("Test with valid input and one group", {
   )
 
   expect_equal(result$GroupLevel, "Site")
-  expect_equal(result$SnapshotDate, as.Date("2012-12-31"))
+  expect_equal(result$SnapshotDate, as.Date("2025-04-01"))
   expect_equal(result$StudyID, "AA-AA-000-0000")
   expect_true(is.numeric(result$red_kris))
   expect_true(is.numeric(result$amber_kris))
@@ -39,7 +39,7 @@ test_that("Test StudyID output with missing protocol number", {
   result <- Report_Setup(reportingGroups_alt, gsm.core::reportingMetrics, gsm.core::reportingResults)
 
   expect_equal(result$GroupLevel, "Site")
-  expect_equal(result$SnapshotDate, as.Date("2012-12-31"))
+  expect_equal(result$SnapshotDate, as.Date("2025-04-01"))
   expect_equal(result$StudyID, "AA-AA-000-0000")
   expect_true(is.numeric(result$red_kris))
   expect_true(is.numeric(result$amber_kris))

@@ -4,13 +4,14 @@ meta:
   GroupLevel: Country
   Abbreviation: OQRY
   Metric: Delayed Query Resolution Rate
-  Numerator: Queries Open > 30 Days
+  Numerator: Queries That Were Open > 30 Days
   Denominator: Total Queries
   Model: Normal Approximation
   Score: Adjusted Z-Score
   AnalysisType: binary
-  Threshold: -3,-2,2,3
-  nMinDenominator: 30
+  Threshold: "2,3"
+  AccrualThreshold: 30
+  AccrualMetric: Denominator
 spec:
   Mapped_SUBJ:
     subjid:
@@ -64,11 +65,16 @@ steps:
     params:
       dfAnalyzed: Analysis_Analyzed
       vThreshold: vThreshold
+      vFlag:
+        - 0
+        - 1
+        - 2
+      nAccrualThreshold: AccrualThreshold
+      strAccrualMetric: AccrualMetric
   - output: Analysis_Summary
     name: gsm.core::Summarize
     params:
       dfFlagged: Analysis_Flagged
-      nMinDenominator: nMinDenominator
   - output: lAnalysis
     name: list
     params:

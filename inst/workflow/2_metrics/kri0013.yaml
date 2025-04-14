@@ -1,66 +1,69 @@
 meta:
   Type: Analysis
-  ID: kri0004
+  ID: kri0013
   GroupLevel: Site
-  Abbreviation: IPD
-  Metric: Important Protocol Deviation Rate
-  Numerator: Important Protocol Deviations
-  Denominator: Days on Study
-  Model: Normal Approximation
-  Score: Adjusted Z-Score
-  AnalysisType: rate
-  Threshold: -3,-2,2,3
-  AccrualThreshold: 30
-  AccrualMetric: Denominator
+  Abbreviation: PK
+  Metric: PK Collection Compliance Rate
+  Numerator: PK Samples Collected
+  Denominator: PK Samples Expected
+  Model: Identity
+  Score: PK Collection Compliance Rate
+  AnalysisType: identity
+  Threshold: "0.9,0.85"
+  Flag: "-2,-1,0"
+  AccrualMetric: Difference
+  AccrualThreshold: 3
 spec:
-  Mapped_PD:
-    subjid:
-      type: character
-    deemedimportant:
-      type: character
   Mapped_SUBJ:
     subjid:
       type: character
     invid:
       type: character
-    timeonstudy:
-      type: integer
+  Mapped_PK:
+    subjid:
+      type: character
+    pkperf:
+      type: character
 steps:
   - output: vThreshold
     name: gsm.core::ParseThreshold
     params:
       strThreshold: Threshold
-  - output: Temp_IMPORTANT
-    name: RunQuery
+  - output: vFlag
+    name: gsm.core::ParseThreshold
     params:
-      df: Mapped_PD
-      strQuery: "SELECT * FROM df WHERE deemedimportant = 'Yes'"
+      strThreshold: Flag
+      bSort: false
+  - output: PK_Collected
+    name: gsm.core::RunQuery
+    params:
+      df: Mapped_PK
+      strQuery: "SELECT * FROM df WHERE pkperf = 'Yes'"
   - output: Analysis_Input
     name: gsm.core::Input_Rate
     params:
       dfSubjects: Mapped_SUBJ
-      dfNumerator: Temp_IMPORTANT
-      dfDenominator: Mapped_SUBJ
+      dfNumerator: PK_Collected
+      dfDenominator: Mapped_PK
       strSubjectCol: subjid
       strGroupCol: invid
       strGroupLevel: GroupLevel
       strNumeratorMethod: Count
-      strDenominatorMethod: Sum
-      strDenominatorCol: timeonstudy
+      strDenominatorMethod: Count
   - output: Analysis_Transformed
     name: gsm.core::Transform_Rate
     params:
       dfInput: Analysis_Input
   - output: Analysis_Analyzed
-    name: Analyze_NormalApprox
+    name: gsm.core::Analyze_Identity
     params:
       dfTransformed: Analysis_Transformed
-      strType: AnalysisType
   - output: Analysis_Flagged
-    name: gsm.core::Flag_NormalApprox
+    name: gsm.core::Flag
     params:
       dfAnalyzed: Analysis_Analyzed
       vThreshold: vThreshold
+      vFlag: vFlag
       nAccrualThreshold: AccrualThreshold
       strAccrualMetric: AccrualMetric
   - output: Analysis_Summary
