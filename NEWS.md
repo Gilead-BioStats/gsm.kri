@@ -1,3 +1,12 @@
+# gsm.kri v1.1.0
+
+This minor release adds a new KRI along with a few other small fixes.
+
+- PK Compliance Rate KRI workflows have been added as workflow 0013.
+- Remove unnecessary lower bound thresholds for the Data Quality KRIs.
+- All workflows now use the new FlagAccrual() functionality, so AccrualMetric and AccrualThreshold have been added to the `meta` of each yaml.
+
+
 # gsm.kri v1.0.0
 
 We are happy to announce the first major release of the `gsm.kri` package, which houses the metric and module workflows, as well as all visualization functions and widgets for the GSM pipeline.
