@@ -14,22 +14,23 @@
 #' - 'red/amber': Groups with 1+ red/amber flag.
 #' - 'amber': Groups with 1+ amber flag.
 #' @param strGroupLabelKey `character` Value for the group label key. Default: 'InvestigatorLastName'.
+#' @param ... `any` Additional chart configuration settings.
 #'
 #' @examples
-#' # site-level report
-#' Widget_GroupOverview(
-#'   dfResults = FilterByLatestSnapshotDate(gsm.core::reportingResults),
-#'   dfMetrics = gsm.core::reportingMetrics,
-#'   dfGroups = gsm.core::reportingGroups
-#' )
-#'
-#' # filter site-level report to all flags
-#' Widget_GroupOverview(
-#'   dfResults = FilterByLatestSnapshotDate(gsm.core::reportingResults),
-#'   dfMetrics = gsm.core::reportingMetrics,
-#'   dfGroups = gsm.core::reportingGroups,
-#'   strGroupSubset = "all"
-#' )
+# site-level report
+Widget_GroupOverview(
+  dfResults = FilterByLatestSnapshotDate(gsm.core::reportingResults),
+  dfMetrics = gsm.core::reportingMetrics,
+  dfGroups = gsm.core::reportingGroups
+)
+
+# filter site-level report to all flags
+Widget_GroupOverview(
+  dfResults = FilterByLatestSnapshotDate(gsm.core::reportingResults),
+  dfMetrics = gsm.core::reportingMetrics,
+  dfGroups = gsm.core::reportingGroups,
+  strGroupSubset = "all"
+)
 #'
 #' # country-level report
 #' reportingMetrics <- gsm.core::reportingMetrics
@@ -48,9 +49,18 @@ Widget_GroupOverview <- function(
   dfMetrics,
   dfGroups,
   strGroupLevel = NULL,
-  strGroupSubset = "red",
-  strGroupLabelKey = "InvestigatorLastName",
-  bDebug = FALSE
+  strGroupSubset = switch(strGroupLevel,
+    Study = "all",
+    Site = "red",
+    Country = "all"
+  ),
+  strGroupLabelKey = switch(strGroupLevel,
+    Study = "nickname",
+    Site = "InvestigatorLastName",
+    Country = NULL
+  ),
+  bDebug = FALSE,
+  ...
 ) {
   gsm.core::stop_if(cnd = !is.data.frame(dfResults), "dfResults is not a data.frame")
   gsm.core::stop_if(cnd = !is.data.frame(dfMetrics), "dfMetrics is not a data.frame")
@@ -70,21 +80,26 @@ Widget_GroupOverview <- function(
   )
 
   # forward options using x
-  input <- list(
+  lInput <- list(
     dfResults = dfResults,
     dfMetrics = dfMetrics,
     dfGroups = dfGroups,
-    strGroupLevel = strGroupLevel,
-    strGroupSubset = strGroupSubset,
-    strGroupLabelKey = strGroupLabelKey,
+    lConfig = c(
+        list(
+            GroupLevel = strGroupLevel,
+            groupLabelKey = strGroupLabelKey,
+            strGroupSubset = strGroupSubset
+        ),
+        list(...) # additional chart configuration
+    ),
     bDebug = bDebug
   )
 
   # create widget
-  widget <- htmlwidgets::createWidget(
+  lWidget <- htmlwidgets::createWidget(
     name = "Widget_GroupOverview",
     purrr::map(
-      input,
+      lInput,
       ~ jsonlite::toJSON(
         .x,
         null = "null",
@@ -96,14 +111,22 @@ Widget_GroupOverview <- function(
     package = "gsm.kri"
   )
 
+  strWidgetLabel <- paste0(
+      fontawesome::fa("table", fill = "#337ab7"),
+      "  ",
+      strGroupLevel,
+      " Overview"
+  )
+  base::attr(lWidget, "chart_label") <- strWidgetLabel
+
   if (bDebug) {
     viewer <- getOption("viewer")
     options(viewer = NULL)
-    print(widget)
+    print(lWidget)
     options(viewer = viewer)
   }
 
-  return(widget)
+  return(lWidget)
 }
 
 #' Shiny bindings for Widget_GroupOverview

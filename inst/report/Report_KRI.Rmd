@@ -10,8 +10,8 @@ output:
 params:
   lCharts: NA
   dfResults: NA
-  dfGroups: NA
   dfMetrics: NA
+  dfGroups: NA
 ---
 
 ```{r setup, include=FALSE} 
@@ -66,26 +66,14 @@ Report_StudyInfo(params$dfGroups)
 
 
 ```{r echo=FALSE, warning=FALSE, results = 'asis'}
-if(setup$GroupLevel == "Site"){ 
-  GroupLabelKey <- "InvestigatorLastName"
-} else { 
-  GroupLabelKey <- NULL 
-}  
-
 # subset data on latest snapshot date
 dfResults_current <- FilterByLatestSnapshotDate(params$dfResults)
 
 GroupOverViz <- Widget_GroupOverview(
   dfResults = dfResults_current,
-  dfGroups = params$dfGroups,
   dfMetrics = params$dfMetrics,
-  strGroupLevel = setup$GroupLevel,
-  strGroupSubset = switch(setup$GroupLevel,
-    "Site" = "red",
-    "Country" = "all",
-    "Study" = "all"
-  ),
-  strGroupLabelKey = GroupLabelKey
+  dfGroups = params$dfGroups,
+  strGroupLevel = setup$GroupLevel
 )
 
 overview_viz <- list(groupOverview = GroupOverViz)
@@ -117,7 +105,7 @@ if(length(unique((params$dfResults)$SnapshotDate)) > 1){
   )
 }
 
-Report_MetricCharts(overview_viz, overview = TRUE)
+Report_MetricCharts(overview_viz)
 ```
 
 :::
@@ -144,8 +132,7 @@ for (i in unique(params$dfResults$MetricID)) {
   
   Report_MetricCharts(
     lCharts = params$lCharts[[lMetric$MetricID]],
-    strMetricID = lMetric$MetricID,
-    overview = FALSE
+    strMetricID = lMetric$MetricID
   )
   
   print(htmltools::tags$br())

@@ -9,6 +9,7 @@
 #' @inheritParams shared-params
 #' @param bAddGroupSelect `logical` Add a dropdown to highlight sites? Default: `TRUE`.
 #' @param strShinyGroupSelectID `character` Element ID of group select in Shiny context. Default: `'GroupID'`.
+#' @param ... `any` Additional chart configuration settings.
 #'
 #' @examples
 #' ## Filter data to one metric and snapshot
@@ -38,7 +39,8 @@ Widget_ScatterPlot <- function(
   dfBounds = NULL,
   bAddGroupSelect = TRUE,
   strShinyGroupSelectID = "GroupID",
-  bDebug = FALSE
+  bDebug = FALSE,
+  ...
 ) {
   gsm.core::stop_if(cnd = !is.data.frame(dfResults), "dfResults is not a data.frame")
   gsm.core::stop_if(cnd = !(is.null(lMetric) || (is.list(lMetric) && !is.data.frame(lMetric))), "lMetric must be a list, but not a data.frame")
@@ -49,11 +51,21 @@ Widget_ScatterPlot <- function(
   gsm.core::stop_if(cnd = !is.logical(bDebug), "bDebug is not a logical")
 
   # define widget inputs
-  input <- list(
+  lChartConfig <- do.call(
+      'MakeChartConfig',
+      list(
+          lMetric = lMetric,
+          strChartFunction = sys.call()[[1]] %>% as.character(),
+          ...
+        )
+    )
+
+  lWidgetInput <- list(
     dfResults = dfResults,
     lMetric = lMetric,
     dfGroups = dfGroups,
     dfBounds = dfBounds,
+    lChartConfig = lChartConfig,
     bAddGroupSelect = bAddGroupSelect,
     strShinyGroupSelectID = strShinyGroupSelectID,
     strFootnote = ifelse(!is.null(dfGroups), "Point size is relative to the number of enrolled participants.", ""),
@@ -61,10 +73,10 @@ Widget_ScatterPlot <- function(
   )
 
   # create widget
-  widget <- htmlwidgets::createWidget(
+  lWidget <- htmlwidgets::createWidget(
     name = "Widget_ScatterPlot",
     purrr::map(
-      input,
+      lWidgetInput,
       ~ jsonlite::toJSON(
         .x,
         null = "null",
@@ -75,14 +87,20 @@ Widget_ScatterPlot <- function(
     package = "gsm.kri"
   )
 
+  strWidgetLabel <- paste0(
+      fontawesome::fa("arrow-up-right-dots", fill = "#337ab7"),
+      "  Scatter Plot"
+  )
+  base::attr(lWidget, "chart_label") <- strWidgetLabel
+
   if (bDebug) {
     viewer <- getOption("viewer")
     options(viewer = NULL)
-    print(widget)
+    print(lWidget)
     options(viewer = viewer)
   }
 
-  return(widget)
+  return(lWidget)
 }
 
 #' Shiny bindings for Widget_ScatterPlot

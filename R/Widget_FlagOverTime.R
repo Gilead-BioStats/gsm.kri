@@ -68,21 +68,27 @@ Widget_FlagOverTime <- function(
     bDebug = bDebug
   )
 
-  widget <- htmlwidgets::createWidget(
+  lWidget <- htmlwidgets::createWidget(
     name = "Widget_FlagOverTime",
     x,
     width = "100%",
     package = "gsm.kri"
   )
 
+  strWidgetLabel <- paste0(
+      fontawesome::fa("table", fill = "#337ab7"),
+      "  Flags over Time"
+  )
+  base::attr(lWidget, "chart_label") <- strWidgetLabel
+
   if (bDebug) {
     viewer <- getOption("viewer")
     options(viewer = NULL)
-    print(widget)
+    print(lWidget)
     options(viewer = viewer)
   }
 
-  return(widget)
+  return(lWidget)
 }
 
 #' Shiny bindings for Widget_FlagOverTime
