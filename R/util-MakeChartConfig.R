@@ -15,6 +15,10 @@ MakeChartConfig <- function(
     strChartFunction,
     ...
 ) {
+    if (is.null(lMetric)) {
+        lMetric <- list()
+    }
+
     gsm.core::stop_if(
         cnd = !(is.list(lMetric) && !is.data.frame(lMetric)),
         "lMetric must be a list, but not a data.frame"
@@ -34,7 +38,7 @@ MakeChartConfig <- function(
     lChartConfig <- c(
         lMetric,
         # metric-specific chart settings
-        list(...)[[ lMetric$MetricID ]][[ strChartFunction ]],
+        list(...)[[ coalesce(lMetric$MetricID, '') ]][[ strChartFunction ]],
         # cross-metric chart settings
         list(...)[[ strChartFunction ]],
         # cross-metric, cross-chart settings

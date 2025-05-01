@@ -11,7 +11,8 @@ Widget_GroupOverview(
   strGroupLevel = NULL,
   strGroupSubset = "red",
   strGroupLabelKey = "InvestigatorLastName",
-  bDebug = FALSE
+  bDebug = FALSE,
+  ...
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ passing CTMS site and study data to [MakeLongMeta()]. Expected columns:
 \item{strGroupLabelKey}{`character` Value for the group label key. Default: 'InvestigatorLastName'.}
 
 \item{bDebug}{`logical` Print debug messages? Default: `FALSE`.}
+
+\item{...}{`any` Additional chart configuration settings.}
 }
 \description{
 `r lifecycle::badge("stable")`

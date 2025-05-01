@@ -23,10 +23,20 @@ Report_MetricCharts <- function(
   for (i in seq_along(lCharts)) {
     lChart <- lCharts[[i]]
     strChartKey <- names(lCharts)[i]
-    strChartLabel <- coalesce(
-        base::attr(lChart, "chart_label"),
-        strChartKey
-    )
+
+    # Check that chart object has [ chart_label ] attribute.
+    if (is.null(base::attr(lChart, "chart_label"))) {
+      LogMessage(
+        level = "info",
+        message = "No attribute named `chart_label` detected on chart object named `{strChartKey}`.",
+        cli_detail = "alert"
+      )
+
+      # If not, set it to the chart key.
+      base::attr(lChart, "chart_label") <- strChartKey
+    }
+
+    strChartLabel <- base::attr(lChart, "chart_label")
 
     ##### lChart tab /
     cat(paste("#####", strChartLabel, "\n"))

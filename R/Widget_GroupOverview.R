@@ -17,20 +17,20 @@
 #' @param ... `any` Additional chart configuration settings.
 #'
 #' @examples
-# site-level report
-Widget_GroupOverview(
-  dfResults = FilterByLatestSnapshotDate(gsm.core::reportingResults),
-  dfMetrics = gsm.core::reportingMetrics,
-  dfGroups = gsm.core::reportingGroups
-)
-
-# filter site-level report to all flags
-Widget_GroupOverview(
-  dfResults = FilterByLatestSnapshotDate(gsm.core::reportingResults),
-  dfMetrics = gsm.core::reportingMetrics,
-  dfGroups = gsm.core::reportingGroups,
-  strGroupSubset = "all"
-)
+#' # site-level report
+#' Widget_GroupOverview(
+#'   dfResults = FilterByLatestSnapshotDate(gsm.core::reportingResults),
+#'   dfMetrics = gsm.core::reportingMetrics,
+#'   dfGroups = gsm.core::reportingGroups
+#' )
+#' 
+#' # filter site-level report to all flags
+#' Widget_GroupOverview(
+#'   dfResults = FilterByLatestSnapshotDate(gsm.core::reportingResults),
+#'   dfMetrics = gsm.core::reportingMetrics,
+#'   dfGroups = gsm.core::reportingGroups,
+#'   strGroupSubset = "all"
+#' )
 #'
 #' # country-level report
 #' reportingMetrics <- gsm.core::reportingMetrics
@@ -49,16 +49,8 @@ Widget_GroupOverview <- function(
   dfMetrics,
   dfGroups,
   strGroupLevel = NULL,
-  strGroupSubset = switch(strGroupLevel,
-    Study = "all",
-    Site = "red",
-    Country = "all"
-  ),
-  strGroupLabelKey = switch(strGroupLevel,
-    Study = "nickname",
-    Site = "InvestigatorLastName",
-    Country = NULL
-  ),
+  strGroupSubset = "red",
+  strGroupLabelKey = "InvestigatorLastName",
   bDebug = FALSE,
   ...
 ) {
@@ -87,11 +79,11 @@ Widget_GroupOverview <- function(
     lConfig = c(
         list(
             GroupLevel = strGroupLevel,
-            groupLabelKey = strGroupLabelKey,
-            strGroupSubset = strGroupSubset
+            groupLabelKey = strGroupLabelKey
         ),
         list(...) # additional chart configuration
     ),
+    strGroupSubset = strGroupSubset,
     bDebug = bDebug
   )
 

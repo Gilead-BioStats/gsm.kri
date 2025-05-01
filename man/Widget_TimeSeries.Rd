@@ -12,7 +12,8 @@ Widget_TimeSeries(
   strOutcome = "Score",
   bAddGroupSelect = TRUE,
   strShinyGroupSelectID = "GroupID",
-  bDebug = FALSE
+  bDebug = FALSE,
+  ...
 )
 }
 \arguments{
@@ -42,6 +43,8 @@ passing CTMS site and study data to [MakeLongMeta()]. Expected columns:
 \item{strShinyGroupSelectID}{`character` Element ID of group select in Shiny context. Default: `'GroupID'`.}
 
 \item{bDebug}{`logical` Print debug messages? Default: `FALSE`.}
+
+\item{...}{`any` Additional chart configuration settings.}
 }
 \description{
 `r lifecycle::badge("stable")`

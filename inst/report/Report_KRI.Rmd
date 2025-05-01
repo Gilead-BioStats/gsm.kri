@@ -25,9 +25,9 @@ library(gsm.kri)
 library(gt)
 
 setup <- Report_Setup(
-  dfGroups =  params$dfGroups, 
-  dfMetrics = params$dfMetrics, 
-  dfResults = params$dfResults
+  dfResults = params$dfResults,
+  dfMetrics = params$dfMetrics,
+  dfGroups = params$dfGroups
 )
 
 ```
@@ -73,7 +73,15 @@ GroupOverViz <- Widget_GroupOverview(
   dfResults = dfResults_current,
   dfMetrics = params$dfMetrics,
   dfGroups = params$dfGroups,
-  strGroupLevel = setup$GroupLevel
+  strGroupLevel = setup$GroupLevel,
+  strGroupSubset = switch(setup$GroupLevel,
+    Site = 'red',
+    'all'
+  ),
+  strGroupLabelKey = switch(setup$GroupLevel,
+    Site = 'InvestigatorLastName',
+    NULL
+  )
 )
 
 overview_viz <- list(groupOverview = GroupOverViz)

@@ -11,7 +11,8 @@ Widget_ScatterPlot(
   dfBounds = NULL,
   bAddGroupSelect = TRUE,
   strShinyGroupSelectID = "GroupID",
-  bDebug = FALSE
+  bDebug = FALSE,
+  ...
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ values for reporting. Created by passing `dfResults` and `dfMetrics` to
 \item{strShinyGroupSelectID}{`character` Element ID of group select in Shiny context. Default: `'GroupID'`.}
 
 \item{bDebug}{`logical` Print debug messages? Default: `FALSE`.}
+
+\item{...}{`any` Additional chart configuration settings.}
 }
 \description{
 `r lifecycle::badge("stable")`

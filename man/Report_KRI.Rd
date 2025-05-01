@@ -7,10 +7,11 @@
 Report_KRI(
   lCharts = NULL,
   dfResults = NULL,
-  dfGroups = NULL,
   dfMetrics = NULL,
+  dfGroups = NULL,
   strOutputDir = getwd(),
-  strOutputFile = NULL
+  strOutputFile = NULL,
+  strInputPath = system.file("report", "Report_KRI.Rmd", package = "gsm.kri")
 )
 }
 \arguments{
@@ -22,16 +23,16 @@ Created by passing a list of results returned by [Summarize()] to
 `Denominator`, `Metric`, `Score`, `Flag`, `MetricID`, `StudyID`,
 `SnapshotDate`.}
 
-\item{dfGroups}{`data.frame` Group-level metadata dictionary. Created by
-passing CTMS site and study data to [MakeLongMeta()]. Expected columns:
-`GroupID`, `GroupLevel`, `Param`, `Value`.}
-
 \item{dfMetrics}{`data.frame` Metric-specific metadata for use in charts and
 reporting. Created by passing an `lWorkflow` object to [MakeMetric()].
 Expected columns: `File`, `MetricID`, `Group`, `Abbreviation`, `Metric`,
 `Numerator`, `Denominator`, `Model`, `Score`, and `Threshold`. For more
 details see the Data Model vignette: `vignette("DataModel", package =
 "gsm.core")`.}
+
+\item{dfGroups}{`data.frame` Group-level metadata dictionary. Created by
+passing CTMS site and study data to [MakeLongMeta()]. Expected columns:
+`GroupID`, `GroupLevel`, `Param`, `Value`.}
 
 \item{strOutputDir}{The output directory path for the generated report. If not provided,
 the report will be saved in the current working directory.}
@@ -52,8 +53,8 @@ This function generates a KRI report based on the provided inputs.
 # Run site-level KRI report.
 lChartsSite <- MakeCharts(
   dfResults = gsm.core::reportingResults,
-  dfGroups = gsm.core::reportingGroups,
   dfMetrics = gsm.core::reportingMetrics,
+  dfGroups = gsm.core::reportingGroups,
   dfBounds = gsm.core::reportingBounds
 )
 
@@ -61,16 +62,16 @@ strOutputFile <- "StandardSiteReport.html"
 kri_report_path <- Report_KRI(
   lCharts = lChartsSite,
   dfResults = gsm.core::reportingResults,
-  dfGroups = gsm.core::reportingGroups,
   dfMetrics = gsm.core::reportingMetrics,
+  dfGroups = gsm.core::reportingGroups,
   strOutputFile = strOutputFile
 )
 
 # Run country-level KRI report.
 lChartsCountry <- MakeCharts(
   dfResults = gsm.core::reportingResults_country,
-  dfGroups = gsm.core::reportingGroups_country,
   dfMetrics = gsm.core::reportingMetrics_country,
+  dfGroups = gsm.core::reportingGroups_country,
   dfBounds = gsm.core::reportingBounds_country
 )
 
@@ -78,8 +79,8 @@ strOutputFile <- "StandardCountryReport.html"
 kri_report_path <- Report_KRI(
   lCharts = lChartsCountry,
   dfResults = gsm.core::reportingResults_country,
-  dfGroups = gsm.core::reportingGroups_country,
   dfMetrics = gsm.core::reportingMetrics_country,
+  dfGroups = gsm.core::reportingGroups_country,
   strOutputFile = strOutputFile
 )
 }
