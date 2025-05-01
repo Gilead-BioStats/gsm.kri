@@ -25,7 +25,7 @@ Report_MetricCharts <- function(
     strChartKey <- names(lCharts)[i]
 
     # Check that chart object has [ output_label ] attribute.
-    if (is.null(base::attr(lChart, "output_label"))) {
+    if (is.null(base::attr(lChart, "output_label", exact = TRUE))) {
       LogMessage(
         level = "info",
         message = "No attribute named `output_label` detected on chart object named `{strChartKey}`.",
@@ -36,7 +36,7 @@ Report_MetricCharts <- function(
       base::attr(lChart, "output_label") <- strChartKey
     }
 
-    strOutputLabel <- base::attr(lChart, "output_label")
+    strOutputLabel <- base::attr(lChart, "output_label", exact = TRUE)
 
     ##### lChart tab /
     cat(paste("#####", strOutputLabel, "\n"))
