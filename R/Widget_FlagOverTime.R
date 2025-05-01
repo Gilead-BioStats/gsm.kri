@@ -45,10 +45,10 @@ Widget_FlagOverTime <- function(
   strGroupLevel = c("Site", "Study", "Country"),
   strFootnote = NULL,
   bExcludeEver = FALSE,
-  strOutputLabel <- paste0(
+  strOutputLabel = paste0(
       fontawesome::fa("table", fill = "#337ab7"),
       "  Flags over Time"
-  )
+  ),
   bDebug = FALSE
 ) {
   gsm.core::stop_if(cnd = !is.data.frame(dfResults), message = "dfResults is not a data.frame")

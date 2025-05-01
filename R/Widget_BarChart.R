@@ -40,7 +40,7 @@ Widget_BarChart <- function(
   strOutcome = "Score",
   bAddGroupSelect = TRUE,
   strShinyGroupSelectID = "GroupID",
-  strOutputLabel <- paste0(
+  strOutputLabel = paste0(
       fontawesome::fa("chart-simple", fill = "#337ab7"),
       "  Bar Chart"
   ),

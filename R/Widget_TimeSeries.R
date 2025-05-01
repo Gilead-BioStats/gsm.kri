@@ -39,7 +39,7 @@ Widget_TimeSeries <- function(
   strOutcome = "Score",
   bAddGroupSelect = TRUE,
   strShinyGroupSelectID = "GroupID",
-  strOutputLabel <- paste0(
+  strOutputLabel = paste0(
       fontawesome::fa("chart-line", fill = "#337ab7"),
       "  Time Series"
   ),

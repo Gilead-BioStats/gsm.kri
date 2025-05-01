@@ -51,7 +51,7 @@ Widget_GroupOverview <- function(
   strGroupLevel = NULL,
   strGroupSubset = "red",
   strGroupLabelKey = "InvestigatorLastName",
-  strOutputLabel <- paste0(
+  strOutputLabel = paste0(
       fontawesome::fa("table", fill = "#337ab7"),
       "  ",
       strGroupLevel,
