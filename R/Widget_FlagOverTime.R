@@ -79,7 +79,7 @@ Widget_FlagOverTime <- function(
       fontawesome::fa("table", fill = "#337ab7"),
       "  Flags over Time"
   )
-  base::attr(lWidget, "chart_label") <- strWidgetLabel
+  base::attr(lWidget, "output_label") <- strOutputLabel
 
   if (bDebug) {
     viewer <- getOption("viewer")
