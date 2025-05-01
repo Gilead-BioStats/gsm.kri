@@ -106,5 +106,6 @@ MakeMetricTable <- function(
         "Flag"
       ))
     )
+
   return(MetricTable)
 }
