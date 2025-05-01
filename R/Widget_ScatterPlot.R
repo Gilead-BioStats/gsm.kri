@@ -39,6 +39,10 @@ Widget_ScatterPlot <- function(
   dfBounds = NULL,
   bAddGroupSelect = TRUE,
   strShinyGroupSelectID = "GroupID",
+  strOutputLabel <- paste0(
+      fontawesome::fa("arrow-up-right-dots", fill = "#337ab7"),
+      "  Scatter Plot"
+  ),
   bDebug = FALSE,
   ...
 ) {
@@ -87,11 +91,7 @@ Widget_ScatterPlot <- function(
     package = "gsm.kri"
   )
 
-  strWidgetLabel <- paste0(
-      fontawesome::fa("arrow-up-right-dots", fill = "#337ab7"),
-      "  Scatter Plot"
-  )
-  base::attr(lWidget, "chart_label") <- strWidgetLabel
+  base::attr(lWidget, "output_label") <- strOutputLabel
 
   if (bDebug) {
     viewer <- getOption("viewer")

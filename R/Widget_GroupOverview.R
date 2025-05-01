@@ -51,6 +51,12 @@ Widget_GroupOverview <- function(
   strGroupLevel = NULL,
   strGroupSubset = "red",
   strGroupLabelKey = "InvestigatorLastName",
+  strOutputLabel <- paste0(
+      fontawesome::fa("table", fill = "#337ab7"),
+      "  ",
+      strGroupLevel,
+      " Overview"
+  ),
   bDebug = FALSE,
   ...
 ) {
@@ -103,13 +109,7 @@ Widget_GroupOverview <- function(
     package = "gsm.kri"
   )
 
-  strWidgetLabel <- paste0(
-      fontawesome::fa("table", fill = "#337ab7"),
-      "  ",
-      strGroupLevel,
-      " Overview"
-  )
-  base::attr(lWidget, "chart_label") <- strWidgetLabel
+  base::attr(lWidget, "output_label") <- strOutputLabel
 
   if (bDebug) {
     viewer <- getOption("viewer")

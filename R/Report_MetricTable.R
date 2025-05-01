@@ -57,11 +57,11 @@ Report_MetricTable <- function(
     gt::cols_hide(cols_to_hide) %>%
     fmt_sign(columns = "Flag")
 
-  strWidgetLabel <- paste0(
+  strOutputLabel <- paste0(
       fontawesome::fa("table", fill = "#337ab7"),
       "  Metric Table"
   )
-  base::attr(lMetricTable, "chart_label") <- strWidgetLabel
+  base::attr(lMetricTable, "output_label") <- strOutputLabel
 
   return(lMetricTable)
 }

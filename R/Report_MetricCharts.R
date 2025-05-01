@@ -24,22 +24,22 @@ Report_MetricCharts <- function(
     lChart <- lCharts[[i]]
     strChartKey <- names(lCharts)[i]
 
-    # Check that chart object has [ chart_label ] attribute.
-    if (is.null(base::attr(lChart, "chart_label"))) {
+    # Check that chart object has [ output_label ] attribute.
+    if (is.null(base::attr(lChart, "output_label"))) {
       LogMessage(
         level = "info",
-        message = "No attribute named `chart_label` detected on chart object named `{strChartKey}`.",
+        message = "No attribute named `output_label` detected on chart object named `{strChartKey}`.",
         cli_detail = "alert"
       )
 
       # If not, set it to the chart key.
-      base::attr(lChart, "chart_label") <- strChartKey
+      base::attr(lChart, "output_label") <- strChartKey
     }
 
-    strChartLabel <- base::attr(lChart, "chart_label")
+    strOutputLabel <- base::attr(lChart, "output_label")
 
     ##### lChart tab /
-    cat(paste("#####", strChartLabel, "\n"))
+    cat(paste("#####", strOutputLabel, "\n"))
 
     # need to initialize JS dependencies within loop in order to print correctly
     # see here: https://github.com/rstudio/rmarkdown/issues/1877#issuecomment-678996452

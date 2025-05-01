@@ -39,6 +39,10 @@ Widget_TimeSeries <- function(
   strOutcome = "Score",
   bAddGroupSelect = TRUE,
   strShinyGroupSelectID = "GroupID",
+  strOutputLabel <- paste0(
+      fontawesome::fa("chart-line", fill = "#337ab7"),
+      "  Time Series"
+  ),
   bDebug = FALSE,
   ...
 ) {
@@ -102,11 +106,7 @@ Widget_TimeSeries <- function(
     package = "gsm.kri"
   )
 
-  strWidgetLabel <- paste0(
-      fontawesome::fa("chart-line", fill = "#337ab7"),
-      "  Time Series"
-  )
-  base::attr(lWidget, "chart_label") <- strWidgetLabel
+  base::attr(lWidget, "output_label") <- strOutputLabel
 
   if (bDebug) {
     viewer <- getOption("viewer")

@@ -45,6 +45,10 @@ Widget_FlagOverTime <- function(
   strGroupLevel = c("Site", "Study", "Country"),
   strFootnote = NULL,
   bExcludeEver = FALSE,
+  strOutputLabel <- paste0(
+      fontawesome::fa("table", fill = "#337ab7"),
+      "  Flags over Time"
+  )
   bDebug = FALSE
 ) {
   gsm.core::stop_if(cnd = !is.data.frame(dfResults), message = "dfResults is not a data.frame")
@@ -75,10 +79,6 @@ Widget_FlagOverTime <- function(
     package = "gsm.kri"
   )
 
-  strWidgetLabel <- paste0(
-      fontawesome::fa("table", fill = "#337ab7"),
-      "  Flags over Time"
-  )
   base::attr(lWidget, "output_label") <- strOutputLabel
 
   if (bDebug) {

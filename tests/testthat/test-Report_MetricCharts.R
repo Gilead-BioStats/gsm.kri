@@ -6,7 +6,7 @@ test_that("Handles all supported chart types", {
     barChart = dummy_chart,
     timeSeries = dummy_chart
   ) %>% imap(~ {
-    attr(.x, "chart_label") <- .y
+    attr(.x, "output_label") <- .y
     .x
   })
 
@@ -21,7 +21,7 @@ test_that("Handles some missing chart types", {
     scatterPlot = dummy_chart,
     timeSeries = dummy_chart
   ) %>% imap(~ {
-    attr(.x, "chart_label") <- .y
+    attr(.x, "output_label") <- .y
     .x
   })
 
@@ -42,7 +42,7 @@ test_that("Output formatting and no errors", {
     scatterPlot = dummy_chart,
     barChart = dummy_chart
   ) %>% imap(~ {
-    attr(.x, "chart_label") <- .y
+    attr(.x, "output_label") <- .y
     .x
   })
 
@@ -53,7 +53,7 @@ test_that("Output formatting and no errors", {
   expect_true(any(grepl("</div>", output)))
 })
 
-test_that('Handles missing chart_label', {
+test_that('Handles missing output_label', {
   lCharts <- list(
     scatterPlot = dummy_chart
   )
