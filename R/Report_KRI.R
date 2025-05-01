@@ -11,6 +11,7 @@
 #'  the report will be saved in the current working directory.
 #' @param strOutputFile The output file name for the generated report. If not provided,
 #'  the report will be named based on the study ID, Group Level and Date.
+#' @param strInputPath `string` or `fs_path` Path to the template `Rmd` file.
 #'
 #' @return File path of the saved report html is returned invisibly. Save to object to view absolute output path.
 #' @examples
