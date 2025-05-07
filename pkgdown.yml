@@ -1,9 +1,9 @@
 pandoc: 3.1.11
-pkgdown: 2.1.1
+pkgdown: 2.1.2
 pkgdown_sha: ~
 articles:
   AddingKRIs: AddingKRIs.html
-last_built: 2025-04-14T13:40Z
+last_built: 2025-05-07T13:04Z
 urls:
   reference: https://gilead-biostats.github.io/gsm.kri/reference
   article: https://gilead-biostats.github.io/gsm.kri/articles
