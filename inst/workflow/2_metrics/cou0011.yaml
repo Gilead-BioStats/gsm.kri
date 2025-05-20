@@ -14,8 +14,8 @@ meta:
         - 0
         - 1
         - 2
-  AccrualThreshold: 30
-  AccrualMetric: Denominator
+  AccrualThreshold: 100
+  AccrualMetric: Numerator
 spec:
   Mapped_SUBJ:
     subjid:
