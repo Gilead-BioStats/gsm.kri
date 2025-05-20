@@ -9,7 +9,11 @@ meta:
   Model: Normal Approximation
   Score: Adjusted Z-Score
   AnalysisType: binary
-  Threshold: -3,-2,2,3
+  Threshold: "2,3"
+  Flag:
+        - 0
+        - 1
+        - 2
   AccrualThreshold: 30
   AccrualMetric: Denominator
 spec:
@@ -63,6 +67,7 @@ steps:
     params:
       dfAnalyzed: Analysis_Analyzed
       vThreshold: vThreshold
+      vFlag: Flag
       nAccrualThreshold: AccrualThreshold
       strAccrualMetric: AccrualMetric
   - output: Analysis_Summary

@@ -10,6 +10,10 @@ meta:
   Score: Adjusted Z-Score
   AnalysisType: rate
   Threshold: "2,3"
+  Flag:
+        - 0
+        - 1
+        - 2
   AccrualThreshold: 30
   AccrualMetric: Denominator
 spec:
@@ -61,10 +65,7 @@ steps:
     params:
       dfAnalyzed: Analysis_Analyzed
       vThreshold: vThreshold
-      vFlag:
-        - 0
-        - 1
-        - 2
+      vFlag: Flag
       nAccrualThreshold: AccrualThreshold
       strAccrualMetric: AccrualMetric
   - output: Analysis_Summary
