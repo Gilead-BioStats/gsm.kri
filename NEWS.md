@@ -1,3 +1,8 @@
+# gsm.ri 1.1.1
+
+This patch release updates the description file to incorporate min version for `{gsm.core}`.
+
+
 # gsm.kri v1.1.0
 
 This minor release adds a new KRI along with a few other small fixes.
