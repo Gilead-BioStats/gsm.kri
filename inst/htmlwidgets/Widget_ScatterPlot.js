@@ -7,31 +7,31 @@ HTMLWidgets.widget({
                 if (input.bDebug)
                     console.log(input);
 
-                // Coerce `input.lMetric` to an object if it is not already.
-                if (Object.prototype.toString.call(input.lMetric) !== '[object Object]') {
-                    input.lMetric = {};
+                // Coerce `input.lChartConfig` to an object if it is not already.
+                if (Object.prototype.toString.call(input.lChartConfig) !== '[object Object]') {
+                    input.lChartConfig = {};
                 };
 
                 // Assign a unique ID to the element.
-                el.id = `scatterPlot--${input.lMetric.MetricID}`;
+                el.id = `scatterPlot--${input.lChartConfig.MetricID}`;
 
                 // Add click event callback to chart.
-                input.lMetric.clickCallback = clickCallback(el, input);
+                input.lChartConfig.clickCallback = clickCallback(el, input);
 
                 // Generate scatter plot.
                 const instance = gsmViz.default.scatterPlot(
                     el,
                     input.dfResults,
-                    input.lMetric,
+                    input.lChartConfig,
                     input.dfBounds,
                     input.dfGroups
                 );
 
-                // Add dropdowns that highlight group IDs.
+                // Add dropdowns that highlight group ID(s).
                 addWidgetControls(
                     el,
                     input.dfResults,
-                    input.lMetric,
+                    input.lChartConfig,
                     input.dfGroups,
                     input.bAddGroupSelect,
                     false

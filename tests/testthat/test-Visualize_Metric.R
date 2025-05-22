@@ -3,9 +3,9 @@ test_that("Visualize_Metric processes data correctly", {
     {
       charts <- Visualize_Metric(
         gsm.core::reportingResults,
-        gsm.core::reportingBounds,
-        gsm.core::reportingGroups,
         gsm.core::reportingMetrics,
+        gsm.core::reportingGroups,
+        gsm.core::reportingBounds,
         strMetricID = "Analysis_kri0001"
       )
     },
@@ -27,9 +27,9 @@ test_that("Visualize_Metric handles missing MetricID", {
     {
       charts <- Visualize_Metric(
         gsm.core::reportingResults,
-        gsm.core::reportingBounds,
-        gsm.core::reportingGroups,
         gsm.core::reportingMetrics,
+        gsm.core::reportingGroups,
+        gsm.core::reportingBounds,
         strMetricID = "Analysis_kri1000"
       )
     },
@@ -45,9 +45,9 @@ test_that("Visualize_Metric handles multiple snapshots", {
     {
       charts <- Visualize_Metric(
         gsm.core::reportingResults,
-        gsm.core::reportingBounds,
-        gsm.core::reportingGroups,
         gsm.core::reportingMetrics,
+        gsm.core::reportingGroups,
+        gsm.core::reportingBounds,
         strMetricID = "Analysis_kri0001"
       )
     },

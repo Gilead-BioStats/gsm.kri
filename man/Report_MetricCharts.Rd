@@ -4,14 +4,13 @@
 \alias{Report_MetricCharts}
 \title{Render charts for a given metric to markdown}
 \usage{
-Report_MetricCharts(lCharts, strMetricID = "", overview = FALSE)
+Report_MetricCharts(lCharts, strMetricID = "")
 }
 \arguments{
 \item{lCharts}{A list of charts for the selected metric.}
 
-\item{strMetricID}{`character` MetricID to subset the data.}
-
-\item{overview}{`logical` TRUE for generating Study Overview & Flag Over Time}
+\item{strMetricID}{`character` Metric ID, wich is added as a class to each rendered chart to
+uniquely identify it within the report.}
 }
 \value{
 Markdown content with charts and a summary table for the metric
