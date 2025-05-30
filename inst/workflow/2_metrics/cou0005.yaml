@@ -9,9 +9,10 @@ meta:
   Model: Normal Approximation
   Score: Adjusted Z-Score
   AnalysisType: binary
-  Threshold: -3,-2,2,3
-  AccrualThreshold: 30
-  AccrualMetric: Denominator
+  Threshold: "2,3"
+  Flag: "0,1,2"
+  AccrualThreshold: 10
+  AccrualMetric: Numerator
 spec:
   Mapped_SUBJ:
     subjid:
@@ -28,6 +29,10 @@ steps:
     name: gsm.core::ParseThreshold
     params:
       strThreshold: Threshold
+  - output: vFlag
+    name: gsm.core::ParseThreshold
+    params:
+      strThreshold: Flag
   - output: Temp_ABNORMAL
     name: RunQuery
     params:
@@ -63,6 +68,7 @@ steps:
     params:
       dfAnalyzed: Analysis_Analyzed
       vThreshold: vThreshold
+      vFlag: vFlag
       nAccrualThreshold: AccrualThreshold
       strAccrualMetric: AccrualMetric
   - output: Analysis_Summary

@@ -10,8 +10,9 @@ meta:
   Score: Adjusted Z-Score
   AnalysisType: binary
   Threshold: "2,3"
+  Flag: "0,1,2"
   AccrualThreshold: 30
-  AccrualMetric: Denominator
+  AccrualMetric: Numerator
 spec:
   Mapped_SUBJ:
     subjid:
@@ -30,6 +31,10 @@ steps:
     name: gsm.core::ParseThreshold
     params:
       strThreshold: Threshold
+  - output: vFlag
+    name: gsm.core::ParseThreshold
+    params:
+      strThreshold: Flag
   - output: Temp_OLDQUERY
     name: RunQuery
     params:
@@ -65,10 +70,7 @@ steps:
     params:
       dfAnalyzed: Analysis_Analyzed
       vThreshold: vThreshold
-      vFlag:
-        - 0
-        - 1
-        - 2
+      vFlag: vFlag
       nAccrualThreshold: AccrualThreshold
       strAccrualMetric: AccrualMetric
   - output: Analysis_Summary

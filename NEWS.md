@@ -1,4 +1,24 @@
-# gsm.ri 1.1.1
+# gsm.kri 1.1.2
+
+This patch release updates the following yaml files in `/2_metrics` to update default accrual thresholds
+
+- kri0005.yaml
+- kri0006.yaml
+- kri0007.yaml
+- kri0008.yaml
+- kri0009.yaml
+- kri0010.yaml
+- kri0011.yaml
+- cou0005.yaml
+- cou0006.yaml
+- cou0007.yaml
+- cou0008.yaml
+- cou0009.yaml
+- cou0010.yaml
+- cou0011.yaml
+
+
+# gsm.kri 1.1.1
 
 This patch release updates the description file to incorporate min version for `{gsm.core}`.
 
