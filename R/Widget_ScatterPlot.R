@@ -59,7 +59,7 @@ Widget_ScatterPlot <- function(
       'MakeChartConfig',
       list(
           lMetric = lMetric,
-          strChartFunction = sys.call()[[1]] %>% as.character(),
+          strChartFunction = 'Widget_ScatterPlot',
           ...
         )
     )

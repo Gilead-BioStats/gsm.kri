@@ -73,7 +73,7 @@ Widget_BarChart <- function(
       'MakeChartConfig',
       list(
           lMetric = lMetric,
-          strChartFunction = sys.call()[[1]] %>% as.character(),
+          strChartFunction = 'Widget_BarChart',
           y = strOutcome,
           ...
         )

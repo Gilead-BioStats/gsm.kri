@@ -72,7 +72,7 @@ Widget_TimeSeries <- function(
       'MakeChartConfig',
       list(
           lMetric = lMetric,
-          strChartFunction = sys.call()[[1]] %>% as.character(),
+          strChartFunction = 'Widget_TimeSeries',
           y = strOutcome,
           ...
         )
