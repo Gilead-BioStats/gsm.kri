@@ -133,6 +133,13 @@ Report_OverviewText(
 
 ```
 
+
+
+```{r flag-change-html, echo=FALSE, results='asis'}
+# Render a list of newly changed flags if previous values are included in dfResults
+Report_FlagChange(dfResults = dfResults_current)
+```
+
 ## Results
 
 ```{r, echo=FALSE, results='asis'}
@@ -159,7 +166,6 @@ for (i in unique(params$dfResults$MetricID)) {
 #print dfMetrics table
 params$dfMetrics %>%
   gt::gt()
-
 ```
 
 ```{r echo=FALSE}
