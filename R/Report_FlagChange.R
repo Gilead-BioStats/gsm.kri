@@ -50,7 +50,7 @@ Report_FlagChange <- function(dfResults) {
             flag <- glue::glue("{Report_FormatFlag(as.numeric(row['Flag']))}")
             prev_flag <- glue::glue("{Report_FormatFlag(as.numeric(row['Flag_Previous']))}")
             flagChange = glue::glue("{prev_flag} {rArrow} {flag} | ΔScore: {round(as.numeric(row['Score_Change']), 2)} ({row['Score_Previous']} {rArrow} {row['Score']})")
-            previousSnap = glue::glue("{row['SnapshotDate_Previous']} | {prev_flag} | Score: {row['Score_Previous']} | Rate: {row['Numerator_Previous']} / {row['Denominator_Previous']} (", ifelse(!is.na(row['Rate_Previous']), round(as.numeric(row['Rate_Previous']), 2), "NA"), ")")
+            previousSnap = glue::glue("{row['PrevSnapshotDate']} | {prev_flag} | Score: {row['Score_Previous']} | Rate: {row['Numerator_Previous']} / {row['Denominator_Previous']} (", ifelse(!is.na(row['Rate_Previous']), round(as.numeric(row['Rate_Previous']), 2), "NA"), ")")
             currentSnap = glue::glue("{row['SnapshotDate']} | {flag} | Score: {row['Score']} | Rate: {row['Numerator']} / {row['Denominator']} (", ifelse(!is.na(row['Rate']), round(as.numeric(row['Rate']), 2), "NA"), ")")
             cat(glue::glue("<li>{row['GroupID']} | {row['MetricID']} | {flagChange}<ul>"))
             cat(glue::glue("<li>Previous: {previousSnap}</li>"))
