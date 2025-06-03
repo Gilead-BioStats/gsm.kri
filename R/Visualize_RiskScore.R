@@ -13,6 +13,7 @@
 #'     Visualize_RiskScore()
 #'
 #' @export
+
 Visualize_RiskScore <- function(
     dfRiskScoreTransposed,
     # dfMetrics = gsm.core::reportingMetrics, # TODO: merge metric metadata on to grab abbreviations
@@ -37,8 +38,8 @@ Visualize_RiskScore <- function(
         datatable(
             colnames = c(
                 strGroupLevel, # TODO: comment out when rendering risk score across multiple studies
-                #'# Studies',
-                #'Study',
+                # '# Studies',
+                # 'Study',
                 'Risk Score (%)',
                 'AE',
                 'SAE',

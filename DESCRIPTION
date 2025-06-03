@@ -21,6 +21,7 @@ Depends:
     R (>= 4.0)
 Imports: 
     dplyr,
+    DT,
     ggplot2,
     glue,
     gsm.core (>= 1.1.0),
