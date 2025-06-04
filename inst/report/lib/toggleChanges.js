@@ -95,7 +95,6 @@ document.addEventListener('DOMContentLoaded', function() {
       document.querySelectorAll('.flag-change-parent, .flag-change-item').forEach(function(li) {
         li.classList.remove('expanded');
       });
-      // Do NOT expand red flags after collapse all
     });
   });
 });
