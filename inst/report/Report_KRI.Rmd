@@ -136,8 +136,21 @@ Report_OverviewText(
 
 
 ```{r flag-change-html, echo=FALSE, results='asis'}
-# Render a list of newly changed flags if previous values are included in dfResults
-Report_FlagChange(dfResults = dfResults_current)
+
+# Add custom GroupLabel and MetricLabel values to dfResults
+dfResults_delta <- dfResults_current %>%         
+  left_join(params$dfMetrics %>% select(MetricID, MetricName=Metric), by = "MetricID") %>%
+  mutate(MetricLabel = coalesce(MetricName, MetricID)) %>%
+  add_Groups_metadata(
+    params$dfGroups,
+    setup$GroupLevel,
+    setup$GroupLabelKey
+  ) %>%
+  mutate(GroupLabel = paste0(GroupID," (",.data[[GroupLabelKey]],")"))
+
+
+# Render a list of newly changed flags if deltas are included in dfResults
+Report_FlagChange(dfResults = dfResults_delta)
 ```
 
 ## Results
