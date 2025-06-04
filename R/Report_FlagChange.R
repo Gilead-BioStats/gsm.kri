@@ -58,16 +58,27 @@ Report_FlagChange <- function(dfResults) {
   mutate(absolute_flag= abs(Flag))
   
   # Split by absolute_flag and generate separate lists
-  cat(glue::glue("<h3>New Flags</h3>"))
+  cat(glue::glue("<h3>Flags Changes</h3>"))
+  cat(glue::glue("<p>Found {nrow(changed)} Risk Signals where the Flag Value Changed. In the list below, click items with +/- to show/hide details. <a class='change-expand-all'>Click here</a> to expand all, or <a class='change-collapse-all'>click here</a> to collapse all.</p>"))
   cat('<ul class="flag-change-list">')
   abs_flag_levels <- sort(unique(changed$absolute_flag), decreasing = TRUE)
-  abs_flag_colors <- list("2"="red", "1"="amber", "0"="green")
+  abs_flag_colors <- list(
+    "2"="<span style='color:red;font-weight:bold'>red</span>", 
+    "1"="<span style='color:#FEAA02;font-weight:bold'>amber</span>", 
+    "0"="<span style='color:green;font-weight:bold'>green</span>"
+  )
   rArrow <- "<span style='font-size:1.2em;'>&#8594;</span>"
   for (af in abs_flag_levels) {
     changed_af <- changed %>% dplyr::filter(absolute_flag == af)
     color <- abs_flag_colors[[as.character(af)]]
+    # Expand red flags by default, others minimized
+    nested_class <- if (color == "red") {
+      "flag-change-nested flag-change-expanded"
+    } else {
+      "flag-change-nested"
+    }
     if (nrow(changed_af) > 0) {
-        cat(glue::glue("<li class='flag-change-parent'>Found {nrow(changed_af)} new <span style='color:{color};font-weight:bold'>{color}</span> flags <ul class='flag-change-nested'>"))
+        cat(glue::glue("<li class='flag-change-parent'>Found {nrow(changed_af)} new {color} flags <ul class='{nested_class}'>"))
         apply(changed_af, 1, function(row) {
             group = glue("{row['GroupLabel']}")
             metric = glue("{row['MetricLabel']}")
@@ -76,7 +87,12 @@ Report_FlagChange <- function(dfResults) {
             flagChange = glue::glue("{prev_flag} {rArrow} {flag}")
             previousSnap = glue::glue("{row['SnapshotDate_Previous']} | {prev_flag} | Score: {row['Score_Previous']} | Rate: {row['Numerator_Previous']} / {row['Denominator_Previous']} ({round(as.numeric(row['Metric_Previous']), 2)})")
             currentSnap = glue::glue("{row['SnapshotDate']} | {flag} | Score: {row['Score']} | Rate: {row['Numerator']} / {row['Denominator']} ({round(as.numeric(row['Metric']), 2)})")
-            delta = glue::glue("ΔScore: {round(as.numeric(row['Score_Change']), 2)} | ΔMetric: {round(as.numeric(row['Metric_Change']), 2)} | ΔNumerator: {round(as.numeric(row['Numerator_Change']), 2)} | ΔDenominator: {round(as.numeric(row['Denominator_Change']), 2)}")   
+            delta = glue::glue(
+              "ΔScore: {sprintf('%+.2f', as.numeric(row['Score_Change']))} | " ,
+              "ΔMetric: {sprintf('%+.2f', as.numeric(row['Metric_Change']))} | ",
+              "ΔNumerator: {sprintf('%+d', as.integer(row['Numerator_Change']))} | ",
+              "ΔDenominator: {sprintf('%+d', as.integer(row['Denominator_Change']))}"
+            )   
             cat(glue::glue("<li class='flag-change-item'>{group} | {metric} | {flagChange}<ul class='flag-change-details'>"))
             cat(glue::glue("<li>Current Snapshot: {currentSnap}</li>"))
             cat(glue::glue("<li>Previous Snapshot: {previousSnap}</li>"))
