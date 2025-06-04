@@ -59,7 +59,7 @@ Report_FlagChange <- function(dfResults) {
   
   # Split by absolute_flag and generate separate lists
   cat(glue::glue("<h3>New Flags</h3>"))
-  cat('<ul>')
+  cat('<ul class="flag-change-list">')
   abs_flag_levels <- sort(unique(changed$absolute_flag), decreasing = TRUE)
   abs_flag_colors <- list("2"="red", "1"="amber", "0"="green")
   rArrow <- "<span style='font-size:1.2em;'>&#8594;</span>"
@@ -67,7 +67,7 @@ Report_FlagChange <- function(dfResults) {
     changed_af <- changed %>% dplyr::filter(absolute_flag == af)
     color <- abs_flag_colors[[as.character(af)]]
     if (nrow(changed_af) > 0) {
-        cat(glue::glue("<li>Found {nrow(changed_af)} new <span style='color:{color};font-weight:bold'>{color}</span> flags <ul>"))
+        cat(glue::glue("<li class='flag-change-parent'>Found {nrow(changed_af)} new <span style='color:{color};font-weight:bold'>{color}</span> flags <ul class='flag-change-nested'>"))
         apply(changed_af, 1, function(row) {
             group = glue("{row['GroupLabel']}")
             metric = glue("{row['MetricLabel']}")
@@ -77,7 +77,7 @@ Report_FlagChange <- function(dfResults) {
             previousSnap = glue::glue("{row['SnapshotDate_Previous']} | {prev_flag} | Score: {row['Score_Previous']} | Rate: {row['Numerator_Previous']} / {row['Denominator_Previous']} ({round(as.numeric(row['Metric_Previous']), 2)})")
             currentSnap = glue::glue("{row['SnapshotDate']} | {flag} | Score: {row['Score']} | Rate: {row['Numerator']} / {row['Denominator']} ({round(as.numeric(row['Metric']), 2)})")
             delta = glue::glue("ΔScore: {round(as.numeric(row['Score_Change']), 2)} | ΔMetric: {round(as.numeric(row['Metric_Change']), 2)} | ΔNumerator: {round(as.numeric(row['Numerator_Change']), 2)} | ΔDenominator: {round(as.numeric(row['Denominator_Change']), 2)}")   
-            cat(glue::glue("<li>{group} | {metric} | {flagChange}<ul>"))
+            cat(glue::glue("<li class='flag-change-item'>{group} | {metric} | {flagChange}<ul class='flag-change-details'>"))
             cat(glue::glue("<li>Current Snapshot: {currentSnap}</li>"))
             cat(glue::glue("<li>Previous Snapshot: {previousSnap}</li>"))
             cat(glue::glue("<li>{delta}</li>"))

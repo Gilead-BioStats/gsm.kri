@@ -195,3 +195,6 @@ toggle_toc <- system.file('report', 'lib', 'toggleTOC.js', package = "gsm.kri")
 
 ```{js, file={toggle_toc}, echo=FALSE}
 ```
+
+```{js, file=system.file('report', 'lib', 'toggleChanges.js', package = 'gsm.kri'), echo=FALSE}
+```

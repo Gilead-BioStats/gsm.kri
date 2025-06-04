@@ -135,3 +135,33 @@ tbody.gt_table_body tr:hover:nth-child(odd) {
   display: none;
 }
 
+/* Flag Change List Styles */
+.flag-change-list {
+  list-style-type: disc;
+  margin-left: 1.5em;
+}
+.flag-change-parent {
+  margin-bottom: 1em;
+  font-weight: bold;
+}
+.flag-change-nested {
+  list-style-type: circle;
+  margin-left: 2em;
+  display: none;
+}
+.flag-change-item {
+  margin-bottom: 0.5em;
+  font-weight: normal;
+}
+.flag-change-details {
+  list-style-type: square;
+  margin-left: 2em;
+  color: #444;
+  font-size: 0.95em;
+  display: none;
+}
+.flag-change-parent:hover, .flag-change-item:hover {
+  background: #f5f5f5;
+  cursor: pointer;
+}
+
