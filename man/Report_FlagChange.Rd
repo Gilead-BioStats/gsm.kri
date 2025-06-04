@@ -19,12 +19,13 @@ Generate an HTML summary of newly changed risk flags between snapshots.
 This function compares the current and previous snapshot for each group/metric and lists all changes in flag status, including the direction and magnitude of change. It provides a detailed breakdown for each change, including the group, metric, flag transition, score and metric changes, and numerator/denominator details. Optionally, if `GroupLabel` or `MetricLabel` columns are present, they will be used for display; otherwise, `GroupID` and `MetricID` are used.
 
 
+
 - Only rows where the flag value has changed (including NA transitions) are included.
 - Rows where the flag went from NA to green (0) are excluded.
 - Results are grouped and color-coded by the absolute value of the new flag (red, amber, green).
 - For each change, the function displays:
   - Group and metric (using labels if available)
   - Flag transition (with icon)
-  - Score and metric changes (ΔScore, ΔMetric, etc.)
+  - Score and metric changes (\eqn{\Delta} Score, \eqn{\Delta} Metric, etc.`)
   - Previous and current snapshot details (flag, score, rate, numerator/denominator)
 }

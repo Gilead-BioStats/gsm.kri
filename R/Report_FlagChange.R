@@ -9,13 +9,14 @@
 #' @return HTML (character) containing a nested unordered list of newly changed flags, grouped by absolute flag value and color-coded. Each entry includes the flag transition, score/metric/numerator/denominator changes, and snapshot details.
 #'
 #' @details
+#'
 #' - Only rows where the flag value has changed (including NA transitions) are included.
 #' - Rows where the flag went from NA to green (0) are excluded.
 #' - Results are grouped and color-coded by the absolute value of the new flag (red, amber, green).
 #' - For each change, the function displays:
 #'   - Group and metric (using labels if available)
 #'   - Flag transition (with icon)
-#'   - Score and metric changes (ΔScore, ΔMetric, etc.)
+#'   - Score and metric changes (\eqn{\Delta} Score, \eqn{\Delta} Metric, etc.`)
 #'   - Previous and current snapshot details (flag, score, rate, numerator/denominator)
 #'
 #' @export
@@ -44,27 +45,27 @@ Report_FlagChange <- function(dfResults) {
   }
 
   # Only show Risk Signals where flag has changed from previous snapshot
-  changed <- dfResults %>% 
+  changed <- dfResults %>%
   dplyr::filter(
     (is.na(Flag) & !is.na(Flag_Previous)) |
     (!is.na(Flag) & is.na(Flag_Previous)) |
     (Flag != Flag_Previous)
-  ) %>% 
+  ) %>%
   # Drop rows where flag went from NA -> Green
   filter(!(is.na(Flag_Previous) & Flag==0)) %>%
-  # Sort by previous flag and then current flag 
+  # Sort by previous flag and then current flag
   dplyr::arrange(dplyr::desc(abs(Flag_Previous))) %>%
   dplyr::arrange(dplyr::desc(abs(Flag))) %>%
   mutate(absolute_flag= abs(Flag))
-  
+
   # Split by absolute_flag and generate separate lists
   cat(glue::glue("<h3>Flags Changes</h3>"))
   cat(glue::glue("<p>Found {nrow(changed)} Risk Signals where the Flag Value Changed. In the list below, click items with +/- to show/hide details. <a class='change-expand-all'>Click here</a> to expand all, or <a class='change-collapse-all'>click here</a> to collapse all.</p>"))
   cat('<ul class="flag-change-list">')
   abs_flag_levels <- sort(unique(changed$absolute_flag), decreasing = TRUE)
   abs_flag_colors <- list(
-    "2"="<span style='color:red;font-weight:bold'>red</span>", 
-    "1"="<span style='color:#FEAA02;font-weight:bold'>amber</span>", 
+    "2"="<span style='color:red;font-weight:bold'>red</span>",
+    "1"="<span style='color:#FEAA02;font-weight:bold'>amber</span>",
     "0"="<span style='color:green;font-weight:bold'>green</span>"
   )
   rArrow <- "<span style='font-size:1.2em;'>&#8594;</span>"
@@ -88,11 +89,11 @@ Report_FlagChange <- function(dfResults) {
             previousSnap = glue::glue("{row['SnapshotDate_Previous']} | {prev_flag} | Score: {row['Score_Previous']} | Rate: {row['Numerator_Previous']} / {row['Denominator_Previous']} ({round(as.numeric(row['Metric_Previous']), 2)})")
             currentSnap = glue::glue("{row['SnapshotDate']} | {flag} | Score: {row['Score']} | Rate: {row['Numerator']} / {row['Denominator']} ({round(as.numeric(row['Metric']), 2)})")
             delta = glue::glue(
-              "ΔScore: {sprintf('%+.2f', as.numeric(row['Score_Change']))} | " ,
-              "ΔMetric: {sprintf('%+.2f', as.numeric(row['Metric_Change']))} | ",
-              "ΔNumerator: {sprintf('%+d', as.integer(row['Numerator_Change']))} | ",
-              "ΔDenominator: {sprintf('%+d', as.integer(row['Denominator_Change']))}"
-            )   
+              "\\(\\Delta\\) Score: {sprintf('%+.2f', as.numeric(row['Score_Change']))} | " ,
+              "\\(\\Delta\\) Metric: {sprintf('%+.2f', as.numeric(row['Metric_Change']))} | ",
+              "\\(\\Delta\\) Numerator: {sprintf('%+d', as.integer(row['Numerator_Change']))} | ",
+              "\\(\\Delta\\) Denominator: {sprintf('%+d', as.integer(row['Denominator_Change']))}"
+            )
             cat(glue::glue("<li class='flag-change-item'>{group} | {metric} | {flagChange}<ul class='flag-change-details'>"))
             cat(glue::glue("<li>Current Snapshot: {currentSnap}</li>"))
             cat(glue::glue("<li>Previous Snapshot: {previousSnap}</li>"))
