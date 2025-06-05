@@ -79,7 +79,7 @@ Report_FlagChange <- function(dfResults) {
       "flag-change-nested"
     }
     if (nrow(changed_af) > 0) {
-        cat(cli::pluralize("<li class='flag-change-parent'>Found {nrow(changed_af)} new {color} flag{?s} <ul class='{nested_class}'>"))
+        cat(cli::pluralize("<li class='flag-change-parent'>Found {nrow(changed_af)} new {color} {cli::qty(nrow(changed_af)) }flag{?s} <ul class='{nested_class}'>"))
         apply(changed_af, 1, function(row) {
             group = glue("{row['GroupLabel']}")
             metric = glue("{row['MetricLabel']}")
