@@ -60,7 +60,7 @@ Report_FlagChange <- function(dfResults) {
 
   # Split by absolute_flag and generate separate lists
   cat(glue::glue("<h3>Flags Changes</h3>"))
-  cat(glue::glue("<p>Found {nrow(changed)} Risk Signals where the Flag Value Changed. In the list below, click items with +/- to show/hide details. <a class='change-expand-all'>Click here</a> to expand all, or <a class='change-collapse-all'>click here</a> to collapse all.</p>"))
+  cat(cli::pluralize("<p>Found {nrow(changed)} Risk Signal{?s} where the Flag Value Changed. In the list below, click items with +/- to show/hide details. <a class='change-expand-all'>Click here</a> to expand all, or <a class='change-collapse-all'>click here</a> to collapse all.</p>"))
   cat('<ul class="flag-change-list">')
   abs_flag_levels <- sort(unique(changed$absolute_flag), decreasing = TRUE)
   abs_flag_colors <- list(
@@ -79,7 +79,7 @@ Report_FlagChange <- function(dfResults) {
       "flag-change-nested"
     }
     if (nrow(changed_af) > 0) {
-        cat(glue::glue("<li class='flag-change-parent'>Found {nrow(changed_af)} new {color} flags <ul class='{nested_class}'>"))
+        cat(cli::pluralize("<li class='flag-change-parent'>Found {nrow(changed_af)} new {color} flag{?s} <ul class='{nested_class}'>"))
         apply(changed_af, 1, function(row) {
             group = glue("{row['GroupLabel']}")
             metric = glue("{row['MetricLabel']}")
