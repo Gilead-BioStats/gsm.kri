@@ -35,7 +35,7 @@ Visualize_RiskScore <- function(
         )
 
     lRiskScoreTable <- dfRiskScoreSubset %>%
-        datatable(
+        DT::datatable(
             colnames = c(
                 strGroupLevel, # TODO: comment out when rendering risk score across multiple studies
                 # '# Studies',
@@ -74,9 +74,9 @@ Visualize_RiskScore <- function(
             ),
             rownames = FALSE
         ) %>%
-        formatStyle(
+        DT::formatStyle(
             'RiskScoreNormalized',
-            backgroundColor = styleInterval(
+            backgroundColor = DT::styleInterval(
                 cuts = c(2, 4, 6, 8, 10, 12.5, 15, 20, 25),
                 values = c(
                     '#00683777',
@@ -93,7 +93,7 @@ Visualize_RiskScore <- function(
             )
         )# %>%
         # TODO: enable when rendering risk score across multiple studies
-        #formatStyle(
+        #DT::formatStyle(
         #    c('GroupLabel', 'StudyLabel'),
         #    "white-space" = "nowrap"
         #)
