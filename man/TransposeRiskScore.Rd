@@ -4,12 +4,12 @@
 \alias{TransposeRiskScore}
 \title{Transpose Risk Score}
 \usage{
-TransposeRiskScore(dfRiskScore, strValuesFrom = "Weight")
+TransposeRiskScore(dfResults, dfMetrics, strValuesFrom = "flag_icon")
 }
 \arguments{
-\item{dfRiskScore}{`data.frame` The risk score data to be transposed.}
-
 \item{strValuesFrom}{`character` The column name from which to take values in the transposed data.}
+
+\item{dfRiskScore}{`data.frame` The risk score data to be transposed.}
 }
 \value{
 `data.frame` The transposed risk score data with `MetricID` as columns.

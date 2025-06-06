@@ -16,27 +16,19 @@
 #' @export
 
 TransposeRiskScore <- function(
-    dfRiskScore,
-    strValuesFrom = 'Weight'
+    dfResults,
+    dfMetrics,
+    strValuesFrom = 'flag_icon'
 ) {
-    dfRiskScore %>%
-        select(
-            StudyID,
-            SnapshotMonth,
-            SnapshotDate,
-            GroupLevel,
-            GroupID,
-            RiskScore,
-            RiskScoreMax,
-            RiskScoreNormalized,
-            nRed,
-            nAmber,
-            MetricID,
-            !!strValuesFrom
-        ) %>%
+    wide <- dfResults %>%
+        # Merge in metric label from dfMetrics
+        left_join(dfMetrics %>% select(MetricID, MetricLabel = Abbreviation), by = "MetricID") %>%
+        mutate(Label = paste0(Report_FormatFlag(Flag), ' <sup>', RiskScore, '</sup>')) %>%
         arrange(MetricID) %>%
         pivot_wider(
-            names_from = 'MetricID',
-            values_from = !!strValuesFrom
+            id_cols= c("StudyID","SnapshotDate","GroupID", "GroupLevel"),
+            names_from = 'MetricLabel',
+            values_from = c("Flag","RiskScore","Label")
         )
+    return(wide)
 }
