@@ -21,7 +21,8 @@ SummarizeRiskScore <- function(
 ) {
     dfRiskScoreTransposed %>%
         group_by(
-            SnapshotMonth,
+            StudyID,
+            SnapshotDate,
             GroupLevel,
             GroupID
         ) %>%
