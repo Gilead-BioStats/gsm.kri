@@ -51,6 +51,9 @@ function renderRiskScoreTable(el, data) {
     }
     // Add a class to the table for targeting
     el.innerHTML = `<table class="risk-score-table sortable" style="border-collapse:collapse;width:100%">${thead}${tbody}</table>`;
+    // Add timestamp above the risk score table
+    const timestamp = new Date().toLocaleString();
+    el.innerHTML = `<div style="font-size:0.9em;color:#666;margin-bottom:4px;">Report generated: ${timestamp}</div>` + el.innerHTML;
     // Wait for DOM update, then make sortable
     setTimeout(function() {
         var table = el.querySelector('table.risk-score-table');
