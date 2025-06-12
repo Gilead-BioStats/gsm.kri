@@ -19,9 +19,12 @@ Visualize_RiskScore <- function(
     dfMetrics,
     strGroupLevel = 'Site'
 ) {
-    # Ensure RiskScoreNormalized column exists
-    if (!"RiskScoreNormalized" %in% names(dfResults)) {
-        stop("Input data frame must contain a 'RiskScoreNormalized' column. Please run CalculateRiskScore and TransposeRiskScore first.")
+    # Ensure RiskScore column exists
+    if (!"RiskScore" %in% names(dfResults)) {
+        stop("Input data frame must contain a 'RiskScore' column. Please run CalculateRiskScore on Reporting Results first.")
     }
-    Widget_RiskScore(dfResults, dfMetrics, strGroupLevel)
+
+    dfRiskScores <- dfResults %>% GroupRiskScore(strGroupLevel = "Site")
+
+    Widget_RiskScore(dfResults, dfRiskScores, dfMetrics)
 }

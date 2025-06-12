@@ -5,43 +5,38 @@ function renderRiskScoreTable(el, data) {
         return;
     }
     const columns = Object.keys(data[0]);
-    // Combine RiskScore, RiskScoreMax, RiskScoreNormalized into a single column
-    let thead = '<thead><tr>' + columns.map(col => {
-        if (col === 'RiskScoreNormalized') {
-            return `<th style="padding:4px;border:1px solid #ccc;">Risk Score</th>`;
-        } else if (col === 'RiskScore' || col === 'RiskScoreMax') {
-            return '';
+    // Use only columns present in dfRiskScores_Wide (which includes the renamed columns)
+    // These are: StudyID, SnapshotDate, GroupID, GroupLevel, 'Risk Score', 'Raw Risk Score', 'Max Risk Score', and all Label_* columns
+    const groupCols = ['StudyID', 'SnapshotDate', 'GroupID', 'GroupLevel'];
+    const mainScoreCols = ['Risk Score', 'Raw Risk Score', 'Max Risk Score'];
+    const labelCols = columns.filter(col => col.startsWith('Label_'));
+    const displayCols = groupCols.filter(col => columns.includes(col))
+        .concat(mainScoreCols.filter(col => columns.includes(col)))
+        .concat(labelCols);
+
+    let thead = '<thead><tr>' + displayCols.map(col => {
+        if (col.startsWith('Label_')) {
+            return `<th style="padding:4px;border:1px solid #ccc;">${col.replace('Label_', '')}</th>`;
         } else {
             return `<th style="padding:4px;border:1px solid #ccc;">${col}</th>`;
         }
     }).join('') + '</tr></thead>';
+
     let tbody = '<tbody>' + data.map(row => {
-        return '<tr>' + columns.map(col => {
-            if (col === 'RiskScoreNormalized') {
-                // Compose combined value
-                let score = row['RiskScore'] ?? '';
-                let max = row['RiskScoreMax'] ?? '';
-                let norm = row['RiskScoreNormalized'] ?? '';
-                let normVal = norm !== '' ? Math.round(parseFloat(norm) * 10) / 10 : '';
-                let combined = `${score} / ${max} (${normVal}%)`;
-                // Color scale (same as R)
-                const cuts = [2, 4, 6, 8, 10, 12.5, 15, 20, 25];
-                const colors = [
-                    '#00683777', '#1a985077', '#66bd6377', '#a6d96a77', '#d9ef8b77',
-                    '#ffffbf77', '#fee08b77', '#fdae6177', '#f46d4377', '#d7302777'
-                ];
-                let idx = cuts.findIndex(cut => normVal <= cut);
-                if (idx === -1) idx = colors.length - 1;
-                let style = `padding:4px;border:1px solid #ccc;background:${colors[idx]};`;
-                return `<td style="${style}">${combined}</td>`;
-            } else if (col === 'RiskScore' || col === 'RiskScoreMax') {
-                return '';
-            } else {
-                let val = row[col];
-                return `<td style="padding:4px;border:1px solid #ccc;">${val == null ? '' : val}</td>`;
+        return '<tr>' + displayCols.map(col => {
+            let val = row[col];
+            // Round 'Risk Score' to 1 decimal place if numeric
+            if (col === 'Risk Score' && val != null && !isNaN(val)) {
+                val = Math.round(parseFloat(val) * 10) / 10;
             }
+            // Prevent line breaks between <svg> and <sup> in label columns using CSS
+            if (col.startsWith('Label_') && typeof val === 'string') {
+                val = `<span style="white-space:nowrap;">${val}</span>`;
+            }
+            return `<td style="padding:4px;border:1px solid #ccc;">${val == null ? '' : val}</td>`;
         }).join('') + '</tr>';
     }).join('') + '</tbody>';
+
     // Add sorttable.js if not already loaded
     if (!window.__riskScoreSorttableLoaded) {
         var script = document.createElement('script');

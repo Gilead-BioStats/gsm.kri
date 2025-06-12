@@ -17,31 +17,38 @@
 #' @export
 Widget_RiskScore <- function(
     dfResults,
+    dfRiskScores,
     dfMetrics,
     strGroupLevel = 'Site',
     bDebug= FALSE
 ) {
     stopifnot(is.data.frame(dfResults))
     stopifnot(is.character(strGroupLevel) && length(strGroupLevel) == 1)
-    if (!"RiskScoreNormalized" %in% names(dfResults)) {
-        stop("Input data frame must contain a 'RiskScoreNormalized' column. Please run CalculateRiskScore and TransposeRiskScore first.")
+    if (!"RiskScore" %in% names(dfResults)) {
+        stop("Input data frame must contain a 'RiskScore' column. Please run CalculateRiskScore and TransposeRiskScore first.")
     }
 
     # Transpose and Summarize the data for easier JS rendering
-    dfSRS <- TransposeRiskScore(dfResults, dfMetrics) 
-    #%>% SummarizeRiskScore()
+    dfResults_Wide <- TransposeRiskScore(dfResults, dfMetrics)
+    
+    dfRiskScores_Wide <- dfRiskScores %>%
+        left_join(dfResults_Wide, by = c("StudyID", "SnapshotDate", "GroupID", "GroupLevel")) %>%
+        select(
+            StudyID, SnapshotDate, GroupID, GroupLevel,
+            'Risk Score' = RiskScore_Percent, 'Raw Risk Score' = RiskScore, 'Max Risk Score' = RiskScore_Max,
+            starts_with("Label_")
+        )
 
     # Pass the transposed data and group level to the widget
     widget <- htmlwidgets::createWidget(
         name = "Widget_RiskScore",
         list(
             data = jsonlite::toJSON(
-                dfSRS,
+                dfRiskScores_Wide,
                 null = "null",
                 na = "string",
                 auto_unbox = TRUE
-            ),
-            strGroupLevel = strGroupLevel
+            )
         ),
         package = "gsm.kri"
     )

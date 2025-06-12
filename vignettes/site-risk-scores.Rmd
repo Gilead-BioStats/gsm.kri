@@ -1,0 +1,92 @@
+---
+title: "Site Risk Scores"
+author: "Your Name"
+date: "2025-06-08"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Site Risk Scores}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Introduction
+
+This vignette demonstrates how to calculate and visualize site risk scores using the `gsm.kri` package. Site risk scores (SRS) are calculated based on Key Risk Indicators (KRIs) and are essential for monitoring and managing risks at clinical trial sites. The `gsm.kri` package provides functions to compute these scores, which can then be visualized and reported.
+
+# Step-by-Step Guide
+
+Site Risk Scores are added to the `results` data saved in the reporting layer of gsm.core.  using the following steps: 
+
+1. *Generate Metric Results* - Generate KRI results using the standard gsm reporting pipeline (TODO add vignette link). Save a results table in the format of `gsm.core::reportingResults`.
+2. *Calculate Metric-level Scores* - The `gsm.kri::CalculateRiskScore` function adds risk scores to the provided `dfResults` data frame. The function takes a set of metric weights and uses them to derive a risk score for each row in `dfResults`. 
+    - `gsm.kri::metricWeights` provides a default set of weights, or users can define their own weights.  
+    - For each row of `dfResults`, the following columns are added:
+        - `RiskScore`: Risk score calculated based on the metric weights.
+        - `RiskScore_max`:  The maximum possible risk score for the Metric.
+        - `RiskScore_html`: An HTML representation of the risk score including a flag icon and the risk score value, which can be used for visualization in web applications.
+3. *Calculate Group-Level Risk Scores* - `SummarizeRiskScores` aggregates the risk scores across specified groups and returns a data frame giving the risk profile for each site (or other selected `GroupType`) with the following columns:
+    - `GroupType`: The type of group (e.g., site, region).
+    - `GroupID`: The unique identifier for the group.
+    - `RiskScore`: The total risk score for the group.
+    - `RiskScore_percent`: The normalized risk score for the group, which is the risk score divided by the maximum possible risk score.
+    - `RiskScore_max`: The maximum risk score for the group.
+4. *Visualize Risk Scores* - The `Visualize_RiskScore` function creates an interactive HTML widget to visualize the risk scores. This widget can be saved as a standalone HTML file for reporting purposes.
+
+
+
+
+
+# Prerequisites
+
+```r
+# Install and load required packages
+if (!requireNamespace("devtools", quietly = TRUE)) install.packages("devtools")
+if (!requireNamespace("gsm.core", quietly = TRUE)) {
+  devtools::install_github("gilead-biostats/gsm.core")
+}
+library(gsm.core)
+library(gsm.kri)
+library(dplyr)
+```
+
+# Example Workflow
+
+```r
+# Load and process results
+dfResults <- gsm.core::reportingResults %>%
+  FilterByLatestSnapshotDate() %>%
+  CalculateRiskScore(gsm.kri::metricWeights)
+
+# Transpose for reporting
+wide <- dfResults %>%
+  TransposeRiskScore(dfMetrics = gsm.core::reportingMetrics)
+
+# Summarize risk scores
+summary <- dfResults %>%
+  SummarizeRiskScore()
+
+# Print a timestamp
+cat(paste0('Report generated: ', format(Sys.time(), '%Y-%m-%d %H:%M:%S'), '\n'))
+
+# View the wide table
+head(wide)
+
+# View the summary
+t(summary)
+```
+
+# Visualization
+
+You can visualize the risk scores using the provided widget:
+
+```r
+htmlwidgets::saveWidget(
+  Visualize_RiskScore(dfResults, gsm.core::reportingMetrics),
+  file = "site_risk_score_widget.html",
+  selfcontained = TRUE
+)
+```
+
+# Conclusion
+
+This vignette showed how to compute and report site risk scores using the `gsm.kri` package.
