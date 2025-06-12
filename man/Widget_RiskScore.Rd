@@ -7,7 +7,13 @@
 \usage{
 Visualize_RiskScore(dfResults, dfMetrics, strGroupLevel = "Site")
 
-Widget_RiskScore(dfResults, dfMetrics, strGroupLevel = "Site", bDebug = FALSE)
+Widget_RiskScore(
+  dfResults,
+  dfRiskScores,
+  dfMetrics,
+  strGroupLevel = "Site",
+  bDebug = FALSE
+)
 }
 \arguments{
 \item{strGroupLevel}{`character` The group level to filter the risk score data. Default is 'Site'.}

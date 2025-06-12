@@ -90,12 +90,27 @@ TransposeRiskScore <- function(
     wide <- dfResults %>%
         # Merge in metric label from dfMetrics
         left_join(dfMetrics %>% select(MetricID, MetricLabel = Abbreviation), by = "MetricID") %>%
-        mutate(Label = paste0(Report_FormatFlag(Flag), ' <sup>', RiskScore, '</sup>')) %>%
+        mutate(
+            Label = paste0(Report_FormatFlag(Flag), ' <sup>', RiskScore, '</sup>'),
+            Details = paste0(
+                'Metric: ', MetricLabel, '\n',
+                'Group: ', GroupID, '\n',
+                'Group Level: ', GroupLevel, '\n',
+                'Snapshot Date: ', SnapshotDate, '\n',
+                'Numerator: ', ifelse(!is.na(Numerator), Numerator, ''), '\n',
+                'Denominator: ', ifelse(!is.na(Denominator), Denominator, ''), '\n',
+                'Metric: ', round(Metric, 2), '\n',
+                'Score: ', ifelse(!is.na(Score), round(Score, 2), ''), '\n',
+                'Flag: ', ifelse(!is.na(Flag), Flag, ''), '\n',
+                "Raw Risk Score: ", ifelse(!is.na(RiskScore), RiskScore, ''), '\n', 
+                'Max Risk Score: ', ifelse(!is.na(RiskScore_Max), RiskScore_Max, '')
+            )
+        ) %>%
         arrange(MetricID) %>%
         pivot_wider(
             id_cols= c("StudyID","SnapshotDate","GroupID", "GroupLevel"),
             names_from = 'MetricLabel',
-            values_from = c("Label")
+            values_from = c("Label", "Details")
         )
     return(wide)
 }

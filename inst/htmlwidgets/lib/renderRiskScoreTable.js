@@ -30,10 +30,16 @@ function renderRiskScoreTable(el, data) {
                 val = Math.round(parseFloat(val) * 10) / 10;
             }
             // Prevent line breaks between <svg> and <sup> in label columns using CSS
+            let tdAttrs = '';
             if (col.startsWith('Label_') && typeof val === 'string') {
                 val = `<span style="white-space:nowrap;">${val}</span>`;
+                // Find corresponding _Details column
+                const detailsCol = col.replace('Label_', 'Details_');
+                if (detailsCol in row && row[detailsCol]) {
+                    tdAttrs = ` title="${String(row[detailsCol]).replace(/"/g, '&quot;')}"`;
+                }
             }
-            return `<td style="padding:4px;border:1px solid #ccc;">${val == null ? '' : val}</td>`;
+            return `<td style="padding:4px;border:1px solid #ccc;"${tdAttrs}>${val == null ? '' : val}</td>`;
         }).join('') + '</tr>';
     }).join('') + '</tbody>';
 

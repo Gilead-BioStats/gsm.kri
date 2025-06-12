@@ -36,7 +36,7 @@ Widget_RiskScore <- function(
         select(
             StudyID, SnapshotDate, GroupID, GroupLevel,
             'Risk Score' = RiskScore_Percent, 'Raw Risk Score' = RiskScore, 'Max Risk Score' = RiskScore_Max,
-            starts_with("Label_")
+            starts_with("Label_"), starts_with("Details_")
         )
 
     # Pass the transposed data and group level to the widget
