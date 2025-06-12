@@ -48,3 +48,6 @@ CalculateRiskScore <- function(
 
     return(dfRiskScore)
 }
+
+#' @keywords internal
+NULL
