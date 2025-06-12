@@ -4,53 +4,42 @@
 #' `r lifecycle::badge("stable")`
 #'
 #' This function generates a markdown framework for charts
-#
+#'
 #' @param lCharts A list of charts for the selected metric.
-#' @param strMetricID `character` MetricID to subset the data.
-#' @param overview `logical` TRUE for generating Study Overview & Flag Over Time
+#' @param strMetricID `character` Metric ID, wich is added as a class to each rendered chart to
+#' uniquely identify it within the report.
 #'
 #' @return Markdown content with charts and a summary table for the metric
 #'
 #' @export
-#'
-Report_MetricCharts <- function(lCharts, strMetricID = "", overview = FALSE) {
-  #### charts tabset
+
+Report_MetricCharts <- function(
+    lCharts,
+    strMetricID = ""
+) {
+  #### charts tabset /
   cat("#### Summary Charts {.tabset} \n")
-  chartTypes <- c(
-    "scatterPlot",
-    "barChart",
-    "timeSeries",
-    "metricTable"
-  )
 
-  chartTypes2 <- c(
-    "groupOverview",
-    "flagOverTime"
-  )
+  for (i in seq_along(lCharts)) {
+    lChart <- lCharts[[i]]
+    strChartKey <- names(lCharts)[i]
 
-  if (overview == FALSE) {
-    lCharts <- lCharts[intersect(chartTypes, names(lCharts))]
-  } else {
-    lCharts <- lCharts[intersect(chartTypes2, names(lCharts))]
-  }
+    # Check that chart object has [ output_label ] attribute.
+    if (is.null(base::attr(lChart, "output_label", exact = TRUE))) {
+      LogMessage(
+        level = "info",
+        message = "No attribute named `output_label` detected on chart object named `{strChartKey}`.",
+        cli_detail = "alert"
+      )
 
-  for (j in seq_along(lCharts)) {
-    chart_key <- names(lCharts)[j]
-    chart <- lCharts[[j]]
+      # If not, set it to the chart key.
+      base::attr(lChart, "output_label") <- strChartKey
+    }
 
-    chart_name <- switch(chart_key,
-      groupOverview = paste0(fontawesome::fa("table", fill = "#337ab7"), "  Group Overview"),
-      flagOverTime = paste0(fontawesome::fa("table", fill = "#337ab7"), "  Flags Over Time"),
-      scatterPlot = paste0(fontawesome::fa("arrow-up-right-dots", fill = "#337ab7"), "  Scatter Plot"),
-      barChart = paste0(fontawesome::fa("chart-simple", fill = "#337ab7"), "  Bar Chart"),
-      timeSeries = paste0(fontawesome::fa("chart-line", fill = "#337ab7"), "  Time Series"),
-      metricTable = paste0(fontawesome::fa("table", fill = "#337ab7"), "  Metric Table")
-    )
+    strOutputLabel <- base::attr(lChart, "output_label", exact = TRUE)
 
-    ##### chart tab /
-    chart_header <- paste("#####", chart_name, "\n")
-
-    cat(chart_header)
+    ##### lChart tab /
+    cat(paste("#####", strOutputLabel, "\n"))
 
     # need to initialize JS dependencies within loop in order to print correctly
     # see here: https://github.com/rstudio/rmarkdown/issues/1877#issuecomment-678996452
@@ -64,10 +53,10 @@ Report_MetricCharts <- function(lCharts, strMetricID = "", overview = FALSE) {
     )
 
     # Display chart.
-    cat(glue::glue("<div class='gsm-widget {strMetricID} {chart_key}'>"))
-    cat(knitr::knit_print(htmltools::tagList(chart)))
+    cat(glue::glue("<div class='gsm-widget {strMetricID} {strChartKey}'>"))
+    cat(knitr::knit_print(htmltools::tagList(lChart)))
     cat("</div>")
-    ##### / chart tab
+    ##### / lChart tab
   }
 
   cat("#### {-} \n")

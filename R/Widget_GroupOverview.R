@@ -14,6 +14,7 @@
 #' - 'red/amber': Groups with 1+ red/amber flag.
 #' - 'amber': Groups with 1+ amber flag.
 #' @param strGroupLabelKey `character` Value for the group label key. Default: 'InvestigatorLastName'.
+#' @param ... `any` Additional chart configuration settings.
 #'
 #' @examples
 #' # site-level report
@@ -22,7 +23,7 @@
 #'   dfMetrics = gsm.core::reportingMetrics,
 #'   dfGroups = gsm.core::reportingGroups
 #' )
-#'
+#' 
 #' # filter site-level report to all flags
 #' Widget_GroupOverview(
 #'   dfResults = FilterByLatestSnapshotDate(gsm.core::reportingResults),
@@ -50,7 +51,14 @@ Widget_GroupOverview <- function(
   strGroupLevel = NULL,
   strGroupSubset = "red",
   strGroupLabelKey = "InvestigatorLastName",
-  bDebug = FALSE
+  strOutputLabel = paste0(
+      fontawesome::fa("table", fill = "#337ab7"),
+      "  ",
+      strGroupLevel,
+      " Overview"
+  ),
+  bDebug = FALSE,
+  ...
 ) {
   gsm.core::stop_if(cnd = !is.data.frame(dfResults), "dfResults is not a data.frame")
   gsm.core::stop_if(cnd = !is.data.frame(dfMetrics), "dfMetrics is not a data.frame")
@@ -70,21 +78,26 @@ Widget_GroupOverview <- function(
   )
 
   # forward options using x
-  input <- list(
+  lInput <- list(
     dfResults = dfResults,
     dfMetrics = dfMetrics,
     dfGroups = dfGroups,
-    strGroupLevel = strGroupLevel,
+    lConfig = c(
+        list(
+            GroupLevel = strGroupLevel,
+            groupLabelKey = strGroupLabelKey
+        ),
+        list(...) # additional chart configuration
+    ),
     strGroupSubset = strGroupSubset,
-    strGroupLabelKey = strGroupLabelKey,
     bDebug = bDebug
   )
 
   # create widget
-  widget <- htmlwidgets::createWidget(
+  lWidget <- htmlwidgets::createWidget(
     name = "Widget_GroupOverview",
     purrr::map(
-      input,
+      lInput,
       ~ jsonlite::toJSON(
         .x,
         null = "null",
@@ -96,14 +109,16 @@ Widget_GroupOverview <- function(
     package = "gsm.kri"
   )
 
+  base::attr(lWidget, "output_label") <- strOutputLabel
+
   if (bDebug) {
     viewer <- getOption("viewer")
     options(viewer = NULL)
-    print(widget)
+    print(lWidget)
     options(viewer = viewer)
   }
 
-  return(widget)
+  return(lWidget)
 }
 
 #' Shiny bindings for Widget_GroupOverview
