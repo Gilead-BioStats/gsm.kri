@@ -23,7 +23,9 @@ CalculateRiskScore <- function(
     dfRiskScore <- dfResults %>%
         inner_join(
             dfMetricWeights,
-            c('MetricID', 'Flag')
+            c('MetricID', 'Flag'),
+            na_matches = "na",
+            unmatched = "drop"
         ) %>%
         rename(
             RiskScore = Weight, 
@@ -91,7 +93,8 @@ TransposeRiskScore <- function(
         # Merge in metric label from dfMetrics
         left_join(dfMetrics %>% select(MetricID, MetricLabel = Abbreviation), by = "MetricID") %>%
         mutate(
-            Label = paste0(Report_FormatFlag(Flag), ' <sup>', RiskScore, '</sup>'),
+            FlagIcon = Report_FormatFlag(Flag),
+            Label = paste0(FlagIcon, ' <sup>', RiskScore, '</sup>'),
             Details = paste0(
                 'Metric: ', MetricLabel, '\n',
                 'Group: ', GroupID, '\n',
@@ -110,7 +113,8 @@ TransposeRiskScore <- function(
         pivot_wider(
             id_cols= c("StudyID","SnapshotDate","GroupID", "GroupLevel"),
             names_from = 'MetricLabel',
-            values_from = c("Label", "Details")
+            values_from = c("Label", "Details"),
+            values_fill = list(Label = '', Details = 'Metric Not Found')
         )
     return(wide)
 }
