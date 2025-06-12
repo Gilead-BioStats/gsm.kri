@@ -24,19 +24,17 @@ Site Risk Scores are added to the `results` data saved in the reporting layer of
         - `RiskScore`: Risk score calculated based on the metric weights.
         - `RiskScore_max`:  The maximum possible risk score for the Metric.
         - `RiskScore_html`: An HTML representation of the risk score including a flag icon and the risk score value, which can be used for visualization in web applications.
-3. *Calculate Group-Level Risk Scores* - `SummarizeRiskScores` aggregates the risk scores across specified groups and returns a data frame giving the risk profile for each site (or other selected `GroupType`) with the following columns:
+3. *Calculate Group-Level Risk Scores* - `GroupRiskScores` aggregates the risk scores across specified groups and returns a data frame giving the risk profile for each site (or other selected `GroupType`) with the following columns:
     - `GroupType`: The type of group (e.g., site, region).
     - `GroupID`: The unique identifier for the group.
     - `RiskScore`: The total risk score for the group.
-    - `RiskScore_percent`: The normalized risk score for the group, which is the risk score divided by the maximum possible risk score.
-    - `RiskScore_max`: The maximum risk score for the group.
+    - `RiskScore_Percent`: The normalized risk score for the group, which is the risk score divided by the maximum possible risk score.
+    - `RiskScore_Max`: The maximum risk score for the group.
 4. *Visualize Risk Scores* - The `Visualize_RiskScore` function creates an interactive HTML widget to visualize the risk scores. This widget can be saved as a standalone HTML file for reporting purposes.
 
+# Examples
 
-
-
-
-# Prerequisites
+## Prerequisites
 
 ```r
 # Install and load required packages
@@ -49,7 +47,9 @@ library(gsm.kri)
 library(dplyr)
 ```
 
-# Example Workflow
+## Single-Study Site Risk Score Visualization
+To calculate and visualize site risk scores for a single study, you can use the following code snippet. This assumes you have already generated KRI results and saved them in the `gsm.core::reportingResults` format.
+You can visualize the risk scores using the provided widget:
 
 ```r
 # Load and process results
@@ -57,35 +57,64 @@ dfResults <- gsm.core::reportingResults %>%
   FilterByLatestSnapshotDate() %>%
   CalculateRiskScore(gsm.kri::metricWeights)
 
-# Transpose for reporting
-wide <- dfResults %>%
-  TransposeRiskScore(dfMetrics = gsm.core::reportingMetrics)
-
-# Summarize risk scores
-summary <- dfResults %>%
-  SummarizeRiskScore()
-
-# Print a timestamp
-cat(paste0('Report generated: ', format(Sys.time(), '%Y-%m-%d %H:%M:%S'), '\n'))
-
-# View the wide table
-head(wide)
-
-# View the summary
-t(summary)
-```
-
-# Visualization
-
-You can visualize the risk scores using the provided widget:
-
-```r
 htmlwidgets::saveWidget(
   Visualize_RiskScore(dfResults, gsm.core::reportingMetrics),
   file = "site_risk_score_widget.html",
   selfcontained = TRUE
 )
 ```
+
+## Simulating Multi-Study, Multi-Site Data and Risk Score Reporting
+
+The following example demonstrates how to simulate reporting results for 10 studies, each with a random subset of 10-20 sites (from a pool of 20), and calculate risk scores for this simulated data. This is useful for testing the risk score pipeline across multiple studies and sites.
+
+```r
+
+# Simulate reporting results for multiple studies and sites
+library(dplyr)
+library(gsm.kri)
+library(gsm.core)
+# Set seed for reproducibility and define parameters
+set.seed(123)
+study_ids <- sprintf("STUDY%03d", 1:10)
+snapshot_dates <- as.Date("2025-06-01") + 0:2
+metric_ids <- sprintf("Analysis_kri%04d", 1:5)
+group_levels <- c("Site")
+group_ids <- sprintf("SITE%03d", 1:20)
+
+sim_reportingResults <- lapply(study_ids, function(study) {
+  n_sites <- sample(10:20, 1)
+  study_sites <- sample(group_ids, n_sites, replace = FALSE)
+  expand.grid(
+    StudyID = study,
+    SnapshotDate = snapshot_dates,
+    GroupLevel = group_levels,
+    GroupID = study_sites,
+    MetricID = metric_ids,
+    stringsAsFactors = FALSE
+  )
+}) %>%
+  dplyr::bind_rows() %>%
+  dplyr::mutate(
+    Numerator = sample(1:100, n(), replace = TRUE),
+    Denominator = sample(100:200, n(), replace = TRUE),
+    Metric = Numerator / Denominator,
+    Score = round(runif(n(), 0, 100), 1),
+    Flag = sample(c(-2, -1, 0, 1, 2), n(), replace = TRUE)
+  )
+
+
+dfResults10 <- sim_reportingResults %>% CalculateRiskScore(gsm.kri::metricWeights)
+
+# Visualize the multi-study/site risk scores
+htmlwidgets::saveWidget(
+  Visualize_RiskScore(dfResults10, gsm.core::reportingMetrics),
+  file = "site_risk_score_multistudy.html",
+  selfcontained = TRUE
+)
+```
+
+The resulting HTML file will show an interactive risk score table for all studies/sites in the simulated data.
 
 # Conclusion
 
