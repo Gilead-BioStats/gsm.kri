@@ -4,7 +4,7 @@
 #' `r lifecycle::badge("stable")`
 #'
 #' This function generates a markdown framework for charts
-#
+#'
 #' @param lCharts A list of charts for the selected metric.
 #' @param strMetricID `character` Metric ID, wich is added as a class to each rendered chart to
 #' uniquely identify it within the report.
@@ -12,7 +12,7 @@
 #' @return Markdown content with charts and a summary table for the metric
 #'
 #' @export
-#'
+
 Report_MetricCharts <- function(
     lCharts,
     strMetricID = ""
