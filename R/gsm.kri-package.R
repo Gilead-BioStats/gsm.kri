@@ -8,6 +8,9 @@
 #' @import gt
 #' @import purrr
 #' @import tidyr
+#' @importFrom DT datatable
+#' @importFrom DT formatStyle
+#' @importFrom DT styleInterval
 #' @importFrom glue glue
 #' @importFrom htmltools h1
 #' @importFrom htmltools h2
@@ -25,8 +28,8 @@
 #' @importFrom jsonlite fromJSON
 #' @importFrom jsonlite toJSON
 #' @importFrom lifecycle deprecated
-#' @importFrom log4r logger
 #' @importFrom log4r console_appender
+#' @importFrom log4r logger
 #' @importFrom rlang %||%
 #' @importFrom rlang .data
 #' @importFrom rlang check_installed
