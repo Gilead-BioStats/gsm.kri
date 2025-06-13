@@ -66,6 +66,11 @@ Report_StudyInfo(params$dfGroups)
 
 
 ```{r echo=FALSE, warning=FALSE, results = 'asis'}
+if(setup$GroupLevel == "Site"){ 
+  GroupLabelKey <- "InvestigatorLastName"
+} else { 
+  GroupLabelKey <- NULL 
+}  
 # subset data on latest snapshot date
 dfResults_current <- FilterByLatestSnapshotDate(params$dfResults)
 
