@@ -114,7 +114,7 @@ lCharts_country <- MakeCharts(
 )
 
 kri_country <- Report_KRI(
-  lCharts = lCharts,
+  lCharts = lCharts_country,
   dfResults =  FilterByLatestSnapshotDate(gsm.core::reportingResults_country),
   dfGroups =  gsm.core::reportingGroups_country,
   dfMetrics = gsm.core::reportingMetrics_country
