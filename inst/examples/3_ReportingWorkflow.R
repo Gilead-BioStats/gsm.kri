@@ -119,3 +119,13 @@ kri_country <- Report_KRI(
   dfGroups =  gsm.core::reportingGroups_country,
   dfMetrics = gsm.core::reportingMetrics_country
 )
+
+#### 3.4 Reporting Results with Changes from previous snapshot
+
+# Prepare historical data
+historical <- gsm.core::reportingResults %>% filter(SnapshotDate == "2025-03-01")
+
+# Re-run reporting model and KRI report with historical data
+reporting_long <- gsm.core::RunWorkflows(reporting_wf, c(mapped, list(lAnalyzed = analyzed, Reporting_Results_Longitudinal = historical, lWorkflows = metrics_wf)))
+lReports_long <- gsm.core::RunWorkflows(module_wf, reporting_long)
+
