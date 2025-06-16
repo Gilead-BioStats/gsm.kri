@@ -79,16 +79,6 @@ reporting <- RunWorkflows(reporting_wf, c(mapped, list(lAnalyzed = analyzed,
 module_wf <- MakeWorkflowList(strPath = "workflow/4_modules", strPackage = "gsm.kri")
 lReports <- RunWorkflows(module_wf, reporting)
 
-#### 3.4 - Combine steps in to a single workflow
-#ss_wf <- MakeWorkflowList(strNames = "Snapshot")
-#lReports <- RunWorkflows(ss_wf, lSource)
-
-#### 3.4 - Use Study configuration to specify data sources
-# StudyConfig <- Read_yaml("workflow/config.yaml")
-# mapped <- RunWorkflows(mappings_wf, lConfig=StudyConfig)
-# analyzed <- RunWorkflows(metrics_wf,  lConfig=StudyConfig)
-# reporting <- RunWorkflows(reporting_wf,  lConfig=StudyConfig)
-# lReports <- RunWorkflows(module_wf,  lConfig=StudyConfig)
 
 #### 3.3 Site-Level KRI Report with multiple SnapshotDate
 lCharts <- MakeCharts(
