@@ -32,6 +32,14 @@ Report_Setup <- function(dfGroups = NULL, dfMetrics = NULL, dfResults = NULL) {
     output$GroupLevel <- ""
   }
 
+  if(output$GroupLevel == "Site"){
+    output$GroupLabelKey <- "InvestigatorLastName"
+  } else if(output$GroupLevel == "Country"){
+    output$GroupLabelKey <- "GroupID"
+  } else{
+    output$GroupLabelKey <- NULL
+  }
+
   # Get the snapshot date
   if ("SnapshotDate" %in% names(dfResults)) {
     output$SnapshotDate <- max(dfResults$SnapshotDate)

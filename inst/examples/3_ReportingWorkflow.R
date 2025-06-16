@@ -98,9 +98,24 @@ lCharts <- MakeCharts(
   dfBounds = gsm.core::reportingBounds
 )
 
-kri_report_path <- Report_KRI(
+kri_site <- Report_KRI(
   lCharts = lCharts,
   dfResults =  FilterByLatestSnapshotDate(gsm.core::reportingResults),
   dfGroups =  gsm.core::reportingGroups,
   dfMetrics = gsm.core::reportingMetrics
+)
+
+
+lCharts_country <- MakeCharts(
+  dfResults = gsm.core::reportingResults_country,
+  dfGroups = gsm.core::reportingGroups_country,
+  dfMetrics = gsm.core::reportingMetrics_country,
+  dfBounds = gsm.core::reportingBounds_country
+)
+
+kri_country <- Report_KRI(
+  lCharts = lCharts,
+  dfResults =  FilterByLatestSnapshotDate(gsm.core::reportingResults_country),
+  dfGroups =  gsm.core::reportingGroups_country,
+  dfMetrics = gsm.core::reportingMetrics_country
 )
