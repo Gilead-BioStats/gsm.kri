@@ -1,4 +1,5 @@
 # gsm.kri 1.2.0
+
 This minor release introduces new chart configuration functionality, refactors widget generation to support additional settings and unified output labels, and adds a new flag‐change report. Key changes:
 
 - Add MakeChartConfig() helper and propagate ... into widgets and Visualize_Metric()
