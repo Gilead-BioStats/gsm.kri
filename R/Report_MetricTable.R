@@ -58,8 +58,8 @@ Report_MetricTable <- function(
     fmt_sign(columns = "Flag")
 
   strOutputLabel <- paste0(
-      fontawesome::fa("table", fill = "#337ab7"),
-      "  Metric Table"
+    fontawesome::fa("table", fill = "#337ab7"),
+    "  Metric Table"
   )
   base::attr(lMetricTable, "output_label") <- strOutputLabel
 

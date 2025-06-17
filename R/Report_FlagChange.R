@@ -23,7 +23,6 @@
 
 
 Report_FlagChange <- function(dfResults) {
-
   # Check that dfResults contains required columns
   required_cols <- c(
     "StudyID", "GroupLevel", "GroupID", "MetricID", "Flag_Change", "SnapshotDate",
@@ -33,7 +32,7 @@ Report_FlagChange <- function(dfResults) {
   )
   missing_cols <- setdiff(required_cols, colnames(dfResults))
   if (length(missing_cols) > 0) {
-    cat(paste("Missing delta columns in dfResults:", paste(missing_cols, collapse=", "), ". Not rendering list of newly changed flags."))
+    cat(paste("Missing delta columns in dfResults:", paste(missing_cols, collapse = ", "), ". Not rendering list of newly changed flags."))
     return(NULL)
   }
   # if GroupLabel/MetricLabel columns are missing use GroupID/MetricID
@@ -46,17 +45,17 @@ Report_FlagChange <- function(dfResults) {
 
   # Only show Risk Signals where flag has changed from previous snapshot
   changed <- dfResults %>%
-  dplyr::filter(
-    (is.na(Flag) & !is.na(Flag_Previous)) |
-    (!is.na(Flag) & is.na(Flag_Previous)) |
-    (Flag != Flag_Previous)
-  ) %>%
-  # Drop rows where flag went from NA -> Green
-  filter(!(is.na(Flag_Previous) & Flag==0)) %>%
-  # Sort by previous flag and then current flag
-  dplyr::arrange(dplyr::desc(abs(Flag_Previous))) %>%
-  dplyr::arrange(dplyr::desc(abs(Flag))) %>%
-  mutate(absolute_flag= abs(Flag))
+    dplyr::filter(
+      (is.na(Flag) & !is.na(Flag_Previous)) |
+        (!is.na(Flag) & is.na(Flag_Previous)) |
+        (Flag != Flag_Previous)
+    ) %>%
+    # Drop rows where flag went from NA -> Green
+    filter(!(is.na(Flag_Previous) & Flag == 0)) %>%
+    # Sort by previous flag and then current flag
+    dplyr::arrange(dplyr::desc(abs(Flag_Previous))) %>%
+    dplyr::arrange(dplyr::desc(abs(Flag))) %>%
+    mutate(absolute_flag = abs(Flag))
 
   # Split by absolute_flag and generate separate lists
   cat(glue::glue("<h3>Flags Changes</h3>"))
@@ -64,9 +63,9 @@ Report_FlagChange <- function(dfResults) {
   cat('<ul class="flag-change-list">')
   abs_flag_levels <- sort(unique(changed$absolute_flag), decreasing = TRUE)
   abs_flag_colors <- list(
-    "2"="<span style='color:red;font-weight:bold'>red</span>",
-    "1"="<span style='color:#FEAA02;font-weight:bold'>amber</span>",
-    "0"="<span style='color:green;font-weight:bold'>green</span>"
+    "2" = "<span style='color:red;font-weight:bold'>red</span>",
+    "1" = "<span style='color:#FEAA02;font-weight:bold'>amber</span>",
+    "0" = "<span style='color:green;font-weight:bold'>green</span>"
   )
   rArrow <- "<span style='font-size:1.2em;'>&#8594;</span>"
   for (af in abs_flag_levels) {
@@ -79,29 +78,29 @@ Report_FlagChange <- function(dfResults) {
       "flag-change-nested"
     }
     if (nrow(changed_af) > 0) {
-        cat(cli::pluralize("<li class='flag-change-parent'>Found {nrow(changed_af)} new {color} {cli::qty(nrow(changed_af)) }flag{?s} <ul class='{nested_class}'>"))
-        apply(changed_af, 1, function(row) {
-            group = glue("{row['GroupLabel']}")
-            metric = glue("{row['MetricLabel']}")
-            flag <- glue::glue("{Report_FormatFlag(as.numeric(row['Flag']))}")
-            prev_flag <- glue::glue("{Report_FormatFlag(as.numeric(row['Flag_Previous']))}")
-            flagChange = glue::glue("{prev_flag} {rArrow} {flag}")
-            previousSnap = glue::glue("{row['SnapshotDate_Previous']} | {prev_flag} | Score: {row['Score_Previous']} | Rate: {row['Numerator_Previous']} / {row['Denominator_Previous']} ({round(as.numeric(row['Metric_Previous']), 2)})")
-            currentSnap = glue::glue("{row['SnapshotDate']} | {flag} | Score: {row['Score']} | Rate: {row['Numerator']} / {row['Denominator']} ({round(as.numeric(row['Metric']), 2)})")
-            delta = glue::glue(
-              "\\(\\Delta\\) Score: {sprintf('%+.2f', as.numeric(row['Score_Change']))} | " ,
-              "\\(\\Delta\\) Metric: {sprintf('%+.2f', as.numeric(row['Metric_Change']))} | ",
-              "\\(\\Delta\\) Numerator: {sprintf('%+d', as.integer(row['Numerator_Change']))} | ",
-              "\\(\\Delta\\) Denominator: {sprintf('%+d', as.integer(row['Denominator_Change']))}"
-            )
-            cat(glue::glue("<li class='flag-change-item'>{group} | {metric} | {flagChange}<ul class='flag-change-details'>"))
-            cat(glue::glue("<li>Current Snapshot: {currentSnap}</li>"))
-            cat(glue::glue("<li>Previous Snapshot: {previousSnap}</li>"))
-            cat(glue::glue("<li>{delta}</li>"))
-            cat("</ul></li>")
-        })
+      cat(cli::pluralize("<li class='flag-change-parent'>Found {nrow(changed_af)} new {color} {cli::qty(nrow(changed_af)) }flag{?s} <ul class='{nested_class}'>"))
+      apply(changed_af, 1, function(row) {
+        group <- glue("{row['GroupLabel']}")
+        metric <- glue("{row['MetricLabel']}")
+        flag <- glue::glue("{Report_FormatFlag(as.numeric(row['Flag']))}")
+        prev_flag <- glue::glue("{Report_FormatFlag(as.numeric(row['Flag_Previous']))}")
+        flagChange <- glue::glue("{prev_flag} {rArrow} {flag}")
+        previousSnap <- glue::glue("{row['SnapshotDate_Previous']} | {prev_flag} | Score: {row['Score_Previous']} | Rate: {row['Numerator_Previous']} / {row['Denominator_Previous']} ({round(as.numeric(row['Metric_Previous']), 2)})")
+        currentSnap <- glue::glue("{row['SnapshotDate']} | {flag} | Score: {row['Score']} | Rate: {row['Numerator']} / {row['Denominator']} ({round(as.numeric(row['Metric']), 2)})")
+        delta <- glue::glue(
+          "\\(\\Delta\\) Score: {sprintf('%+.2f', as.numeric(row['Score_Change']))} | ",
+          "\\(\\Delta\\) Metric: {sprintf('%+.2f', as.numeric(row['Metric_Change']))} | ",
+          "\\(\\Delta\\) Numerator: {sprintf('%+d', as.integer(row['Numerator_Change']))} | ",
+          "\\(\\Delta\\) Denominator: {sprintf('%+d', as.integer(row['Denominator_Change']))}"
+        )
+        cat(glue::glue("<li class='flag-change-item'>{group} | {metric} | {flagChange}<ul class='flag-change-details'>"))
+        cat(glue::glue("<li>Current Snapshot: {currentSnap}</li>"))
+        cat(glue::glue("<li>Previous Snapshot: {previousSnap}</li>"))
+        cat(glue::glue("<li>{delta}</li>"))
         cat("</ul></li>")
+      })
+      cat("</ul></li>")
     }
   }
-  cat('</ul>')
+  cat("</ul>")
 }

@@ -32,11 +32,11 @@ Report_Setup <- function(dfGroups = NULL, dfMetrics = NULL, dfResults = NULL) {
     output$GroupLevel <- ""
   }
 
-  if(output$GroupLevel == "Site"){
+  if (output$GroupLevel == "Site") {
     output$GroupLabelKey <- "InvestigatorLastName"
-  } else if(output$GroupLevel == "Country"){
+  } else if (output$GroupLevel == "Country") {
     output$GroupLabelKey <- "GroupID"
-  } else{
+  } else {
     output$GroupLabelKey <- NULL
   }
 
