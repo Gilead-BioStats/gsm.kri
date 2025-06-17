@@ -1,3 +1,5 @@
+# gsm.kri 1.2.0
+
 # gsm.kri 1.1.2
 
 This patch release updates the following yaml files in `/2_metrics` to update default accrual thresholds
