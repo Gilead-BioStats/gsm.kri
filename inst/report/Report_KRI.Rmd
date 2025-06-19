@@ -142,7 +142,7 @@ dfResults_delta <- dfResults_current %>%
     setup$GroupLevel,
     setup$GroupLabelKey
   ) %>%
-  mutate(GroupLabel = paste0(GroupID," (",.data[[setup$GroupLabelKey]],")"))
+  dplyr::mutate(GroupLabel = paste0(GroupID," (",.data[[setup$GroupLabelKey]],")"))
 
 
 # Render a list of newly changed flags if deltas are included in dfResults
