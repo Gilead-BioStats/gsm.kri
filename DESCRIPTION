@@ -24,7 +24,7 @@ Imports:
     dplyr,
     ggplot2,
     glue,
-    gsm.core (>= 1.1.0),
+    gsm.core (>= 1.1.2),
     gt,
     htmltools,
     htmlwidgets,
