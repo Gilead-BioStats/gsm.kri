@@ -8,11 +8,13 @@
 <url><loc>https://gilead-biostats.github.io/gsm.kri/news/index.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/reference/FilterByFlags.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/reference/FilterByLatestSnapshotDate.html</loc></url>
+<url><loc>https://gilead-biostats.github.io/gsm.kri/reference/MakeChartConfig.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/reference/MakeCharts.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/reference/MakeMetricTable.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/reference/MakeParamLabels.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/reference/MakeStudyInfo.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/reference/RenderRmd.html</loc></url>
+<url><loc>https://gilead-biostats.github.io/gsm.kri/reference/Report_FlagChange.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/reference/Report_FlagOverTime.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/reference/Report_FormatFlag.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/reference/Report_KRI.html</loc></url>
@@ -34,6 +36,7 @@
 <url><loc>https://gilead-biostats.github.io/gsm.kri/reference/Widget_ScatterPlot.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/reference/Widget_TimeSeries-shiny.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/reference/Widget_TimeSeries.html</loc></url>
+<url><loc>https://gilead-biostats.github.io/gsm.kri/reference/add_Groups_metadata.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/reference/cols_label_month.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/reference/gsm.kri-package.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/reference/gsm_gt.html</loc></url>
