@@ -8,6 +8,8 @@
 #' @import gt
 #' @import purrr
 #' @import tidyr
+#' @importFrom cli pluralize
+#' @importFrom cli qty
 #' @importFrom glue glue
 #' @importFrom htmltools h1
 #' @importFrom htmltools h2
