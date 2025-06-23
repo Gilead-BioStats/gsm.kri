@@ -46,8 +46,8 @@ Widget_FlagOverTime <- function(
   strFootnote = NULL,
   bExcludeEver = FALSE,
   strOutputLabel = paste0(
-      fontawesome::fa("table", fill = "#337ab7"),
-      "  Flags over Time"
+    fontawesome::fa("table", fill = "#337ab7"),
+    "  Flags over Time"
   ),
   bDebug = FALSE
 ) {

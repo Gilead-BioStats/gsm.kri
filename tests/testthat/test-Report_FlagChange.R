@@ -26,7 +26,6 @@ test_that("returns NULL if required columns are missing", {
 })
 
 test_that("GroupLabel and MetricLabel default to IDs when missing", {
-
   output <- capture.output(Report_FlagChange(dfResults))
   expect_true(any(grepl("G1", output))) # GroupLabel fallback
   expect_true(any(grepl("M1", output))) # MetricLabel fallback

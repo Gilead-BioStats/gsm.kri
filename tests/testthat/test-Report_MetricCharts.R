@@ -53,7 +53,7 @@ test_that("Output formatting and no errors", {
   expect_true(any(grepl("</div>", output)))
 })
 
-test_that('Handles missing output_label', {
+test_that("Handles missing output_label", {
   lCharts <- list(
     scatterPlot = dummy_chart
   )

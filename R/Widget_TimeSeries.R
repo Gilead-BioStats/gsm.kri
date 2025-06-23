@@ -40,8 +40,8 @@ Widget_TimeSeries <- function(
   bAddGroupSelect = TRUE,
   strShinyGroupSelectID = "GroupID",
   strOutputLabel = paste0(
-      fontawesome::fa("chart-line", fill = "#337ab7"),
-      "  Time Series"
+    fontawesome::fa("chart-line", fill = "#337ab7"),
+    "  Time Series"
   ),
   bDebug = FALSE,
   ...
@@ -69,14 +69,14 @@ Widget_TimeSeries <- function(
 
   # define widget inputs
   lChartConfig <- do.call(
-      'MakeChartConfig',
-      list(
-          lMetric = lMetric,
-          strChartFunction = 'Widget_TimeSeries',
-          y = strOutcome,
-          ...
-        )
+    "MakeChartConfig",
+    list(
+      lMetric = lMetric,
+      strChartFunction = "Widget_TimeSeries",
+      y = strOutcome,
+      ...
     )
+  )
 
   # define widget inputs
   lInput <- list(

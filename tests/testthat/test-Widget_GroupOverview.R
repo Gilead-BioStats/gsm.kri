@@ -25,9 +25,9 @@ test_that("Widget_GroupOverview returns correct class", {
 
 test_that("Widget_GroupOverview uses correct Group or errors out when strGroupLevel is NULL", {
   widget <- Widget_GroupOverview(
-      gsm.core::reportingResults,
-      gsm.core::reportingMetrics,
-      gsm.core::reportingGroups
+    gsm.core::reportingResults,
+    gsm.core::reportingMetrics,
+    gsm.core::reportingGroups
   )
 
   sampleGroupLevel <- gsm.core::reportingMetrics$GroupLevel %>%
