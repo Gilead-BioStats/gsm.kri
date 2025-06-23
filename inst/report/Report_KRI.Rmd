@@ -135,14 +135,15 @@ Report_OverviewText(
 
 # Add custom GroupLabel and MetricLabel values to dfResults
 dfResults_delta <- dfResults_current %>%         
-  left_join(params$dfMetrics %>% select(MetricID, MetricName=Metric), by = "MetricID") %>%
-  mutate(MetricLabel = coalesce(MetricName, MetricID)) %>%
+  dplyr::left_join(params$dfMetrics %>% dplyr::select(MetricID, MetricName=Metric), 
+                   by = "MetricID") %>%
+  dplyr::mutate(MetricLabel = dplyr::coalesce(MetricName, MetricID)) %>%
   add_Groups_metadata(
     params$dfGroups,
     setup$GroupLevel,
     setup$GroupLabelKey
   ) %>%
-  mutate(GroupLabel = paste0(GroupID," (",.data[[setup$GroupLabelKey]],")"))
+  dplyr::mutate(GroupLabel = paste0(GroupID," (",.data[[setup$GroupLabelKey]],")"))
 
 
 # Render a list of newly changed flags if deltas are included in dfResults

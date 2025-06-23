@@ -40,8 +40,8 @@ Widget_ScatterPlot <- function(
   bAddGroupSelect = TRUE,
   strShinyGroupSelectID = "GroupID",
   strOutputLabel = paste0(
-      fontawesome::fa("arrow-up-right-dots", fill = "#337ab7"),
-      "  Scatter Plot"
+    fontawesome::fa("arrow-up-right-dots", fill = "#337ab7"),
+    "  Scatter Plot"
   ),
   bDebug = FALSE,
   ...
@@ -56,13 +56,13 @@ Widget_ScatterPlot <- function(
 
   # define widget inputs
   lChartConfig <- do.call(
-      'MakeChartConfig',
-      list(
-          lMetric = lMetric,
-          strChartFunction = 'Widget_ScatterPlot',
-          ...
-        )
+    "MakeChartConfig",
+    list(
+      lMetric = lMetric,
+      strChartFunction = "Widget_ScatterPlot",
+      ...
     )
+  )
 
   lWidgetInput <- list(
     dfResults = dfResults,

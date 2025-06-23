@@ -23,7 +23,7 @@
 #'   dfMetrics = gsm.core::reportingMetrics,
 #'   dfGroups = gsm.core::reportingGroups
 #' )
-#' 
+#'
 #' # filter site-level report to all flags
 #' Widget_GroupOverview(
 #'   dfResults = FilterByLatestSnapshotDate(gsm.core::reportingResults),
@@ -52,10 +52,10 @@ Widget_GroupOverview <- function(
   strGroupSubset = "red",
   strGroupLabelKey = "InvestigatorLastName",
   strOutputLabel = paste0(
-      fontawesome::fa("table", fill = "#337ab7"),
-      "  ",
-      strGroupLevel,
-      " Overview"
+    fontawesome::fa("table", fill = "#337ab7"),
+    "  ",
+    strGroupLevel,
+    " Overview"
   ),
   bDebug = FALSE,
   ...
@@ -83,11 +83,11 @@ Widget_GroupOverview <- function(
     dfMetrics = dfMetrics,
     dfGroups = dfGroups,
     lConfig = c(
-        list(
-            GroupLevel = strGroupLevel,
-            groupLabelKey = strGroupLabelKey
-        ),
-        list(...) # additional chart configuration
+      list(
+        GroupLevel = strGroupLevel,
+        groupLabelKey = strGroupLabelKey
+      ),
+      list(...) # additional chart configuration
     ),
     strGroupSubset = strGroupSubset,
     bDebug = bDebug

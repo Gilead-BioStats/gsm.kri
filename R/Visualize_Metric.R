@@ -132,27 +132,27 @@ Visualize_Metric <- function(
     )
   } else {
     lCharts$scatterPlot <- do.call(
-        'Widget_ScatterPlot',
-        list(
-            dfResults = dfResults_latest,
-            lMetric = lMetric,
-            dfGroups = dfGroups,
-            dfBounds = dfBounds_latest,
-            bDebug = bDebug,
-            ...
-        )
+      "Widget_ScatterPlot",
+      list(
+        dfResults = dfResults_latest,
+        lMetric = lMetric,
+        dfGroups = dfGroups,
+        dfBounds = dfBounds_latest,
+        bDebug = bDebug,
+        ...
+      )
     )
 
     lCharts$barChart <- do.call(
-        'Widget_BarChart',
-        list(
-            dfResults = dfResults_latest,
-            lMetric = lMetric,
-            dfGroups = dfGroups,
-            vThreshold = vThreshold,
-            bDebug = bDebug,
-            ...
-        )
+      "Widget_BarChart",
+      list(
+        dfResults = dfResults_latest,
+        lMetric = lMetric,
+        dfGroups = dfGroups,
+        vThreshold = vThreshold,
+        bDebug = bDebug,
+        ...
+      )
     )
 
     if (!is.null(lMetric)) {
@@ -174,15 +174,15 @@ Visualize_Metric <- function(
     )
   } else {
     lCharts$timeSeries <- do.call(
-        'Widget_TimeSeries',
-        list(
-            dfResults = dfResults,
-            lMetric = lMetric,
-            dfGroups = dfGroups,
-            vThreshold = vThreshold,
-            bDebug = bDebug,
-            ...
-        )
+      "Widget_TimeSeries",
+      list(
+        dfResults = dfResults,
+        lMetric = lMetric,
+        dfGroups = dfGroups,
+        vThreshold = vThreshold,
+        bDebug = bDebug,
+        ...
+      )
     )
   }
 

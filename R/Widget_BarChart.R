@@ -41,8 +41,8 @@ Widget_BarChart <- function(
   bAddGroupSelect = TRUE,
   strShinyGroupSelectID = "GroupID",
   strOutputLabel = paste0(
-      fontawesome::fa("chart-simple", fill = "#337ab7"),
-      "  Bar Chart"
+    fontawesome::fa("chart-simple", fill = "#337ab7"),
+    "  Bar Chart"
   ),
   bDebug = FALSE,
   ...
@@ -70,14 +70,14 @@ Widget_BarChart <- function(
 
   # define widget inputs
   lChartConfig <- do.call(
-      'MakeChartConfig',
-      list(
-          lMetric = lMetric,
-          strChartFunction = 'Widget_BarChart',
-          y = strOutcome,
-          ...
-        )
+    "MakeChartConfig",
+    list(
+      lMetric = lMetric,
+      strChartFunction = "Widget_BarChart",
+      y = strOutcome,
+      ...
     )
+  )
 
   # define widget inputs
   lInput <- list(

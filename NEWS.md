@@ -1,3 +1,11 @@
+# gsm.kri 1.2.0
+
+This minor release introduces new chart configuration functionality, refactors widget generation to support additional settings and unified output labels, and adds a new flag‐change report. Key changes:
+
+- Add MakeChartConfig() helper and propagate ... into widgets and Visualize_Metric()
+- Refactor widgets to return a labeled lWidget with output_label attribute
+- Introduce Report_FlagChange() using updates from gsm.reporting v1.1.0
+
 # gsm.kri 1.1.2
 
 This patch release updates the following yaml files in `/2_metrics` to update default accrual thresholds
