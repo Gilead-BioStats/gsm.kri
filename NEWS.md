@@ -1,3 +1,7 @@
+# gsm.kri 1.2.1
+
+This patch release addresses changes to an `.rda` object updated in `gsm.core` v1.1.3.
+
 # gsm.kri 1.2.0
 
 This minor release introduces new chart configuration functionality, refactors widget generation to support additional settings and unified output labels, and adds a new flag‐change report. Key changes:
