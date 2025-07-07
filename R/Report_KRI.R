@@ -27,7 +27,11 @@
 #' strOutputFile <- "StandardSiteReport.html"
 #' kri_report_path <- Report_KRI(
 #'   lCharts = lChartsSite,
-#'   dfResults = gsm.core::reportingResults,
+#'   dfResults = gsm.core::reportingResults %>%
+#'     FilterByLatestSnapshotDate() %>%
+#'     gsm.reporting::CalculateChange(
+#'       gsm.reportingResults
+#'     ),
 #'   dfMetrics = gsm.core::reportingMetrics,
 #'   dfGroups = gsm.core::reportingGroups,
 #'   strOutputFile = strOutputFile

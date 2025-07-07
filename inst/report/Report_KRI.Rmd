@@ -39,11 +39,7 @@ subtitle: "Study: `r setup$StudyLabel`"
 date: "Snapshot Date: `r setup$SnapshotDate`"
 --- 
 
-::: {
-    #overall-group-select
-    .overall-group-select
-    title="Selected group will be highlighted in all charts for all KRIs."
-}
+::: {#overall-group-select .overall-group-select title="Selected group will be highlighted in all charts for all KRIs."}
 :::
 
 ```{r, echo=FALSE, results='asis', fig.height=2}
@@ -144,7 +140,6 @@ dfResults_delta <- dfResults_current %>%
     setup$GroupLabelKey
   ) %>%
   dplyr::mutate(GroupLabel = paste0(GroupID," (",.data[[setup$GroupLabelKey]],")"))
-
 
 # Render a list of newly changed flags if deltas are included in dfResults
 Report_FlagChange(dfResults = dfResults_delta)
