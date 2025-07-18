@@ -18,6 +18,16 @@ spec:
       type: numeric
     Flag:
       type: numeric
+    Numerator_Previous:
+      type: numeric
+    Denominator_Previous:
+      type: numeric
+    Metric_Previous:
+      type: numeric
+    Score_Previous:
+      type: numeric
+    Flag_Previous:
+      type: numeric
   Reporting_Metrics:
     _all:
       required: true
