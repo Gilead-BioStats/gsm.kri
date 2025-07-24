@@ -1,3 +1,7 @@
+# gsm.kri 1.2.2
+
+This patch release fixes a bug in `Report_KRI.Rmd` that produced an error in LaTeX compilation of the report output.
+
 # gsm.kri 1.2.1
 
 This patch release addresses changes to an `.rda` object updated in `gsm.core` v1.1.3.
