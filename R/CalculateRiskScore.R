@@ -20,10 +20,19 @@
 #' @export
 
 CalculateRiskScore <- function(
-    dfResults,
+    lAnalysis,
     dfMetricWeights = gsm.kri::metricWeights
 ) {
-    dfRiskScore <- dfResults %>%
+  ##filter to site-level analysis output only and stack results
+  dfAnalysis_site <- purrr::keep(lAnalysis, \(.x) grepl("^kri", .x$ID)) %>%
+    purrr::imap(function(result, metric) {
+      subResult <- result$Analysis_Summary
+      return(subResult %>% dplyr::mutate(MetricID = metric))
+    }) %>%
+    purrr::list_rbind()
+
+
+    dfRiskScore <- dfAnalysis_site %>%
         inner_join(
             dfMetricWeights,
             c('MetricID', 'Flag')
