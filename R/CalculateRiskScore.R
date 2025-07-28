@@ -2,7 +2,8 @@
 #'
 #' Calculates the risk score for each group in the provided results data frame.
 #'
-#' @inheritParams shared-params
+#' @param lAnalysis `list` List of analysis outputs from the metrics calculated in the
+#' `workflow/2_metrics` workflows
 #' @param dfMetricWeights `data.frame` Combinations of metric ID and flag value, each with a
 #' corresponding weight.
 #'
@@ -15,7 +16,8 @@
 #' - `nAmber`: The count of metrics flagged as amber.
 #'
 #' @examples
-#' dfRiskScore <- CalculateRiskScore(gsm.core::reportingResults)
+#' lAnalysis <- list(Analysis_Summary = gsm.core::analysisSummary)
+#' dfRiskScore <- CalculateRiskScore(lAnalysis)
 #'
 #' @export
 

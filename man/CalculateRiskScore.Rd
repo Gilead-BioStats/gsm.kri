@@ -12,6 +12,9 @@ CalculateRiskScore(dfResults, dfMetricWeights = gsm.kri::metricWeights)
 \item{dfResults}{`data.frame` The results data to calculate risk scores for.}
 
 \item{dfMetricWeights}{`data.frame` Combinations of metric ID and flag value, each with a corresponding weight. Default: `gsm.kri::metricWeights`.}
+
+\item{lAnalysis}{`list` List of analysis outputs from the metrics calculated in the
+`workflow/2_metrics` workflows}
 }
 \value{
 `data.frame` `dfResults` with the following additional columns:
@@ -30,7 +33,8 @@ Calculates the risk score for each group in the provided results data frame.
 Calculates the risk score for each group in the provided results data frame.
 }
 \examples{
-dfRiskScore <- CalculateRiskScore(gsm.core::reportingResults)
+lAnalysis <- list(Analysis_Summary = gsm.core::analysisSummary)
+dfRiskScore <- CalculateRiskScore(lAnalysis)
 
 dfRiskScore <- CalculateRiskScore(gsm.core::reportingResults)
 
