@@ -16,22 +16,25 @@
 #' - `nAmber`: The count of metrics flagged as amber.
 #'
 #' @examples
-#' lAnalysis <- list(Analysis_Summary = gsm.core::analysisSummary)
+#' lAnalysis <- list(Analysis_Summary = gsm.core::analyticsSummary)
 #' dfRiskScore <- CalculateRiskScore(lAnalysis)
 #'
 #' @export
 
 CalculateRiskScore <- function(
     lAnalysis,
-    dfMetricWeights = gsm.kri::metricWeights
+    dfMetricWeights = gsm.kri::metricWeights,
+    dSnapshotDate = Sys.Date(),
+    vThreshold = c(60,30)
 ) {
   ##filter to site-level analysis output only and stack results
-  dfAnalysis_site <- purrr::keep(lAnalysis, \(.x) grepl("^kri", .x$ID)) %>%
+  dfAnalysis_site <- purrr::keep(lAnalysis, \(.x) "ID" %in% names(.x) && grepl("^kri", .x$ID)) %>%
     purrr::imap(function(result, metric) {
       subResult <- result$Analysis_Summary
       return(subResult %>% dplyr::mutate(MetricID = metric))
     }) %>%
-    purrr::list_rbind()
+    purrr::list_rbind() %>%
+    mutate(SnapshotDate = dSnapshotDate)
 
 
     dfRiskScore <- dfAnalysis_site %>%
@@ -40,25 +43,25 @@ CalculateRiskScore <- function(
             c('MetricID', 'Flag')
         ) %>%
         group_by(
-            StudyID,
-            SnapshotDate,
             GroupLevel,
             GroupID
         ) %>%
-        mutate(
-            SnapshotMonth = SnapshotDate %>%
+        summarize(
+            SnapshotMonth = first(SnapshotDate) %>%
                 as.character %>%
                 substr(1, 7),
-            RiskScore = sum(Weight, na.rm = TRUE),
-            RiskScoreMax = sum(WeightMax, na.rm = TRUE),
-            RiskScoreNormalized = RiskScore / RiskScoreMax * 100,
+            MetricID = "Analysis_srs0001",
+            Numerator = sum(Weight, na.rm = TRUE),
+            Denominator = sum(WeightMax, na.rm = TRUE),
+            Metric = Numerator / Denominator * 100,
+            Score = Metric,
             nRed = sum(abs(Flag) == 2, na.rm = TRUE),
             nAmber = sum(abs(Flag) == 1, na.rm = TRUE),
+            Flag = case_when(Score >= vThreshold[1] ~ 2,  # Red
+                            Score >= vThreshold[2] ~ 1,  # Amber
+                            TRUE ~ 0),       # Green
         ) %>%
         ungroup()
 
     return(dfRiskScore)
 }
-
-#' @keywords internal
-NULL
