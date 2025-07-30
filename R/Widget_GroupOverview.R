@@ -78,6 +78,10 @@ Widget_GroupOverview <- function(
     message = "A single group level must be provided to create group-level output."
   )
 
+  ##don't include site risk score in dfMetrics, so it's not in the summary charts
+  dfMetrics <- dfMetrics %>%
+    dplyr::filter(MetricID != strSiteRiskMetric)
+
   # forward options using x
   lInput <- list(
     dfResults = dfResults,
