@@ -76,7 +76,7 @@ reporting <- RunWorkflows(reporting_wf, c(mapped, list(lAnalyzed = analyzed,
                                                        lWorkflows = metrics_wf)))
 
 # Step 4 - Create KRI Report - create KRI report using reporting data
-module_wf <- MakeWorkflowList(strPath = "workflow/4_modules", strPackage = "gsm.kri")
+module_wf <- MakeWorkflowList(strPath = "inst/workflow/4_modules", strPackage = "gsm.kri")
 lReports <- RunWorkflows(module_wf, reporting)
 
 #### 3.4 - Combine steps in to a single workflow

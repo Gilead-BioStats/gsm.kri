@@ -7,7 +7,7 @@
 #'
 #' @examples
 #' gsm.core::reportingResults %>%
-#'     CalculateRiskScore(gsm.kri::metricWeights) %>%
+#'     RiskScore(gsm.kri::metricWeights) %>%
 #'     TransposeRiskScore() %>%
 #'     Visualize_RiskScore()
 #'

@@ -36,7 +36,7 @@ steps:
         FROM df
         WHERE GroupLevel = 'Site'
   - output: dfRiskScore
-    name: gsm.kri::CalculateRiskScore
+    name: gsm.kri::RiskScore
     params:
       dfResults: Reporting_Results_Site
   - output: dfRiskScoreTransposed

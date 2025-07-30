@@ -50,6 +50,7 @@ Widget_GroupOverview <- function(
   strGroupLevel = NULL,
   strGroupSubset = "red",
   strGroupLabelKey = "InvestigatorLastName",
+  strSiteRiskMetric = "Analysis_srs0001",
   bDebug = FALSE
 ) {
   gsm.core::stop_if(cnd = !is.data.frame(dfResults), "dfResults is not a data.frame")
@@ -77,6 +78,7 @@ Widget_GroupOverview <- function(
     strGroupLevel = strGroupLevel,
     strGroupSubset = strGroupSubset,
     strGroupLabelKey = strGroupLabelKey,
+    strSiteRiskMetric = strSiteRiskMetric,
     bDebug = bDebug
   )
 

@@ -13,7 +13,8 @@ HTMLWidgets.widget({
                     input.dfResults,
                     {
                         GroupLevel: input.strGroupLevel,
-                        groupLabelKey: input.strGroupLabelKey
+                        groupLabelKey: input.strGroupLabelKey,
+                        SiteRiskMetric: input.strSiteRiskMetric
                     },
                     input.dfGroups,
                     input.dfMetrics
