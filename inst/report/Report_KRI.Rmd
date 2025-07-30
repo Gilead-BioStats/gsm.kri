@@ -10,8 +10,8 @@ output:
 params:
   lCharts: NA
   dfResults: NA
-  dfGroups: NA
   dfMetrics: NA
+  dfGroups: NA
 ---
 
 ```{r setup, include=FALSE} 
@@ -25,9 +25,9 @@ library(gsm.kri)
 library(gt)
 
 setup <- Report_Setup(
-  dfGroups =  params$dfGroups, 
-  dfMetrics = params$dfMetrics, 
-  dfResults = params$dfResults
+  dfResults = params$dfResults,
+  dfMetrics = params$dfMetrics,
+  dfGroups = params$dfGroups
 )
 
 ```
@@ -39,11 +39,7 @@ subtitle: "Study: `r setup$StudyLabel`"
 date: "Snapshot Date: `r setup$SnapshotDate`"
 --- 
 
-::: {
-    #overall-group-select
-    .overall-group-select
-    title="Selected group will be highlighted in all charts for all KRIs."
-}
+::: {#overall-group-select .overall-group-select title="Selected group will be highlighted in all charts for all KRIs."}
 :::
 
 ```{r, echo=FALSE, results='asis', fig.height=2}
@@ -66,26 +62,22 @@ Report_StudyInfo(params$dfGroups)
 
 
 ```{r echo=FALSE, warning=FALSE, results = 'asis'}
-if(setup$GroupLevel == "Site"){ 
-  GroupLabelKey <- "InvestigatorLastName"
-} else { 
-  GroupLabelKey <- NULL 
-}  
-
 # subset data on latest snapshot date
 dfResults_current <- FilterByLatestSnapshotDate(params$dfResults)
 
 GroupOverViz <- Widget_GroupOverview(
   dfResults = dfResults_current,
-  dfGroups = params$dfGroups,
   dfMetrics = params$dfMetrics,
+  dfGroups = params$dfGroups,
   strGroupLevel = setup$GroupLevel,
   strGroupSubset = switch(setup$GroupLevel,
-    "Site" = "red",
-    "Country" = "all",
-    "Study" = "all"
+    Site = 'red',
+    'all'
   ),
-  strGroupLabelKey = GroupLabelKey
+  strGroupLabelKey = switch(setup$GroupLevel,
+    Site = 'InvestigatorLastName',
+    NULL
+  )
 )
 
 overview_viz <- list(groupOverview = GroupOverViz)
@@ -117,7 +109,7 @@ if(length(unique((params$dfResults)$SnapshotDate)) > 1){
   )
 }
 
-Report_MetricCharts(overview_viz, overview = TRUE)
+Report_MetricCharts(overview_viz)
 ```
 
 :::
@@ -133,6 +125,26 @@ Report_OverviewText(
 
 ```
 
+
+
+```{r flag-change-html, echo=FALSE, results='asis'}
+
+# Add custom GroupLabel and MetricLabel values to dfResults
+dfResults_delta <- dfResults_current %>%         
+  dplyr::left_join(params$dfMetrics %>% dplyr::select(MetricID, MetricName=Metric), 
+                   by = "MetricID") %>%
+  dplyr::mutate(MetricLabel = dplyr::coalesce(MetricName, MetricID)) %>%
+  add_Groups_metadata(
+    params$dfGroups,
+    setup$GroupLevel,
+    setup$GroupLabelKey
+  ) %>%
+  dplyr::mutate(GroupLabel = paste0(GroupID," (",.data[[setup$GroupLabelKey]],")"))
+
+# Render a list of newly changed flags if deltas are included in dfResults
+Report_FlagChange(dfResults = dfResults_delta)
+```
+
 ## Results
 
 ```{r, echo=FALSE, results='asis'}
@@ -144,8 +156,7 @@ for (i in unique(params$dfResults$MetricID)) {
   
   Report_MetricCharts(
     lCharts = params$lCharts[[lMetric$MetricID]],
-    strMetricID = lMetric$MetricID,
-    overview = FALSE
+    strMetricID = lMetric$MetricID
   )
   
   print(htmltools::tags$br())
@@ -159,7 +170,6 @@ for (i in unique(params$dfResults$MetricID)) {
 #print dfMetrics table
 params$dfMetrics %>%
   gt::gt()
-
 ```
 
 ```{r echo=FALSE}
@@ -175,4 +185,7 @@ toggle_toc <- system.file('report', 'lib', 'toggleTOC.js', package = "gsm.kri")
 ```
 
 ```{js, file={toggle_toc}, echo=FALSE}
+```
+
+```{js, file=system.file('report', 'lib', 'toggleChanges.js', package = 'gsm.kri'), echo=FALSE}
 ```

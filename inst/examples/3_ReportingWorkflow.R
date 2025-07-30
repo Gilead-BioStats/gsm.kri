@@ -79,16 +79,6 @@ reporting <- RunWorkflows(reporting_wf, c(mapped, list(lAnalyzed = analyzed,
 module_wf <- MakeWorkflowList(strPath = "inst/workflow/4_modules", strPackage = "gsm.kri")
 lReports <- RunWorkflows(module_wf, reporting)
 
-#### 3.4 - Combine steps in to a single workflow
-#ss_wf <- MakeWorkflowList(strNames = "Snapshot")
-#lReports <- RunWorkflows(ss_wf, lSource)
-
-#### 3.4 - Use Study configuration to specify data sources
-# StudyConfig <- Read_yaml("workflow/config.yaml")
-# mapped <- RunWorkflows(mappings_wf, lConfig=StudyConfig)
-# analyzed <- RunWorkflows(metrics_wf,  lConfig=StudyConfig)
-# reporting <- RunWorkflows(reporting_wf,  lConfig=StudyConfig)
-# lReports <- RunWorkflows(module_wf,  lConfig=StudyConfig)
 
 #### 3.3 Site-Level KRI Report with multiple SnapshotDate
 lCharts <- MakeCharts(
@@ -98,9 +88,34 @@ lCharts <- MakeCharts(
   dfBounds = gsm.core::reportingBounds
 )
 
-kri_report_path <- Report_KRI(
+kri_site <- Report_KRI(
   lCharts = lCharts,
   dfResults =  FilterByLatestSnapshotDate(gsm.core::reportingResults),
   dfGroups =  gsm.core::reportingGroups,
   dfMetrics = gsm.core::reportingMetrics
 )
+
+
+lCharts_country <- MakeCharts(
+  dfResults = gsm.core::reportingResults_country,
+  dfGroups = gsm.core::reportingGroups_country,
+  dfMetrics = gsm.core::reportingMetrics_country,
+  dfBounds = gsm.core::reportingBounds_country
+)
+
+kri_country <- Report_KRI(
+  lCharts = lCharts_country,
+  dfResults =  FilterByLatestSnapshotDate(gsm.core::reportingResults_country),
+  dfGroups =  gsm.core::reportingGroups_country,
+  dfMetrics = gsm.core::reportingMetrics_country
+)
+
+#### 3.4 Reporting Results with Changes from previous snapshot
+
+# Prepare historical data
+historical <- gsm.core::reportingResults %>% filter(SnapshotDate == "2025-03-01")
+
+# Re-run reporting model and KRI report with historical data
+reporting_long <- gsm.core::RunWorkflows(reporting_wf, c(mapped, list(lAnalyzed = analyzed, Reporting_Results_Longitudinal = historical, lWorkflows = metrics_wf)))
+lReports_long <- gsm.core::RunWorkflows(module_wf, reporting_long)
+

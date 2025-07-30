@@ -9,6 +9,7 @@
 #' @param strMetricID `character` MetricID to subset the data.
 #' @param strSnapshotDate `character` Snapshot date to subset the data.
 #' @param bDebug `logical` Display console in html viewer for debugging. Default is `FALSE`.
+#' @param ... Additional chart configuration settings.
 #'
 #' @return A list containing the following charts:
 #' - scatterPlot: A scatter plot using JavaScript.
@@ -29,12 +30,13 @@
 
 Visualize_Metric <- function(
   dfResults = dfResults,
-  dfBounds = NULL,
-  dfGroups = NULL,
   dfMetrics = NULL,
+  dfGroups = NULL,
+  dfBounds = NULL,
   strMetricID = NULL,
   strSnapshotDate = NULL,
-  bDebug = FALSE
+  bDebug = FALSE,
+  ...
 ) {
   # Check for multiple snapshots --------------------------------------------
   # if SnapshotDate is missing set it to today for all records
@@ -57,7 +59,7 @@ Visualize_Metric <- function(
   # Filter to selected MetricID ----------------------------------------------
   if (!is.null(strMetricID)) {
     if (!(strMetricID %in% unique(dfResults$MetricID))) {
-      LogMessage(
+      gsm.core::LogMessage(
         level = "info",
         message = "MetricID not found in dfResults. No charts will be generated.",
         cli_detail = "alert_info"
@@ -69,7 +71,7 @@ Visualize_Metric <- function(
   }
   if (!is.null(strMetricID)) {
     if (!(strMetricID %in% unique(dfBounds$MetricID))) {
-      LogMessage(
+      gsm.core::LogMessage(
         level = "info",
         message = "MetricID not found in dfBounds. Please double check input data if intentional.",
         cli_detail = "inform"
@@ -82,7 +84,7 @@ Visualize_Metric <- function(
 
   if (!is.null(strMetricID)) {
     if (!(strMetricID %in% unique(dfMetrics$MetricID))) {
-      LogMessage(
+      gsm.core::LogMessage(
         level = "info",
         message = "MetricID not found in dfMetrics. Please double check input data if intentional.",
         cli_detail = "inform"
@@ -98,7 +100,7 @@ Visualize_Metric <- function(
       length(unique(dfBounds$MetricID)) > 1 |
       length(unique(dfMetrics$MetricID)) > 1
   ) {
-    LogMessage(
+    gsm.core::LogMessage(
       level = "fatal",
       message = "Multiple MetricIDs found in dfResults, dfBounds or dfMetrics. Specify `MetricID` to subset. No charts will be generated."
     )
@@ -111,7 +113,7 @@ Visualize_Metric <- function(
     vThreshold <- NULL
   } else {
     lMetric <- as.list(dfMetrics)
-    vThreshold <- ParseThreshold(lMetric$Threshold, bSort = FALSE)
+    vThreshold <- gsm.core::ParseThreshold(lMetric$Threshold, bSort = FALSE)
   }
 
   # Cross-sectional Charts using most recent snapshot ------------------------
@@ -124,26 +126,33 @@ Visualize_Metric <- function(
   }
 
   if (nrow(dfResults_latest) == 0) {
-    LogMessage(
+    gsm.core::LogMessage(
       level = "warn",
       message = "No data found for specified snapshot date: {strSnapshotDate}. No charts will be generated."
     )
   } else {
-    lCharts$scatterPlot <- Widget_ScatterPlot(
-      dfResults = dfResults_latest,
-      lMetric = lMetric,
-      dfGroups = dfGroups,
-      dfBounds = dfBounds_latest,
-      bDebug = bDebug
+    lCharts$scatterPlot <- do.call(
+      "Widget_ScatterPlot",
+      list(
+        dfResults = dfResults_latest,
+        lMetric = lMetric,
+        dfGroups = dfGroups,
+        dfBounds = dfBounds_latest,
+        bDebug = bDebug,
+        ...
+      )
     )
 
-    lCharts$barChart <- Widget_BarChart(
-      dfResults = dfResults_latest,
-      lMetric = lMetric,
-      dfGroups = dfGroups,
-      vThreshold = vThreshold,
-      strOutcome = "Score",
-      bDebug = bDebug
+    lCharts$barChart <- do.call(
+      "Widget_BarChart",
+      list(
+        dfResults = dfResults_latest,
+        lMetric = lMetric,
+        dfGroups = dfGroups,
+        vThreshold = vThreshold,
+        bDebug = bDebug,
+        ...
+      )
     )
 
     if (!is.null(lMetric)) {
@@ -158,19 +167,22 @@ Visualize_Metric <- function(
   }
   # Continuous Charts -------------------------------------------------------
   if (number_of_snapshots <= 1) {
-    LogMessage(
+    gsm.core::LogMessage(
       level = "info",
       message = "Only one snapshot found. Time series charts will not be generated.",
       cli_detail = "alert_info"
     )
   } else {
-    lCharts$timeSeries <- Widget_TimeSeries(
-      dfResults = dfResults,
-      lMetric = lMetric,
-      dfGroups = dfGroups,
-      vThreshold = vThreshold,
-      strOutcome = "Score",
-      bDebug = bDebug
+    lCharts$timeSeries <- do.call(
+      "Widget_TimeSeries",
+      list(
+        dfResults = dfResults,
+        lMetric = lMetric,
+        dfGroups = dfGroups,
+        vThreshold = vThreshold,
+        bDebug = bDebug,
+        ...
+      )
     )
   }
 

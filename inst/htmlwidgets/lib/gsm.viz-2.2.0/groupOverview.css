@@ -1,25 +1,3 @@
-/* ---------------------------------------------------------------------------------------------- */
-/* rbm-viz examples */
-/* ---------------------------------------------------------------------------------------------- */
-
-.rbm-viz--example #controls {
-    display: flex;
-    justify-content: center;
-}
-.rbm-viz--example fieldset {
-    display: flex;
-    justify-content: center;
-}
-.rbm-viz--example #container {
-    margin: auto;
-    width: 100%;
-    height: 40vw;
-}
-
-/* ---------------------------------------------------------------------------------------------- */
-/* groupOverview module */
-/* ---------------------------------------------------------------------------------------------- */
-
 .group-overview {
     border-collapse: separate;
     border-spacing: 0.1em;
