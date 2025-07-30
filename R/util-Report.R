@@ -87,6 +87,15 @@ FilterByFlags <- function(
   return(dfResultsFlagged)
 }
 
+#' Add group meta data for report
+#'
+#' @param dfResults `data.frame` Analysis results data.
+#' @param dfGroups `data.frame` Analysis groups data.
+#' @param strGroupLevel `string` denoting group level
+#' @param strGroupDetailsParams `string`
+#'
+#' @returns A modified `dfResults` which metadata attached
+#' @export
 add_Groups_metadata <- function(
   dfResults,
   dfGroups,

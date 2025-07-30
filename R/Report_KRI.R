@@ -11,6 +11,7 @@
 #'  the report will be saved in the current working directory.
 #' @param strOutputFile The output file name for the generated report. If not provided,
 #'  the report will be named based on the study ID, Group Level and Date.
+#' @param strInputPath `string` or `fs_path` Path to the template `Rmd` file.
 #'
 #' @return File path of the saved report html is returned invisibly. Save to object to view absolute output path.
 #' @examples
@@ -18,34 +19,42 @@
 #' # Run site-level KRI report.
 #' lChartsSite <- MakeCharts(
 #'   dfResults = gsm.core::reportingResults,
-#'   dfGroups = gsm.core::reportingGroups,
 #'   dfMetrics = gsm.core::reportingMetrics,
+#'   dfGroups = gsm.core::reportingGroups,
 #'   dfBounds = gsm.core::reportingBounds
 #' )
 #'
 #' strOutputFile <- "StandardSiteReport.html"
 #' kri_report_path <- Report_KRI(
 #'   lCharts = lChartsSite,
-#'   dfResults = gsm.core::reportingResults,
-#'   dfGroups = gsm.core::reportingGroups,
+#'   dfResults = gsm.core::reportingResults %>%
+#'     FilterByLatestSnapshotDate() %>%
+#'     gsm.reporting::CalculateChange(
+#'       gsm.core::reportingResults
+#'     ),
 #'   dfMetrics = gsm.core::reportingMetrics,
+#'   dfGroups = gsm.core::reportingGroups,
 #'   strOutputFile = strOutputFile
 #' )
 #'
 #' # Run country-level KRI report.
 #' lChartsCountry <- MakeCharts(
 #'   dfResults = gsm.core::reportingResults_country,
-#'   dfGroups = gsm.core::reportingGroups_country,
 #'   dfMetrics = gsm.core::reportingMetrics_country,
+#'   dfGroups = gsm.core::reportingGroups_country,
 #'   dfBounds = gsm.core::reportingBounds_country
 #' )
 #'
 #' strOutputFile <- "StandardCountryReport.html"
 #' kri_report_path <- Report_KRI(
 #'   lCharts = lChartsCountry,
-#'   dfResults = gsm.core::reportingResults_country,
-#'   dfGroups = gsm.core::reportingGroups_country,
+#'   dfResults = gsm.core::reportingResults_country %>%
+#'     FilterByLatestSnapshotDate() %>%
+#'     gsm.reporting::CalculateChange(
+#'       gsm.core::reportingResults_country
+#'     ),
 #'   dfMetrics = gsm.core::reportingMetrics_country,
+#'   dfGroups = gsm.core::reportingGroups_country,
 #'   strOutputFile = strOutputFile
 #' )
 #' }
@@ -57,10 +66,11 @@
 Report_KRI <- function(
   lCharts = NULL,
   dfResults = NULL,
-  dfGroups = NULL,
   dfMetrics = NULL,
+  dfGroups = NULL,
   strOutputDir = getwd(),
-  strOutputFile = NULL
+  strOutputFile = NULL,
+  strInputPath = system.file("report", "Report_KRI.Rmd", package = "gsm.kri")
 ) {
   rlang::check_installed("rmarkdown", reason = "to run `Report_KRI()`")
   rlang::check_installed("knitr", reason = "to run `Report_KRI()`")
@@ -83,14 +93,14 @@ Report_KRI <- function(
   }
 
   RenderRmd(
-    strInputPath = system.file("report", "Report_KRI.Rmd", package = "gsm.kri"),
+    strInputPath = strInputPath,
     strOutputFile = strOutputFile,
     strOutputDir = strOutputDir,
     lParams = list(
       lCharts = lCharts,
       dfResults = dfResults,
-      dfGroups = dfGroups,
-      dfMetrics = dfMetrics
+      dfMetrics = dfMetrics,
+      dfGroups = dfGroups
     )
   )
 }

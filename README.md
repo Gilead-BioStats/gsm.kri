@@ -81,3 +81,70 @@ Full reports for a sample trial run with [`{clindata}`](https://github.com/Gilea
 - [Site Report](https://gilead-biostats.github.io/gsm.kri/report_kri_site.html)
 - [Country Report](https://gilead-biostats.github.io/gsm.kri/report_kri_country.html)
 
+## Chart Customization
+
+All widgets can be customized with any configuration setting available via the underlying
+[JavaScript library API](https://github.com/Gilead-BioStats/gsm.viz/wiki/API) at the report, chart, or metric
+level. Customize a widget by passing any configuration setting as an argument to the widget
+function. Below we can change the default x-axis type of `logarithmic` to `linear` for the scatter
+plot widget:
+
+``` r
+## Filter data to one metric and snapshot
+reportingResults_filter <- gsm.core::reportingResults %>%
+  dplyr::filter(MetricID == "Analysis_kri0001" & SnapshotDate == max(SnapshotDate))
+
+reportingMetrics_filter <- gsm.core::reportingMetrics %>%
+  dplyr::filter(MetricID == "Analysis_kri0001") %>%
+  as.list()
+
+reportingBounds_filter <- gsm.core::reportingBounds %>%
+  dplyr::filter(MetricID == "Analysis_kri0001" & SnapshotDate == max(SnapshotDate))
+
+Widget_ScatterPlot(
+  dfResults = reportingResults_filter,
+  lMetric = reportingMetrics_filter,
+  dfGroups = gsm.core::reportingGroups,
+  dfBounds = reportingBounds_filter,
+  xType = "linear"  # Change x-axis type to linear
+)
+```
+
+In the context of a workflow, you can also customize the chart configuration by passing a list of
+settings to the `Report_KRI()` function:
+
+``` r
+lWorkflow <-     yaml::read_yaml(text = '
+steps:
+  - output: lCharts
+    name: gsm.kri::MakeCharts
+    params:
+      dfResults: Reporting_Results
+      dfGroups: Reporting_Groups
+      dfBounds: Reporting_Bounds
+      dfMetrics: Reporting_Metrics
+      # applies to all charts
+      resultTooltipKeys:
+        - Numerator
+        - Denominator
+        - Metric
+        - Score
+      # applies to all scatter plots
+      Widget_ScatterPlot:
+        yType: logarithmic
+      # applies to scatter plot only for kri0013
+      Analysis_kri0013:
+        Widget_ScatterPlot:
+          xType: linear
+')
+
+lCharts <- RunWorkflow(
+    lWorkflow = lWorkflow,
+    lData = list(
+        Reporting_Results = gsm.core::reportingResults,
+        Reporting_Metrics = gsm.core::reportingMetrics,
+        Reporting_Groups = gsm.core::reportingGroups,
+        Reporting_Bounds = gsm.core::reportingBounds
+    )
+)
+```

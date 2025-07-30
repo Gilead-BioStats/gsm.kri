@@ -24,11 +24,17 @@ test_that("Widget_GroupOverview returns correct class", {
 })
 
 test_that("Widget_GroupOverview uses correct Group or errors out when strGroupLevel is NULL", {
-  widget <- Widget_GroupOverview(gsm.core::reportingResults, gsm.core::reportingMetrics, gsm.core::reportingGroups)
+  widget <- Widget_GroupOverview(
+    gsm.core::reportingResults,
+    gsm.core::reportingMetrics,
+    gsm.core::reportingGroups
+  )
+
   sampleGroupLevel <- gsm.core::reportingMetrics$GroupLevel %>%
     unique() %>%
     jsonlite::toJSON(na = "string", auto_unbox = T)
-  expect_equal(widget$x$strGroupLevel, sampleGroupLevel)
+
+  expect_true(grepl(sampleGroupLevel, widget$x$lConfig))
 })
 
 test_that("Widget_GroupOverview assertions works", {

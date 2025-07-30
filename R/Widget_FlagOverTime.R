@@ -45,6 +45,10 @@ Widget_FlagOverTime <- function(
   strGroupLevel = c("Site", "Study", "Country"),
   strFootnote = NULL,
   bExcludeEver = FALSE,
+  strOutputLabel = paste0(
+    fontawesome::fa("table", fill = "#337ab7"),
+    "  Flags over Time"
+  ),
   bDebug = FALSE
 ) {
   gsm.core::stop_if(cnd = !is.data.frame(dfResults), message = "dfResults is not a data.frame")
@@ -68,21 +72,23 @@ Widget_FlagOverTime <- function(
     bDebug = bDebug
   )
 
-  widget <- htmlwidgets::createWidget(
+  lWidget <- htmlwidgets::createWidget(
     name = "Widget_FlagOverTime",
     x,
     width = "100%",
     package = "gsm.kri"
   )
 
+  base::attr(lWidget, "output_label") <- strOutputLabel
+
   if (bDebug) {
     viewer <- getOption("viewer")
     options(viewer = NULL)
-    print(widget)
+    print(lWidget)
     options(viewer = viewer)
   }
 
-  return(widget)
+  return(lWidget)
 }
 
 #' Shiny bindings for Widget_FlagOverTime

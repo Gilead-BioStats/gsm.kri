@@ -34,26 +34,34 @@ Report_MetricTable <- function(
   strGroupDetailsParams = NULL,
   vFlags = c(-2, -1, 1, 2)
 ) {
-  MetricTable <- MakeMetricTable(
+  dfRiskSignals <- MakeMetricTable(
     dfResults, dfGroups, strGroupLevel, strGroupDetailsParams, vFlags
   )
 
-  if (!nrow(MetricTable)) {
+  if (!nrow(dfRiskSignals)) {
     return(htmltools::tags$p("Nothing flagged for this KRI."))
   }
 
   # Check these columns against columns in the output of [ MakeMetricTable ].
   cols_to_hide <- intersect(
     c("StudyID", "GroupID", "MetricID"),
-    names(MetricTable)
+    names(dfRiskSignals)
   )
 
-  if (length(unique(MetricTable$SnapshotDate == 1))) {
+  if (length(unique(dfRiskSignals$SnapshotDate == 1))) {
     cols_to_hide <- c(cols_to_hide, "SnapshotDate")
   }
 
-  MetricTable %>%
+  lMetricTable <- dfRiskSignals %>%
     gsm_gt() %>%
     gt::cols_hide(cols_to_hide) %>%
     fmt_sign(columns = "Flag")
+
+  strOutputLabel <- paste0(
+    fontawesome::fa("table", fill = "#337ab7"),
+    "  Metric Table"
+  )
+  base::attr(lMetricTable, "output_label") <- strOutputLabel
+
+  return(lMetricTable)
 }
