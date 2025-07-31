@@ -29,7 +29,7 @@ A widget that generates a color-coded HTML table of risk scores, mimicking the D
 }
 \examples{
 gsm.core::reportingResults \%>\%
-    CalculateRiskScore(gsm.kri::metricWeights) \%>\%
+    RiskScore(gsm.kri::metricWeights) \%>\%
     TransposeRiskScore() \%>\%
     Visualize_RiskScore()
 

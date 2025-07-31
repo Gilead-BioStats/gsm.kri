@@ -11,6 +11,7 @@ Widget_GroupOverview(
   strGroupLevel = NULL,
   strGroupSubset = "red",
   strGroupLabelKey = "InvestigatorLastName",
+  strSiteRiskMetric = "Analysis_srs0001",
   strOutputLabel = paste0(fontawesome::fa("table", fill = "#337ab7"), "  ",
     strGroupLevel, " Overview"),
   bDebug = FALSE,
