@@ -70,7 +70,7 @@
     background-color: #feaa02;
 }
 .group-overview td.group-overview--siteRiskScore {
-    color: black; /* White text for better contrast on colored backgrounds */
+    color: black;
     text-shadow: 1px 1px 1px white; /* Text shadow for better readability */
 }
 .group-overview td.group-overview--metric {
