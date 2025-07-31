@@ -8,7 +8,7 @@
 #' @return `data.frame` `dfResults` with additional columns: `SnapshotMonth`, `RiskScore`, `RiskScoreMax`, `RiskScoreNormalized`, `nRed`, `nAmber`.
 #'
 #' @examples
-#' dfRiskScore <- CalculateRiskScore(gsm.core::reportingResults)
+#' dfRiskScore <- RiskScore(gsm.core::reportingResults)
 #'
 #' @export
 #' @importFrom dplyr %>% group_by ungroup summarize mutate arrange left_join select across
@@ -46,7 +46,9 @@ RiskScore <- function(
 #' @return `data.frame` The grouped results with columns: RiskScore, RiskScore_Max, RiskScore_Percent.
 #'
 #' @examples
-#' grouped <- GroupRiskScore(dfResults, strGroupLevel = "Site")
+#' grouped <- gsm.core::reportingResults %>%
+#'    RiskScore() %>%
+#'    GroupRiskScore(strGroupLevel = "Site")
 #'
 #' @export
 GroupRiskScore <- function(dfResults, strGroupLevel = "Site") {
@@ -80,7 +82,7 @@ GroupRiskScore <- function(dfResults, strGroupLevel = "Site") {
 #'
 #' @examples
 #' dfRiskScoreTransposed <- gsm.core::reportingResults %>%
-#'     CalculateRiskScore(gsm.kri::metricWeights) %>%
+#'     RiskScore(gsm.kri::metricWeights) %>%
 #'     TransposeRiskScore(dfMetrics = gsm.core::reportingMetrics)
 #'
 #' @export

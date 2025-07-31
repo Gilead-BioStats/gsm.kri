@@ -21,7 +21,7 @@ Transposes the risk score data frame so that each metric (by `MetricID`) becomes
 }
 \examples{
 dfRiskScoreTransposed <- gsm.core::reportingResults \%>\%
-    CalculateRiskScore(gsm.kri::metricWeights) \%>\%
+    RiskScore(gsm.kri::metricWeights) \%>\%
     TransposeRiskScore(dfMetrics = gsm.core::reportingMetrics)
 
 }

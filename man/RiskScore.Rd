@@ -18,6 +18,6 @@ RiskScore(dfResults, dfMetricWeights = gsm.kri::metricWeights)
 Calculates the risk score for each group in the provided results data frame.
 }
 \examples{
-dfRiskScore <- CalculateRiskScore(gsm.core::reportingResults)
+dfRiskScore <- RiskScore(gsm.core::reportingResults)
 
 }

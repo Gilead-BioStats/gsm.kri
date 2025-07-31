@@ -16,7 +16,8 @@
 #' - `nAmber`: The count of metrics flagged as amber.
 #'
 #' @examples
-#' lAnalysis <- list(Analysis_Summary = gsm.core::analyticsSummary)
+#' lAnalysis <- list("Analysis_kri0001" = list(Analysis_Summary = gsm.core::analyticsSummary,
+#'                                 ID = "Analysis_kri0001"))
 #' dfRiskScore <- CalculateRiskScore(lAnalysis)
 #'
 #' @export
@@ -28,7 +29,7 @@ CalculateRiskScore <- function(
     vThreshold = c(60,30)
 ) {
   ##filter to site-level analysis output only and stack results
-  dfAnalysis_site <- purrr::keep(lAnalysis, \(.x) "ID" %in% names(.x) && grepl("^kri", .x$ID)) %>%
+  dfAnalysis_site <- purrr::keep(lAnalysis, \(.x) "ID" %in% names(.x) && grepl("kri", .x$ID)) %>%
     purrr::imap(function(result, metric) {
       subResult <- result$Analysis_Summary
       return(subResult %>% dplyr::mutate(MetricID = metric))

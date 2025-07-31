@@ -19,6 +19,8 @@ Calculates group-level risk scores for a specified group level (default: "Site")
 Filters the input data to the specified `GroupLevel`, then groups and summarizes risk scores and their percent of maximum.
 }
 \examples{
-grouped <- GroupRiskScore(dfResults, strGroupLevel = "Site")
+grouped <- gsm.core::reportingResults \%>\%
+   RiskScore() \%>\%
+   GroupRiskScore(strGroupLevel = "Site")
 
 }

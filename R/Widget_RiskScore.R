@@ -9,10 +9,10 @@
 #' @param strGroupLevel `character` The group level to filter the risk score data. Default is 'Site'.
 #'
 #' @examples
-#' gsm.core::reportingResults %>%
-#'     CalculateRiskScore(gsm.kri::metricWeights) %>%
-#'     TransposeRiskScore() %>%
-#'     Widget_RiskScore()
+#' #gsm.core::reportingResults %>%
+#' #     RiskScore(gsm.kri::metricWeights) %>%
+#' #    TransposeRiskScore(dfMetrics = gsm.core::reportingMetrics) %>%
+#' #    Widget_RiskScore(dfMetrics = gsm.core::reportingMetrics)
 #'
 #' @export
 Widget_RiskScore <- function(
@@ -30,7 +30,7 @@ Widget_RiskScore <- function(
 
     # Transpose and Summarize the data for easier JS rendering
     dfResults_Wide <- TransposeRiskScore(dfResults, dfMetrics)
-    
+
     dfRiskScores_Wide <- dfRiskScores %>%
         left_join(dfResults_Wide, by = c("StudyID", "SnapshotDate", "GroupID", "GroupLevel")) %>%
         select(

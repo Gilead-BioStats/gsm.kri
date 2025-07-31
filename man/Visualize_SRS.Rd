@@ -16,9 +16,9 @@ Visualizes the risk score data in a table format, allowing for easy comparison o
 TODO: apply color palette to metric columns
 }
 \examples{
-gsm.core::reportingResults \%>\%
-    CalculateRiskScore(gsm.kri::metricWeights) \%>\%
-    TransposeRiskScore() \%>\%
-    Visualize_RiskScore()
+#gsm.core::reportingResults \%>\%
+#    RiskScore(gsm.kri::metricWeights) \%>\%
+#    TransposeRiskScore(dfMetrics = gsm.core::reportingMetrics) \%>\%
+#    Visualize_SRS()
 
 }

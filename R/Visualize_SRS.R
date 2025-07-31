@@ -7,10 +7,10 @@
 #' @param strGroupLevel `character` The group level to filter the risk score data. Default is 'Site'.
 #'
 #' @examples
-#' gsm.core::reportingResults %>%
-#'     CalculateRiskScore(gsm.kri::metricWeights) %>%
-#'     TransposeRiskScore() %>%
-#'     Visualize_RiskScore()
+#' #gsm.core::reportingResults %>%
+#' #    RiskScore(gsm.kri::metricWeights) %>%
+#' #    TransposeRiskScore(dfMetrics = gsm.core::reportingMetrics) %>%
+#' #    Visualize_SRS()
 #'
 #' @importFrom DT datatable formatStyle styleInterval
 #' @import htmlwidgets
@@ -99,6 +99,6 @@ Visualize_SRS <- function(
         #    c('GroupLabel', 'StudyLabel'),
         #    "white-space" = "nowrap"
         #)
-    
+
     return(lRiskScoreTable)
 }

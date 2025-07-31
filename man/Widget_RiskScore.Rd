@@ -28,14 +28,9 @@ Generates a color-coded HTML table using htmlwidgets, mimicking the DT table but
 A widget that generates a color-coded HTML table of risk scores, mimicking the DT table but without DT dependencies.
 }
 \examples{
-gsm.core::reportingResults \%>\%
-    RiskScore(gsm.kri::metricWeights) \%>\%
-    TransposeRiskScore() \%>\%
-    Visualize_RiskScore()
-
-gsm.core::reportingResults \%>\%
-    CalculateRiskScore(gsm.kri::metricWeights) \%>\%
-    TransposeRiskScore() \%>\%
-    Widget_RiskScore()
+#gsm.core::reportingResults \%>\%
+#     RiskScore(gsm.kri::metricWeights) \%>\%
+#    TransposeRiskScore(dfMetrics = gsm.core::reportingMetrics) \%>\%
+#    Widget_RiskScore(dfMetrics = gsm.core::reportingMetrics)
 
 }

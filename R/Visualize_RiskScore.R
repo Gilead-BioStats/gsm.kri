@@ -5,11 +5,6 @@
 #' @param dfRiskScoreTransposed `data.frame` The summarized risk score data to be visualized.
 #' @param strGroupLevel `character` The group level to filter the risk score data. Default is 'Site'.
 #'
-#' @examples
-#' gsm.core::reportingResults %>%
-#'     RiskScore(gsm.kri::metricWeights) %>%
-#'     TransposeRiskScore() %>%
-#'     Visualize_RiskScore()
 #'
 #' @rdname Widget_RiskScore
 #' @export

@@ -31,7 +31,8 @@ corresponding weight.}
 Calculates the risk score for each group in the provided results data frame.
 }
 \examples{
-lAnalysis <- list(Analysis_Summary = gsm.core::analyticsSummary)
+lAnalysis <- list("Analysis_kri0001" = list(Analysis_Summary = gsm.core::analyticsSummary,
+                                ID = "Analysis_kri0001"))
 dfRiskScore <- CalculateRiskScore(lAnalysis)
 
 }
