@@ -48,6 +48,8 @@
 }
 .group-overview th.group-overview--nAmberFlags {
 }
+.group-overview th.group-overview--siteRiskScore {
+}
 .group-overview th.group-overview--metric {
     font-size: 0.8em;
 }
@@ -67,8 +69,13 @@
 .group-overview td.group-overview--nAmberFlags {
     background-color: #feaa02;
 }
+.group-overview td.group-overview--siteRiskScore {
+    color: black; /* White text for better contrast on colored backgrounds */
+    text-shadow: 1px 1px 1px white; /* Text shadow for better readability */
+}
 .group-overview td.group-overview--metric {
     width: 3em;
     text-align: center;
     padding-top: 0.4em;
 }
+
