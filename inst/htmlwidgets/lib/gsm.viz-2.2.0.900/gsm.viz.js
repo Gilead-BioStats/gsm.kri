@@ -21811,7 +21811,7 @@ var gsmViz = (() => {
     if (riskScoreResult) {
       const numerator = riskScoreResult.Numerator;
       const denominator = riskScoreResult.Denominator;
-      const score = parseFloat(riskScoreResult.Score).toFixed(2);
+      const score = parseFloat(riskScoreResult.Score).toFixed(3);
       tooltipLines.push(`Risk Score Calculation:`);
       tooltipLines.push(`${numerator} / ${denominator} = ${score}`);
       tooltipLines.push("");
