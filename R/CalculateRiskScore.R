@@ -59,10 +59,10 @@ CalculateRiskScore <- function(
             Metric = Numerator / Denominator * 100,
             Score = Metric,
             nRed = sum(abs(Flag) == 2, na.rm = TRUE),
-            nAmber = sum(abs(Flag) == 1, na.rm = TRUE),
-            Flag = case_when(Score >= vThreshold[1] ~ 2,  # Red
-                            Score >= vThreshold[2] ~ 1,  # Amber
-                            TRUE ~ 0),       # Green
+            nAmber = sum(abs(Flag) == 1, na.rm = TRUE)#,
+            # Flag = case_when(Score >= vThreshold[1] ~ 2,  # Red
+            #                 Score >= vThreshold[2] ~ 1,  # Amber
+            #                 TRUE ~ 0),       # Green
         ) %>%
         ungroup()
 
