@@ -51,6 +51,7 @@ Widget_GroupOverview <- function(
   strGroupLevel = NULL,
   strGroupSubset = "red",
   strGroupLabelKey = "InvestigatorLastName",
+  strSiteRiskMetric = "Analysis_srs0001",
   strOutputLabel = paste0(
     fontawesome::fa("table", fill = "#337ab7"),
     "  ",
@@ -77,6 +78,10 @@ Widget_GroupOverview <- function(
     message = "A single group level must be provided to create group-level output."
   )
 
+  ##don't include site risk score in dfMetrics, so it's not in the summary charts
+  dfMetrics <- dfMetrics %>%
+    dplyr::filter(MetricID != strSiteRiskMetric)
+
   # forward options using x
   lInput <- list(
     dfResults = dfResults,
@@ -90,6 +95,8 @@ Widget_GroupOverview <- function(
       list(...) # additional chart configuration
     ),
     strGroupSubset = strGroupSubset,
+    strGroupLabelKey = strGroupLabelKey,
+    strSiteRiskMetric = strSiteRiskMetric,
     bDebug = bDebug
   )
 
