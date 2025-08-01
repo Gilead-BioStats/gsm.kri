@@ -70,11 +70,16 @@ steps:
     name: gsm.core::Summarize
     params:
       dfFlagged: Analysis_Flagged
+  - output: metricWeights_filtered
+    name: RunQuery
+    params:
+      df: metricWeights
+      strQuery: "SELECT * FROM df WHERE MetricID == 'Analysis_kri0011'"
   - output: Analysis_Summary_Weight
     name: dplyr::left_join
     params:
       x: Analysis_Summary
-      "y": metricWeights
+      "y": metricWeights_filtered
   - output: lAnalysis
     name: list
     params:

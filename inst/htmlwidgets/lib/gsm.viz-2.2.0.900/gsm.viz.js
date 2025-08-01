@@ -21743,7 +21743,10 @@ var gsmViz = (() => {
       group2.nGreenFlags = groupResults.filter(
         (result) => Math.abs(parseInt(result.Flag)) === 0
       ).length;
-      group2.siteRiskScore = groupResults.filter((result) => result.MetricID === config.SiteRiskMetric).map((result) => parseFloat(result.Score));
+      const riskScoreResult = groupResults.find(
+        (result) => result.MetricID === config.SiteRiskMetric
+      );
+      group2.siteRiskScore = riskScoreResult ? parseFloat(riskScoreResult.Score) : null;
     });
     return groups2;
   }
@@ -21790,8 +21793,54 @@ var gsmViz = (() => {
     return tooltipContent.join("\n");
   }
 
+  // src/groupOverview/defineColumns/defineRiskScoreTooltip.js
+  function defineRiskScoreTooltip(column, content, config, results, metricMetadata = null) {
+    const groupID = content.GroupID;
+    const groupResults = results.filter((result) => result.GroupID === groupID);
+    const riskScoreResult = groupResults.find((result) => result.MetricID === config.SiteRiskMetric);
+    const amberFlags = groupResults.filter((result) => Math.abs(parseInt(result.Flag)) === 1);
+    const redFlags = groupResults.filter((result) => Math.abs(parseInt(result.Flag)) === 2);
+    const metricLookup = metricMetadata ? metricMetadata.reduce((acc, metric) => {
+      acc[metric.MetricID] = {
+        name: metric.Metric,
+        abbreviation: metric.Abbreviation
+      };
+      return acc;
+    }, {}) : {};
+    const tooltipLines = [];
+    if (riskScoreResult) {
+      const numerator = riskScoreResult.Numerator;
+      const denominator = riskScoreResult.Denominator;
+      const score = parseFloat(riskScoreResult.Score).toFixed(2);
+      tooltipLines.push(`Risk Score Calculation:`);
+      tooltipLines.push(`${numerator} / ${denominator} = ${score}`);
+      tooltipLines.push("");
+    }
+    if (redFlags.length > 0) {
+      tooltipLines.push(`Red Flags (${redFlags.length}):`);
+      redFlags.forEach((result) => {
+        const metricInfo = metricLookup[result.MetricID];
+        const metricName = metricInfo ? `${metricInfo.abbreviation} - ${metricInfo.name}` : result.MetricID;
+        tooltipLines.push(`\u2022 ${metricName}: ${result.Weight}`);
+      });
+      tooltipLines.push("");
+    }
+    if (amberFlags.length > 0) {
+      tooltipLines.push(`Amber Flags (${amberFlags.length}):`);
+      amberFlags.forEach((result) => {
+        const metricInfo = metricLookup[result.MetricID];
+        const metricName = metricInfo ? `${metricInfo.abbreviation} - ${metricInfo.name}` : result.MetricID;
+        tooltipLines.push(`\u2022 ${metricName}: ${result.Weight}`);
+      });
+    }
+    if (redFlags.length === 0 && amberFlags.length === 0) {
+      tooltipLines.push("No amber or red flags for this group");
+    }
+    return tooltipLines.join("\n");
+  }
+
   // src/groupOverview/defineColumns/defineGroupColumns.js
-  function defineGroupColumns(groupMetadata, config) {
+  function defineGroupColumns(groupMetadata, config, results = null, metricMetadata = null) {
     let columns = [
       {
         label: "Group",
@@ -21836,8 +21885,10 @@ var gsmViz = (() => {
         tooltip: false,
         type: "group",
         dataType: "number"
-      },
-      {
+      }
+    ];
+    if (config.GroupLevel === "Site") {
+      columns.push({
         label: "Risk Score",
         data: groupMetadata,
         filterKey: "GroupID",
@@ -21847,10 +21898,14 @@ var gsmViz = (() => {
         tooltip: true,
         type: "group",
         dataType: "number"
-      }
-    ];
+      });
+    }
     columns.forEach((column) => {
-      column.defineTooltip = defineTooltip;
+      if (column.valueKey === "siteRiskScore" && results) {
+        column.defineTooltip = (col, content, config2) => defineRiskScoreTooltip(col, content, config2, results, metricMetadata);
+      } else {
+        column.defineTooltip = defineTooltip;
+      }
     });
     columns = columns.filter(
       (column) => groupMetadata.some(
@@ -21894,7 +21949,7 @@ var gsmViz = (() => {
 
   // src/groupOverview/defineColumns.js
   function defineColumns(groupMetadata, metricMetadata, results, config) {
-    const groupColumns = defineGroupColumns(groupMetadata, config);
+    const groupColumns = defineGroupColumns(groupMetadata, config, results, metricMetadata);
     const metricColumns = defineMetricColumns(metricMetadata, results, config);
     const columns = [...groupColumns, ...metricColumns];
     columns.forEach((column, i) => {
