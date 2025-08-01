@@ -68,7 +68,8 @@ mapped <- RunWorkflows(mappings_wf, lRaw)
 
 # Step 2 - Create Metrics - calculate metrics using mapped data
 metrics_wf <- MakeWorkflowList(strPath = "inst/workflow/2_metrics", strPackage = "gsm.kri")
-analyzed <- RunWorkflows(metrics_wf, mapped)
+analyzed <- RunWorkflows(metrics_wf, lData = c(mapped,
+                                               list(metricWeights = gsm.kri::metricWeights)))
 
 # Step 3 - Create Reporting Layer - create reports using metrics data
 reporting_wf <- MakeWorkflowList(strPath = "workflow/3_reporting", strPackage = "gsm.reporting")

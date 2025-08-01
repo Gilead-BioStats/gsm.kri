@@ -6,14 +6,13 @@
 #' `workflow/2_metrics` workflows
 #' @param dfMetricWeights `data.frame` Combinations of metric ID and flag value, each with a
 #' corresponding weight.
+#' @param dSnapshotDate `Date` The date of the snapshot. Default is the current date.
+#' @param vThreshold `numeric` A vector of two numeric values representing the thresholds for flagging
 #'
-#' @return `data.frame` `dfResults` with the following additional columns:
-#' - `SnapshotMonth`: The month of the snapshot, formatted as "YYYY-MM".
-#' - `RiskScore`: The total risk score for the group.
-#' - `RiskScoreMax`: The maximum possible risk score for the group.
-#' - `RiskScoreNormalized`: The normalized risk score as a percentage of the maximum.
-#' - `nRed`: The count of metrics flagged as red.
-#' - `nAmber`: The count of metrics flagged as amber.
+#' @return `data.frame` That has the same features as Analysis_Summary, but with the following additional columns:
+#' - `SnapshotMonth`: The month of the snapshot in "YYYY-MM" format.
+#' - `nAmber`: The count of metrics flagged as Amber.
+#' - `nRed`: The count of metrics flagged as Red.
 #'
 #' @examples
 #' lAnalysis <- list("Analysis_kri0001" = list(Analysis_Summary = gsm.core::analyticsSummary,
@@ -37,12 +36,15 @@ CalculateRiskScore <- function(
     purrr::list_rbind() %>%
     mutate(SnapshotDate = dSnapshotDate)
 
+    if (!"Weight" %in% names(dfAnalysis_site)) {
+      dfAnalysis_site %>%
+        inner_join(
+          dfMetricWeights,
+          c('MetricID', 'Flag')
+        )
+    }
 
     dfRiskScore <- dfAnalysis_site %>%
-        inner_join(
-            dfMetricWeights,
-            c('MetricID', 'Flag')
-        ) %>%
         group_by(
             GroupLevel,
             GroupID
