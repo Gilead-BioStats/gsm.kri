@@ -37,7 +37,7 @@ CalculateRiskScore <- function(
     mutate(SnapshotDate = dSnapshotDate)
 
     if (!"Weight" %in% names(dfAnalysis_site)) {
-      dfAnalysis_site %>%
+      dfAnalysis_site <- dfAnalysis_site %>%
         inner_join(
           dfMetricWeights,
           c('MetricID', 'Flag')
