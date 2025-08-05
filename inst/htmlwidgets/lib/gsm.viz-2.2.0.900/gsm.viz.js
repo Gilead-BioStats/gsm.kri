@@ -17650,10 +17650,68 @@ var gsmViz = (() => {
   var rgbBasis = rgbSpline(basis_default);
   var rgbBasisClosed = rgbSpline(basisClosed_default);
 
+  // node_modules/d3-interpolate/src/numberArray.js
+  function numberArray_default(a, b) {
+    if (!b)
+      b = [];
+    var n = a ? Math.min(b.length, a.length) : 0, c = b.slice(), i;
+    return function(t) {
+      for (i = 0; i < n; ++i)
+        c[i] = a[i] * (1 - t) + b[i] * t;
+      return c;
+    };
+  }
+  function isNumberArray(x) {
+    return ArrayBuffer.isView(x) && !(x instanceof DataView);
+  }
+
+  // node_modules/d3-interpolate/src/array.js
+  function genericArray(a, b) {
+    var nb = b ? b.length : 0, na = a ? Math.min(nb, a.length) : 0, x = new Array(na), c = new Array(nb), i;
+    for (i = 0; i < na; ++i)
+      x[i] = value_default(a[i], b[i]);
+    for (; i < nb; ++i)
+      c[i] = b[i];
+    return function(t) {
+      for (i = 0; i < na; ++i)
+        c[i] = x[i](t);
+      return c;
+    };
+  }
+
+  // node_modules/d3-interpolate/src/date.js
+  function date_default(a, b) {
+    var d = /* @__PURE__ */ new Date();
+    return a = +a, b = +b, function(t) {
+      return d.setTime(a * (1 - t) + b * t), d;
+    };
+  }
+
   // node_modules/d3-interpolate/src/number.js
   function number_default(a, b) {
     return a = +a, b = +b, function(t) {
       return a * (1 - t) + b * t;
+    };
+  }
+
+  // node_modules/d3-interpolate/src/object.js
+  function object_default(a, b) {
+    var i = {}, c = {}, k;
+    if (a === null || typeof a !== "object")
+      a = {};
+    if (b === null || typeof b !== "object")
+      b = {};
+    for (k in b) {
+      if (k in a) {
+        i[k] = value_default(a[k], b[k]);
+      } else {
+        c[k] = b[k];
+      }
+    }
+    return function(t) {
+      for (k in i)
+        c[k] = i[k](t);
+      return c;
     };
   }
 
@@ -17704,6 +17762,12 @@ var gsmViz = (() => {
         s[(o = q[i2]).i] = o.x(t);
       return s.join("");
     });
+  }
+
+  // node_modules/d3-interpolate/src/value.js
+  function value_default(a, b) {
+    var t = typeof b, c;
+    return b == null || t === "boolean" ? constant_default2(b) : (t === "number" ? number_default : t === "string" ? (c = color2(b)) ? (b = c, rgb_default) : string_default : b instanceof color2 ? rgb_default : b instanceof Date ? date_default : isNumberArray(b) ? numberArray_default : Array.isArray(b) ? genericArray : typeof b.valueOf !== "function" && typeof b.toString !== "function" || isNaN(b) ? object_default : number_default)(a, b);
   }
 
   // node_modules/d3-interpolate/src/transform/decompose.js
@@ -18957,29 +19021,6 @@ var gsmViz = (() => {
     formatPrefix = locale.formatPrefix;
     return locale;
   }
-
-  // node_modules/d3-scale-chromatic/src/colors.js
-  function colors_default(specifier) {
-    var n = specifier.length / 6 | 0, colors2 = new Array(n), i = 0;
-    while (i < n)
-      colors2[i] = "#" + specifier.slice(i * 6, ++i * 6);
-    return colors2;
-  }
-
-  // node_modules/d3-scale-chromatic/src/ramp.js
-  var ramp_default = (scheme2) => rgbBasis(scheme2[scheme2.length - 1]);
-
-  // node_modules/d3-scale-chromatic/src/sequential-multi/YlOrRd.js
-  var scheme = new Array(3).concat(
-    "ffeda0feb24cf03b20",
-    "ffffb2fecc5cfd8d3ce31a1c",
-    "ffffb2fecc5cfd8d3cf03b20bd0026",
-    "ffffb2fed976feb24cfd8d3cf03b20bd0026",
-    "ffffb2fed976feb24cfd8d3cfc4e2ae31a1cb10026",
-    "ffffccffeda0fed976feb24cfd8d3cfc4e2ae31a1cb10026",
-    "ffffccffeda0fed976feb24cfd8d3cfc4e2ae31a1cbd0026800026"
-  ).map(colors_default);
-  var YlOrRd_default = ramp_default(scheme);
 
   // node_modules/d3-zoom/src/transform.js
   function Transform(k, x, y) {
@@ -22038,8 +22079,9 @@ var gsmViz = (() => {
       }
     ).join("td").text((d) => d.text === "NA" ? "-" : d.text).attr("class", (d) => d.class).classed("group-overview--tooltip", (d) => d.tooltip).attr("title", (d) => d.tooltip ? d.tooltipContent : null).style("background-color", (d) => {
       if (d.column.valueKey === "siteRiskScore" && d.value !== null && !isNaN(d.value)) {
-        const normalizedValue = d.value / 100;
-        return YlOrRd_default(normalizedValue);
+        const normalizedValue = Math.max(0, Math.min(100, d.value)) / 100;
+        const colorInterpolator = value_default("#ffffff", "#ff5859");
+        return colorInterpolator(normalizedValue);
       }
       return null;
     });

@@ -77,8 +77,8 @@ steps:
     params:
       x: Analysis_Summary
       "y": metricWeights_filtered
-      by:
-        - Flag
+      by: "Flag"
+      na_matches: never
   - output: lAnalysis
     name: list
     params:
