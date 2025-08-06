@@ -12,15 +12,10 @@ meta:
   Threshold: "60,30"
   Priority: 4
 steps:
-  - output: vThreshold
-    name: gsm.core::ParseThreshold
-    params:
-      strThreshold: Threshold
   - output: Analysis_Summary
     name: gsm.kri::CalculateRiskScore
     params:
       lAnalysis: lData
-      vThreshold: vThreshold
   - output: lAnalysis
     name: list
     params:

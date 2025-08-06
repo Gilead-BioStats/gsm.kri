@@ -11,6 +11,7 @@ meta:
   AnalysisType: binary
   Threshold: "2,3"
   Flag: "0,1,2"
+  RiskScoreWeight: "0,4,8"
   AccrualThreshold: 3
   AccrualMetric: Numerator
 spec:
@@ -29,10 +30,16 @@ steps:
     name: gsm.core::ParseThreshold
     params:
       strThreshold: Threshold
+  - output: vRiskScoreWeight
+    name: gsm.core::ParseThreshold
+    params:
+      strThreshold: RiskScoreWeight
+      bSort: false
   - output: vFlag
     name: gsm.core::ParseThreshold
     params:
       strThreshold: Flag
+      bSort: false
   - output: Temp_DROPOUT
     name: RunQuery
     params:
@@ -64,23 +71,13 @@ steps:
       dfAnalyzed: Analysis_Analyzed
       vThreshold: vThreshold
       vFlag: vFlag
+      vRiskScoreWeight: vRiskScoreWeight
       nAccrualThreshold: AccrualThreshold
       strAccrualMetric: AccrualMetric
   - output: Analysis_Summary
     name: gsm.core::Summarize
     params:
       dfFlagged: Analysis_Flagged
-  - output: metricWeights_filtered
-    name: RunQuery
-    params:
-      df: metricWeights
-      strQuery: "SELECT * FROM df WHERE MetricID == 'Analysis_kri0006'"
-  - output: Analysis_Summary_Weight
-    name: dplyr::left_join
-    params:
-      x: Analysis_Summary
-      "y": metricWeights_filtered
-      na_matches: never
   - output: lAnalysis
     name: list
     params:
@@ -89,5 +86,5 @@ steps:
       Analysis_Transformed: Analysis_Transformed
       Analysis_Analyzed: Analysis_Analyzed
       Analysis_Flagged: Analysis_Flagged
-      Analysis_Summary: Analysis_Summary_Weight
+      Analysis_Summary: Analysis_Summary
 
