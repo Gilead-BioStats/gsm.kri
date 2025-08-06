@@ -1,0 +1,9 @@
+dependencies:
+  - name: htmlwidgets
+    version: 1.6.2
+    src: htmlwidgets/lib
+    script: htmlwidgets.js
+  - name: renderRiskScoreTable
+    version: 1.0.0
+    src: htmlwidgets/lib
+    script: renderRiskScoreTable.js

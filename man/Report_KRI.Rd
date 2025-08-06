@@ -63,7 +63,11 @@ lChartsSite <- MakeCharts(
 strOutputFile <- "StandardSiteReport.html"
 kri_report_path <- Report_KRI(
   lCharts = lChartsSite,
-  dfResults = gsm.core::reportingResults,
+  dfResults = gsm.core::reportingResults \%>\%
+    FilterByLatestSnapshotDate() \%>\%
+    gsm.reporting::CalculateChange(
+      gsm.core::reportingResults
+    ),
   dfMetrics = gsm.core::reportingMetrics,
   dfGroups = gsm.core::reportingGroups,
   strOutputFile = strOutputFile
@@ -80,7 +84,11 @@ lChartsCountry <- MakeCharts(
 strOutputFile <- "StandardCountryReport.html"
 kri_report_path <- Report_KRI(
   lCharts = lChartsCountry,
-  dfResults = gsm.core::reportingResults_country,
+  dfResults = gsm.core::reportingResults_country \%>\%
+    FilterByLatestSnapshotDate() \%>\%
+    gsm.reporting::CalculateChange(
+      gsm.core::reportingResults_country
+    ),
   dfMetrics = gsm.core::reportingMetrics_country,
   dfGroups = gsm.core::reportingGroups_country,
   strOutputFile = strOutputFile
