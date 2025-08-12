@@ -84,22 +84,19 @@ Widget_GroupOverview <- function(
 
   ## update dfResults to include site risk weights when available
   if (any(!is.na(dfMetrics$RiskScoreWeight))) {
-  dfWeights <- NULL
-  for (i in 1:nrow(dfMetrics)) {
-    if(!is.na(dfMetrics$RiskScoreWeight[i])) {
-    weights <- ParseThreshold(dfMetrics$RiskScoreWeight[i])
-    flags <- ParseThreshold(dfMetrics$Flag[i])
-    metric <- dfMetrics$MetricID[i]
-    weight_max <- max(weights, na.rm = TRUE)
-    dfWeights <- bind_rows(dfWeights,
-                           data.frame(MetricID = metric,
-                                      Flag = flags,
-                                      Weight = weights,
-                                      WeightMax = weight_max))
-    }
-  }
-  dfResults <- dfResults %>%
-    dplyr::left_join(dfWeights, by = c("Flag", "MetricID"))
+
+    dfWeights <- dfMetrics %>%
+      filter(!is.na(RiskScoreWeight)) %>%
+      mutate(
+        Weight = map(RiskScoreWeight, \(x) ParseThreshold(x, bSort = FALSE)),
+        Flag  = map(Flag, \(x) ParseThreshold(x, bSort = FALSE)),
+        WeightMax = map_dbl(Weight, ~ max(.x, na.rm = TRUE))
+      ) %>%
+      select(MetricID, Flag, Weight, WeightMax) %>%
+      unnest(cols = c(Flag, Weight))
+
+    dfResults <- dfResults %>%
+      left_join(dfWeights, by = c("Flag", "MetricID"))
   }
 
   # forward options using x
