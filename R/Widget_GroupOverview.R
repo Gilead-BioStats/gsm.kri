@@ -78,9 +78,29 @@ Widget_GroupOverview <- function(
     message = "A single group level must be provided to create group-level output."
   )
 
-  ##don't include site risk score in dfMetrics, so it's not in the summary charts
+  ## don't include site risk score in dfMetrics, so it's not in the summary charts
   dfMetrics <- dfMetrics %>%
     dplyr::filter(MetricID != strSiteRiskMetric)
+
+  ## update dfResults to include site risk weights when available
+  if (any(!is.na(dfMetrics$RiskScoreWeight))) {
+  dfWeights <- NULL
+  for (i in 1:nrow(dfMetrics)) {
+    if(!is.na(dfMetrics$RiskScoreWeight[i])) {
+    weights <- ParseThreshold(dfMetrics$RiskScoreWeight[i])
+    flags <- ParseThreshold(dfMetrics$Flag[i])
+    metric <- dfMetrics$MetricID[i]
+    weight_max <- max(weights, na.rm = TRUE)
+    dfWeights <- bind_rows(dfWeights,
+                           data.frame(MetricID = metric,
+                                      Flag = flags,
+                                      Weight = weights,
+                                      WeightMax = weight_max))
+    }
+  }
+  dfResults <- dfResults %>%
+    dplyr::left_join(dfWeights, by = c("Flag", "MetricID"))
+  }
 
   # forward options using x
   lInput <- list(
