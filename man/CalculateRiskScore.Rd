@@ -4,12 +4,7 @@
 \alias{CalculateRiskScore}
 \title{Calculate Risk Score}
 \usage{
-CalculateRiskScore(
-  lAnalysis,
-  dfMetricWeights = gsm.kri::metricWeights,
-  dSnapshotDate = Sys.Date(),
-  vThreshold = c(60, 30)
-)
+CalculateRiskScore(lAnalysis)
 }
 \arguments{
 \item{lAnalysis}{`list` List of analysis outputs from the metrics calculated in the
