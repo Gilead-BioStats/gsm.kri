@@ -14,6 +14,7 @@
 #' - 'red/amber': Groups with 1+ red/amber flag.
 #' - 'amber': Groups with 1+ amber flag.
 #' @param strGroupLabelKey `character` Value for the group label key. Default: 'InvestigatorLastName'.
+#' @param strSiteRiskMetric `character` Metric ID for the site risk score. Default: 'Analysis_srs0001'.
 #' @param ... `any` Additional chart configuration settings.
 #'
 #' @examples

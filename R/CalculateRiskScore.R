@@ -4,18 +4,18 @@
 #'
 #' @param lAnalysis `list` List of analysis outputs from the metrics calculated in the
 #' `workflow/2_metrics` workflows
-#' @param dfMetricWeights `data.frame` Combinations of metric ID and flag value, each with a
-#' corresponding weight.
-#' @param dSnapshotDate `Date` The date of the snapshot. Default is the current date.
-#' @param vThreshold `numeric` A vector of two numeric values representing the thresholds for flagging
 #'
-#' @return `data.frame` That has the same features as Analysis_Summary, but with the following additional columns:
-#' - `SnapshotMonth`: The month of the snapshot in "YYYY-MM" format.
-#' - `nAmber`: The count of metrics flagged as Amber.
-#' - `nRed`: The count of metrics flagged as Red.
+#' @return `data.frame` That has the same features as Analysis_Summary.
 #'
 #' @examples
-#' lAnalysis <- list("Analysis_kri0001" = list(Analysis_Summary = gsm.core::analyticsSummary,
+#' analysisFlagged <- gsm.core::analyticsSummary %>%
+#'   dplyr::mutate(Weight = dplyr::case_when(abs(Flag) == 1 ~ 2,
+#'                                           abs(Flag) == 2 ~ 4,
+#'                                           Flag == 0 ~ 0,
+#'                                           TRUE ~ NA),
+#'                 WeightMax = 4)
+#'
+#' lAnalysis <- list("Analysis_kri0001" = list(Analysis_Flagged = analysisFlagged,
 #'                                 ID = "Analysis_kri0001"))
 #' dfRiskScore <- CalculateRiskScore(lAnalysis)
 #'
