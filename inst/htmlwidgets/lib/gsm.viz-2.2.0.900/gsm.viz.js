@@ -17650,68 +17650,10 @@ var gsmViz = (() => {
   var rgbBasis = rgbSpline(basis_default);
   var rgbBasisClosed = rgbSpline(basisClosed_default);
 
-  // node_modules/d3-interpolate/src/numberArray.js
-  function numberArray_default(a, b) {
-    if (!b)
-      b = [];
-    var n = a ? Math.min(b.length, a.length) : 0, c = b.slice(), i;
-    return function(t) {
-      for (i = 0; i < n; ++i)
-        c[i] = a[i] * (1 - t) + b[i] * t;
-      return c;
-    };
-  }
-  function isNumberArray(x) {
-    return ArrayBuffer.isView(x) && !(x instanceof DataView);
-  }
-
-  // node_modules/d3-interpolate/src/array.js
-  function genericArray(a, b) {
-    var nb = b ? b.length : 0, na = a ? Math.min(nb, a.length) : 0, x = new Array(na), c = new Array(nb), i;
-    for (i = 0; i < na; ++i)
-      x[i] = value_default(a[i], b[i]);
-    for (; i < nb; ++i)
-      c[i] = b[i];
-    return function(t) {
-      for (i = 0; i < na; ++i)
-        c[i] = x[i](t);
-      return c;
-    };
-  }
-
-  // node_modules/d3-interpolate/src/date.js
-  function date_default(a, b) {
-    var d = /* @__PURE__ */ new Date();
-    return a = +a, b = +b, function(t) {
-      return d.setTime(a * (1 - t) + b * t), d;
-    };
-  }
-
   // node_modules/d3-interpolate/src/number.js
   function number_default(a, b) {
     return a = +a, b = +b, function(t) {
       return a * (1 - t) + b * t;
-    };
-  }
-
-  // node_modules/d3-interpolate/src/object.js
-  function object_default(a, b) {
-    var i = {}, c = {}, k;
-    if (a === null || typeof a !== "object")
-      a = {};
-    if (b === null || typeof b !== "object")
-      b = {};
-    for (k in b) {
-      if (k in a) {
-        i[k] = value_default(a[k], b[k]);
-      } else {
-        c[k] = b[k];
-      }
-    }
-    return function(t) {
-      for (k in i)
-        c[k] = i[k](t);
-      return c;
     };
   }
 
@@ -17762,12 +17704,6 @@ var gsmViz = (() => {
         s[(o = q[i2]).i] = o.x(t);
       return s.join("");
     });
-  }
-
-  // node_modules/d3-interpolate/src/value.js
-  function value_default(a, b) {
-    var t = typeof b, c;
-    return b == null || t === "boolean" ? constant_default2(b) : (t === "number" ? number_default : t === "string" ? (c = color2(b)) ? (b = c, rgb_default) : string_default : b instanceof color2 ? rgb_default : b instanceof Date ? date_default : isNumberArray(b) ? numberArray_default : Array.isArray(b) ? genericArray : typeof b.valueOf !== "function" && typeof b.toString !== "function" || isNaN(b) ? object_default : number_default)(a, b);
   }
 
   // node_modules/d3-interpolate/src/transform/decompose.js
@@ -21852,7 +21788,7 @@ var gsmViz = (() => {
     if (riskScoreResult) {
       const numerator = riskScoreResult.Numerator;
       const denominator = riskScoreResult.Denominator;
-      const score = parseFloat(riskScoreResult.Score).toFixed(3);
+      const score = parseFloat(riskScoreResult.Score).toFixed(2);
       tooltipLines.push(`Risk Score Calculation:`);
       tooltipLines.push(`${numerator} / ${denominator} = ${score}`);
       tooltipLines.push("");
@@ -22033,7 +21969,7 @@ var gsmViz = (() => {
         datum2.value = datum2[column.valueKey];
         datum2.text = datum2.value;
         if (column.valueKey === "siteRiskScore" && datum2.value !== null && !isNaN(datum2.value)) {
-          datum2.text = parseFloat(datum2.value).toFixed(3);
+          datum2.text = parseFloat(datum2.value);
         }
         datum2.sortValue = column.type === "metric" ? Math.abs(parseFloat(datum2.value)) : datum2.value;
         datum2.class = [
@@ -22077,14 +22013,7 @@ var gsmViz = (() => {
         const id2 = d.column.type === "metric" ? `${d.GroupID}-${d.column.meta.MetricID}` : `${d.GroupID}-${d.column.valueKey}`;
         return id2;
       }
-    ).join("td").text((d) => d.text === "NA" ? "-" : d.text).attr("class", (d) => d.class).classed("group-overview--tooltip", (d) => d.tooltip).attr("title", (d) => d.tooltip ? d.tooltipContent : null).style("background-color", (d) => {
-      if (d.column.valueKey === "siteRiskScore" && d.value !== null && !isNaN(d.value)) {
-        const normalizedValue = Math.max(0, Math.min(100, d.value)) / 100;
-        const colorInterpolator = value_default("#ffffff", "#ff5859");
-        return colorInterpolator(normalizedValue);
-      }
-      return null;
-    });
+    ).join("td").text((d) => d.text === "NA" ? "-" : d.text).attr("class", (d) => d.class).classed("group-overview--tooltip", (d) => d.tooltip).attr("title", (d) => d.tooltip ? d.tooltipContent : null);
     return cells;
   }
 
