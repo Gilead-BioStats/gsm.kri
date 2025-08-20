@@ -1,0 +1,86 @@
+---
+title: "Calculating Site Risk Scores"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Calculating Site Risk Scores}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Overview
+
+This vignette describes how **site-level risk scores** are calculated using Key Risk Indicators (KRIs), their associated *flag severities*, and predefined *weights*. The risk scoring framework provides a standardized, quantitative way to highlight sites with elevated risk.
+
+# Risk Indicators and Flags
+
+Each KRI (e.g., Adverse Events, Serious Adverse Events, Protocol Deviations) can generate *flags* of different severity:
+  
+  * **Low Amber**
+  * **Low Red**
+  * **High Amber**
+  * **High Red**
+  
+  Each flag type is assigned a **weight** that reflects its contribution to site risk.
+
+```{r, echo=FALSE}
+library(knitr)
+
+kri_weights <- data.frame(
+  KRI = c("AE", "SAE", "PD (Protocol Deviations)", "IPD (Important Protocol Deviations)",
+          "LB (Labs)", "Data Quality (combined)", "Screen Failure",
+          "Treatment Discontinuation", "Study Discontinuation"),
+  Low_Amber = c(2, 0, 0.5, 0, 0, 0, 0, 0, 0),
+  Low_Red   = c(4, 1, 1, 0, 0, 0, 0, 0, 0),
+  High_Amber= c(0, 0.5, 1, 2, 0, 0.5, 1, 2, 2),
+  High_Red  = c(0, 1, 2, 4, 0, 1, 2, 4, 4)
+)
+
+kable(kri_weights, caption = "Flag Weights for Key Risk Indicators")
+```
+
+# Example Site Calculation
+
+For each site, the observed *flags* are multiplied by the corresponding **weights** and summed to produce a **site risk score**.
+
+Below is a worked example for one site:
+  
+```{r, echo=FALSE}
+site_example <- data.frame(
+  KRI = c("AE", "SAE", "PD", "IPD", "LB", "Data Quality", 
+          "Screen Failure", "Treatment Discontinuation", "Study Discontinuation"),
+  Contribution = c(4.0, 0.0, 1.0, 2.0, 0.0, 0.5, 2.0, 0.0, 0.0)
+)
+
+kable(site_example, caption = "Example Site Contributions to Risk Score")
+```
+
+The **total site risk score** is simply the sum:
+  
+```{r}
+total_score <- sum(site_example$Contribution)
+total_score
+```
+
+# Benchmarking Across Sites
+
+Site-level scores can be contextualized in two ways:
+  
+* **Relative ranking**: comparing each site’s score against other sites (e.g., percentile, rank order).
+* **Temporal averaging**: computing average scores across multiple months to reduce short-term fluctuations.
+
+For example:
+  
+  * Highest site score observed: **22**
+  * Average score across 3 months: **9.5**
+  
+  # Conclusion
+  
+This scoring framework provides an interpretable, quantitative measure of risk at each site. By combining information across KRIs and weighting severity appropriately, it allows data monitoring teams to identify high-risk sites and prioritize monitoring resources effectively.
+
