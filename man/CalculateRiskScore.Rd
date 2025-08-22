@@ -4,14 +4,14 @@
 \alias{CalculateRiskScore}
 \title{Calculate Risk Score}
 \usage{
-CalculateRiskScore(lAnalysis)
+CalculateRiskScore(dfFlaggedWeights)
 }
 \arguments{
-\item{lAnalysis}{`list` List of analysis outputs from the metrics calculated in the
-`workflow/2_metrics` workflows}
+\item{dfFlaggedWeights}{`data.frame` Dataframe of stacked analysis outputs from the metrics calculated in the
+`workflow/2_metrics` workflows. Must contain the columns `GroupLevel`, `GroupID`, `Weight`, and `WeightMax`.}
 }
 \value{
-`data.frame` That has the same features as Analysis_Summary.
+`data.frame` that has the same features as Analysis_Summary.
 }
 \description{
 Calculates the risk score for each group in the provided results data frame.
@@ -26,6 +26,8 @@ analysisFlagged <- gsm.core::analyticsSummary \%>\%
 
 lAnalysis <- list("Analysis_kri0001" = list(Analysis_Flagged = analysisFlagged,
                                 ID = "Analysis_kri0001"))
-dfRiskScore <- CalculateRiskScore(lAnalysis)
+lAnalysis_filtered <- FilterAnalysis(lAnalysis)
+dfFlaggedWeights <- StackAnalysis(lAnalysis_filtered)
+dfRiskScore <- CalculateRiskScore(dfFlaggedWeights)
 
 }
