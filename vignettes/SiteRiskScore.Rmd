@@ -33,7 +33,7 @@ Each KRI (e.g., Adverse Events, Serious Adverse Events, Protocol Deviations) can
 library(knitr)
 
 kri_weights <- data.frame(
-  KRI = c("AE", "SAE", "PD (Protocol Deviations)", "IPD (Important Protocol Deviations)",
+  KRI = c("AE (Adverse Event)", "SAE (Serious Adverse Event)", "PD (Protocol Deviations)", "IPD (Important Protocol Deviations)",
           "LB (Labs)", "Data Quality (combined)", "Screen Failure",
           "Treatment Discontinuation", "Study Discontinuation"),
   Low_Amber = c(2, 0, 0.5, 0, 0, 0, 0, 0, 0),
