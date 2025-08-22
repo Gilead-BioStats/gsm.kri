@@ -2,13 +2,29 @@
 % Please edit documentation in R/util-FilterStackAnalysis.R
 \name{FilterAnalysis}
 \alias{FilterAnalysis}
-\title{Title}
+\title{Filter Analysis Outputs}
 \usage{
 FilterAnalysis(lAnalysis, strFilterIDPattern = "kri")
 }
 \arguments{
-\item{strFilterIDPattern}{}
+\item{lAnalysis}{`list` List of analysis outputs from the metrics calculated in the `workflow/2_metrics` workflows.}
+
+\item{strFilterIDPattern}{`character` Pattern to filter the analysis IDs. Default is "kri".}
+}
+\value{
+`list` Filtered list of analysis outputs from the metrics calculated in the `workflow/2_metrics` workflows.
 }
 \description{
-Title
+Filter Analysis Outputs
+}
+\examples{
+analysisFlagged <- gsm.core::analyticsSummary \%>\%
+ dplyr::mutate(Weight = dplyr::case_when(abs(Flag) == 1 ~ 2,
+                                       abs(Flag) == 2 ~ 4,
+                                       Flag == 0 ~ 0,
+                                       TRUE ~ NA),
+               WeightMax = 4)
+lAnalysis <- list("Analysis_kri0001" = list(Analysis_Flagged = analysisFlagged,
+                               ID = "Analysis_kri0001"))
+lAnalysis_filtered <- FilterAnalysis(lAnalysis)
 }
