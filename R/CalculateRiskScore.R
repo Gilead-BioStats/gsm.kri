@@ -33,7 +33,8 @@ CalculateRiskScore <- function(
       group_by(MetricID) %>%
       summarize(GlobalWeightMax = max(WeightMax)) %>%
       ungroup() %>%
-      summarize(GlobalDenominator = sum(GlobalWeightMax, na.rm = TRUE))
+      summarize(GlobalDenominator = sum(GlobalWeightMax, na.rm = TRUE)) %>%
+      pull(GlobalDenominator)
 
     dfRiskScore <- dfFlaggedWeights %>%
         group_by(
