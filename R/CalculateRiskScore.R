@@ -27,6 +27,14 @@ CalculateRiskScore <- function(
     dfFlaggedWeights
 ) {
 
+    # calculate global denominator
+    GlobalDenominator <- dfFlaggedWeights %>%
+      filter(!is.na(WeightMax)) %>%
+      group_by(MetricID) %>%
+      summarize(GlobalWeightMax = max(WeightMax)) %>%
+      ungroup() %>%
+      summarize(GlobalDenominator = sum(GlobalWeightMax, na.rm = TRUE))
+
     dfRiskScore <- dfFlaggedWeights %>%
         group_by(
             GroupLevel,
@@ -35,7 +43,7 @@ CalculateRiskScore <- function(
         summarize(
             MetricID = "Analysis_srs0001",
             Numerator = sum(Weight, na.rm = TRUE),
-            Denominator = sum(WeightMax, na.rm = TRUE),
+            Denominator = GlobalDenominator,
             Metric = Numerator / Denominator * 100,
             Score = Metric
         ) %>%
