@@ -11,7 +11,7 @@ meta:
   AnalysisType: rate
   Threshold: -3,-2,2,3
   Flag: "-2,-1,0,1,2"
-  RiskScoreWeight: "0,0,0,4,8"
+  RiskScoreWeight: "0,0,0,16,32"
   AccrualThreshold: 30
   AccrualMetric: Denominator
 spec:

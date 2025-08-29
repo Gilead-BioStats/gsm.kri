@@ -11,7 +11,7 @@ meta:
   AnalysisType: binary
   Threshold: "2,3"
   Flag: "0,1,2"
-  RiskScoreWeight: "0,0,0"
+  RiskScoreWeight: "0,1,2"
   AccrualThreshold: 10
   AccrualMetric: Numerator
 spec:
