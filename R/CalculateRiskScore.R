@@ -48,6 +48,9 @@ CalculateRiskScore <- function(
             Metric = Numerator / Denominator * 100,
             Score = Metric
         ) %>%
+        mutate(
+            Flag = NA
+        ) %>%
         ungroup()
 
     return(dfRiskScore)
