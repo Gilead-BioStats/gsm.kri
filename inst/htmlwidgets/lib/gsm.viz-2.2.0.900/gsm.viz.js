@@ -21813,6 +21813,9 @@ var gsmViz = (() => {
     if (redFlags.length === 0 && amberFlags.length === 0) {
       tooltipLines.push("No amber or red flags for this group");
     }
+    tooltipLines.push("");
+    tooltipLines.push("For more information, see:");
+    tooltipLines.push("https://gilead-biostats.github.io/gsm.kri/articles/SiteRiskScore.html");
     return tooltipLines.join("\n");
   }
 
@@ -22150,6 +22153,55 @@ var gsmViz = (() => {
     });
   }
 
+  // src/groupOverview/makeTable/addCustomTooltip.js
+  function addCustomTooltip(cells) {
+    let tooltip5 = select_default2("body").select(".custom-tooltip");
+    if (tooltip5.empty()) {
+      tooltip5 = select_default2("body").append("div").attr("class", "custom-tooltip").style("position", "absolute").style("background", "#ffffff").style("color", "#000").style("padding", "8px 10px").style("border", "1px solid #ccc").style("border-radius", "3px").style("font-size", "11px").style("line-height", "1.3").style("white-space", "pre-line").style("max-width", "350px").style("box-shadow", "0 2px 4px rgba(0,0,0,0.2)").style("z-index", "1000").style("pointer-events", "auto").style("display", "none").style("font-family", '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif');
+    }
+    const riskScoreCells = cells.filter((d) => d.column.valueKey === "siteRiskScore" && d.tooltip);
+    riskScoreCells.on("mouseenter", function(event, d) {
+      select_default2(this).attr("title", null);
+      const content = d.tooltipContent;
+      const lines = content.split("\n");
+      tooltip5.selectAll("*").remove();
+      lines.forEach((line) => {
+        const lineElement = tooltip5.append("div");
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
+        const matches = line.match(urlRegex);
+        if (matches) {
+          const parts = line.split(urlRegex);
+          parts.forEach((part) => {
+            if (urlRegex.test(part)) {
+              lineElement.append("a").attr("href", part).attr("target", "_blank").attr("rel", "noopener noreferrer").style("color", "#0066cc").style("text-decoration", "underline").text(part).on("mouseover", function() {
+                select_default2(this).style("color", "#004499");
+              }).on("mouseout", function() {
+                select_default2(this).style("color", "#0066cc");
+              });
+            } else if (part) {
+              lineElement.append("span").text(part);
+            }
+          });
+        } else {
+          lineElement.text(line);
+        }
+      });
+      const [mouseX, mouseY] = [event.pageX, event.pageY];
+      tooltip5.style("left", mouseX + 10 + "px").style("top", mouseY - 10 + "px").style("display", "block");
+    }).on("mouseleave", function() {
+      setTimeout(() => {
+        if (!tooltip5.node().matches(":hover") && !select_default2(this).node().matches(":hover")) {
+          tooltip5.style("display", "none");
+        }
+      }, 100);
+    });
+    tooltip5.on("mouseenter", function() {
+      select_default2(this).style("display", "block");
+    }).on("mouseleave", function() {
+      select_default2(this).style("display", "none");
+    });
+  }
+
   // src/groupOverview/makeTable.js
   function makeTable(_element_, rows, columns, config) {
     const table = select_default2(_element_).append("table").datum({
@@ -22166,6 +22218,7 @@ var gsmViz = (() => {
     addFlagIcons(bodyRows);
     addRowHighlighting(bodyRows);
     addClickEvents(bodyRows, cells, config);
+    addCustomTooltip(cells);
     return table;
   }
 
