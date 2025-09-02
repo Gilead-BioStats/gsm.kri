@@ -21969,7 +21969,7 @@ var gsmViz = (() => {
         datum2.value = datum2[column.valueKey];
         datum2.text = datum2.value;
         if (column.valueKey === "siteRiskScore" && datum2.value !== null && !isNaN(datum2.value)) {
-          datum2.text = parseFloat(datum2.value);
+          datum2.text = Math.round(parseFloat(datum2.value));
         }
         datum2.sortValue = column.type === "metric" ? Math.abs(parseFloat(datum2.value)) : datum2.value;
         datum2.class = [
