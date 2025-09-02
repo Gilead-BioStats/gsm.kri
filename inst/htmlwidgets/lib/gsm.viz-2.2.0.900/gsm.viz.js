@@ -21720,10 +21720,12 @@ var gsmViz = (() => {
       group2.nGreenFlags = groupResults.filter(
         (result) => Math.abs(parseInt(result.Flag)) === 0
       ).length;
-      const riskScoreResult = groupResults.find(
-        (result) => result.MetricID === config.SiteRiskMetric
-      );
-      group2.siteRiskScore = riskScoreResult ? parseFloat(riskScoreResult.Score) : null;
+      if (config.GroupLevel === "Site") {
+        const riskScoreResult = groupResults.find(
+          (result) => result.MetricID === config.SiteRiskMetric
+        );
+        group2.siteRiskScore = riskScoreResult ? parseFloat(riskScoreResult.Score) : null;
+      }
     });
     return groups2;
   }
@@ -21867,8 +21869,19 @@ var gsmViz = (() => {
         dataType: "number"
       }
     ];
-    if (config.GroupLevel === "Site") {
-      columns.push({
+    columns.forEach((column) => {
+      column.defineTooltip = defineTooltip;
+    });
+    columns = columns.filter(
+      (column) => groupMetadata.some(
+        (groupMetadatum) => groupMetadatum.hasOwnProperty(column.valueKey)
+      )
+    );
+    const hasSiteLevelData = metricMetadata && metricMetadata.some(
+      (metricMetadatum) => metricMetadatum.GroupLevel === "Site"
+    );
+    if (config.GroupLevel === "Site" && hasSiteLevelData && groupMetadata.some((groupMetadatum) => groupMetadatum.hasOwnProperty("siteRiskScore"))) {
+      const riskScoreColumn = {
         label: "Risk Score",
         data: groupMetadata,
         filterKey: "GroupID",
@@ -21878,20 +21891,14 @@ var gsmViz = (() => {
         tooltip: true,
         type: "group",
         dataType: "number"
-      });
-    }
-    columns.forEach((column) => {
-      if (column.valueKey === "siteRiskScore" && results) {
-        column.defineTooltip = (col, content, config2) => defineRiskScoreTooltip(col, content, config2, results, metricMetadata);
+      };
+      if (results) {
+        riskScoreColumn.defineTooltip = (col, content, config2) => defineRiskScoreTooltip(col, content, config2, results, metricMetadata);
       } else {
-        column.defineTooltip = defineTooltip;
+        riskScoreColumn.defineTooltip = defineTooltip;
       }
-    });
-    columns = columns.filter(
-      (column) => groupMetadata.some(
-        (groupMetadatum) => groupMetadatum.hasOwnProperty(column.valueKey)
-      )
-    );
+      columns.push(riskScoreColumn);
+    }
     return columns;
   }
 
