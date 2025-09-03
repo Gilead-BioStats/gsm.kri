@@ -45,8 +45,6 @@ kri_weights <- data.frame(
 kable(kri_weights, caption = "Flag Weights for Key Risk Indicators")
 ```
 
-These weights are then added up at the site level and divided by the maximum possible score to create a normalized risk score between 0 and 100. This normalized site risk score is what is reported in the KRI report, and if desired, any sites above a certain threshold can be flagged for further review.
-
 # Example Site Calculation
 
 For each site, the observed *flags* are multiplied by the corresponding **weights** and summed to produce a **site risk score**.
@@ -64,11 +62,11 @@ site_example <- data.frame(
 kable(site_example, caption = "Example Site Contributions to Risk Score")
 ```
 
-The **total site risk score** is simply the sum:
+These weights are added up at the site level and divided by the maximum possible score to create a **normalized risk score** between 0 and 100. This normalized site risk score is what is reported in the KRI report, and if desired, any sites above a certain threshold can be flagged for further review.
   
 ```{r}
-total_score <- sum(site_example$Contribution)
-total_score
+normalized_score <- (sum(site_example$Contribution)/178) * 100
+normalized_score
 ```
 
 # Benchmarking Across Sites
