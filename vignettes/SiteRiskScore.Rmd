@@ -36,10 +36,10 @@ kri_weights <- data.frame(
   KRI = c("Adverse Event", "Serious Adverse Event", "Protocol Deviations", "Important Protocol Deviations",
           "Labs", "Query Rate", "Delayed Query Rate", "Delayed Data Entry Rate", "Data Change Rate", "Screen Failure",
           "Treatment Discontinuation", "Study Discontinuation"),
-  Low_Red   = c(32, 8, 8, 0, 0, 0, 0, 0,0, 0, 0, 0),
-  Low_Amber = c(16, 0, 4, 0, 0, 0, 0, 0,0, 0, 0, 0),
+  Low_Red   = c(32, 8, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+  Low_Amber = c(16, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0),
   High_Amber= c(1, 4, 8, 16, 1, 1, 1, 1, 1, 8, 16, 16),
-  High_Red  = c(2, 8, 16, 32, 2, 2, 2,, 2, 2, 16, 32, 32)
+  High_Red  = c(2, 8, 16, 32, 2, 2, 2, 2, 2, 16, 32, 32)
 )
 
 kable(kri_weights, caption = "Flag Weights for Key Risk Indicators")
