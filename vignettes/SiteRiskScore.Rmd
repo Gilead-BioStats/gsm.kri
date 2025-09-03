@@ -33,17 +33,19 @@ Each KRI (e.g., Adverse Events, Serious Adverse Events, Protocol Deviations) can
 library(knitr)
 
 kri_weights <- data.frame(
-  KRI = c("AE (Adverse Event)", "SAE (Serious Adverse Event)", "PD (Protocol Deviations)", "IPD (Important Protocol Deviations)",
-          "LB (Labs)", "Data Quality (combined)", "Screen Failure",
+  KRI = c("Adverse Event", "Serious Adverse Event", "Protocol Deviations", "Important Protocol Deviations",
+          "Labs", "Query Rate", "Delayed Query Rate", "Delayed Data Entry Rate", "Data Change Rate", "Screen Failure",
           "Treatment Discontinuation", "Study Discontinuation"),
-  Low_Amber = c(2, 0, 0.5, 0, 0, 0, 0, 0, 0),
-  Low_Red   = c(4, 1, 1, 0, 0, 0, 0, 0, 0),
-  High_Amber= c(0, 0.5, 1, 2, 0, 0.5, 1, 2, 2),
-  High_Red  = c(0, 1, 2, 4, 0, 1, 2, 4, 4)
+  Low_Red   = c(32, 8, 8, 0, 0, 0, 0, 0,0, 0, 0, 0),
+  Low_Amber = c(16, 0, 4, 0, 0, 0, 0, 0,0, 0, 0, 0),
+  High_Amber= c(1, 4, 8, 16, 1, 1, 1, 1, 1, 8, 16, 16),
+  High_Red  = c(2, 8, 16, 32, 2, 2, 2,, 2, 2, 16, 32, 32)
 )
 
 kable(kri_weights, caption = "Flag Weights for Key Risk Indicators")
 ```
+
+These weights are then added up at the site level and divided by the maximum possible score to create a normalized risk score between 0 and 100. This normalized site risk score is what is reported in the KRI report, and if desired, any sites above a certain threshold can be flagged for further review.
 
 # Example Site Calculation
 
@@ -53,9 +55,10 @@ Below is a worked example for one site:
   
 ```{r, echo=FALSE}
 site_example <- data.frame(
-  KRI = c("AE", "SAE", "PD", "IPD", "LB", "Data Quality", 
+  KRI = c("Adverse Event", "Serious Adverse Event", "Protocol Deviations", "Important Protocol Deviations",
+          "Labs", "Query Rate", "Delayed Query Rate", "Delayed Data Entry Rate", "Data Change Rate",
           "Screen Failure", "Treatment Discontinuation", "Study Discontinuation"),
-  Contribution = c(4.0, 0.0, 1.0, 2.0, 0.0, 0.5, 2.0, 0.0, 0.0)
+  Contribution = c(32, 0, 4, 8, 0, 1, 0, 0, 0, 2, 0, 0)
 )
 
 kable(site_example, caption = "Example Site Contributions to Risk Score")
@@ -73,12 +76,9 @@ total_score
 Site-level scores can be contextualized in two ways:
   
 * **Relative ranking**: comparing each site’s score against other sites (e.g., percentile, rank order).
-* **Temporal averaging**: computing average scores across multiple months to reduce short-term fluctuations.
+* **Temporal comparison**: computing scores across multiple months to understand site-level fluctuations.
 
-For example:
-  
-  * Highest site score observed: **22**
-  * Average score across 3 months: **9.5**
+
   
   # Conclusion
   
