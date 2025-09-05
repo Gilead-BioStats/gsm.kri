@@ -21732,7 +21732,9 @@ var gsmViz = (() => {
           const riskFlags = group2.nRedFlags + group2.nAmberFlags;
           const mockScore = totalFlags > 0 ? Math.round(riskFlags / totalFlags * 100) : 50;
           group2.siteRiskScore = mockScore;
-          console.log(`DEBUG: TESTING - Added mock site risk score ${mockScore} for group ${group2.GroupID}`);
+          console.log(
+            `DEBUG: TESTING - Added mock site risk score ${mockScore} for group ${group2.GroupID}`
+          );
         }
       }
     });
@@ -21905,7 +21907,10 @@ var gsmViz = (() => {
     console.log("DEBUG: hasSiteRiskScoreData:", hasSiteRiskScoreData);
     console.log("DEBUG: config.SiteRiskMetric:", config.SiteRiskMetric);
     const shouldAddRiskScoreColumn = config.GroupLevel === "Site";
-    console.log("DEBUG: TESTING OVERRIDE - shouldAddRiskScoreColumn:", shouldAddRiskScoreColumn);
+    console.log(
+      "DEBUG: TESTING OVERRIDE - shouldAddRiskScoreColumn:",
+      shouldAddRiskScoreColumn
+    );
     if (shouldAddRiskScoreColumn) {
       console.log("DEBUG: Creating Risk Score column");
       const riskScoreColumn = {
