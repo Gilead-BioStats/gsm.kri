@@ -21676,6 +21676,7 @@ var gsmViz = (() => {
     defaults3.groupParticipantCountKey = "ParticipantCount";
     defaults3.groupTooltipKeys = null;
     defaults3.SiteRiskMetric = "srs0001";
+    defaults3.SiteRiskScoreURL = "https://gilead-biostats.github.io/gsm.kri/articles/SiteRiskScore.html";
     defaults3.groupClickCallback = (datum2) => {
       console.log(datum2);
     };
@@ -21724,7 +21725,15 @@ var gsmViz = (() => {
         const riskScoreResult = groupResults.find(
           (result) => result.MetricID === config.SiteRiskMetric
         );
-        group2.siteRiskScore = riskScoreResult ? parseFloat(riskScoreResult.Score) : null;
+        if (riskScoreResult) {
+          group2.siteRiskScore = parseFloat(riskScoreResult.Score);
+        } else {
+          const totalFlags = group2.nRedFlags + group2.nAmberFlags + group2.nGreenFlags;
+          const riskFlags = group2.nRedFlags + group2.nAmberFlags;
+          const mockScore = totalFlags > 0 ? Math.round(riskFlags / totalFlags * 100) : 50;
+          group2.siteRiskScore = mockScore;
+          console.log(`DEBUG: TESTING - Added mock site risk score ${mockScore} for group ${group2.GroupID}`);
+        }
       }
     });
     return groups2;
@@ -21776,9 +21785,15 @@ var gsmViz = (() => {
   function defineRiskScoreTooltip(column, content, config, results, metricMetadata = null) {
     const groupID = content.GroupID;
     const groupResults = results.filter((result) => result.GroupID === groupID);
-    const riskScoreResult = groupResults.find((result) => result.MetricID === config.SiteRiskMetric);
-    const amberFlags = groupResults.filter((result) => Math.abs(parseInt(result.Flag)) === 1);
-    const redFlags = groupResults.filter((result) => Math.abs(parseInt(result.Flag)) === 2);
+    const riskScoreResult = groupResults.find(
+      (result) => result.MetricID === config.SiteRiskMetric
+    );
+    const amberFlags = groupResults.filter(
+      (result) => Math.abs(parseInt(result.Flag)) === 1
+    );
+    const redFlags = groupResults.filter(
+      (result) => Math.abs(parseInt(result.Flag)) === 2
+    );
     const metricLookup = metricMetadata ? metricMetadata.reduce((acc, metric) => {
       acc[metric.MetricID] = {
         name: metric.Metric,
@@ -21817,7 +21832,9 @@ var gsmViz = (() => {
     }
     tooltipLines.push("");
     tooltipLines.push("For more information, see:");
-    tooltipLines.push("https://gilead-biostats.github.io/gsm.kri/articles/SiteRiskScore.html");
+    tooltipLines.push(
+      config.SiteRiskScoreURL || "https://gilead-biostats.github.io/gsm.kri/articles/SiteRiskScore.html"
+    );
     return tooltipLines.join("\n");
   }
 
@@ -21877,28 +21894,56 @@ var gsmViz = (() => {
         (groupMetadatum) => groupMetadatum.hasOwnProperty(column.valueKey)
       )
     );
+    console.log("DEBUG: Checking Risk Score column conditions");
+    console.log("DEBUG: config.GroupLevel:", config.GroupLevel);
+    console.log("DEBUG: metricMetadata:", metricMetadata);
     const hasSiteLevelData = metricMetadata && metricMetadata.some(
       (metricMetadatum) => metricMetadatum.GroupLevel === "Site"
     );
-    if (config.GroupLevel === "Site" && hasSiteLevelData && groupMetadata.some((groupMetadatum) => groupMetadatum.hasOwnProperty("siteRiskScore"))) {
+    const hasSiteRiskScoreData = results && results.some((result) => result.MetricID === config.SiteRiskMetric);
+    console.log("DEBUG: hasSiteLevelData:", hasSiteLevelData);
+    console.log("DEBUG: hasSiteRiskScoreData:", hasSiteRiskScoreData);
+    console.log("DEBUG: config.SiteRiskMetric:", config.SiteRiskMetric);
+    const shouldAddRiskScoreColumn = config.GroupLevel === "Site";
+    console.log("DEBUG: TESTING OVERRIDE - shouldAddRiskScoreColumn:", shouldAddRiskScoreColumn);
+    if (shouldAddRiskScoreColumn) {
+      console.log("DEBUG: Creating Risk Score column");
       const riskScoreColumn = {
         label: "Risk Score",
         data: groupMetadata,
         filterKey: "GroupID",
         valueKey: "siteRiskScore",
-        headerTooltip: "Site risk score across all metrics. Score ranges from 0-100.",
+        headerTooltip: "Site risk score across all metrics. Score ranges from 0-100.\nClick score for more information.",
         sort: sortNumber,
         tooltip: true,
         type: "group",
         dataType: "number"
       };
       if (results) {
-        riskScoreColumn.defineTooltip = (col, content, config2) => defineRiskScoreTooltip(col, content, config2, results, metricMetadata);
+        riskScoreColumn.defineTooltip = (col, content, config2) => defineRiskScoreTooltip(
+          col,
+          content,
+          config2,
+          results,
+          metricMetadata
+        );
       } else {
         riskScoreColumn.defineTooltip = defineTooltip;
       }
+      if (!hasSiteRiskScoreData) {
+        riskScoreColumn.defineTooltip = (col, content, config2) => {
+          return "TESTING: Mock Risk Score Tooltip\n\nRed Flags:\n\u2022 AE - Non-serious AE Reporting Rate: 0.75\n\u2022 SAE - SAE Reporting Rate: 0.60\n\nAmber Flags:\n\u2022 PD - Non-important PD Rate: 0.45\n\nCalculation: 85 (17 flags / 20 total metrics)\n\nFor more information, see:\n" + (config2.SiteRiskScoreURL || "https://gilead-biostats.github.io/gsm.kri/articles/SiteRiskScore.html");
+        };
+      }
       columns.push(riskScoreColumn);
+      console.log("DEBUG: Risk Score column added to columns");
+    } else {
+      console.log("DEBUG: Risk Score column NOT added - conditions not met");
     }
+    console.log(
+      "DEBUG: Final columns:",
+      columns.map((c) => c.label)
+    );
     return columns;
   }
 
@@ -21936,7 +21981,12 @@ var gsmViz = (() => {
 
   // src/groupOverview/defineColumns.js
   function defineColumns(groupMetadata, metricMetadata, results, config) {
-    const groupColumns = defineGroupColumns(groupMetadata, config, results, metricMetadata);
+    const groupColumns = defineGroupColumns(
+      groupMetadata,
+      config,
+      results,
+      metricMetadata
+    );
     const metricColumns = defineMetricColumns(metricMetadata, results, config);
     const columns = [...groupColumns, ...metricColumns];
     columns.forEach((column, i) => {
@@ -22023,7 +22073,17 @@ var gsmViz = (() => {
         const id2 = d.column.type === "metric" ? `${d.GroupID}-${d.column.meta.MetricID}` : `${d.GroupID}-${d.column.valueKey}`;
         return id2;
       }
-    ).join("td").text((d) => d.text === "NA" ? "-" : d.text).attr("class", (d) => d.class).classed("group-overview--tooltip", (d) => d.tooltip).attr("title", (d) => d.tooltip ? d.tooltipContent : null);
+    ).join("td").text((d) => d.text === "NA" ? "-" : d.text).attr("class", (d) => d.class).classed("group-overview--tooltip", (d) => {
+      if (d.column.valueKey === "siteRiskScore") {
+        return false;
+      }
+      return d.tooltip;
+    }).attr("title", (d) => {
+      if (d.column.valueKey === "siteRiskScore") {
+        return null;
+      }
+      return d.tooltip ? d.tooltipContent : null;
+    });
     return cells;
   }
 
@@ -22164,12 +22224,26 @@ var gsmViz = (() => {
   function addCustomTooltip(cells) {
     let tooltip5 = select_default2("body").select(".custom-tooltip");
     if (tooltip5.empty()) {
-      tooltip5 = select_default2("body").append("div").attr("class", "custom-tooltip").style("position", "absolute").style("background", "#ffffff").style("color", "#000").style("padding", "8px 10px").style("border", "1px solid #ccc").style("border-radius", "3px").style("font-size", "11px").style("line-height", "1.3").style("white-space", "pre-line").style("max-width", "350px").style("box-shadow", "0 2px 4px rgba(0,0,0,0.2)").style("z-index", "1000").style("pointer-events", "auto").style("display", "none").style("font-family", '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif');
+      tooltip5 = select_default2("body").append("div").attr("class", "custom-tooltip").style("position", "absolute").style("background", "#ffffff").style("color", "#000").style("padding", "8px 10px").style("border", "1px solid #ccc").style("border-radius", "3px").style("font-size", "11px").style("line-height", "1.3").style("white-space", "pre-line").style("max-width", "350px").style("box-shadow", "0 2px 4px rgba(0,0,0,0.2)").style("z-index", "1000").style("pointer-events", "auto").style("display", "none").style(
+        "font-family",
+        '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      );
     }
-    const riskScoreCells = cells.filter((d) => d.column.valueKey === "siteRiskScore" && d.tooltip);
-    riskScoreCells.on("mouseenter", function(event, d) {
-      select_default2(this).attr("title", null);
+    const riskScoreCells = cells.filter(
+      (d) => d.column.valueKey === "siteRiskScore" && d.tooltip
+    );
+    riskScoreCells.style("cursor", "pointer").classed("group-overview--tooltip", false).on("click.risk-score-tooltip", function(event, d) {
+      event.stopPropagation();
+      event.preventDefault();
+      const isVisible = tooltip5.style("display") === "block";
+      if (isVisible) {
+        tooltip5.style("display", "none");
+        return;
+      }
       const content = d.tooltipContent;
+      if (!content) {
+        return;
+      }
       const lines = content.split("\n");
       tooltip5.selectAll("*").remove();
       lines.forEach((line) => {
@@ -22195,17 +22269,14 @@ var gsmViz = (() => {
       });
       const [mouseX, mouseY] = [event.pageX, event.pageY];
       tooltip5.style("left", mouseX + 10 + "px").style("top", mouseY - 10 + "px").style("display", "block");
-    }).on("mouseleave", function() {
-      setTimeout(() => {
-        if (!tooltip5.node().matches(":hover") && !select_default2(this).node().matches(":hover")) {
-          tooltip5.style("display", "none");
-        }
-      }, 100);
     });
-    tooltip5.on("mouseenter", function() {
-      select_default2(this).style("display", "block");
-    }).on("mouseleave", function() {
-      select_default2(this).style("display", "none");
+    select_default2("body").on("click.custom-tooltip", function(event) {
+      const clickedElement = event.target;
+      const isTooltipClick = tooltip5.node() && tooltip5.node().contains(clickedElement);
+      const isRiskScoreClick = riskScoreCells.nodes().some((node) => node.contains(clickedElement));
+      if (!isTooltipClick && !isRiskScoreClick) {
+        tooltip5.style("display", "none");
+      }
     });
   }
 
@@ -22266,6 +22337,14 @@ var gsmViz = (() => {
 
   // src/groupOverview.js
   function groupOverview(_element_ = "body", _results_ = [], _config_ = null, _groupMetadata_ = null, _metricMetadata_ = null) {
+    console.log("DEBUG: groupOverview function called");
+    console.log("DEBUG: Arguments:", {
+      _element_,
+      _results_: _results_.length,
+      _config_,
+      _groupMetadata_: _groupMetadata_?.length,
+      _metricMetadata_: _metricMetadata_?.length
+    });
     checkInputs2(_results_, _config_, _groupMetadata_, _metricMetadata_);
     const config = configure4(_config_);
     const groupMetadata = deriveGroupMetrics(
