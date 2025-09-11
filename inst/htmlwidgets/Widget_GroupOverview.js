@@ -11,7 +11,11 @@ HTMLWidgets.widget({
                 const instance = gsmViz.default.groupOverview(
                     el,
                     input.dfResults,
-                    input.lConfig,
+                    {
+                        GroupLevel: input.strGroupLevel,
+                        groupLabelKey: input.strGroupLabelKey,
+                        SiteRiskMetric: input.strSiteRiskMetric
+                    },
                     input.dfGroups,
                     input.dfMetrics
                 );
