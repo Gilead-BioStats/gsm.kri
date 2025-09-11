@@ -22209,7 +22209,7 @@ var gsmViz = (() => {
     const groupSelected = new CustomEvent("groupSelected", {
       bubbles: true
     });
-    cells.filter(".group-overview--group").on("click", function(event, d) {
+    cells.filter(".group-overview--group").filter((d) => d.column.valueKey !== "siteRiskScore").on("click", function(event, d) {
       config.groupClickCallback({
         GroupLevel: config.GroupLevel,
         GroupID: d.GroupID,
@@ -22227,6 +22227,8 @@ var gsmViz = (() => {
 
   // src/groupOverview/makeTable/addCustomTooltip.js
   function addCustomTooltip(cells) {
+    console.log("DEBUG: addCustomTooltip called with cells:", cells.size());
+    cells.on("click.risk-score-tooltip", null);
     let tooltip5 = select_default2("body").select(".custom-tooltip");
     if (tooltip5.empty()) {
       tooltip5 = select_default2("body").append("div").attr("class", "custom-tooltip").style("position", "absolute").style("background", "#ffffff").style("color", "#000").style("padding", "8px 10px").style("border", "1px solid #ccc").style("border-radius", "3px").style("font-size", "11px").style("line-height", "1.3").style("white-space", "pre-line").style("max-width", "350px").style("box-shadow", "0 2px 4px rgba(0,0,0,0.2)").style("z-index", "1000").style("pointer-events", "auto").style("display", "none").style(
@@ -22237,7 +22239,10 @@ var gsmViz = (() => {
     const riskScoreCells = cells.filter(
       (d) => d.column.valueKey === "siteRiskScore" && d.tooltip
     );
+    console.log("DEBUG: Found", riskScoreCells.size(), "risk score cells");
+    console.log("DEBUG: Risk score cells data:", riskScoreCells.data());
     riskScoreCells.style("cursor", "pointer").classed("group-overview--tooltip", false).on("click.risk-score-tooltip", function(event, d) {
+      console.log("DEBUG: Risk score cell clicked!", d);
       event.stopPropagation();
       event.preventDefault();
       const isVisible = tooltip5.style("display") === "block";
@@ -22301,6 +22306,7 @@ var gsmViz = (() => {
     addFlagIcons(bodyRows);
     addRowHighlighting(bodyRows);
     addClickEvents(bodyRows, cells, config);
+    console.log("DEBUG: About to call addCustomTooltip from makeTable");
     addCustomTooltip(cells);
     return table;
   }
@@ -22325,6 +22331,8 @@ var gsmViz = (() => {
     addFlagIcons(bodyRows);
     addRowHighlighting(bodyRows);
     addClickEvents(bodyRows, cells, this.config);
+    console.log("DEBUG: About to call addCustomTooltip from updateTable");
+    addCustomTooltip(cells);
     const sortedColumn = this.columns.find((d) => d.activeSort);
     if (sortedColumn !== void 0) {
       sortedColumn.sortState = -sortedColumn.sortState;
