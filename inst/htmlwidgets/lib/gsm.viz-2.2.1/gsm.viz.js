@@ -22227,7 +22227,6 @@ var gsmViz = (() => {
 
   // src/groupOverview/makeTable/addCustomTooltip.js
   function addCustomTooltip(cells) {
-    console.log("DEBUG: addCustomTooltip called with cells:", cells.size());
     cells.on("click.risk-score-tooltip", null);
     let tooltip5 = select_default2("body").select(".custom-tooltip");
     if (tooltip5.empty()) {
@@ -22239,10 +22238,7 @@ var gsmViz = (() => {
     const riskScoreCells = cells.filter(
       (d) => d.column.valueKey === "siteRiskScore" && d.tooltip
     );
-    console.log("DEBUG: Found", riskScoreCells.size(), "risk score cells");
-    console.log("DEBUG: Risk score cells data:", riskScoreCells.data());
     riskScoreCells.style("cursor", "pointer").classed("group-overview--tooltip", false).on("click.risk-score-tooltip", function(event, d) {
-      console.log("DEBUG: Risk score cell clicked!", d);
       event.stopPropagation();
       event.preventDefault();
       const isVisible = tooltip5.style("display") === "block";
@@ -22306,7 +22302,6 @@ var gsmViz = (() => {
     addFlagIcons(bodyRows);
     addRowHighlighting(bodyRows);
     addClickEvents(bodyRows, cells, config);
-    console.log("DEBUG: About to call addCustomTooltip from makeTable");
     addCustomTooltip(cells);
     return table;
   }
@@ -22331,7 +22326,6 @@ var gsmViz = (() => {
     addFlagIcons(bodyRows);
     addRowHighlighting(bodyRows);
     addClickEvents(bodyRows, cells, this.config);
-    console.log("DEBUG: About to call addCustomTooltip from updateTable");
     addCustomTooltip(cells);
     const sortedColumn = this.columns.find((d) => d.activeSort);
     if (sortedColumn !== void 0) {
@@ -22350,14 +22344,6 @@ var gsmViz = (() => {
 
   // src/groupOverview.js
   function groupOverview(_element_ = "body", _results_ = [], _config_ = null, _groupMetadata_ = null, _metricMetadata_ = null) {
-    console.log("DEBUG: groupOverview function called");
-    console.log("DEBUG: Arguments:", {
-      _element_,
-      _results_: _results_.length,
-      _config_,
-      _groupMetadata_: _groupMetadata_?.length,
-      _metricMetadata_: _metricMetadata_?.length
-    });
     checkInputs2(_results_, _config_, _groupMetadata_, _metricMetadata_);
     const config = configure4(_config_);
     const groupMetadata = deriveGroupMetrics(
