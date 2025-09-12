@@ -1,3 +1,14 @@
+# gsm.kri 1.3.0
+
+This minor release introduces a new KRI along with several enhancements and bug fixes. 
+
+Key changes:
+- Add new KRI workflow SRS0001 to calculate Site Risk Scores
+- Incorporate Site Risk Scores into Report_KRI.Rmd with an update to Widget_GroupOverview() and the gsm.viz js library
+- Update Issue Templates and Contributor Guidelines
+- Add GitHub Actions for tarball creation upon release
+
+
 # gsm.kri 1.2.2
 
 This patch release fixes a bug in `Report_KRI.Rmd` that produced an error in LaTeX compilation of the report output.
