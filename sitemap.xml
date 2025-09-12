@@ -1,11 +1,15 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/404.html</loc></url>
+<url><loc>https://gilead-biostats.github.io/gsm.kri/CONTRIBUTING.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/LICENSE.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/articles/AddingKRIs.html</loc></url>
+<url><loc>https://gilead-biostats.github.io/gsm.kri/articles/SiteRiskScore.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/articles/index.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/authors.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/index.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/news/index.html</loc></url>
+<url><loc>https://gilead-biostats.github.io/gsm.kri/reference/CalculateRiskScore.html</loc></url>
+<url><loc>https://gilead-biostats.github.io/gsm.kri/reference/FilterAnalysis.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/reference/FilterByFlags.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/reference/FilterByLatestSnapshotDate.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/reference/MakeChartConfig.html</loc></url>
@@ -23,6 +27,7 @@
 <url><loc>https://gilead-biostats.github.io/gsm.kri/reference/Report_OverviewText.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/reference/Report_Setup.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/reference/Report_StudyInfo.html</loc></url>
+<url><loc>https://gilead-biostats.github.io/gsm.kri/reference/StackAnalysis.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/reference/Visualize_Metric.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/reference/Visualize_Scatter.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/reference/Visualize_Score.html</loc></url>
