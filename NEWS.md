@@ -9,9 +9,7 @@ This release adds a new Site Risk Score metric that calculates weighted site-lev
 
  See the new Site Risk Score vignette for full implementation details. Other minor updates are described below. 
 
-Key changes:
-- Add new KRI workflow SRS0001 to calculate Site Risk Scores
-- Incorporate Site Risk Scores into Report_KRI.Rmd with an update to Widget_GroupOverview() and the gsm.viz js library
+Minor Updates:
 - Update Issue Templates and Contributor Guidelines
 - Add GitHub Actions for tarball creation upon release
 
