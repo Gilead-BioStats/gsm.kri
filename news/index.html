@@ -44,8 +44,14 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.3.0" id="gsmkri-130">gsm.kri 1.3.0<a class="anchor" aria-label="anchor" href="#gsmkri-130"></a></h2>
-<p>This minor release introduces a new KRI along with several enhancements and bug fixes.</p>
-<p>Key changes: - Add new KRI workflow SRS0001 to calculate Site Risk Scores - Incorporate Site Risk Scores into Report_KRI.Rmd with an update to Widget_GroupOverview() and the gsm.viz js library - Update Issue Templates and Contributor Guidelines - Add GitHub Actions for tarball creation upon release</p>
+<p>This release adds a new Site Risk Score metric that calculates weighted site-level risk across multiple KRIs. In short, the new default workflow has the following steps:</p>
+<ul><li>KRI Flags are given weights using the new <code>RiskScoreWeight</code> parameter in the <code>yaml</code> workflows for each KRI.</li>
+<li>Site-level risk scores are calculated using the new <code><a href="../reference/CalculateRiskScore.html">CalculateRiskScore()</a></code> function.</li>
+<li>Site Risk Scores are saved in a new Metric <code>srs0001</code> via a new standard workflow</li>
+<li>A columns showing site risk scores has been added to the KRI report via update in <code>gsm.viz</code>
+</li>
+</ul><p>See the new Site Risk Score vignette for full implementation details. Other minor updates are described below.</p>
+<p>Minor Updates: - Update Issue Templates and Contributor Guidelines - Add GitHub Actions for tarball creation upon release</p>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.2.2" id="gsmkri-122">gsm.kri 1.2.2<a class="anchor" aria-label="anchor" href="#gsmkri-122"></a></h2>
