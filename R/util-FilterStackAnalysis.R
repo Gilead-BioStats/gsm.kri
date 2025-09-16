@@ -8,20 +8,26 @@
 #'
 #' @examples
 #' analysisFlagged <- gsm.core::analyticsSummary %>%
-#'  dplyr::mutate(Weight = dplyr::case_when(abs(Flag) == 1 ~ 2,
-#'                                        abs(Flag) == 2 ~ 4,
-#'                                        Flag == 0 ~ 0,
-#'                                        TRUE ~ NA),
-#'                WeightMax = 4)
-#' lAnalysis <- list("Analysis_kri0001" = list(Analysis_Flagged = analysisFlagged,
-#'                                ID = "Analysis_kri0001"))
+#'   dplyr::mutate(
+#'     Weight = dplyr::case_when(
+#'       abs(Flag) == 1 ~ 2,
+#'       abs(Flag) == 2 ~ 4,
+#'       Flag == 0 ~ 0,
+#'       TRUE ~ NA
+#'     ),
+#'     WeightMax = 4
+#'   )
+#' lAnalysis <- list("Analysis_kri0001" = list(
+#'   Analysis_Flagged = analysisFlagged,
+#'   ID = "Analysis_kri0001"
+#' ))
 #' lAnalysis_filtered <- FilterAnalysis(lAnalysis)
 FilterAnalysis <- function(lAnalysis,
-                           strFilterIDPattern = "kri") {
-##filter to site-level analysis output only and stack results
-lAnalysis_filtered <-  purrr::keep(lAnalysis, \(.x) "ID" %in% names(.x) && grepl(strFilterIDPattern, .x$ID))
+  strFilterIDPattern = "kri") {
+  ## filter to site-level analysis output only and stack results
+  lAnalysis_filtered <- purrr::keep(lAnalysis, \(.x) "ID" %in% names(.x) && grepl(strFilterIDPattern, .x$ID))
 
-return(lAnalysis_filtered)
+  return(lAnalysis_filtered)
 }
 
 #' Stack Analysis Outputs
@@ -35,18 +41,24 @@ return(lAnalysis_filtered)
 #'
 #' @examples
 #' analysisFlagged <- gsm.core::analyticsSummary %>%
-#'  dplyr::mutate(Weight = dplyr::case_when(abs(Flag) == 1 ~ 2,
-#'                                        abs(Flag) == 2 ~ 4,
-#'                                        Flag == 0 ~ 0,
-#'                                        TRUE ~ NA),
-#'                WeightMax = 4)
-#' lAnalysis <- list("Analysis_kri0001" = list(Analysis_Flagged = analysisFlagged,
-#'                                ID = "Analysis_kri0001"))
+#'   dplyr::mutate(
+#'     Weight = dplyr::case_when(
+#'       abs(Flag) == 1 ~ 2,
+#'       abs(Flag) == 2 ~ 4,
+#'       Flag == 0 ~ 0,
+#'       TRUE ~ NA
+#'     ),
+#'     WeightMax = 4
+#'   )
+#' lAnalysis <- list("Analysis_kri0001" = list(
+#'   Analysis_Flagged = analysisFlagged,
+#'   ID = "Analysis_kri0001"
+#' ))
 #' lAnalysis_filtered <- FilterAnalysis(lAnalysis)
 #' dfFlaggedWeights <- StackAnalysis(lAnalysis_filtered)
 #'
 StackAnalysis <- function(lAnalysis,
-                          strName = "Analysis_Flagged") {
+  strName = "Analysis_Flagged") {
   output <- lAnalysis %>%
     purrr::imap(function(result, metric) {
       subResult <- result[[strName]]
