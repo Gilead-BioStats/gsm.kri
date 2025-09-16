@@ -5,7 +5,7 @@ This release adds a new Site Risk Score metric that calculates weighted site-lev
 - KRI Flags are given weights using the new `RiskScoreWeight` parameter in the `yaml` workflows for each KRI.
 - Site-level risk scores are calculated using the new `CalculateRiskScore()` function. 
 - Site Risk Scores are saved in a new Metric `srs0001` via a new standard workflow
-- A columns showing site risk scores has been added to the KRI report via update in `gsm.viz`
+- A column showing site risk scores has been added to the KRI report via update in `gsm.viz`
 
  See the new Site Risk Score vignette for full implementation details. Other minor updates are described below. 
 
