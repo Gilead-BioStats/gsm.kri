@@ -14,6 +14,7 @@
 #' - 'red/amber': Groups with 1+ red/amber flag.
 #' - 'amber': Groups with 1+ amber flag.
 #' @param strGroupLabelKey `character` Value for the group label key. Default: 'InvestigatorLastName'.
+#' @param strSiteRiskMetric `character` Metric ID for the site risk score. Default: 'Analysis_srs0001'.
 #' @param ... `any` Additional chart configuration settings.
 #'
 #' @examples
@@ -51,6 +52,7 @@ Widget_GroupOverview <- function(
   strGroupLevel = NULL,
   strGroupSubset = "red",
   strGroupLabelKey = "InvestigatorLastName",
+  strSiteRiskMetric = "Analysis_srs0001",
   strOutputLabel = paste0(
     fontawesome::fa("table", fill = "#337ab7"),
     "  ",
@@ -77,6 +79,26 @@ Widget_GroupOverview <- function(
     message = "A single group level must be provided to create group-level output."
   )
 
+  ## don't include site risk score in dfMetrics, so it's not in the summary charts
+  dfMetrics <- dfMetrics %>%
+    dplyr::filter(MetricID != strSiteRiskMetric)
+
+  ## update dfResults to include site risk weights when available
+  if (any(!is.na(dfMetrics$RiskScoreWeight))) {
+    dfWeights <- dfMetrics %>%
+      filter(!is.na(RiskScoreWeight)) %>%
+      mutate(
+        Weight = map(RiskScoreWeight, \(x) ParseThreshold(x, bSort = FALSE)),
+        Flag = map(Flag, \(x) ParseThreshold(x, bSort = FALSE)),
+        WeightMax = map_dbl(Weight, ~ max(.x, na.rm = TRUE))
+      ) %>%
+      select(MetricID, Flag, Weight, WeightMax) %>%
+      unnest(cols = c(Flag, Weight))
+
+    dfResults <- dfResults %>%
+      left_join(dfWeights, by = c("Flag", "MetricID"))
+  }
+
   # forward options using x
   lInput <- list(
     dfResults = dfResults,
@@ -90,6 +112,8 @@ Widget_GroupOverview <- function(
       list(...) # additional chart configuration
     ),
     strGroupSubset = strGroupSubset,
+    strGroupLabelKey = strGroupLabelKey,
+    strSiteRiskMetric = strSiteRiskMetric,
     bDebug = bDebug
   )
 

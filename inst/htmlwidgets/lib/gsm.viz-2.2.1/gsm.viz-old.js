@@ -1,3 +1,4 @@
+'use strict'
 var gsmViz = (() => {
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -21362,7 +21363,15 @@ var gsmViz = (() => {
     if (!group2) {
       return [];
     }
-    const tooltipKeys = ![null, void 0].includes(config.groupTooltipKeys) ? config.groupTooltipKeys : Object.keys(group2).filter((key) => ["groupLabel", "GroupLabel", "nRedFlags", "nAmberFlags", "nGreenFlags"].includes(key) === false).reduce((acc, key) => {
+    const tooltipKeys = ![null, void 0].includes(config.groupTooltipKeys) ? config.groupTooltipKeys : Object.keys(group2).filter(
+      (key) => [
+        "groupLabel",
+        "GroupLabel",
+        "nRedFlags",
+        "nAmberFlags",
+        "nGreenFlags"
+      ].includes(key) === false
+    ).reduce((acc, key) => {
       const label = key.replace(/_/g, " ").replace(/([a-z])([A-Z])/g, "$1 $2").replace(/\b\w/g, (char) => char.toUpperCase()).replace("Id", "ID");
       acc[key] = label;
       return acc;
@@ -21666,6 +21675,7 @@ var gsmViz = (() => {
     defaults3.groupLabelKey = null;
     defaults3.groupParticipantCountKey = "ParticipantCount";
     defaults3.groupTooltipKeys = null;
+    defaults3.SiteRiskMetric = "srs0001";
     defaults3.groupClickCallback = (datum2) => {
       console.log(datum2);
     };
@@ -21710,6 +21720,12 @@ var gsmViz = (() => {
       group2.nGreenFlags = groupResults.filter(
         (result) => Math.abs(parseInt(result.Flag)) === 0
       ).length;
+      if (config.GroupLevel === "Site") {
+        const riskScoreResult = groupResults.find(
+          (result) => result.MetricID === config.SiteRiskMetric
+        );
+        group2.siteRiskScore = riskScoreResult ? parseFloat(riskScoreResult.Score) : null;
+      }
     });
     return groups2;
   }
@@ -21756,8 +21772,57 @@ var gsmViz = (() => {
     return tooltipContent.join("\n");
   }
 
+  // src/groupOverview/defineColumns/defineRiskScoreTooltip.js
+  function defineRiskScoreTooltip(column, content, config, results, metricMetadata = null) {
+    const groupID = content.GroupID;
+    const groupResults = results.filter((result) => result.GroupID === groupID);
+    const riskScoreResult = groupResults.find((result) => result.MetricID === config.SiteRiskMetric);
+    const amberFlags = groupResults.filter((result) => Math.abs(parseInt(result.Flag)) === 1);
+    const redFlags = groupResults.filter((result) => Math.abs(parseInt(result.Flag)) === 2);
+    const metricLookup = metricMetadata ? metricMetadata.reduce((acc, metric) => {
+      acc[metric.MetricID] = {
+        name: metric.Metric,
+        abbreviation: metric.Abbreviation
+      };
+      return acc;
+    }, {}) : {};
+    const tooltipLines = [];
+    if (riskScoreResult) {
+      const numerator = riskScoreResult.Numerator;
+      const denominator = riskScoreResult.Denominator;
+      const score = parseFloat(riskScoreResult.Score).toFixed(2);
+      tooltipLines.push(`Risk Score Calculation:`);
+      tooltipLines.push(`${numerator} / ${denominator} = ${score}`);
+      tooltipLines.push("");
+    }
+    if (redFlags.length > 0) {
+      tooltipLines.push(`Red Flags (${redFlags.length}):`);
+      redFlags.forEach((result) => {
+        const metricInfo = metricLookup[result.MetricID];
+        const metricName = metricInfo ? `${metricInfo.abbreviation} - ${metricInfo.name}` : result.MetricID;
+        tooltipLines.push(`\u2022 ${metricName}: ${result.Weight}`);
+      });
+      tooltipLines.push("");
+    }
+    if (amberFlags.length > 0) {
+      tooltipLines.push(`Amber Flags (${amberFlags.length}):`);
+      amberFlags.forEach((result) => {
+        const metricInfo = metricLookup[result.MetricID];
+        const metricName = metricInfo ? `${metricInfo.abbreviation} - ${metricInfo.name}` : result.MetricID;
+        tooltipLines.push(`\u2022 ${metricName}: ${result.Weight}`);
+      });
+    }
+    if (redFlags.length === 0 && amberFlags.length === 0) {
+      tooltipLines.push("No amber or red flags for this group");
+    }
+    tooltipLines.push("");
+    tooltipLines.push("For more information, see:");
+    tooltipLines.push("https://gilead-biostats.github.io/gsm.kri/articles/SiteRiskScore.html");
+    return tooltipLines.join("\n");
+  }
+
   // src/groupOverview/defineColumns/defineGroupColumns.js
-  function defineGroupColumns(groupMetadata, config) {
+  function defineGroupColumns(groupMetadata, config, results = null, metricMetadata = null) {
     let columns = [
       {
         label: "Group",
@@ -21812,6 +21877,28 @@ var gsmViz = (() => {
         (groupMetadatum) => groupMetadatum.hasOwnProperty(column.valueKey)
       )
     );
+    const hasSiteLevelData = metricMetadata && metricMetadata.some(
+      (metricMetadatum) => metricMetadatum.GroupLevel === "Site"
+    );
+    if (config.GroupLevel === "Site" && hasSiteLevelData && groupMetadata.some((groupMetadatum) => groupMetadatum.hasOwnProperty("siteRiskScore"))) {
+      const riskScoreColumn = {
+        label: "Risk Score",
+        data: groupMetadata,
+        filterKey: "GroupID",
+        valueKey: "siteRiskScore",
+        headerTooltip: "Site risk score across all metrics. Score ranges from 0-100.",
+        sort: sortNumber,
+        tooltip: true,
+        type: "group",
+        dataType: "number"
+      };
+      if (results) {
+        riskScoreColumn.defineTooltip = (col, content, config2) => defineRiskScoreTooltip(col, content, config2, results, metricMetadata);
+      } else {
+        riskScoreColumn.defineTooltip = defineTooltip;
+      }
+      columns.push(riskScoreColumn);
+    }
     return columns;
   }
 
@@ -21849,7 +21936,7 @@ var gsmViz = (() => {
 
   // src/groupOverview/defineColumns.js
   function defineColumns(groupMetadata, metricMetadata, results, config) {
-    const groupColumns = defineGroupColumns(groupMetadata, config);
+    const groupColumns = defineGroupColumns(groupMetadata, config, results, metricMetadata);
     const metricColumns = defineMetricColumns(metricMetadata, results, config);
     const columns = [...groupColumns, ...metricColumns];
     columns.forEach((column, i) => {
@@ -21891,6 +21978,9 @@ var gsmViz = (() => {
         };
         datum2.value = datum2[column.valueKey];
         datum2.text = datum2.value;
+        if (column.valueKey === "siteRiskScore" && datum2.value !== null && !isNaN(datum2.value)) {
+          datum2.text = Math.round(parseFloat(datum2.value));
+        }
         datum2.sortValue = column.type === "metric" ? Math.abs(parseFloat(datum2.value)) : datum2.value;
         datum2.class = [
           `group-overview--${column.type}`,
@@ -22070,6 +22160,55 @@ var gsmViz = (() => {
     });
   }
 
+  // src/groupOverview/makeTable/addCustomTooltip.js
+  function addCustomTooltip(cells) {
+    let tooltip5 = select_default2("body").select(".custom-tooltip");
+    if (tooltip5.empty()) {
+      tooltip5 = select_default2("body").append("div").attr("class", "custom-tooltip").style("position", "absolute").style("background", "#ffffff").style("color", "#000").style("padding", "8px 10px").style("border", "1px solid #ccc").style("border-radius", "3px").style("font-size", "11px").style("line-height", "1.3").style("white-space", "pre-line").style("max-width", "350px").style("box-shadow", "0 2px 4px rgba(0,0,0,0.2)").style("z-index", "1000").style("pointer-events", "auto").style("display", "none").style("font-family", '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif');
+    }
+    const riskScoreCells = cells.filter((d) => d.column.valueKey === "siteRiskScore" && d.tooltip);
+    riskScoreCells.on("mouseenter", function(event, d) {
+      select_default2(this).attr("title", null);
+      const content = d.tooltipContent;
+      const lines = content.split("\n");
+      tooltip5.selectAll("*").remove();
+      lines.forEach((line) => {
+        const lineElement = tooltip5.append("div");
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
+        const matches = line.match(urlRegex);
+        if (matches) {
+          const parts = line.split(urlRegex);
+          parts.forEach((part) => {
+            if (urlRegex.test(part)) {
+              lineElement.append("a").attr("href", part).attr("target", "_blank").attr("rel", "noopener noreferrer").style("color", "#0066cc").style("text-decoration", "underline").text(part).on("mouseover", function() {
+                select_default2(this).style("color", "#004499");
+              }).on("mouseout", function() {
+                select_default2(this).style("color", "#0066cc");
+              });
+            } else if (part) {
+              lineElement.append("span").text(part);
+            }
+          });
+        } else {
+          lineElement.text(line);
+        }
+      });
+      const [mouseX, mouseY] = [event.pageX, event.pageY];
+      tooltip5.style("left", mouseX + 10 + "px").style("top", mouseY - 10 + "px").style("display", "block");
+    }).on("mouseleave", function() {
+      setTimeout(() => {
+        if (!tooltip5.node().matches(":hover") && !select_default2(this).node().matches(":hover")) {
+          tooltip5.style("display", "none");
+        }
+      }, 100);
+    });
+    tooltip5.on("mouseenter", function() {
+      select_default2(this).style("display", "block");
+    }).on("mouseleave", function() {
+      select_default2(this).style("display", "none");
+    });
+  }
+
   // src/groupOverview/makeTable.js
   function makeTable(_element_, rows, columns, config) {
     const table = select_default2(_element_).append("table").datum({
@@ -22086,6 +22225,7 @@ var gsmViz = (() => {
     addFlagIcons(bodyRows);
     addRowHighlighting(bodyRows);
     addClickEvents(bodyRows, cells, config);
+    addCustomTooltip(cells);
     return table;
   }
 

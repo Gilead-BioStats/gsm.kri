@@ -11,6 +11,7 @@ meta:
   AnalysisType: rate
   Threshold: "2,3"
   Flag: "0,1,2"
+  RiskScoreWeight: "0,1,2"
   AccrualThreshold: 30
   AccrualMetric: Numerator
 spec:
@@ -32,10 +33,16 @@ steps:
     name: gsm.core::ParseThreshold
     params:
       strThreshold: Threshold
+  - output: vRiskScoreWeight
+    name: gsm.core::ParseThreshold
+    params:
+      strThreshold: RiskScoreWeight
+      bSort: false
   - output: vFlag
     name: gsm.core::ParseThreshold
     params:
       strThreshold: Flag
+      bSort: false
   - output: Temp_QUERY
     name: RunQuery
     params:
@@ -67,6 +74,7 @@ steps:
       dfAnalyzed: Analysis_Analyzed
       vThreshold: vThreshold
       vFlag: vFlag
+      vRiskScoreWeight: vRiskScoreWeight
       nAccrualThreshold: AccrualThreshold
       strAccrualMetric: AccrualMetric
   - output: Analysis_Summary
