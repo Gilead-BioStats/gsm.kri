@@ -85,12 +85,11 @@ Widget_GroupOverview <- function(
 
   ## update dfResults to include site risk weights when available
   if (any(!is.na(dfMetrics$RiskScoreWeight))) {
-
     dfWeights <- dfMetrics %>%
       filter(!is.na(RiskScoreWeight)) %>%
       mutate(
         Weight = map(RiskScoreWeight, \(x) ParseThreshold(x, bSort = FALSE)),
-        Flag  = map(Flag, \(x) ParseThreshold(x, bSort = FALSE)),
+        Flag = map(Flag, \(x) ParseThreshold(x, bSort = FALSE)),
         WeightMax = map_dbl(Weight, ~ max(.x, na.rm = TRUE))
       ) %>%
       select(MetricID, Flag, Weight, WeightMax) %>%
