@@ -1,3 +1,7 @@
+# gsm.kri 1.3.1
+
+This patch release addresses a bug related to the `gsm.viz` implementation of site risk score.
+
 # gsm.kri 1.3.0
 
 This release adds a new Site Risk Score metric that calculates weighted site-level risk across multiple KRIs. In short, the new default workflow has the following steps:  
