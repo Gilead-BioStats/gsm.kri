@@ -32,10 +32,21 @@
 CalculateRiskScore <- function(
   dfFlaggedWeights
 ) {
+  # Check that required columns are present
+  required_cols <- c("StudyID", "MetricID", "Weight", "WeightMax")
+  if (!all(required_cols %in% colnames(dfFlaggedWeights))) {
+    stop("Missing required columns in dfFlaggedWeights")
+  }
+
+  # check that only a single snapshot is included
+  if (n_distinct(dfFlaggedWeights$SnapshotDate) != 1) {
+    stop("Multiple snapshot dates found in dfFlaggedWeights")
+  }
+
   # calculate global denominator
   GlobalDenominator <- dfFlaggedWeights %>%
     filter(!is.na(WeightMax)) %>%
-    group_by(MetricID) %>%
+    group_by(StudyID, MetricID) %>%
     summarize(GlobalWeightMax = max(WeightMax)) %>%
     ungroup() %>%
     summarize(GlobalDenominator = sum(GlobalWeightMax, na.rm = TRUE)) %>%
@@ -43,6 +54,7 @@ CalculateRiskScore <- function(
 
   dfRiskScore <- dfFlaggedWeights %>%
     group_by(
+      StudyID, 
       GroupLevel,
       GroupID
     ) %>%
