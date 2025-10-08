@@ -1,31 +1,55 @@
 #' Calculate Risk Score
 #'
 #' Calculates the risk score for each group in the provided results data frame.
+#' The function aggregates weighted flag values across all metrics for each group,
+#' creating a composite risk score as a percentage of the total possible risk.
 #'
 #' @param dfResults `data.frame` Dataframe of stacked analysis outputs from the metrics calculated in the
 #' `workflow/2_metrics` workflows. Must contain the columns `GroupLevel`, `GroupID`, `MetricID`, `Weight`, and `WeightMax`.
+#' @param strMetricID `character` The MetricID to assign to the calculated risk scores. Default is "Analysis_srs0001".
 #'
-#' @return `data.frame` that has the same features as Analysis_Summary.
+#' @return `data.frame` with risk score data containing columns: `GroupLevel`, `GroupID`, `MetricID`, 
+#' `Numerator` (sum of weights), `Denominator` (sum of max weights across all metrics), 
+#' `Metric` (risk score percentage), `Score` (same as Metric), and `Flag` (set to NA).
+#'
+#' @details
+#' The function calculates risk scores by:
+#' \enumerate{
+#'   \item Summing the `Weight` values for each group across all metrics
+#'   \item Calculating a global denominator as the sum of `WeightMax` values across all unique metrics
+#'   \item Computing the risk score as (Numerator / Denominator) * 100
+#' }
+#' 
+#' Risk scores represent the percentage of total possible risk that each group exhibits,
+#' allowing for comparison across groups and identification of high-risk sites or entities.
 #'
 #' @examples
-#' analysisFlagged <- gsm.core::analyticsSummary %>%
+#' # Prepare data with weights from gsm.core::reportingResults
+#' library(dplyr)
+#' 
+#' # Filter to remove any existing risk scores and add weight columns
+#' dfResults <- gsm.core::reportingResults %>%
+#'   dplyr::filter(!grepl("srs0001", MetricID)) %>%
 #'   dplyr::mutate(
 #'     Weight = dplyr::case_when(
 #'       abs(Flag) == 1 ~ 2,
 #'       abs(Flag) == 2 ~ 4,
 #'       Flag == 0 ~ 0,
-#'       TRUE ~ NA
+#'       TRUE ~ 0
 #'     ),
-#'     WeightMax = 4
+#'     WeightMax = dplyr::case_when(
+#'       grepl("kri0001", MetricID) ~ 4,
+#'       grepl("kri0002", MetricID) ~ 8,
+#'       grepl("kri0003", MetricID) ~ 4,
+#'       TRUE ~ 4
+#'     )
 #'   )
-#'
-#' lAnalysis <- list("Analysis_kri0001" = list(
-#'   Analysis_Flagged = analysisFlagged,
-#'   ID = "Analysis_kri0001"
-#' ))
-#' lAnalysis_filtered <- FilterAnalysis(lAnalysis)
-#' dfResults <- StackAnalysis(lAnalysis_filtered)
+#' 
+#' # Calculate risk scores
 #' dfRiskScore <- CalculateRiskScore(dfResults)
+#' 
+#' # View summary of risk scores
+#' summary(dfRiskScore$Metric)
 #'
 #' @export
 
