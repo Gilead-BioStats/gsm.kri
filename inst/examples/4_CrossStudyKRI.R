@@ -176,9 +176,7 @@ weight_table <- gsm.core::reportingMetrics %>%
   tidyr::unnest_longer(c(flags_list, weights_list)) %>%
   dplyr::mutate(
     Flag = as.numeric(flags_list),
-    Weight = as.numeric(weights_list),
-    # Calculate WeightMax as the maximum weight for each metric
-    WeightMax = NA_real_
+    Weight = as.numeric(weights_list)
   ) %>%
   # Calculate WeightMax by metric
   dplyr::group_by(MetricID) %>%
@@ -186,26 +184,31 @@ weight_table <- gsm.core::reportingMetrics %>%
   dplyr::ungroup()
 
 sim_reportingResults <- sim_reportingResults %>%
-  dplyr::left_join(weight_table, by = c("MetricID", "Flag")) %>%
-  dplyr::mutate(
-    Weight = ifelse(is.na(Weight), 0, Weight),
-    WeightMax = ifelse(is.na(WeightMax), 4, WeightMax)
-  )
+  dplyr::left_join(weight_table, by = c("MetricID", "Flag"))
 
 
 cat("Generated", nrow(sim_reportingResults), "simulated records across", 
     length(unique(sim_reportingResults$StudyID)), "studies and", 
     length(unique(sim_reportingResults$GroupID)), "sites.\n")
 
+#dfFlaggedWeights <- sim_reportingResults %>% filter(StudyID =="STUDY001")
+
 #### Step 2: Calculate Site Risk Scores ####
 
 # Now calculate risk scores using the CalculateRiskScore function
-dfResults_WithRiskScore <- CalculateRiskScore(sim_reportingResults)
+RiskScores <- sim_reportingResults %>%
+  split(.$StudyID) %>%
+  purrr::map(~ {
+    df <- CalculateRiskScore(.x)
+    df$StudyID <- .x$StudyID[1]
+    df
+  }) %>%
+  dplyr::bind_rows()
 
 # Combine the Site-level risk scores with original KRI data 
 dfResults_WithRiskScore <- dplyr::bind_rows(
   sim_reportingResults,
-  dfResults_WithRiskScore
+  RiskScores
 )
 
 cat("Added risk scores. Dataset now has", nrow(dfResults_WithRiskScore), "records.\n")
