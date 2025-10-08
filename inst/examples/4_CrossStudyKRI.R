@@ -160,80 +160,30 @@ sim_reportingResults <- lapply(study_ids, function(study) {
     )
   )
 
-# Make a data frame with one weight for each KRI/Flag combination
-flags <- c(-2, -1, 0, 1, 2)
-weight_table <- expand_grid(Metric = metric_ids, flags = flags) %>%
+# Create weight table from gsm.core::reportingMetrics
+weight_table <- gsm.core::reportingMetrics %>%
+  dplyr::filter(!is.na(Flag) & !is.na(RiskScoreWeight)) %>%
+  dplyr::select(MetricID, Flag, RiskScoreWeight) %>%
+  # Parse the comma-separated Flag and RiskScoreWeight values
   dplyr::mutate(
-    # Define weights based on KRI type and flag severity
-    Weight = dplyr::case_when(
-      # Adverse Event (kri0001) - highest weights for low events (safety concern)
-      Metric == "Analysis_kri0001" & flags == -2 ~ 32,
-      Metric == "Analysis_kri0001" & flags == -1 ~ 16,
-      Metric == "Analysis_kri0001" & flags == 0 ~ 0,
-      Metric == "Analysis_kri0001" & flags == 1 ~ 1,
-      Metric == "Analysis_kri0001" & flags == 2 ~ 2,
-      
-      # Serious Adverse Event (kri0002) - high weights for both high and low
-      Metric == "Analysis_kri0002" & flags == -2 ~ 8,
-      Metric == "Analysis_kri0002" & flags == -1 ~ 0,
-      Metric == "Analysis_kri0002" & flags == 0 ~ 0,
-      Metric == "Analysis_kri0002" & flags == 1 ~ 4,
-      Metric == "Analysis_kri0002" & flags == 2 ~ 8,
-      
-      # Protocol Deviations (kri0003) - moderate weights, higher for more deviations
-      Metric == "Analysis_kri0003" & flags == -2 ~ 8,
-      Metric == "Analysis_kri0003" & flags == -1 ~ 4,
-      Metric == "Analysis_kri0003" & flags == 0 ~ 0,
-      Metric == "Analysis_kri0003" & flags == 1 ~ 8,
-      Metric == "Analysis_kri0003" & flags == 2 ~ 16,
-      
-      # Important Protocol Deviations (kri0004) - very high weights for high rates
-      Metric == "Analysis_kri0004" & flags == -2 ~ 0,
-      Metric == "Analysis_kri0004" & flags == -1 ~ 0,
-      Metric == "Analysis_kri0004" & flags == 0 ~ 0,
-      Metric == "Analysis_kri0004" & flags == 1 ~ 16,
-      Metric == "Analysis_kri0004" & flags == 2 ~ 32,
-      
-      # Labs, Query rates, Data entry/change rates (kri0005-kri0009) - low weights
-      Metric %in% paste0("Analysis_kri000", 5:9) & flags %in% c(-2, -1) ~ 0,
-      Metric %in% paste0("Analysis_kri000", 5:9) & flags == 0 ~ 0,
-      Metric %in% paste0("Analysis_kri000", 5:9) & flags == 1 ~ 1,
-      Metric %in% paste0("Analysis_kri000", 5:9) & flags == 2 ~ 2,
-      
-      # Screen Failure (kri0010) - moderate weights for high rates
-      Metric == "Analysis_kri0010" & flags == -2 ~ 0,
-      Metric == "Analysis_kri0010" & flags == -1 ~ 0,
-      Metric == "Analysis_kri0010" & flags == 0 ~ 0,
-      Metric == "Analysis_kri0010" & flags == 1 ~ 8,
-      Metric == "Analysis_kri0010" & flags == 2 ~ 16,
-      
-      # Treatment/Study Discontinuation (kri0011, kri0012) - high weights
-      Metric %in% paste0("Analysis_kri001", 1:2) & flags == -2 ~ 0,
-      Metric %in% paste0("Analysis_kri001", 1:2) & flags == -1 ~ 0,
-      Metric %in% paste0("Analysis_kri001", 1:2) & flags == 0 ~ 0,
-      Metric %in% paste0("Analysis_kri001", 1:2) & flags == 1 ~ 16,
-      Metric %in% paste0("Analysis_kri001", 1:2) & flags == 2 ~ 32,
-      
-      TRUE ~ 0
-    ),
-    # Define maximum possible weight for each metric
-    WeightMax = dplyr::case_when(
-      Metric == "Analysis_kri0001" ~ 32,  # AE
-      Metric == "Analysis_kri0002" ~ 8,   # SAE
-      Metric == "Analysis_kri0003" ~ 16,  # PD
-      Metric == "Analysis_kri0004" ~ 32,  # IPD
-      Metric %in% paste0("Analysis_kri000", 5:9) ~ 2,  # Labs, Queries, Data entry
-      Metric == "Analysis_kri0010" ~ 16,  # Screen Failure
-      Metric %in% paste0("Analysis_kri001", 1:2) ~ 32,  # Discontinuation
-      TRUE ~ 4
-    )
-  )
+    flags_list = strsplit(Flag, ","),
+    weights_list = strsplit(RiskScoreWeight, ",")
+  ) %>%
+  # Expand to one row per flag-weight combination
+  tidyr::unnest_longer(c(flags_list, weights_list)) %>%
+  dplyr::mutate(
+    Flag = as.numeric(flags_list),
+    Weight = as.numeric(weights_list),
+    # Calculate WeightMax as the maximum weight for each metric
+    WeightMax = NA_real_
+  ) %>%
+  # Calculate WeightMax by metric
+  dplyr::group_by(MetricID) %>%
+  dplyr::mutate(WeightMax = max(Weight, na.rm = TRUE)) %>%
+  dplyr::ungroup()
 
 sim_reportingResults <- sim_reportingResults %>%
-  dplyr::left_join(
-    weight_table %>% dplyr::select(MetricID = Metric, Flag = flags, Weight, WeightMax),
-    by = c("MetricID", "Flag")
-  ) %>%
+  dplyr::left_join(weight_table, by = c("MetricID", "Flag")) %>%
   dplyr::mutate(
     Weight = ifelse(is.na(Weight), 0, Weight),
     WeightMax = ifelse(is.na(WeightMax), 4, WeightMax)
