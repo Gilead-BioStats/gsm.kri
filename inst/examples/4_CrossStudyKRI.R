@@ -129,7 +129,10 @@ study_ids <- sprintf("STUDY%03d", 1:5)
 snapshot_date <- as.Date("2025-06-01")  # Single snapshot date
 metric_ids <- sprintf("Analysis_kri%04d", 1:12)
 group_levels <- "Site"
-site_ids <- sprintf("SITE%03d", 1:25)
+site_ids <- gsm.core::reportingGroups %>%
+  dplyr::filter(Param == "invid") %>%
+  dplyr::pull(Value) %>%
+  sample(25)
 
 # Simulate cross-study reporting results
 sim_reportingResults <- lapply(study_ids, function(study) {
@@ -232,7 +235,11 @@ cat("Summary columns:", paste(names(dfCrossStudySummary), collapse = ", "), "\n"
 cat("First few summary rows:\n")
 print(head(dfCrossStudySummary, 3))
 
-cross_study_widget <- Widget_CrossStudyRiskScore(dfResults = dfResults_WithRiskScore)
+cross_study_widget <- Widget_CrossStudyRiskScore(
+  dfResults = dfResults_WithRiskScore,
+  dfMetrics = gsm.core::reportingMetrics,
+  dfGroups = gsm.core::reportingGroups
+  )
 
 # Save widget to file in /inst/examples folder
 htmlwidgets::saveWidget(

@@ -4,3 +4,7 @@
 .Ruserdata
 docs
 inst/doc
+
+# Generated HTML files and associated folders in inst/examples
+inst/examples/*.html
+inst/examples/*_files/

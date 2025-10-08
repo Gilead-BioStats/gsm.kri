@@ -7,6 +7,8 @@
 #' Shows a summary view with click-to-expand details for each site.
 #'
 #' @param dfResults `data.frame` Full results data for details.
+#' @param dfMetrics `data.frame` Metadata about metrics/KRIs.
+#' @param dfGroups `data.frame` Metadata about groups (sites/studies).
 #' @param strGroupLevel `character` The group level. Default is 'Site'.
 #'
 #' @return An htmlwidget for cross-study risk score visualization.
@@ -14,15 +16,19 @@
 #' @examples
 #' \dontrun{
 #' dfSummary <- SummarizeCrossStudy(dfMultiStudy)
-#' Widget_CrossStudyRiskScore(dfMultiStudy)
+#' Widget_CrossStudyRiskScore(dfMultiStudy, gsm.core::reportingMetrics, gsm.core::reportingGroups)
 #' }
 #'
 #' @export
 Widget_CrossStudyRiskScore <- function(
     dfResults,
+    dfMetrics,
+    dfGroups,
     strGroupLevel = "Site"
 ) {
   stopifnot(is.data.frame(dfResults))
+  stopifnot(is.data.frame(dfMetrics))
+  stopifnot(is.data.frame(dfGroups))
   #Check that Analysis_srs0001 is present
   stopifnot("Analysis_srs0001" %in% dfResults$MetricID)
 
@@ -30,23 +36,34 @@ Widget_CrossStudyRiskScore <- function(
     dfResults = dfResults,  
     strGroupLevel = strGroupLevel
   )
-  
-  # Create the widget data structure
-  widget_data <- list(
-    summary = dfCrossStudySummary,
-    details = dfResults
+  # Forward options using the same pattern as Widget_GroupOverview
+  lInput <- list(
+    dfResults = dfResults,
+    dfMetrics = dfMetrics,
+    dfGroups = dfGroups,
+    dfSummary = dfCrossStudySummary,
+    strGroupLevel = strGroupLevel,
+    strGroupLabelKey = "GroupID",
+    strSiteRiskMetric = "Analysis_srs0001"
   )
   
-  # Create the htmlwidget
-  widget <- htmlwidgets::createWidget(
+  # Create widget using the same pattern as Widget_GroupOverview
+  lWidget <- htmlwidgets::createWidget(
     name = "Widget_CrossStudyRiskScore",
-    x = list(
-      data = widget_data
+    purrr::map(
+      lInput,
+      ~ jsonlite::toJSON(
+        .x,
+        null = "null",
+        na = "string",
+        auto_unbox = TRUE
+      )
     ),
+    width = "100%",
     package = "gsm.kri"
   )
   
-  return(widget)
+  return(lWidget)
 }
 
 #' Shiny bindings for Widget_CrossStudyRiskScore

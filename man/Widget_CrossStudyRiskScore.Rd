@@ -4,10 +4,19 @@
 \alias{Widget_CrossStudyRiskScore}
 \title{Cross-Study Risk Score Widget}
 \usage{
-Widget_CrossStudyRiskScore(dfResults, strGroupLevel = "Site")
+Widget_CrossStudyRiskScore(
+  dfResults,
+  dfMetrics,
+  dfGroups,
+  strGroupLevel = "Site"
+)
 }
 \arguments{
 \item{dfResults}{`data.frame` Full results data for details.}
+
+\item{dfMetrics}{`data.frame` Metadata about metrics/KRIs.}
+
+\item{dfGroups}{`data.frame` Metadata about groups (sites/studies).}
 
 \item{strGroupLevel}{`character` The group level. Default is 'Site'.}
 }
@@ -23,7 +32,7 @@ Shows a summary view with click-to-expand details for each site.
 \examples{
 \dontrun{
 dfSummary <- SummarizeCrossStudy(dfMultiStudy)
-Widget_CrossStudyRiskScore(dfMultiStudy)
+Widget_CrossStudyRiskScore(dfMultiStudy, gsm.core::reportingMetrics, gsm.core::reportingGroups)
 }
 
 }

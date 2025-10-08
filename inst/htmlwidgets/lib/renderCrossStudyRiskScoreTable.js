@@ -1,37 +1,36 @@
 // Cross-Study Risk Score Table Widget
-function renderCrossStudyRiskScoreTable(el, data) {
-    console.log('renderCrossStudyRiskScoreTable called with data:', data);
-    console.log('Data type:', typeof data);
+function renderCrossStudyRiskScoreTable(el, input) {
+    console.log('renderCrossStudyRiskScoreTable called with input:', input);
     
-    if (!data) {
-        console.log('No data provided');
-        el.innerHTML = '<em>No data provided to widget</em>';
+    if (!input) {
+        console.log('No input provided');
+        el.innerHTML = '<em>No input provided to widget</em>';
         return;
     }
     
-    if (!data.summary) {
-        console.log('No summary data found. Available keys:', Object.keys(data));
-        el.innerHTML = '<em>No summary data found in widget data</em>';
+    if (!input.dfSummary) {
+        console.log('No summary data found. Available keys:', Object.keys(input));
+        el.innerHTML = '<em>No summary data found in widget input</em>';
         return;
     }
     
     // Handle R data.frame structure (object with arrays) vs JavaScript array structure
     let summary;
-    if (Array.isArray(data.summary)) {
+    if (Array.isArray(input.dfSummary)) {
         // Already in the right format (array of objects)
-        summary = data.summary;
+        summary = input.dfSummary;
         console.log('Summary is already an array');
-    } else if (typeof data.summary === 'object' && data.summary.GroupID && Array.isArray(data.summary.GroupID)) {
+    } else if (typeof input.dfSummary === 'object' && input.dfSummary.GroupID && Array.isArray(input.dfSummary.GroupID)) {
         // R data.frame format - convert to array of objects
         console.log('Converting R data.frame format to array of objects');
-        const groupIds = data.summary.GroupID;
-        const numStudies = data.summary.NumStudies;
-        const avgRiskScore = data.summary.AvgRiskScore;
-        const maxRiskScore = data.summary.MaxRiskScore;
-        const minRiskScore = data.summary.MinRiskScore;
-        const redFlags = data.summary.RedFlags;
-        const amberFlags = data.summary.AmberFlags;
-        const greenFlags = data.summary.GreenFlags;
+        const groupIds = input.dfSummary.GroupID;
+        const numStudies = input.dfSummary.NumStudies;
+        const avgRiskScore = input.dfSummary.AvgRiskScore;
+        const maxRiskScore = input.dfSummary.MaxRiskScore;
+        const minRiskScore = input.dfSummary.MinRiskScore;
+        const redFlags = input.dfSummary.RedFlags;
+        const amberFlags = input.dfSummary.AmberFlags;
+        const greenFlags = input.dfSummary.GreenFlags;
         
         summary = [];
         for (let i = 0; i < groupIds.length; i++) {
@@ -48,7 +47,7 @@ function renderCrossStudyRiskScoreTable(el, data) {
         }
         console.log('Converted summary:', summary);
     } else {
-        console.log('Summary is not in expected format:', typeof data.summary, data.summary);
+        console.log('Summary is not in expected format:', typeof input.dfSummary, input.dfSummary);
         el.innerHTML = '<em>Summary data is not in expected format</em>';
         return;
     }
@@ -62,7 +61,8 @@ function renderCrossStudyRiskScoreTable(el, data) {
     console.log('Summary data looks good, length:', summary.length);
     console.log('First summary item:', summary[0]);
 
-    const details = data.details || [];
+    // Store the input data for access by toggle function
+    el._crossStudyInput = input;
 
     // Create summary table
     let html = '<div class="cross-study-container">';
@@ -112,12 +112,6 @@ function renderCrossStudyRiskScoreTable(el, data) {
     
     console.log('Generated HTML length:', html.length);
     el.innerHTML = html;
-    
-    // Store data for access by toggle function (convert summary to the right format)
-    el._crossStudyData = {
-        summary: summary,
-        details: data.details
-    };
 }
 
 function getRiskScoreColor(score) {
@@ -137,73 +131,157 @@ function toggleSiteDetails(siteId, index) {
         detailsRow.style.display = '';
         button.textContent = 'Hide Details';
         
-        // Get the container element to access stored data
+        // Get the container element to access stored input data
         const container = button.closest('.cross-study-container').parentElement;
-        const data = container._crossStudyData;
+        const input = container._crossStudyInput;
         
-        if (data && data.details) {
-            let siteDetails = [];
+        if (input && input.dfResults) {
+            // Clear the content div and create a new container for the gsmViz widget
+            contentDiv.innerHTML = `<h4>KRI Details for ${siteId}</h4><div id="gsm-viz-container-${index}" style="width: 100%; min-height: 400px;"></div>`;
             
-            // Handle R data.frame format vs JavaScript array format
-            if (Array.isArray(data.details)) {
-                // JavaScript array format
-                siteDetails = data.details.filter(d => d.GroupID === siteId);
-            } else if (typeof data.details === 'object' && data.details.GroupID && Array.isArray(data.details.GroupID)) {
-                // R data.frame format - convert to array of objects and filter
-                const groupIds = data.details.GroupID;
-                const studyIds = data.details.StudyID;
-                const snapshotDates = data.details.SnapshotDate;
-                const scores = data.details.Score;
-                const numerators = data.details.Numerator;
-                const denominators = data.details.Denominator;
-                const metricIds = data.details.MetricID;
-                
-                for (let i = 0; i < groupIds.length; i++) {
-                    if (groupIds[i] === siteId && metricIds[i] === 'Analysis_srs0001') {
-                        siteDetails.push({
-                            GroupID: groupIds[i],
-                            StudyID: studyIds[i],
-                            SnapshotDate: snapshotDates[i],
-                            Score: scores[i],
-                            Numerator: numerators[i],
-                            Denominator: denominators[i],
-                            MetricID: metricIds[i]
-                        });
+            // Get the container for the gsmViz widget
+            const gsmVizContainer = document.getElementById(`gsm-viz-container-${index}`);
+            
+            // Check if gsmViz is available
+            if (typeof gsmViz !== 'undefined' && gsmViz.default && gsmViz.default.groupOverview) {
+                try {
+                    // Filter results to only include this site's data
+                    let filteredResults;
+                    if (Array.isArray(input.dfResults)) {
+                        filteredResults = input.dfResults.filter(d => d.GroupID === siteId);
+                    } else if (typeof input.dfResults === 'object' && input.dfResults.GroupID && Array.isArray(input.dfResults.GroupID)) {
+                        // Convert R data.frame format to array and filter
+                        const results = convertDataFrameToArray(input.dfResults);
+                        filteredResults = results.filter(d => d.GroupID === siteId);
                     }
+                    
+                    // Filter groups to only include this site
+                    let filteredGroups;
+                    if (Array.isArray(input.dfGroups)) {
+                        filteredGroups = input.dfGroups.filter(d => d.GroupID === siteId);
+                    } else if (typeof input.dfGroups === 'object' && input.dfGroups.GroupID && Array.isArray(input.dfGroups.GroupID)) {
+                        const groups = convertDataFrameToArray(input.dfGroups);
+                        filteredGroups = groups.filter(d => d.GroupID === siteId);
+                    }
+
+                    //Update the GroupID in filteredResults to combine StudyID and GroupID
+                    filteredResults = filteredResults.map(d => {
+                        return {
+                            ...d,
+                            GroupID: `${d.StudyID}_${d.GroupID}`
+                        };
+                    });
+
+                    console.log('Filtered results for gsmViz:', filteredResults);
+                    console.log('Filtered groups for gsmViz:', filteredGroups);
+                    console.log('Metrics for gsmViz:', input.dfMetrics);
+                    
+                    // Create the gsmViz groupOverview instance using the same pattern as Widget_GroupOverview
+                    const instance = gsmViz.default.groupOverview(
+                        gsmVizContainer,
+                        filteredResults,
+                        {
+                            GroupLevel: input.strGroupLevel,
+                            groupLabelKey: input.strGroupLabelKey,
+                            SiteRiskMetric: input.strSiteRiskMetric
+                        },
+                        filteredGroups,
+                        input.dfMetrics
+                    );
+                    
+                    console.log('Created gsmViz groupOverview instance for site:', siteId, instance);
+                } catch (error) {
+                    console.error('Error creating gsmViz groupOverview:', error);
+                    console.error('Error stack:', error.stack);
+                    // Show error message
+                    contentDiv.innerHTML = `
+                        <div style="padding: 20px; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 5px; color: #856404;">
+                            <h4>⚠️ gsmViz Error</h4>
+                            <p><strong>Failed to initialize gsmViz groupOverview widget.</strong></p>
+                            <p>Error: ${error.message}</p>
+                            <p>Please ensure gsmViz library is properly loaded and compatible with this data structure.</p>
+                        </div>
+                    `;
                 }
-            }
-            
-            if (siteDetails.length > 0) {
-                let detailsHTML = `<h4>Risk Score Details for ${siteId}</h4>`;
-                detailsHTML += '<table style="width:100%;border-collapse:collapse;margin:10px 0;">';
-                detailsHTML += '<thead><tr>';
-                detailsHTML += '<th style="padding:6px;border:1px solid #ddd;background:#f0f0f0;">Study</th>';
-                detailsHTML += '<th style="padding:6px;border:1px solid #ddd;background:#f0f0f0;">Snapshot Date</th>';
-                detailsHTML += '<th style="padding:6px;border:1px solid #ddd;background:#f0f0f0;">Risk Score</th>';
-                detailsHTML += '<th style="padding:6px;border:1px solid #ddd;background:#f0f0f0;">Raw Score</th>';
-                detailsHTML += '<th style="padding:6px;border:1px solid #ddd;background:#f0f0f0;">Max Score</th>';
-                detailsHTML += '</tr></thead><tbody>';
-                
-                siteDetails.forEach(detail => {
-                    const riskColor = getRiskScoreColor(detail.Score);
-                    detailsHTML += '<tr>';
-                    detailsHTML += `<td style="padding:6px;border:1px solid #ddd;">${detail.StudyID}</td>`;
-                    detailsHTML += `<td style="padding:6px;border:1px solid #ddd;">${detail.SnapshotDate}</td>`;
-                    detailsHTML += `<td style="padding:6px;border:1px solid #ddd;text-align:center;background-color:${riskColor};">${detail.Score.toFixed(2)}%</td>`;
-                    detailsHTML += `<td style="padding:6px;border:1px solid #ddd;text-align:center;">${detail.Numerator}</td>`;
-                    detailsHTML += `<td style="padding:6px;border:1px solid #ddd;text-align:center;">${detail.Denominator}</td>`;
-                    detailsHTML += '</tr>';
-                });
-                
-                detailsHTML += '</tbody></table>';
-                contentDiv.innerHTML = detailsHTML;
             } else {
-                contentDiv.innerHTML = '<p>No details available for this site.</p>';
+                console.warn('gsmViz not available');
+                // Show warning message
+                contentDiv.innerHTML = `
+                    <div style="padding: 20px; background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 5px; color: #721c24;">
+                        <h4>⚠️ gsmViz Not Available</h4>
+                        <p><strong>The gsmViz library is required to display detailed KRI analysis.</strong></p>
+                        <p>Please ensure the gsmViz library is loaded before using this widget.</p>
+                        <p>Checked locations: <code>gsmViz</code>, <code>window.gsmViz</code></p>
+                        <details style="margin-top: 10px;">
+                            <summary style="cursor: pointer; font-weight: bold;">Debug Information</summary>
+                            <pre style="background: #f8f9fa; padding: 10px; margin-top: 5px; border-radius: 3px; font-size: 12px;">
+Available globals: ${Object.keys(window).slice(0, 20).join(', ')}...
+Site ID: ${siteId}
+Input keys: ${Object.keys(input).join(', ')}
+                            </pre>
+                        </details>
+                    </div>
+                `;
             }
+        } else {
+            contentDiv.innerHTML = '<p>No details available for this site.</p>';
         }
     } else {
         // Hide details
         detailsRow.style.display = 'none';
         button.textContent = 'Show Details';
     }
+}
+
+// Helper function to convert R data.frame format to JavaScript array format
+function convertDataFrameToArray(dataFrame) {
+    if (!dataFrame || typeof dataFrame !== 'object') return [];
+    
+    const keys = Object.keys(dataFrame);
+    if (keys.length === 0) return [];
+    
+    const firstKey = keys[0];
+    if (!Array.isArray(dataFrame[firstKey])) return [];
+    
+    const length = dataFrame[firstKey].length;
+    const result = [];
+    
+    for (let i = 0; i < length; i++) {
+        const row = {};
+        keys.forEach(key => {
+            row[key] = dataFrame[key][i];
+        });
+        result.push(row);
+    }
+    
+    return result;
+}
+
+// Helper function to get flag colors
+function getFlagColor(flag) {
+    if (flag >= 2) return '#ffcdd2'; // Light red
+    if (flag >= 1) return '#ffe0b2'; // Light orange
+    if (flag <= -2) return '#ffcdd2'; // Light red for negative flags
+    if (flag <= -1) return '#ffe0b2'; // Light orange for negative flags
+    return '#e8f5e8'; // Light green for normal flags
+}
+
+// Helper function to get readable metric names
+function getMetricDisplayName(metricId) {
+    const metricNames = {
+        'Analysis_srs0001': '🎯 Site Risk Score',
+        'Analysis_kri0001': 'Adverse Events',
+        'Analysis_kri0002': 'Serious Adverse Events', 
+        'Analysis_kri0003': 'Protocol Deviations',
+        'Analysis_kri0004': 'Important Protocol Deviations',
+        'Analysis_kri0005': 'Lab Abnormalities',
+        'Analysis_kri0006': 'Study Discontinuation',
+        'Analysis_kri0007': 'Treatment Discontinuation',
+        'Analysis_kri0008': 'Query Rates',
+        'Analysis_kri0009': 'Data Entry Lag',
+        'Analysis_kri0010': 'Screen Failure',
+        'Analysis_kri0011': 'Missing Data',
+        'Analysis_kri0012': 'Other KRI'
+    };
+    return metricNames[metricId] || metricId;
 }
