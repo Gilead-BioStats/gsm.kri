@@ -160,6 +160,18 @@ function toggleSiteDetails(siteId, index) {
                         input.dfMetrics
                     );
                     
+                    // Hide the enrollment column by adding CSS
+                    setTimeout(() => {
+                        const style = document.createElement('style');
+                        style.textContent = `
+                            #gsm-viz-container-${index} .group-overview th:nth-child(2),
+                            #gsm-viz-container-${index} .group-overview td:nth-child(2) {
+                                display: none !important;
+                            }
+                        `;
+                        document.head.appendChild(style);
+                    }, 100);
+                    
                     console.log('Created gsmViz groupOverview instance for site:', siteId, instance);
                 } catch (error) {
                     console.error('Error creating gsmViz groupOverview:', error);
