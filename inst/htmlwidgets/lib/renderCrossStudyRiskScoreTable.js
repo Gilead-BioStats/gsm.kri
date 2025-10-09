@@ -134,11 +134,11 @@ function toggleSiteDetails(siteId, index) {
             console.log('Site metadata:',siteMetadata)
             if (siteMetadata && siteMetadata.length > 0) {
                 // Create metadata table
-                let metadataHtml = '<table style="width:100%;border-collapse:collapse;margin-bottom:10px;">';
+                let metadataHtml = '<table style="width:100%;border-collapse:collapse;margin-bottom:10px;background:white;">';
                 metadataHtml += '<thead><tr><th style="padding:8px;border:1px solid #ccc;background:#f5f5f5;">Parameter</th><th style="padding:8px;border:1px solid #ccc;background:#f5f5f5;">Value</th></tr></thead>';
                 metadataHtml += '<tbody>';
                 siteMetadata.forEach(metadata => {
-                        metadataHtml += `<tr><td style="padding:8px;border:1px solid #ccc;font-weight:bold;">${metadata.Param}</td><td style="padding:8px;border:1px solid #ccc;">${metadata.Value}</td></tr>`;
+                        metadataHtml += `<tr><td style="padding:8px;border:1px solid #ccc;font-weight:bold;background:white;">${metadata.Param}</td><td style="padding:8px;border:1px solid #ccc;background:white;">${metadata.Value}</td></tr>`;
                 });
                 metadataHtml += '</tbody></table>';
                 metadataContainer.innerHTML = metadataHtml;
@@ -195,13 +195,18 @@ function toggleSiteDetails(siteId, index) {
                         input.dfMetrics
                     );
                     
-                    // Hide the enrollment column by adding CSS
+                    // Hide the enrollment column and set white background for groupOverview table
                     setTimeout(() => {
                         const style = document.createElement('style');
                         style.textContent = `
                             #gsm-viz-container-${index} .group-overview th:nth-child(2),
                             #gsm-viz-container-${index} .group-overview td:nth-child(2) {
                                 display: none !important;
+                            }
+
+                            #gsm-viz-container-${index} .group-overview td.group-overview--GroupLabel,
+                            #gsm-viz-container-${index} .group-overview td.group-overview--metric {
+                                background: white;
                             }
                         `;
                         document.head.appendChild(style);
