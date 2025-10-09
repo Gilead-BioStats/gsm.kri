@@ -1,4 +1,4 @@
-#### Cross-Study KRI Report Exampe
+#### Cross-Study KRI Report Example
 #### This example demonstrates how to create a cross-study KRI report using the gsm.kri package
 ####
 #### CROSS-STUDY KRI IMPLEMENTATION DOCUMENTATION
