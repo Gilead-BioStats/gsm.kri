@@ -191,6 +191,65 @@ cat("Generated", nrow(sim_reportingResults), "simulated records across",
     length(unique(sim_reportingResults$StudyID)), "studies and", 
     length(unique(sim_reportingResults$GroupID)), "sites.\n")
 
+#### Step 1.5: Create Study Groups Data ####
+
+# Create dfGroups data for our simulated studies
+dfGroups_studies <- lapply(study_ids, function(study_id) {
+  # Generate realistic study metadata
+  study_number <- as.numeric(gsub("STUDY", "", study_id))
+  
+  data.frame(
+    Index = 1:22,
+    GroupID = study_id,
+    Param = c("studyid", "nickname", "protocol_title", "status", "num_plan_site", 
+              "num_plan_subj", "act_fpfv", "est_fpfv", "est_lplv", "est_lpfv",
+              "therapeutic_area", "protocol_indication", "phase", "product",
+              "SiteTarget", "ParticipantTarget", "ParticipantCount", "SiteCount",
+              "PercentSitesActivated", "SiteActivation", "PercentParticipantsEnrolled", 
+              "ParticipantEnrollment"),
+    Value = c(
+      study_id,
+      paste0("Protocol-", study_number),
+      paste("Protocol Title for Study", study_number),
+      sample(c("Active", "Completed", "Enrolling"), 1),
+      as.character(sample(100:200, 1)),
+      as.character(sample(800:1200, 1)),
+      as.character(as.Date("2024-01-01") + sample(0:365, 1)),
+      as.character(as.Date("2024-01-01") + sample(0:30, 1)),
+      as.character(as.Date("2024-12-31") + sample(0:365, 1)),
+      as.character(as.Date("2024-06-01") + sample(0:180, 1)),
+      sample(c("Oncology", "Virology", "Cardiology", "Neurology", "Immunology"), 1),
+      sample(c("Hematology", "Solid Tumors", "Respiratory", "Dermatology"), 1),
+      sample(c("P1", "P2", "P3"), 1),
+      paste("Product", LETTERS[study_number]),
+      as.character(sample(100:200, 1)),
+      as.character(sample(800:1200, 1)),
+      as.character(sample(600:1000, 1)),
+      as.character(sample(80:150, 1)),
+      as.character(round(runif(1, 85, 98), 1)),
+      paste0(sample(80:150, 1), " / ", sample(100:200, 1), " (", round(runif(1, 85, 98), 1), "%)"),
+      as.character(round(runif(1, 70, 90), 1)),
+      paste0(sample(600:1000, 1), " / ", sample(800:1200, 1), " (", round(runif(1, 70, 90), 1), "%)")
+    ),
+    GroupLevel = "Study",
+    stringsAsFactors = FALSE
+  )
+}) %>%
+  dplyr::bind_rows()
+
+# Combine with existing site groups data from gsm.core
+dfGroups_combined <- dplyr::bind_rows(
+  gsm.core::reportingGroups,  # Original site-level groups
+  dfGroups_studies            # New study-level groups
+)
+
+cat("Created study metadata for", length(study_ids), "studies with", nrow(dfGroups_studies), "total metadata records.\n")
+
+# Show sample of generated study metadata
+cat("Sample study metadata:\n")
+sample_study <- dfGroups_studies %>% filter(GroupID == study_ids[1])
+print(sample_study %>% select(Param, Value) %>% head(8))
+
 #dfFlaggedWeights <- sim_reportingResults %>% filter(StudyID =="STUDY001")
 
 #### Step 2: Calculate Site Risk Scores ####
@@ -241,7 +300,7 @@ print(head(dfCrossStudySummary, 3))
 cross_study_widget <- Widget_CrossStudyRiskScore(
   dfResults = dfResults_WithRiskScore,
   dfMetrics = gsm.core::reportingMetrics,
-  dfGroups = gsm.core::reportingGroups
+  dfGroups = dfGroups_combined
   )
 
 # Save widget to file in /inst/examples folder
@@ -252,54 +311,3 @@ htmlwidgets::saveWidget(
 )
 
 cat("Cross-study widget saved to cross_study_risk_score_widget.html\n")
-
-#### Step 5: Generate Cross-Study KRI Report ####
-
-# Widget visualization is the primary output method for cross-study analysis
-
-#### Step 6: Additional Analysis Examples ####
-dfCrossStudySummary <- SummarizeCrossStudy(dfResults = dfResults_WithRiskScore)
-cat("Cross-study summary created with", nrow(dfCrossStudySummary), "sites.\n")
-# Show site participation matrix
-site_participation <- dfResults_WithRiskScore %>%
-  filter(MetricID == "Analysis_srs0001") %>%
-  select(StudyID, GroupID, Score) %>%
-  distinct() %>%
-  mutate(Participated = 1) %>%
-  tidyr::pivot_wider(names_from = StudyID, values_from = Participated, values_fill = 0)
-
-cat("Site participation matrix:\n")
-print(site_participation)
-
-# Identify high-risk sites across studies
-high_risk_sites <- dfCrossStudySummary %>%
-  filter(AvgRiskScore >= 60) %>%
-  arrange(desc(AvgRiskScore))
-
-cat("\nHigh-risk sites (≥60% average risk score):\n")
-print(high_risk_sites %>% select(GroupID, NumStudies, AvgRiskScore, RedFlags, AmberFlags))
-
-# Show flag distribution
-flag_summary <- dfCrossStudySummary %>%
-  summarise(
-    TotalSites = n(),
-    HighRiskSites = sum(AvgRiskScore >= 75),
-    MediumRiskSites = sum(AvgRiskScore >= 50 & AvgRiskScore < 75),
-    LowRiskSites = sum(AvgRiskScore < 50),
-    TotalRedFlags = sum(RedFlags),
-    TotalAmberFlags = sum(AmberFlags),
-    TotalGreenFlags = sum(GreenFlags)
-  )
-
-cat("\nOverall flag summary:\n")
-print(flag_summary)
-
-#### Example Output Messages ####
-cat("\n=== Cross-Study KRI Report Example Complete ===\n")
-cat("Files generated:\n")
-cat("1. cross_study_risk_score_widget.html - Interactive widget\n")
-cat("\nNext steps:\n")
-cat("- Open the HTML file in a web browser\n")
-cat("- Click 'Show Details' for any site to see study-specific breakdowns\n")
-cat("- Review high-risk sites for potential monitoring focus\n")
-cat("- Compare site performance across studies\n")

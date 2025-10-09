@@ -14,52 +14,21 @@ function renderCrossStudyRiskScoreTable(el, input) {
         return;
     }
     
-    // Handle R data.frame structure (object with arrays) vs JavaScript array structure
-    let summary;
-    if (Array.isArray(input.dfSummary)) {
-        // Already in the right format (array of objects)
-        summary = input.dfSummary;
-        console.log('Summary is already an array');
-    } else if (typeof input.dfSummary === 'object' && input.dfSummary.GroupID && Array.isArray(input.dfSummary.GroupID)) {
-        // R data.frame format - convert to array of objects
-        console.log('Converting R data.frame format to array of objects');
-        const groupIds = input.dfSummary.GroupID;
-        const numStudies = input.dfSummary.NumStudies;
-        const avgRiskScore = input.dfSummary.AvgRiskScore;
-        const maxRiskScore = input.dfSummary.MaxRiskScore;
-        const minRiskScore = input.dfSummary.MinRiskScore;
-        const redFlags = input.dfSummary.RedFlags;
-        const amberFlags = input.dfSummary.AmberFlags;
-        const greenFlags = input.dfSummary.GreenFlags;
-        
-        summary = [];
-        for (let i = 0; i < groupIds.length; i++) {
-            summary.push({
-                GroupID: groupIds[i],
-                NumStudies: numStudies[i],
-                AvgRiskScore: avgRiskScore[i],
-                MaxRiskScore: maxRiskScore[i],
-                MinRiskScore: minRiskScore[i],
-                RedFlags: redFlags[i],
-                AmberFlags: amberFlags[i],
-                GreenFlags: greenFlags[i]
-            });
-        }
-        console.log('Converted summary:', summary);
-    } else {
-        console.log('Summary is not in expected format:', typeof input.dfSummary, input.dfSummary);
-        el.innerHTML = '<em>Summary data is not in expected format</em>';
+    // Check that dfSummary is properly formatted as an array
+    if (!Array.isArray(input.dfSummary)) {
+        console.warn('dfSummary is not an array. Expected array format, got:', typeof input.dfSummary);
+        el.innerHTML = '<div style="padding: 20px; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 5px; color: #856404;"><h4>⚠️ Data Format Warning</h4><p><strong>Summary data must be provided as an array.</strong></p><p>Expected: Array of objects with GroupID, NumStudies, AvgRiskScore, etc.</p><p>Received: ' + typeof input.dfSummary + '</p></div>';
         return;
     }
     
-    if (summary.length === 0) {
+    if (input.dfSummary.length === 0) {
         console.log('Summary array is empty');
         el.innerHTML = '<em>Summary data array is empty</em>';
         return;
     }
     
-    console.log('Summary data looks good, length:', summary.length);
-    console.log('First summary item:', summary[0]);
+    console.log('Summary data looks good, length:', input.dfSummary.length);
+    console.log('First summary item:', input.dfSummary[0]);
 
     // Store the input data for access by toggle function
     el._crossStudyInput = input;
@@ -84,7 +53,7 @@ function renderCrossStudyRiskScoreTable(el, input) {
     
     // Body
     html += '<tbody>';
-    summary.forEach((row, index) => {
+    input.dfSummary.forEach((row, index) => {
         const riskColor = getRiskScoreColor(row.AvgRiskScore);
         html += '<tr>';
         html += `<td style="padding:8px;border:1px solid #ccc;font-weight:bold;">${row.GroupID}</td>`;
@@ -137,7 +106,7 @@ function toggleSiteDetails(siteId, index) {
         
         if (input && input.dfResults) {
             // Clear the content div and create a new container for the gsmViz widget
-            contentDiv.innerHTML = `<h4>KRI Details for ${siteId}</h4><div id="gsm-viz-container-${index}" style="width: 100%; min-height: 400px;"></div>`;
+            contentDiv.innerHTML = `<h4>KRI Details for ${siteId}</h4><div id="gsm-viz-container-${index}" style="width: 100%;"></div>`;
             
             // Get the container for the gsmViz widget
             const gsmVizContainer = document.getElementById(`gsm-viz-container-${index}`);
@@ -155,25 +124,27 @@ function toggleSiteDetails(siteId, index) {
                         filteredResults = results.filter(d => d.GroupID === siteId);
                     }
                     
-                    // Filter groups to only include this site
-                    let filteredGroups;
-                    if (Array.isArray(input.dfGroups)) {
-                        filteredGroups = input.dfGroups.filter(d => d.GroupID === siteId);
-                    } else if (typeof input.dfGroups === 'object' && input.dfGroups.GroupID && Array.isArray(input.dfGroups.GroupID)) {
-                        const groups = convertDataFrameToArray(input.dfGroups);
-                        filteredGroups = groups.filter(d => d.GroupID === siteId);
-                    }
-
-                    //Update the GroupID in filteredResults to combine StudyID and GroupID
+                    // We want to render study metadata with group results for the selected study, so we're going to manually set GroupID/GroupLevel to Study Level info so that the Study metadata will show up in the summary table
+                    // Use StudyID for the grouping variable in results
                     filteredResults = filteredResults.map(d => {
                         return {
                             ...d,
-                            GroupID: `${d.StudyID}_${d.GroupID}`
+                            GroupID: `${d.StudyID}`,
+                            GroupLevel: "Study"
                         };
                     });
 
+                    //Update Metrics to GroupLevel = "Study" (even though we're still using the site flags)
+                    input.dfMetrics = input.dfMetrics.map(d => {
+                        return {
+                            ...d,
+                            GroupLevel: "Study"
+                        };
+                    });
+
+
                     console.log('Filtered results for gsmViz:', filteredResults);
-                    console.log('Filtered groups for gsmViz:', filteredGroups);
+                    console.log('Filtered groups for gsmViz:', input.dfGroups);
                     console.log('Metrics for gsmViz:', input.dfMetrics);
                     
                     // Create the gsmViz groupOverview instance using the same pattern as Widget_GroupOverview
@@ -181,11 +152,11 @@ function toggleSiteDetails(siteId, index) {
                         gsmVizContainer,
                         filteredResults,
                         {
-                            GroupLevel: input.strGroupLevel,
-                            groupLabelKey: input.strGroupLabelKey,
-                            SiteRiskMetric: input.strSiteRiskMetric
+                            GroupLevel: "Study",
+                            groupLabelKey: "nickname",
+                            SiteRiskMetric: "Analysis_srs0001"
                         },
-                        filteredGroups,
+                        input.dfGroups,
                         input.dfMetrics
                     );
                     
