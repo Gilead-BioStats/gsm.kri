@@ -45,9 +45,9 @@ function renderCrossStudyRiskScoreTable(el, input) {
     html += '<th style="padding:8px;border:1px solid #ccc;background:#f5f5f5;">Avg Risk Score</th>';
     html += '<th style="padding:8px;border:1px solid #ccc;background:#f5f5f5;">Max Risk Score</th>';
     html += '<th style="padding:8px;border:1px solid #ccc;background:#f5f5f5;">Min Risk Score</th>';
-    html += '<th style="padding:8px;border:1px solid #ccc;background:#f5f5f5;">Red Flags</th>';
-    html += '<th style="padding:8px;border:1px solid #ccc;background:#f5f5f5;">Amber Flags</th>';
-    html += '<th style="padding:8px;border:1px solid #ccc;background:#f5f5f5;">Green Flags</th>';
+    html += '<th style="padding:8px;border:1px solid #ccc;background:#f5f5f5;">Avg Red Flags/Study</th>';
+    html += '<th style="padding:8px;border:1px solid #ccc;background:#f5f5f5;">Avg Amber Flags/Study</th>';
+    html += '<th style="padding:8px;border:1px solid #ccc;background:#f5f5f5;">Avg Green Flags/Study</th>';
     html += '<th style="padding:8px;border:1px solid #ccc;background:#f5f5f5;">Action</th>';
     html += '</tr></thead>';
     
@@ -55,15 +55,20 @@ function renderCrossStudyRiskScoreTable(el, input) {
     html += '<tbody>';
     input.dfSummary.forEach((row, index) => {
         const riskColor = getRiskScoreColor(row.AvgRiskScore);
+        // Calculate average flags per study
+        const avgRedFlags = row.NumStudies > 0 ? (row.RedFlags / row.NumStudies).toFixed(1) : '0.0';
+        const avgAmberFlags = row.NumStudies > 0 ? (row.AmberFlags / row.NumStudies).toFixed(1) : '0.0';
+        const avgGreenFlags = row.NumStudies > 0 ? (row.GreenFlags / row.NumStudies).toFixed(1) : '0.0';
+        
         html += '<tr>';
         html += `<td style="padding:8px;border:1px solid #ccc;font-weight:bold;">${row.GroupID}</td>`;
         html += `<td style="padding:8px;border:1px solid #ccc;text-align:center;">${row.NumStudies}</td>`;
         html += `<td style="padding:8px;border:1px solid #ccc;text-align:center;background-color:${riskColor};">${row.AvgRiskScore.toFixed(1)}%</td>`;
         html += `<td style="padding:8px;border:1px solid #ccc;text-align:center;">${row.MaxRiskScore.toFixed(1)}%</td>`;
         html += `<td style="padding:8px;border:1px solid #ccc;text-align:center;">${row.MinRiskScore.toFixed(1)}%</td>`;
-        html += `<td style="padding:8px;border:1px solid #ccc;text-align:center;color:#d32f2f;">${row.RedFlags}</td>`;
-        html += `<td style="padding:8px;border:1px solid #ccc;text-align:center;color:#f57c00;">${row.AmberFlags}</td>`;
-        html += `<td style="padding:8px;border:1px solid #ccc;text-align:center;color:#388e3c;">${row.GreenFlags}</td>`;
+        html += `<td style="padding:8px;border:1px solid #ccc;text-align:center;color:#d32f2f;">${avgRedFlags}</td>`;
+        html += `<td style="padding:8px;border:1px solid #ccc;text-align:center;color:#f57c00;">${avgAmberFlags}</td>`;
+        html += `<td style="padding:8px;border:1px solid #ccc;text-align:center;color:#388e3c;">${avgGreenFlags}</td>`;
         html += `<td style="padding:8px;border:1px solid #ccc;text-align:center;">`;
         html += `<button onclick="toggleSiteDetails('${row.GroupID}', ${index})" class="details-btn" style="padding:4px 8px;background:#2196f3;color:white;border:none;border-radius:3px;cursor:pointer;">Show Details</button>`;
         html += `</td>`;
