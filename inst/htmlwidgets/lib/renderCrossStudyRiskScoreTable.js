@@ -110,12 +110,42 @@ function toggleSiteDetails(siteId, index) {
         const input = container._crossStudyInput;
         
         if (input && input.dfResults) {
-            // Clear the content div and create a new container for the gsmViz widget
-            contentDiv.innerHTML = `<h4>KRI Details for ${siteId}</h4><div id="gsm-viz-container-${index}" style="width: 100%;"></div>`;
+            // Clear the content div and create containers for both metadata and gsmViz widget
+            contentDiv.innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                    <h4 style="margin: 0;">KRI Details for ${siteId}</h4>
+                    <button onclick="toggleSiteMetadata(${index})" id="metadata-toggle-${index}" 
+                            style="padding: 4px 8px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 12px;">
+                        Show Site Info
+                    </button>
+                </div>
+                <div id="metadata-container-${index}" style="display: none;"></div>
+                <h5>KRI Analysis by Study</h5>
+                <div id="gsm-viz-container-${index}" style="width: 100%;"></div>
+            `;
             
             // Get the container for the gsmViz widget
             const gsmVizContainer = document.getElementById(`gsm-viz-container-${index}`);
+            const metadataContainer = document.getElementById(`metadata-container-${index}`);
             
+            // Find metadata for this site
+            let siteMetadata;
+            siteMetadata = input.dfGroups.filter(g => g.GroupID === siteId);
+            console.log('Site metadata:',siteMetadata)
+            if (siteMetadata && siteMetadata.length > 0) {
+                // Create metadata table
+                let metadataHtml = '<table style="width:100%;border-collapse:collapse;margin-bottom:10px;">';
+                metadataHtml += '<thead><tr><th style="padding:8px;border:1px solid #ccc;background:#f5f5f5;">Parameter</th><th style="padding:8px;border:1px solid #ccc;background:#f5f5f5;">Value</th></tr></thead>';
+                metadataHtml += '<tbody>';
+                siteMetadata.forEach(metadata => {
+                        metadataHtml += `<tr><td style="padding:8px;border:1px solid #ccc;font-weight:bold;">${metadata.Param}</td><td style="padding:8px;border:1px solid #ccc;">${metadata.Value}</td></tr>`;
+                });
+                metadataHtml += '</tbody></table>';
+                metadataContainer.innerHTML = metadataHtml;
+            }
+        
+            
+
             // Check if gsmViz is available
             if (typeof gsmViz !== 'undefined' && gsmViz.default && gsmViz.default.groupOverview) {
                 try {
@@ -272,4 +302,20 @@ function getMetricDisplayName(metricId) {
         'Analysis_kri0012': 'Other KRI'
     };
     return metricNames[metricId] || metricId;
+}
+
+// Helper function to toggle site metadata visibility
+function toggleSiteMetadata(index) {
+    const metadataContainer = document.getElementById(`metadata-container-${index}`);
+    const toggleButton = document.getElementById(`metadata-toggle-${index}`);
+    
+    if (metadataContainer.style.display === 'none') {
+        metadataContainer.style.display = 'block';
+        toggleButton.textContent = 'Hide Site Info';
+        toggleButton.style.background = '#dc3545'; // Red color when showing
+    } else {
+        metadataContainer.style.display = 'none';
+        toggleButton.textContent = 'Show Site Info';
+        toggleButton.style.background = '#007bff'; // Blue color when hidden
+    }
 }
