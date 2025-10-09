@@ -76,7 +76,7 @@ function renderCrossStudyRiskScoreTable(el, input) {
         
         // Hidden details row
         html += `<tr id="details-${index}" style="display:none;">`;
-        html += `<td colspan="9" style="padding:12px;border:1px solid #ccc;background:#f9f9f9;">`;
+        html += `<td colspan="9" style="padding:12px;border:1px solid #ccc;background:#e3f2fd;">`;
         html += `<div id="details-content-${index}">Loading details...</div>`;
         html += `</td>`;
         html += '</tr>';
