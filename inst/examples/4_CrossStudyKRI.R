@@ -1,4 +1,4 @@
-#### Cross-Study KRI Report Exampe
+#### Cross-Study KRI Report Example
 #### This example demonstrates how to create a cross-study KRI report using the gsm.kri package
 ####
 #### CROSS-STUDY KRI IMPLEMENTATION DOCUMENTATION
@@ -12,103 +12,13 @@
 #### The cross-study KRI report functionality allows users to analyze Key Risk Indicators (KRIs) 
 #### and Site Risk Scores across multiple studies. The implementation provides:
 ####
-#### 1. Interactive Summary Table: Shows aggregated site performance across studies
-#### 2. Drill-down Capability: Click to see study-specific details for each site  
-#### 3. Data Quality Analysis: Flag distributions and participation metrics
-#### 4. Clinical Weight System: Configurable risk scoring based on KRI importance
+#### 1. Unified Table Structure: Single table with one header and collapsible site sections
+#### 2. Collapsible Site Rows: Click site summary rows to expand/collapse study-level KRI data
+#### 3. Site Risk Score Badges: Color-coded badges showing average risk score per site
+#### 4. Study Count Display: Badge showing number of studies each site participates in
+#### 5. Clinical Weight System: Configurable risk scoring based on KRI importance
+#### 6. gsmViz Integration: Leverages gsmViz.groupOverview for KRI flag rendering
 ####
-#### KEY FUNCTIONS IMPLEMENTED
-#### -------------------------
-#### 
-#### Core Functions:
-#### - SummarizeCrossStudy(dfResults, strGroupLevel = "Site")
-####   * Creates cross-study summary statistics per site
-####   * Calculates average risk scores, flag counts, and participation metrics
-####   * Handles R data.frame to JavaScript array conversion
-####
-#### - Widget_CrossStudyRiskScore(dfResults, strGroupLevel = "Site") 
-####   * Interactive widget for cross-study risk score visualization
-####   * Provides expandable details for each site showing study-specific breakdowns
-####   * Handles R data.frame serialization to JavaScript properly
-####
-#### - CalculateRiskScore(dfResults)
-####   * Generates site risk scores (Analysis_srs0001 metric) from KRI data
-####   * Uses Weight and WeightMax columns for clinical importance weighting
-####
-#### - Visualize_RiskScore(dfResults, strGroupLevel = "Site")
-####   * Simplified to directly call Widget_CrossStudyRiskScore
-####   * Streamlined for cross-study functionality
-####
-#### CURRENT IMPLEMENTATION STATUS
-#### ------------------------------
-#### ✅ Cross-study widget fully functional with proper R data.frame handling
-#### ✅ JavaScript conversion from R column-based to row-based data structure
-#### ✅ Interactive drill-down functionality working
-#### ✅ Clinical weight system implemented with comprehensive KRI weighting
-#### ✅ Multi-study simulation and risk score calculation
-
-#### ✅ Removed deprecated TransposeRiskScore and GroupRiskScore functions
-####
-#### TECHNICAL ARCHITECTURE
-#### -----------------------
-#### Files Structure:
-#### gsm.kri/
-#### ├── R/
-#### │   ├── SummarizeCrossStudy.R           # Cross-study aggregation logic
-#### │   ├── Widget_CrossStudyRiskScore.R    # Interactive widget creation  
-
-#### │   ├── CalculateRiskScore.R            # Site risk score calculation
-#### │   └── Visualize_RiskScore.R           # Simplified visualization wrapper
-#### ├── inst/
-#### │   ├── examples/4_CrossStudyKRI.R      # This comprehensive example
-#### │   ├── htmlwidgets/
-#### │   │   ├── Widget_CrossStudyRiskScore.js     # Widget JavaScript interface
-#### │   │   ├── Widget_CrossStudyRiskScore.yaml   # Widget configuration
-#### │   │   └── lib/renderCrossStudyRiskScoreTable.js  # Core rendering logic with R data.frame handling
-
-#### └── man/ (auto-generated documentation)
-####
-#### DATA STRUCTURE HANDLING
-#### ------------------------
-#### Key Innovation: JavaScript functions handle R data.frame serialization properly
-#### - R data.frames serialize as objects with array properties (column-based)
-#### - JavaScript converts to array of objects (row-based) for table rendering
-#### - Maintains compatibility with both R and JavaScript data expectations
-####
-#### CLINICAL WEIGHT SYSTEM
-#### -----------------------
-#### Comprehensive weighting system based on clinical importance:
-#### - Adverse Events (kri0001): Highest weights (up to 32) for safety concerns
-#### - Serious Adverse Events (kri0002): High weights (up to 8) for both high/low rates  
-#### - Protocol Deviations (kri0003): Moderate weights (up to 16) for compliance
-#### - Important Protocol Deviations (kri0004): Very high weights (up to 32)
-#### - Data Quality KRIs (kri0005-0009): Low weights (up to 2) for operational metrics
-#### - Discontinuation KRIs (kri0011-0012): High weights (up to 32) for retention
-####
-#### USAGE PATTERN
-#### --------------
-#### 1. Simulate or load multi-study data with KRI metrics
-#### 2. Apply clinical weights to Flag values  
-#### 3. Calculate site risk scores using CalculateRiskScore()
-#### 4. Create cross-study summary with SummarizeCrossStudy()
-#### 5. Generate interactive widget with Widget_CrossStudyRiskScore()
-
-####
-#### TESTING COVERAGE
-#### ----------------
-#### - Simulated multi-study data (5 studies, 23 sites)
-#### - Various risk score distributions and flag patterns
-#### - Interactive widget functionality with drill-down
-#### - Cross-study aggregation mathematics
-#### - R data.frame to JavaScript conversion
-####
-#### FUTURE ENHANCEMENTS
-#### -------------------
-
-#### - Temporal analysis across multiple snapshot dates  
-#### - Study-level aggregations and benchmarking
-#### - Export functionality for summary tables
-#### - Interactive filtering options
 
 # Load development version
 devtools::load_all()
@@ -283,7 +193,10 @@ cat("Risk score records (Analysis_srs0001):", nrow(risk_score_records), "\n")
 #### Step 3: Create Cross-Study Summary ####
 
 # Create the cross-study summary data
-dfCrossStudySummary <- SummarizeCrossStudy(dfResults = dfResults_WithRiskScore)
+dfCrossStudySummary <- SummarizeCrossStudy(
+  dfResults = dfResults_WithRiskScore,
+  dfGroups = dfGroups_combined
+)
 cat("Cross-study summary created with", nrow(dfCrossStudySummary), "sites.\n")
 
 #### Step 4: Create Cross-Study Widgets ####

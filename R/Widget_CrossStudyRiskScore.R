@@ -34,7 +34,8 @@ Widget_CrossStudyRiskScore <- function(
 
   dfCrossStudySummary <- SummarizeCrossStudy( 
     dfResults = dfResults,  
-    strGroupLevel = strGroupLevel
+    strGroupLevel = strGroupLevel,
+    dfGroups = dfGroups
   )
   # Forward options using the same pattern as Widget_GroupOverview
   lInput <- list(

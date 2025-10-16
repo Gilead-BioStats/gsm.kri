@@ -8,8 +8,9 @@
 #'
 #' @param dfResults `data.frame` A data frame containing results from multiple studies.
 #' @param strGroupLevel `character` The group level to summarize. Default is 'Site'.
+#' @param dfGroups `data.frame` Optional. A data frame containing group metadata (for InvestigatorName lookup).
 #'
-#' @return `data.frame` Summary table with cross-study metrics per site.
+#' @return `data.frame` Summary table with cross-study metrics per site, including per-study details.
 #'
 #' @examples
 #' \dontrun{
@@ -21,9 +22,10 @@
 #' }
 #'
 #' @export
-SummarizeCrossStudy <- function(dfResults, strGroupLevel = "Site") {
+SummarizeCrossStudy <- function(dfResults, strGroupLevel = "Site", dfGroups = NULL, strNameCol = "InvestigatorLastName") {
   stopifnot(is.data.frame(dfResults))
   stopifnot(is.character(strGroupLevel) && length(strGroupLevel) == 1)
+  stopifnot(is.null(dfGroups) || is.data.frame(dfGroups))
   
   # Filter to specified group level
   group_results <- dfResults %>%
@@ -59,6 +61,11 @@ SummarizeCrossStudy <- function(dfResults, strGroupLevel = "Site") {
       .groups = "drop"
     )
   
+  # Get per-study details for each site
+  per_study_details <- group_results %>%
+    dplyr::filter(.data$MetricID == "Analysis_srs0001") %>%
+    dplyr::select(.data$GroupID, .data$StudyID, SiteRiskScore = .data$Score)
+  
   # Combine summaries
   cross_study_summary <- risk_score_data %>%
     dplyr::left_join(flag_summary, by = "GroupID") %>%
@@ -67,6 +74,25 @@ SummarizeCrossStudy <- function(dfResults, strGroupLevel = "Site") {
       FlagRate_Red = round(.data$RedFlags / .data$TotalFlags * 100, 1),
       FlagRate_Amber = round(.data$AmberFlags / .data$TotalFlags * 100, 1),
       FlagRate_Green = round(.data$GreenFlags / .data$TotalFlags * 100, 1)
+    )
+  
+  # Add InvestigatorName if dfGroups provided
+  if (!is.null(dfGroups)) {
+    investigator_names <- dfGroups %>%
+      dplyr::filter(.data$Param == strNameCol) %>%
+      dplyr::select(GroupID = .data$GroupID, InvestigatorName = .data$Value)
+    
+    cross_study_summary <- cross_study_summary %>%
+      dplyr::left_join(investigator_names, by = "GroupID")
+  }
+  
+  # Add per-study details as nested column
+  cross_study_summary <- cross_study_summary %>%
+    dplyr::mutate(
+      StudyDetails = purrr::map(.data$GroupID, function(gid) {
+        per_study_details %>%
+          dplyr::filter(.data$GroupID == gid)
+      })
     ) %>%
     dplyr::arrange(dplyr::desc(.data$AvgRiskScore))
   
