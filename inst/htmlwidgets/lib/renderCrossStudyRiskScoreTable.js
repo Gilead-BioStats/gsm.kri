@@ -29,9 +29,58 @@ function renderCrossStudyRiskScoreTable(el, input) {
     
     const resultsArray = input.dfResults;
 
-    // Create single unified table with one thead and multiple tbody elements
+    // Get unique study IDs for the study filter
+    const uniqueStudies = [...new Set(resultsArray.map(d => d.StudyID))].sort();
+    
+    // Calculate SRS range for slider
+    const srsValues = input.dfSummary.map(s => s.AvgRiskScore);
+    const minSRS = Math.floor(Math.min(...srsValues));
+    const maxSRS = Math.ceil(Math.max(...srsValues));
+
+    // Create controls and table
     let html = '<div class="cross-study-container">';
     html += '<h3>Cross-Study Site Risk Score Summary</h3>';
+    
+    // Add filter controls
+    html += '<div class="filter-controls" style="background:#f5f5f5; padding:15px; margin-bottom:15px; border-radius:5px; border:1px solid #ddd;">';
+    html += '<div style="display:flex; gap:20px; flex-wrap:wrap; align-items:center;">';
+    
+    // SRS Filter
+    html += '<div style="flex:1; min-width:200px;">';
+    html += '<label style="display:block; font-weight:bold; margin-bottom:5px;">Average SRS Range:</label>';
+    html += `<input type="range" id="srs-min-slider" min="${minSRS}" max="${maxSRS}" value="${minSRS}" style="width:45%;" />`;
+    html += '<span id="srs-min-value" style="margin:0 5px;">' + minSRS + '</span>';
+    html += '<span style="margin:0 5px;">to</span>';
+    html += `<input type="range" id="srs-max-slider" min="${minSRS}" max="${maxSRS}" value="${maxSRS}" style="width:45%;" />`;
+    html += '<span id="srs-max-value" style="margin:0 5px;">' + maxSRS + '</span>';
+    html += '</div>';
+    
+    // Study Count Filter
+    html += '<div style="flex:1; min-width:150px;">';
+    html += '<label style="display:block; font-weight:bold; margin-bottom:5px;">Min Study Count:</label>';
+    html += '<input type="number" id="study-count-filter" min="1" value="1" style="width:80px; padding:4px;" />';
+    html += '</div>';
+    
+    // Study Filter
+    html += '<div style="flex:1; min-width:200px;">';
+    html += '<label style="display:block; font-weight:bold; margin-bottom:5px;">Filter by Study:</label>';
+    html += '<select id="study-filter" style="width:100%; padding:4px;">';
+    html += '<option value="">All Studies</option>';
+    uniqueStudies.forEach(study => {
+        html += `<option value="${study}">${study}</option>`;
+    });
+    html += '</select>';
+    html += '</div>';
+    
+    // Reset button
+    html += '<div style="flex:0;">';
+    html += '<button id="reset-filters" style="padding:8px 16px; background:#2196f3; color:white; border:none; border-radius:3px; cursor:pointer; margin-top:20px;">Reset Filters</button>';
+    html += '</div>';
+    
+    html += '</div>';
+    html += '<div id="filter-info" style="margin-top:10px; font-size:14px; color:#666;"></div>';
+    html += '</div>';
+    
     html += '<table class="cross-study-unified-table group-overview" style="width:100%;border-collapse:collapse;">';
     html += '<thead id="unified-thead"></thead>';
     
@@ -64,6 +113,8 @@ function renderCrossStudyRiskScoreTable(el, input) {
         summaryRow.className = 'site-summary';
         summaryRow.style.cssText = 'background:#bbb; font-weight:bold; cursor:pointer;';
         summaryRow.dataset.siteIndex = siteIndex;
+        summaryRow.dataset.avgRiskScore = siteRow.AvgRiskScore;
+        summaryRow.dataset.numStudies = siteRow.NumStudies;
         summaryRow.innerHTML = `
             <td colspan="100" style="text-align:left; padding:5px;">
                 <span class="toggle-indicator" style="display:inline-block; width:20px; font-weight:bold;">−</span>
@@ -72,6 +123,15 @@ function renderCrossStudyRiskScoreTable(el, input) {
                 ${avgRiskBadge}
             </td>
         `;
+        
+        // Get study-level data for this site
+        const siteResults = resultsArray.filter(d => 
+            d.GroupID === siteRow.GroupID && d.GroupLevel === 'Site'
+        );
+        
+        // Store study IDs for this site
+        const siteStudyIds = siteResults.map(r => r.StudyID);
+        summaryRow.dataset.studies = JSON.stringify(siteStudyIds);
         
         // Add click event to toggle visibility
         summaryRow.addEventListener('click', function() {
@@ -91,11 +151,6 @@ function renderCrossStudyRiskScoreTable(el, input) {
         });
         
         siteTbody.appendChild(summaryRow);
-        
-        // Get study-level data for this site
-        const siteResults = resultsArray.filter(d => 
-            d.GroupID === siteRow.GroupID && d.GroupLevel === 'Site'
-        );
         
         // Transform data to use StudyID as GroupID (prepend as requested)
         const transformedResults = siteResults.map(d => ({
@@ -162,7 +217,124 @@ function renderCrossStudyRiskScoreTable(el, input) {
         }
     });
     
-    console.log('Generated HTML and initialized gsmViz tables');
+    // Set up filter event listeners
+    setupFilters(el, input.dfSummary);
+}
+
+function setupFilters(el, dfSummary) {
+    const srsMinSlider = el.querySelector('#srs-min-slider');
+    const srsMaxSlider = el.querySelector('#srs-max-slider');
+    const srsMinValue = el.querySelector('#srs-min-value');
+    const srsMaxValue = el.querySelector('#srs-max-value');
+    const studyCountFilter = el.querySelector('#study-count-filter');
+    const studyFilter = el.querySelector('#study-filter');
+    const resetButton = el.querySelector('#reset-filters');
+    const filterInfo = el.querySelector('#filter-info');
+    
+    function applyFilters() {
+        const minSRS = parseFloat(srsMinSlider.value);
+        const maxSRS = parseFloat(srsMaxSlider.value);
+        const minStudyCount = parseInt(studyCountFilter.value);
+        const selectedStudy = studyFilter.value;
+        
+        let visibleCount = 0;
+        let totalCount = 0;
+        
+        // Get all site tbody elements
+        const allTbodies = el.querySelectorAll('tbody[id^="site-tbody-"]');
+        
+        allTbodies.forEach(tbody => {
+            const summaryRow = tbody.querySelector('.site-summary');
+            if (!summaryRow) return;
+            
+            totalCount++;
+            
+            const avgRiskScore = parseFloat(summaryRow.dataset.avgRiskScore);
+            const numStudies = parseInt(summaryRow.dataset.numStudies);
+            const siteStudies = JSON.parse(summaryRow.dataset.studies || '[]');
+            
+            let show = true;
+            
+            // Check SRS range
+            if (avgRiskScore < minSRS || avgRiskScore > maxSRS) {
+                show = false;
+            }
+            
+            // Check study count
+            if (numStudies < minStudyCount) {
+                show = false;
+            }
+            
+            // Check study filter
+            if (selectedStudy && !siteStudies.includes(selectedStudy)) {
+                show = false;
+            }
+            
+            // Show/hide the entire tbody
+            if (show) {
+                tbody.style.display = '';
+                visibleCount++;
+            } else {
+                tbody.style.display = 'none';
+            }
+        });
+        
+        // Update filter info
+        const filters = [];
+        if (minSRS > parseFloat(srsMinSlider.min) || maxSRS < parseFloat(srsMaxSlider.max)) {
+            filters.push(`SRS: ${minSRS.toFixed(1)}-${maxSRS.toFixed(1)}`);
+        }
+        if (minStudyCount > 1) {
+            filters.push(`Min ${minStudyCount} studies`);
+        }
+        if (selectedStudy) {
+            filters.push(`Study: ${selectedStudy}`);
+        }
+        
+        if (filters.length > 0) {
+            filterInfo.innerHTML = `<strong>Active filters:</strong> ${filters.join(', ')} | Showing ${visibleCount} of ${totalCount} sites`;
+        } else {
+            filterInfo.innerHTML = `Showing all ${totalCount} sites`;
+        }
+    }
+    
+    // Update SRS slider values
+    srsMinSlider.addEventListener('input', function() {
+        const minVal = parseFloat(this.value);
+        const maxVal = parseFloat(srsMaxSlider.value);
+        if (minVal > maxVal) {
+            this.value = maxVal;
+        }
+        srsMinValue.textContent = this.value;
+        applyFilters();
+    });
+    
+    srsMaxSlider.addEventListener('input', function() {
+        const minVal = parseFloat(srsMinSlider.value);
+        const maxVal = parseFloat(this.value);
+        if (maxVal < minVal) {
+            this.value = minVal;
+        }
+        srsMaxValue.textContent = this.value;
+        applyFilters();
+    });
+    
+    studyCountFilter.addEventListener('input', applyFilters);
+    studyFilter.addEventListener('change', applyFilters);
+    
+    // Reset button
+    resetButton.addEventListener('click', function() {
+        srsMinSlider.value = srsMinSlider.min;
+        srsMaxSlider.value = srsMaxSlider.max;
+        srsMinValue.textContent = srsMinSlider.min;
+        srsMaxValue.textContent = srsMaxSlider.max;
+        studyCountFilter.value = 1;
+        studyFilter.value = '';
+        applyFilters();
+    });
+    
+    // Initialize filter info
+    applyFilters();
 }
 
 function getRiskScoreColor(score) {
