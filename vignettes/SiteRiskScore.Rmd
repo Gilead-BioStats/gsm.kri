@@ -20,7 +20,7 @@ This vignette describes how **site-level risk scores** are calculated using Key 
 
 # Risk Indicators and Flags
 
-Each KRI (e.g., Adverse Events, Serious Adverse Events, Protocol Deviations) in the `gsm` framework is assigned a *flag* as part of the [standard analysis workflow](https://gilead-biostats.github.io/gsm.core/articles/DataAnalysis.html). Flags can also be associated with a *weight*, which reflects their contribution to site risk. For example, a site with a low adverse event rate could present more risk than a site with a low query rate. While both KRIs could have the same `flag` value (e.g. -2, representing low rates compared to other sites)  a higher *weight* for could be assigned to the AE KRI flag than the query rate KRI flag. Default flag weights for the 12 standard `gsm` are shown below. 
+Each KRI (e.g., Adverse Events, Serious Adverse Events, Protocol Deviations) in the `gsm` framework is assigned a *flag* as part of the [standard analysis workflow](https://gilead-biostats.github.io/gsm.core/articles/DataAnalysis.html). Flags can also be associated with a *weight*, which reflects their contribution to site risk. For example, a site with a low adverse event rate could present more risk than a site with a low query rate. While both KRIs could have the same `flag` value (e.g. -2, representing low rates compared to other sites)  a higher *weight* could be assigned to the AE KRI flag than the query rate KRI flag. Default flag weights for the 12 standard `gsm` are shown below. 
   
 ```{r, echo=FALSE}
 library(knitr)

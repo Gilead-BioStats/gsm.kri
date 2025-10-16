@@ -46,7 +46,7 @@ test_that("CalculateRiskScore returns correct structure", {
   expect_true(all(dfRiskScore$MetricID == "Analysis_srs0001"))
   
   # Check number of rows equals unique groups
-  expected_groups <- unique(dfResults[c("GroupLevel", "GroupID")])
+  expected_groups <- distinct(dfResults, GroupLevel, GroupID)
   expect_equal(nrow(dfRiskScore), nrow(expected_groups))
 })
 
