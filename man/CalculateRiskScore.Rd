@@ -39,26 +39,8 @@ library(dplyr)
 
 # Filter to remove any existing risk scores and add weight columns
 dfResults <- gsm.core::reportingResults \%>\%
-  dplyr::filter(!grepl("srs0001", MetricID)) \%>\%
-  dplyr::mutate(
-    Weight = dplyr::case_when(
-      abs(Flag) == 1 ~ 2,
-      abs(Flag) == 2 ~ 4,
-      Flag == 0 ~ 0,
-      TRUE ~ 0
-    ),
-    WeightMax = dplyr::case_when(
-      grepl("kri0001", MetricID) ~ 4,
-      grepl("kri0002", MetricID) ~ 8,
-      grepl("kri0003", MetricID) ~ 4,
-      TRUE ~ 4
-    )
-  )
+  dplyr::filter(!grepl("srs0001", MetricID))
 
 # Calculate risk scores
 dfRiskScore <- CalculateRiskScore(dfResults)
-
-# View summary of risk scores
-summary(dfRiskScore$Metric)
-
 }

@@ -4,15 +4,22 @@
 \alias{SummarizeCrossStudy}
 \title{Summarize Cross-Study Risk Scores}
 \usage{
-SummarizeCrossStudy(dfResults, strGroupLevel = "Site")
+SummarizeCrossStudy(
+  dfResults,
+  strGroupLevel = "Site",
+  dfGroups = NULL,
+  strNameCol = "InvestigatorLastName"
+)
 }
 \arguments{
 \item{dfResults}{`data.frame` A data frame containing results from multiple studies.}
 
 \item{strGroupLevel}{`character` The group level to summarize. Default is 'Site'.}
+
+\item{dfGroups}{`data.frame` Optional. A data frame containing group metadata (for InvestigatorName lookup).}
 }
 \value{
-`data.frame` Summary table with cross-study metrics per site.
+`data.frame` Summary table with cross-study metrics per site, including per-study details.
 }
 \description{
 `r lifecycle::badge("experimental")`
