@@ -43,6 +43,14 @@ function renderCrossStudyRiskScoreTable(el, input) {
     
     // Add filter controls
     html += '<div class="filter-controls" style="background:#f5f5f5; padding:15px; margin-bottom:15px; border-radius:5px; border:1px solid #ddd;">';
+    
+    // First row: Search box
+    html += '<div style="margin-bottom:15px;">';
+    html += '<label style="display:block; font-weight:bold; margin-bottom:5px;">🔍 Search Sites:</label>';
+    html += '<input type="text" id="site-search" placeholder="Search by Site ID or Investigator Name..." style="width:100%; padding:8px; border:1px solid #ccc; border-radius:3px; font-size:14px;" />';
+    html += '</div>';
+    
+    // Second row: Other filters
     html += '<div style="display:flex; gap:20px; flex-wrap:wrap; align-items:center;">';
     
     // SRS Filter
@@ -72,13 +80,37 @@ function renderCrossStudyRiskScoreTable(el, input) {
     html += '</select>';
     html += '</div>';
     
+    // Sort dropdown
+    html += '<div style="flex:1; min-width:200px;">';
+    html += '<label style="display:block; font-weight:bold; margin-bottom:5px;">Sort by:</label>';
+    html += '<select id="sort-by" style="width:100%; padding:4px;">';
+    html += '<option value="srs-desc">SRS (High to Low)</option>';
+    html += '<option value="srs-asc">SRS (Low to High)</option>';
+    html += '<option value="studies-desc">Study Count (High to Low)</option>';
+    html += '<option value="studies-asc">Study Count (Low to High)</option>';
+    html += '<option value="site-asc">Site ID (A to Z)</option>';
+    html += '<option value="site-desc">Site ID (Z to A)</option>';
+    html += '<option value="investigator-asc">Investigator (A to Z)</option>';
+    html += '<option value="investigator-desc">Investigator (Z to A)</option>';
+    html += '</select>';
+    html += '</div>';
+    
     // Reset button
     html += '<div style="flex:0;">';
     html += '<button id="reset-filters" style="padding:8px 16px; background:#2196f3; color:white; border:none; border-radius:3px; cursor:pointer; margin-top:20px;">Reset Filters</button>';
     html += '</div>';
     
     html += '</div>';
+    
+    html += '</div>';
     html += '<div id="filter-info" style="margin-top:10px; font-size:14px; color:#666;"></div>';
+    
+    // Add expand/collapse all buttons
+    html += '<div style="margin:10px 0; display:flex; gap:10px;">';
+    html += '<button id="expand-all" style="padding:6px 12px; background:#f5f5f5; color:#333; border:1px solid #ccc; border-radius:3px; cursor:pointer; font-size:13px;">− Expand All</button>';
+    html += '<button id="collapse-all" style="padding:6px 12px; background:#f5f5f5; color:#333; border:1px solid #ccc; border-radius:3px; cursor:pointer; font-size:13px;">+ Collapse All</button>';
+    html += '</div>';
+    
     html += '</div>';
     
     html += '<table class="cross-study-unified-table group-overview" style="width:100%;border-collapse:collapse;">';
@@ -115,6 +147,8 @@ function renderCrossStudyRiskScoreTable(el, input) {
         summaryRow.dataset.siteIndex = siteIndex;
         summaryRow.dataset.avgRiskScore = siteRow.AvgRiskScore;
         summaryRow.dataset.numStudies = siteRow.NumStudies;
+        summaryRow.dataset.siteId = siteRow.GroupID || '';
+        summaryRow.dataset.investigatorName = investigatorName;
         summaryRow.innerHTML = `
             <td colspan="100" style="text-align:left; padding:5px;">
                 <span class="toggle-indicator" style="display:inline-block; width:20px; font-weight:bold;">−</span>
@@ -228,14 +262,67 @@ function setupFilters(el, dfSummary) {
     const srsMaxValue = el.querySelector('#srs-max-value');
     const studyCountFilter = el.querySelector('#study-count-filter');
     const studyFilter = el.querySelector('#study-filter');
+    const searchBox = el.querySelector('#site-search');
+    const sortBy = el.querySelector('#sort-by');
     const resetButton = el.querySelector('#reset-filters');
     const filterInfo = el.querySelector('#filter-info');
+    
+    function applySorting() {
+        const sortValue = sortBy.value;
+        const table = el.querySelector('.cross-study-unified-table');
+        const allTbodies = Array.from(el.querySelectorAll('tbody[id^="site-tbody-"]'));
+        
+        // Create array of tbody elements with their sort values
+        const tbodyData = allTbodies.map(tbody => {
+            const summaryRow = tbody.querySelector('.site-summary');
+            if (!summaryRow) return null;
+            
+            return {
+                tbody: tbody,
+                srs: parseFloat(summaryRow.dataset.avgRiskScore),
+                studies: parseInt(summaryRow.dataset.numStudies),
+                siteId: (summaryRow.dataset.siteId || '').toLowerCase(),
+                investigator: (summaryRow.dataset.investigatorName || '').toLowerCase()
+            };
+        }).filter(d => d !== null);
+        
+        // Sort based on selection
+        tbodyData.sort((a, b) => {
+            switch(sortValue) {
+                case 'srs-desc':
+                    return b.srs - a.srs;
+                case 'srs-asc':
+                    return a.srs - b.srs;
+                case 'studies-desc':
+                    return b.studies - a.studies;
+                case 'studies-asc':
+                    return a.studies - b.studies;
+                case 'site-asc':
+                    return a.siteId.localeCompare(b.siteId);
+                case 'site-desc':
+                    return b.siteId.localeCompare(a.siteId);
+                case 'investigator-asc':
+                    return a.investigator.localeCompare(b.investigator);
+                case 'investigator-desc':
+                    return b.investigator.localeCompare(a.investigator);
+                default:
+                    return 0;
+            }
+        });
+        
+        // Reorder tbody elements in the table
+        const thead = table.querySelector('thead');
+        tbodyData.forEach(data => {
+            table.appendChild(data.tbody);
+        });
+    }
     
     function applyFilters() {
         const minSRS = parseFloat(srsMinSlider.value);
         const maxSRS = parseFloat(srsMaxSlider.value);
         const minStudyCount = parseInt(studyCountFilter.value);
         const selectedStudy = studyFilter.value;
+        const searchTerm = searchBox.value.toLowerCase().trim();
         
         let visibleCount = 0;
         let totalCount = 0;
@@ -252,6 +339,8 @@ function setupFilters(el, dfSummary) {
             const avgRiskScore = parseFloat(summaryRow.dataset.avgRiskScore);
             const numStudies = parseInt(summaryRow.dataset.numStudies);
             const siteStudies = JSON.parse(summaryRow.dataset.studies || '[]');
+            const siteId = (summaryRow.dataset.siteId || '').toLowerCase();
+            const investigatorName = (summaryRow.dataset.investigatorName || '').toLowerCase();
             
             let show = true;
             
@@ -267,6 +356,11 @@ function setupFilters(el, dfSummary) {
             
             // Check study filter
             if (selectedStudy && !siteStudies.includes(selectedStudy)) {
+                show = false;
+            }
+            
+            // Check search term
+            if (searchTerm && !siteId.includes(searchTerm) && !investigatorName.includes(searchTerm)) {
                 show = false;
             }
             
@@ -289,6 +383,9 @@ function setupFilters(el, dfSummary) {
         }
         if (selectedStudy) {
             filters.push(`Study: ${selectedStudy}`);
+        }
+        if (searchTerm) {
+            filters.push(`Search: "${searchTerm}"`);
         }
         
         if (filters.length > 0) {
@@ -321,6 +418,8 @@ function setupFilters(el, dfSummary) {
     
     studyCountFilter.addEventListener('input', applyFilters);
     studyFilter.addEventListener('change', applyFilters);
+    searchBox.addEventListener('input', applyFilters);
+    sortBy.addEventListener('change', applySorting);
     
     // Reset button
     resetButton.addEventListener('click', function() {
@@ -330,10 +429,52 @@ function setupFilters(el, dfSummary) {
         srsMaxValue.textContent = srsMaxSlider.max;
         studyCountFilter.value = 1;
         studyFilter.value = '';
+        searchBox.value = '';
+        sortBy.value = 'srs-desc';
+        applySorting();
         applyFilters();
     });
     
-    // Initialize filter info
+    // Expand/Collapse All buttons
+    const expandAllBtn = el.querySelector('#expand-all');
+    const collapseAllBtn = el.querySelector('#collapse-all');
+    
+    expandAllBtn.addEventListener('click', function() {
+        const allTbodies = el.querySelectorAll('tbody[id^="site-tbody-"]');
+        allTbodies.forEach(tbody => {
+            const summaryRow = tbody.querySelector('.site-summary');
+            const indicator = summaryRow ? summaryRow.querySelector('.toggle-indicator') : null;
+            const studyRows = Array.from(tbody.querySelectorAll('tr:not(.site-summary)'));
+            
+            studyRows.forEach(row => {
+                row.style.display = '';
+            });
+            
+            if (indicator) {
+                indicator.textContent = '−';
+            }
+        });
+    });
+    
+    collapseAllBtn.addEventListener('click', function() {
+        const allTbodies = el.querySelectorAll('tbody[id^="site-tbody-"]');
+        allTbodies.forEach(tbody => {
+            const summaryRow = tbody.querySelector('.site-summary');
+            const indicator = summaryRow ? summaryRow.querySelector('.toggle-indicator') : null;
+            const studyRows = Array.from(tbody.querySelectorAll('tr:not(.site-summary)'));
+            
+            studyRows.forEach(row => {
+                row.style.display = 'none';
+            });
+            
+            if (indicator) {
+                indicator.textContent = '+';
+            }
+        });
+    });
+    
+    // Initialize sorting and filters
+    applySorting();
     applyFilters();
 }
 
