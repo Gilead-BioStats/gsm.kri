@@ -14,7 +14,7 @@ HTMLWidgets.widget({
                     {
                         GroupLevel: input.strGroupLevel,
                         groupLabelKey: input.strGroupLabelKey,
-                        SiteRiskMetric: input.strSiteRiskMetric
+                        SiteRiskScoreMetricID: input.strSiteRiskMetric
                     },
                     input.dfGroups,
                     input.dfMetrics

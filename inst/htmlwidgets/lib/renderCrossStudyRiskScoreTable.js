@@ -124,10 +124,22 @@ function renderCrossStudyRiskScoreTable(el, input) {
             </td>
         `;
         
-        // Get study-level data for this site
+        // Get study-level data for this site (INCLUDING the risk score metric)
         const siteResults = resultsArray.filter(d => 
             d.GroupID === siteRow.GroupID && d.GroupLevel === 'Site'
         );
+        
+        console.log(`Site ${siteRow.GroupID}: Found ${siteResults.length} results`);
+        console.log(`Site ${siteRow.GroupID}: All MetricIDs in siteResults:`, [...new Set(siteResults.map(r => r.MetricID))]);
+        
+        // Check if we have the SiteRiskMetric in the data
+        const srsMetricID = input.strSiteRiskMetric || 'Analysis_srs0001';
+        const hasSRS = siteResults.some(r => r.MetricID === srsMetricID);
+        console.log(`Site ${siteRow.GroupID}: Has SiteRiskMetric (${srsMetricID}): ${hasSRS}`);
+        
+        if (!hasSRS) {
+            console.warn(`Site ${siteRow.GroupID}: Missing ${srsMetricID} metric in data! This will prevent the SRS column from rendering.`);
+        }
         
         // Store study IDs for this site
         const siteStudyIds = siteResults.map(r => r.StudyID);
@@ -155,9 +167,19 @@ function renderCrossStudyRiskScoreTable(el, input) {
         // Transform data to use StudyID as GroupID (prepend as requested)
         const transformedResults = siteResults.map(d => ({
             ...d,
-            GroupID: `${d.StudyID}_${d.GroupID}`,
-            GroupLevel: 'Study'
+            GroupID: `${d.StudyID}_${d.GroupID}`//,
+            //GroupLevel: 'Study'
         }));
+        
+        console.log(`Site ${siteRow.GroupID}: Transformed results count: ${transformedResults.length}`);
+        console.log(`Site ${siteRow.GroupID}: Unique MetricIDs in transformed data:`, [...new Set(transformedResults.map(r => r.MetricID))]);
+        
+        // Count how many risk score records we have
+        const srsRecords = transformedResults.filter(r => r.MetricID === srsMetricID);
+        console.log(`Site ${siteRow.GroupID}: SRS records in transformed data: ${srsRecords.length}`);
+        if (srsRecords.length > 0) {
+            console.log(`Site ${siteRow.GroupID}: Sample SRS record:`, srsRecords[0]);
+        }
         
         // Check if gsmViz is available
         if (typeof gsmViz !== 'undefined' && gsmViz.default && gsmViz.default.groupOverview) {
@@ -165,14 +187,17 @@ function renderCrossStudyRiskScoreTable(el, input) {
                 // Create a temporary container for gsmViz to render into
                 const tempContainer = document.createElement('div');
                 
+                console.log(`Site ${siteRow.GroupID}: Rendering gsmViz with SiteRiskMetric: ${input.strSiteRiskMetric || 'Analysis_srs0001'}`);
+                console.log(`Site ${siteRow.GroupID}: transformedResults count: ${transformedResults.length}`);
+                
                 // Create the gsmViz groupOverview instance
                 const instance = gsmViz.default.groupOverview(
                     tempContainer,
                     transformedResults,
                     {
-                        GroupLevel: 'Study',
+                        GroupLevel: 'Site',
                         groupLabelKey: 'nickname',
-                        SiteRiskMetric: 'Analysis_srs0001'
+                        SiteRiskScoreMetricID: input.strSiteRiskMetric || 'Analysis_srs0001'
                     },
                     input.dfGroups,
                     input.dfMetrics
