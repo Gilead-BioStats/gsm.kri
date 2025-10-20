@@ -7,7 +7,7 @@ library(dplyr)
 library(htmlwidgets)
 
 # Source utility functions
-source("inst/examples/4_util_Sim_Studies.R")
+source("inst/examples/util/Sim_Studies.R")
 
 #### Step 1: Simulate Multi-Study Results and Group Data ####
 
@@ -36,7 +36,7 @@ cross_study_widget <- Widget_CrossStudyRiskScore(
   dfGroups = sim_data$dfGroups
 )
 
-widget_file <- "inst/examples/cross_study_risk_score_widget.html"
+widget_file <- "inst/examples/output/cross_study_risk_score_widget.html"
 htmlwidgets::saveWidget(
   cross_study_widget,
   file = widget_file,
@@ -44,7 +44,7 @@ htmlwidgets::saveWidget(
 )
 
 # Clean up the temporary _files directory created during widget building
-widget_files_dir <- "inst/examples/cross_study_risk_score_widget_files"
+widget_files_dir <- "inst/examples/output/cross_study_risk_score_widget_files"
 if (dir.exists(widget_files_dir)) {
   unlink(widget_files_dir, recursive = TRUE)
   cat("Cleaned up temporary directory:", widget_files_dir, "\n")
