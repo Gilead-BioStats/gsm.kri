@@ -111,6 +111,7 @@ Widget_GroupOverview <- function(
       ),
       list(...) # additional chart configuration
     ),
+    strGroupLevel = strGroupLevel,
     strGroupSubset = strGroupSubset,
     strGroupLabelKey = strGroupLabelKey,
     strSiteRiskMetric = strSiteRiskMetric,
