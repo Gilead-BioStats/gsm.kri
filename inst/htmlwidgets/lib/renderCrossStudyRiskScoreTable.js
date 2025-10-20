@@ -153,8 +153,10 @@ function renderCrossStudyRiskScoreTable(el, input) {
             <td colspan="100" style="text-align:left; padding:5px;">
                 <span class="toggle-indicator" style="display:inline-block; width:20px; font-weight:bold;">−</span>
                 ${siteRow.GroupID} (${investigatorName})
-                ${studyCountBadge}
-                ${avgRiskBadge}
+                <span style="float:right;">
+                    ${studyCountBadge}
+                    ${avgRiskBadge}
+                </span>
             </td>
         `;
         
