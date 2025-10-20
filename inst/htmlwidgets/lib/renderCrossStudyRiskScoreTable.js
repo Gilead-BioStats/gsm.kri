@@ -107,8 +107,8 @@ function renderCrossStudyRiskScoreTable(el, input) {
     
     // Add expand/collapse all buttons
     html += '<div style="margin:10px 0; display:flex; gap:10px;">';
-    html += '<button id="expand-all" style="padding:6px 12px; background:#f5f5f5; color:#333; border:1px solid #ccc; border-radius:3px; cursor:pointer; font-size:13px;">− Expand All</button>';
-    html += '<button id="collapse-all" style="padding:6px 12px; background:#f5f5f5; color:#333; border:1px solid #ccc; border-radius:3px; cursor:pointer; font-size:13px;">+ Collapse All</button>';
+    html += '<button id="expand-all" style="padding:6px 12px; background:#f5f5f5; color:#333; border:1px solid #ccc; border-radius:3px; cursor:pointer; font-size:13px;">+ Expand All</button>';
+    html += '<button id="collapse-all" style="padding:6px 12px; background:#f5f5f5; color:#333; border:1px solid #ccc; border-radius:3px; cursor:pointer; font-size:13px;">− Collapse All</button>';
     html += '</div>';
     
     html += '</div>';
@@ -189,10 +189,33 @@ function renderCrossStudyRiskScoreTable(el, input) {
         // Transform data to use StudyID as GroupID (prepend as requested)
         const transformedResults = siteResults.map(d => ({
             ...d,
-            GroupID: `${d.StudyID}_${d.GroupID}`//,
-            //GroupLevel: 'Study'
+            GroupID: `${d.StudyID} ${d.GroupID}`//,
         }));
+
+        // Prepare Metadata - Show study info on hover, but use enrollment info for the specific study
+        const siteCounts = input.dfGroups.filter(d => 
+            d.GroupID === siteRow.GroupID && d.GroupLevel === 'Site' && d.Param == "ParticipantCount"
+        );
+
+        const studyGroups = input.dfGroups.filter(d => 
+            d.GroupLevel === 'Study'
+        ).map(d=> {
+            // Find the site-level ParticipantCount for this specific study-site combination
+            const siteParticipantCount = siteCounts.find(count => 
+                count.StudyID === d.StudyID
+            );
+            console.log(siteParticipantCount ? siteParticipantCount.Value : 'Not found')
         
+            return {
+                ...d,
+                GroupLevel:"Site",
+                GroupID: `${d.GroupID} ${siteRow.GroupID}`,
+                Value: d.Param == "ParticipantCount" ? (siteParticipantCount ? siteParticipantCount.Value : "??") : d.Value
+            };
+        });
+
+
+
         // Check if gsmViz is available
         if (typeof gsmViz !== 'undefined' && gsmViz.default && gsmViz.default.groupOverview) {
             try {
@@ -208,7 +231,7 @@ function renderCrossStudyRiskScoreTable(el, input) {
                         groupLabelKey: 'nickname',
                         SiteRiskScoreMetricID: 'Analysis_srs0001'
                     },
-                    input.dfGroups,
+                    studyGroups,
                     input.dfMetrics
                 );
                 

@@ -78,13 +78,58 @@ SummarizeCrossStudy <- function(dfResults, strGroupLevel = "Site", dfGroups = NU
   
   # Add InvestigatorName if dfGroups provided
   if (!is.null(dfGroups)) {
-    investigator_names <- dfGroups %>%
-      dplyr::filter(.data$Param == strNameCol) %>%
-      dplyr::select(GroupID = .data$GroupID, InvestigatorName = .data$Value)
-    
-    cross_study_summary <- cross_study_summary %>%
-      dplyr::left_join(investigator_names, by = "GroupID")
+    # check that required columns are included in dfGroups
+    required_cols <- c("GroupID", "StudyID", "Param", "Value")
+    missing_cols <- setdiff(required_cols, colnames(dfGroups))
+    if (length(missing_cols) > 0) {
+      warning(paste("Can't add group metadata since dfGroups is missing required columns:", paste(missing_cols, collapse = ", ")))
+    } else{ 
+
+      # Get all investigator names for each site
+      investigator_names_all <- dfGroups %>%
+        dplyr::filter(.data$Param == strNameCol) %>%
+        dplyr::select(GroupID = .data$GroupID, InvestigatorName = .data$Value)
+      
+      # Check for multiple investigator names per site
+      investigator_counts <- investigator_names_all %>%
+        dplyr::group_by(.data$GroupID) %>%
+        dplyr::summarise(
+          UniqueNames = dplyr::n_distinct(.data$InvestigatorName),
+          AllNames = paste(unique(.data$InvestigatorName), collapse = ", "),
+          InvestigatorName = dplyr::first(.data$InvestigatorName),
+          .groups = "drop"
+        )
+      
+      # Warn about sites with multiple investigator names
+      multiple_names <- investigator_counts %>%
+        dplyr::filter(.data$UniqueNames > 1)
+      
+      if (nrow(multiple_names) > 0) {
+        warning_msg <- paste0(
+          "Found ", nrow(multiple_names), " site(s) with multiple investigator names across studies:\n",
+          paste(sapply(1:min(5, nrow(multiple_names)), function(i) {
+            paste0("  - ", multiple_names$GroupID[i], ": ", multiple_names$AllNames[i])
+          }), collapse = "\n"),
+          if (nrow(multiple_names) > 5) paste0("\n  ... and ", nrow(multiple_names) - 5, " more")
+        )
+        warning(warning_msg)
+        
+        # Set to "Multiple" for sites with different names
+        investigator_counts <- investigator_counts %>%
+          dplyr::mutate(
+            InvestigatorName = ifelse(.data$UniqueNames > 1, "Multiple", .data$InvestigatorName)
+          )
+      }
+      
+      # Select final columns
+      investigator_names <- investigator_counts %>%
+        dplyr::select(.data$GroupID, .data$InvestigatorName)
+
+      cross_study_summary <- cross_study_summary %>%
+        dplyr::left_join(investigator_names, by = "GroupID")
+    }
   }
+
   
   # Add per-study details as nested column
   cross_study_summary <- cross_study_summary %>%
