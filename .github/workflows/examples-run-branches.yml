@@ -1,0 +1,81 @@
+name: Sync Examples to GitHub Pages - Branches
+
+on:
+  push:
+    branches: [main, master, dev]
+    paths:
+      - 'inst/examples/output/**'
+      - '.github/workflows/examples-run-branches.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  sync-examples:
+    runs-on: ubuntu-latest
+    outputs:
+      dir: ${{ steps.target.outputs.dir }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Determine target directory
+        id: target
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+            echo "dir=examples/dev" >> $GITHUB_OUTPUT
+          else
+            echo "dir=examples" >> $GITHUB_OUTPUT
+          fi
+          
+      - name: Check for example outputs
+        run: |
+          if [ ! -d "inst/examples/output" ] || [ -z "$(find inst/examples/output -name '*.html')" ]; then
+            echo "No HTML files found in inst/examples/output"
+            exit 1
+          fi
+          echo "Found HTML example outputs:"
+          find inst/examples/output -name '*.html'
+      
+      - name: Copy HTML files to temp location
+        run: |
+          mkdir -p /tmp/examples
+          find inst/examples/output -name '*.html' -exec cp {} /tmp/examples/ \;
+          echo "Files copied to temp:"
+          ls -la /tmp/examples/
+      
+      - name: Checkout gh-pages branch
+        run: |
+          git fetch origin gh-pages:gh-pages 2>/dev/null || git checkout --orphan gh-pages
+          git checkout gh-pages 2>/dev/null || git checkout --orphan gh-pages
+      
+      - name: Copy example outputs to gh-pages
+        run: |
+          # Create target directory
+          mkdir -p "${{ steps.target.outputs.dir }}"
+          
+          # Copy HTML files from temp location
+          cp /tmp/examples/*.html "${{ steps.target.outputs.dir }}/"
+          
+          echo "Contents of ${{ steps.target.outputs.dir }}/:"
+          ls -la "${{ steps.target.outputs.dir }}/" || echo "No files copied"
+      
+      - name: Commit and push examples
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "${{ steps.target.outputs.dir }}/"
+          git commit -m "Update examples from ${{ github.ref_name }} (${{ github.sha }})" || echo "No changes to commit"
+          git push origin gh-pages
+  
+  generate-index:
+    needs: sync-examples
+    uses: ./.github/workflows/examples-index.yml
+    with:
+      examples_dir: ${{ needs.sync-examples.outputs.dir }}
