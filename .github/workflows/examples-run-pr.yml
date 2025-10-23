@@ -63,13 +63,14 @@ jobs:
           echo "Contents of examples/pr-${{ github.event.pull_request.number }}/:"
           ls -la "examples/pr-${{ github.event.pull_request.number }}/" || echo "No files copied"
       
-      - name: Commit examples (no push)
+      - name: Commit and push examples
         if: steps.check-outputs.outputs.has_outputs == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add "examples/pr-${{ github.event.pull_request.number }}/"
           git commit -m "Update examples for PR #${{ github.event.pull_request.number }} from ${{ github.sha }}" || echo "No changes to commit"
+          git push origin gh-pages
   
   generate-index:
     needs: sync-examples
@@ -77,25 +78,9 @@ jobs:
     uses: ./.github/workflows/examples-index.yml
     with:
       examples_dir: 'examples/pr-${{ github.event.pull_request.number }}'
-  
-  push-all:
-    needs: [sync-examples, generate-index]
-    if: needs.sync-examples.outputs.has_outputs == 'true'
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout gh-pages branch
-        uses: actions/checkout@v4
-        with:
-          ref: gh-pages
-          fetch-depth: 0
-      
-      - name: Push all commits to gh-pages
-        run: |
-          git push origin gh-pages || git push origin gh-pages --force
       
   comment-on-pr:
-    needs: [sync-examples, generate-index, push-all]
+    needs: [sync-examples, generate-index]
     if: needs.sync-examples.outputs.has_outputs == 'true'
     runs-on: ubuntu-latest
     
@@ -140,17 +125,29 @@ jobs:
             }
             
             if (hasExamples) {
-              // Identify new examples
+              // Identify new examples and get timestamps
               const newExamples = exampleFiles.filter(f => !mainExampleFiles.includes(f));
               const existingExamples = exampleFiles.filter(f => mainExampleFiles.includes(f));
+              
+              // Get file modification times
+              const getFileInfo = (filename) => {
+                const filePath = path.join(examplesDir, filename);
+                const stats = fs.statSync(filePath);
+                const mtime = new Date(stats.mtime);
+                return {
+                  name: filename.replace('.html', ''),
+                  filename: filename,
+                  timestamp: mtime.toISOString().replace('T', ' ').substring(0, 19) + ' UTC'
+                };
+              };
               
               let comment = `## 📊 Example Outputs\n\nThe examples have been generated and are available at:\n\n${examples_url}\n\n`;
               
               if (newExamples.length > 0) {
                 comment += `### 🆕 New Examples:\n`;
                 newExamples.forEach(file => {
-                  const name = file.replace('.html', '');
-                  comment += `- [${name}](${examples_url}${file})\n`;
+                  const info = getFileInfo(file);
+                  comment += `- [${info.name}](${examples_url}${info.filename}) *(${info.timestamp})*\n`;
                 });
                 comment += '\n';
               }
@@ -158,8 +155,8 @@ jobs:
               if (existingExamples.length > 0) {
                 comment += `### 🔄 Updated Examples:\n`;
                 existingExamples.forEach(file => {
-                  const name = file.replace('.html', '');
-                  comment += `- [${name}](${examples_url}${file})\n`;
+                  const info = getFileInfo(file);
+                  comment += `- [${info.name}](${examples_url}${info.filename}) *(${info.timestamp})*\n`;
                 });
                 comment += '\n';
               }
