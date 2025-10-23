@@ -41,6 +41,7 @@ Imports:
     tidyr
 Suggests: 
     fontawesome,
+    gsm.qtl (>= 1.0.1),
     knitr,
     lubridate,
     testthat (>= 3.0.0),
