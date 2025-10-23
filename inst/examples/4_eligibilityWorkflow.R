@@ -23,18 +23,8 @@ example_lparams$lListings <- list(
 )
 
 gsm.kri::RenderRmd(
-  lParams = gsm.qtl:::example_lparams,
+  lParams = example_lparams,
   strOutputDir = getwd(),
   strOutputFile = "test.html",
   strInputPath = system.file("report/eligibility.Rmd", package = "gsm.kri")
 )
-
-dfResults <- ResultsProcessor(dfResults = example_lparams$dfResults, dfMetrics = example_lparams$dfMetrics)
-dfGroups <- example_lparams$dfGroups
-lListings <- example_lparams$lListings
-latest_snapshot = max(dfResults$SnapshotDate)
-QTL_Overview(dfResults = dfResults,
-             dSnapshot = latest_snapshot,
-             strNum = "Ineligible Participants",
-             strDenom = "Total Enrolled",
-             strQTL = "Current Ineligible Enrolled Rate")
