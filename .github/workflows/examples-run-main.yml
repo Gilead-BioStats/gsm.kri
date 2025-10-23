@@ -25,12 +25,19 @@ jobs:
           
       - name: Check for example outputs
         run: |
-          if [ ! -d "inst/examples/output" ] || [ -z "$(find inst/examples/output -name '*.html' 2>/dev/null)" ]; then
+          if [ ! -d "inst/examples/output" ] || [ -z "$(find inst/examples/output -name '*.html')" ]; then
             echo "No HTML files found in inst/examples/output"
             exit 1
           fi
           echo "Found HTML example outputs:"
           find inst/examples/output -name '*.html'
+      
+      - name: Copy HTML files to temp location
+        run: |
+          mkdir -p /tmp/examples
+          find inst/examples/output -name '*.html' -exec cp {} /tmp/examples/ \;
+          echo "Files copied to temp:"
+          ls -la /tmp/examples/
       
       - name: Checkout gh-pages branch
         run: |
@@ -42,10 +49,8 @@ jobs:
           # Create examples directory
           mkdir -p examples
           
-          # Copy only HTML files from inst/examples/output
-          if [ -d "inst/examples/output" ]; then
-            find inst/examples/output -name '*.html' -exec cp {} examples/ \;
-          fi
+          # Copy HTML files from temp location
+          cp /tmp/examples/*.html examples/
           
           echo "Contents of examples/:"
           ls -la examples/ || echo "No files copied"
