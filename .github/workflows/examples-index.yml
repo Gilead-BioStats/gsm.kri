@@ -141,4 +141,11 @@ jobs:
           EOF
           
           echo "Generated index at $TARGET_DIR/index.html"
+      
+      - name: Commit index (no push)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "${{ inputs.examples_dir }}/index.html"
+          git diff --staged --quiet || git commit -m "Generate index for ${{ inputs.examples_dir }}"
 
