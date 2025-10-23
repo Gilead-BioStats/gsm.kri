@@ -7,12 +7,10 @@ on:
       - 'inst/examples/**'
       - '.github/workflows/run-examples.yml'
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, closed]
     paths:
       - 'inst/examples/**'
       - '.github/workflows/run-examples.yml'
-  pull_request:
-    types: [closed]
   workflow_dispatch:
 
 permissions:

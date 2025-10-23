@@ -14,8 +14,8 @@ source("inst/examples/util/Sim_Studies.R")
 # Simulate multi-study data using Sim_Studies function
 sim_data <- Sim_Studies(
   dfMetrics = gsm.core::reportingMetrics,
-  n_studies = 5,
-  n_sites = 30,
+  n_studies = 10,
+  n_sites = 50,
   n_sites_per_study = c(8, 15),
   snapshot_date = as.Date("2025-06-01"),
   seed = 123
