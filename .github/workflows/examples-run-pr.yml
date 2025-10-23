@@ -26,14 +26,14 @@ jobs:
       - name: Check for example outputs
         id: check-outputs
         run: |
-          if [ ! -d "inst/examples/output" ] || [ -z "$(ls -A inst/examples/output 2>/dev/null)" ]; then
-            echo "No example outputs found in inst/examples/output"
+          if [ ! -d "inst/examples/output" ] || [ -z "$(find inst/examples/output -name '*.html')" ]; then
+            echo "No HTML files found in inst/examples/output"
             echo "has_outputs=false" >> $GITHUB_OUTPUT
             exit 0
           fi
           echo "has_outputs=true" >> $GITHUB_OUTPUT
-          echo "Found example outputs:"
-          ls -la inst/examples/output/
+          echo "Found HTML example outputs:"
+          find inst/examples/output -name '*.html'
       
       - name: Checkout gh-pages branch
         if: steps.check-outputs.outputs.has_outputs == 'true'
@@ -47,9 +47,9 @@ jobs:
           # Create PR-specific directory
           mkdir -p "examples/pr-${{ github.event.pull_request.number }}"
           
-          # Copy all files from inst/examples/output
+          # Copy only HTML files from inst/examples/output
           if [ -d "inst/examples/output" ]; then
-            cp -r inst/examples/output/* "examples/pr-${{ github.event.pull_request.number }}/" 2>/dev/null || true
+            find inst/examples/output -name '*.html' -exec cp {} "examples/pr-${{ github.event.pull_request.number }}/" \;
           fi
           
           echo "Contents of examples/pr-${{ github.event.pull_request.number }}/:"
