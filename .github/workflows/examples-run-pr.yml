@@ -1,0 +1,129 @@
+name: Sync Examples to GitHub Pages - PR
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'inst/examples/output/**'
+      - '.github/workflows/examples-run-pr.yml'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+  pull-requests: write
+
+jobs:
+  sync-examples:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Check for example outputs
+        id: check-outputs
+        run: |
+          if [ ! -d "inst/examples/output" ] || [ -z "$(ls -A inst/examples/output 2>/dev/null)" ]; then
+            echo "No example outputs found in inst/examples/output"
+            echo "has_outputs=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          echo "has_outputs=true" >> $GITHUB_OUTPUT
+          echo "Found example outputs:"
+          ls -la inst/examples/output/
+      
+      - name: Checkout gh-pages branch
+        if: steps.check-outputs.outputs.has_outputs == 'true'
+        run: |
+          git fetch origin gh-pages:gh-pages
+          git checkout gh-pages
+      
+      - name: Copy example outputs to gh-pages
+        if: steps.check-outputs.outputs.has_outputs == 'true'
+        run: |
+          # Create PR-specific directory
+          mkdir -p "examples/pr-${{ github.event.pull_request.number }}"
+          
+          # Copy all files from inst/examples/output
+          if [ -d "inst/examples/output" ]; then
+            cp -r inst/examples/output/* "examples/pr-${{ github.event.pull_request.number }}/" 2>/dev/null || true
+          fi
+          
+          echo "Contents of examples/pr-${{ github.event.pull_request.number }}/:"
+          ls -la "examples/pr-${{ github.event.pull_request.number }}/" || echo "No files copied"
+    
+      - name: Commit and push to gh-pages
+        if: steps.check-outputs.outputs.has_outputs == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "examples/pr-${{ github.event.pull_request.number }}/"
+          git commit -m "Update examples for PR #${{ github.event.pull_request.number }} from ${{ github.sha }}" || echo "No changes to commit"
+          git push origin gh-pages || git push origin gh-pages --force
+      
+      - name: Comment on PR with examples link
+        if: steps.check-outputs.outputs.has_outputs == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr_number = ${{ github.event.pull_request.number }};
+            const examples_url = `https://gilead-biostats.github.io/gsm.kri/examples/pr-${pr_number}/`;
+            
+            // Check if we have any examples
+            const fs = require('fs');
+            const path = require('path');
+            const examplesDir = `examples/pr-${pr_number}`;
+            
+            let hasExamples = false;
+            let exampleFiles = [];
+            try {
+              const files = fs.readdirSync(examplesDir);
+              exampleFiles = files.filter(f => f.endsWith('.html'));
+              hasExamples = exampleFiles.length > 0;
+            } catch (e) {
+              console.log('No examples directory found');
+            }
+            
+            if (hasExamples) {
+              let comment = `## 📊 Example Outputs\n\nThe examples have been generated and are available at:\n\n${examples_url}\n\n### Available Examples:\n`;
+              
+              exampleFiles.forEach(file => {
+                const name = file.replace('.html', '');
+                comment += `- [${name}](${examples_url}${file})\n`;
+              });
+              
+              comment += `\n*Examples will be automatically removed when this PR is closed.*`;
+              
+              // Check if we already commented
+              const { data: comments } = await github.rest.issues.listComments({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr_number,
+              });
+              
+              const botComment = comments.find(c => 
+                c.user.login === 'github-actions[bot]' && 
+                c.body.includes('Example Outputs')
+              );
+              
+              if (botComment) {
+                // Update existing comment
+                await github.rest.issues.updateComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: botComment.id,
+                  body: comment,
+                });
+              } else {
+                // Create new comment
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: pr_number,
+                  body: comment,
+                });
+              }
+            }
