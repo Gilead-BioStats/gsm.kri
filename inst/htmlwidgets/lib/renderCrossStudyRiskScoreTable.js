@@ -84,8 +84,10 @@ function renderCrossStudyRiskScoreTable(el, input) {
     html += '<div style="flex:1; min-width:200px;">';
     html += '<label style="display:block; font-weight:bold; margin-bottom:5px;">Sort by:</label>';
     html += '<select id="sort-by" style="width:100%; padding:4px;">';
-    html += '<option value="srs-desc">SRS (High to Low)</option>';
-    html += '<option value="srs-asc">SRS (Low to High)</option>';
+    html += '<option value="srs-desc">Avg SRS (High to Low)</option>';
+    html += '<option value="srs-asc">Avg SRS (Low to High)</option>';
+    html += '<option value="max-srs-desc">Max SRS (High to Low)</option>';
+    html += '<option value="max-srs-asc">Max SRS (Low to High)</option>';
     html += '<option value="studies-desc">Study Count (High to Low)</option>';
     html += '<option value="studies-asc">Study Count (Low to High)</option>';
     html += '<option value="site-asc">Site ID (A to Z)</option>';
@@ -138,7 +140,8 @@ function renderCrossStudyRiskScoreTable(el, input) {
         
         // Create site summary row
         const investigatorName = siteRow.InvestigatorName || 'Unknown';
-        const avgRiskBadge = getRiskScoreBadge(siteRow.AvgRiskScore);
+        const avgRiskBadge = getRiskScoreBadge(siteRow.AvgRiskScore, 'Avg');
+        const maxRiskBadge = getRiskScoreBadge(siteRow.MaxRiskScore, 'Max');
         const studyCountBadge = getStudyCountBadge(siteRow.NumStudies);
         
         const summaryRow = document.createElement('tr');
@@ -146,6 +149,7 @@ function renderCrossStudyRiskScoreTable(el, input) {
         summaryRow.style.cssText = 'background:#bbb; font-weight:bold; cursor:pointer;';
         summaryRow.dataset.siteIndex = siteIndex;
         summaryRow.dataset.avgRiskScore = siteRow.AvgRiskScore;
+        summaryRow.dataset.maxRiskScore = siteRow.MaxRiskScore;
         summaryRow.dataset.numStudies = siteRow.NumStudies;
         summaryRow.dataset.siteId = siteRow.GroupID || '';
         summaryRow.dataset.investigatorName = investigatorName;
@@ -156,6 +160,7 @@ function renderCrossStudyRiskScoreTable(el, input) {
                 <span style="float:right;">
                     ${studyCountBadge}
                     ${avgRiskBadge}
+                    ${maxRiskBadge}
                 </span>
             </td>
         `;
@@ -165,8 +170,8 @@ function renderCrossStudyRiskScoreTable(el, input) {
             d.GroupID === siteRow.GroupID && d.GroupLevel === 'Site'
         );
         
-        // Store study IDs for this site
-        const siteStudyIds = siteResults.map(r => r.StudyID);
+        // Store unique study IDs for this site
+        const siteStudyIds = [...new Set(siteResults.map(r => r.StudyID))];
         summaryRow.dataset.studies = JSON.stringify(siteStudyIds);
         
         // Add click event to toggle visibility
@@ -255,6 +260,17 @@ function renderCrossStudyRiskScoreTable(el, input) {
                     const gsmVizTbody = gsmVizTable.querySelector('tbody');
                     if (gsmVizTbody) {
                         const rows = Array.from(gsmVizTbody.querySelectorAll('tr'));
+                        
+                        // Sort rows by SRS (high to low)
+                        rows.sort((a, b) => {
+                            // Get SRS from the siteRiskScore column
+                            const srsColA = a.querySelector('.group-overview--siteRiskScore');
+                            const srsColB = b.querySelector('.group-overview--siteRiskScore');
+                            const srsA = srsColA ? parseFloat(srsColA.textContent || 0) : 0;
+                            const srsB = srsColB ? parseFloat(srsColB.textContent || 0) : 0;
+                            return srsB - srsA; // High to low
+                        });
+                        
                         rows.forEach(row => {
                             siteTbody.appendChild(row);
                         });
@@ -305,6 +321,7 @@ function setupFilters(el, dfSummary) {
             return {
                 tbody: tbody,
                 srs: parseFloat(summaryRow.dataset.avgRiskScore),
+                maxSrs: parseFloat(summaryRow.dataset.maxRiskScore),
                 studies: parseInt(summaryRow.dataset.numStudies),
                 siteId: (summaryRow.dataset.siteId || '').toLowerCase(),
                 investigator: (summaryRow.dataset.investigatorName || '').toLowerCase()
@@ -318,6 +335,10 @@ function setupFilters(el, dfSummary) {
                     return b.srs - a.srs;
                 case 'srs-asc':
                     return a.srs - b.srs;
+                case 'max-srs-desc':
+                    return b.maxSrs - a.maxSrs;
+                case 'max-srs-asc':
+                    return a.maxSrs - b.maxSrs;
                 case 'studies-desc':
                     return b.studies - a.studies;
                 case 'studies-asc':
@@ -503,14 +524,7 @@ function setupFilters(el, dfSummary) {
     applyFilters();
 }
 
-function getRiskScoreColor(score) {
-    if (score >= 75) return '#ffcdd2'; // Light red
-    if (score >= 50) return '#ffe0b2'; // Light orange
-    if (score >= 25) return '#fff3e0'; // Light amber
-    return '#e8f5e8'; // Light green
-}
-
-function getRiskScoreBadge(score) {
+function getRiskScoreBadge(score, label = 'SRS') {
     let bgColor, textColor;
     if (score >= 75) {
         bgColor = '#d32f2f'; // Red
@@ -526,7 +540,7 @@ function getRiskScoreBadge(score) {
         textColor = '#fff';
     }
     
-    return `<span class="gsm-srs" style="background-color:${bgColor};color:${textColor};padding:4px 8px; border-radius:4px;font-weight:bold;font-size:12px;margin-left:5px;">${score.toFixed(1)} SRS</span>`;
+    return `<span class="gsm-srs" style="background-color:${bgColor};color:${textColor};padding:4px 8px; border-radius:4px;font-weight:bold;font-size:12px;margin-left:5px;">${score.toFixed(1)} ${label}</span>`;
 }
 
 function getStudyCountBadge(count) {
