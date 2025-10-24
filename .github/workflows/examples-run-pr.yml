@@ -57,6 +57,9 @@ jobs:
           # Create PR-specific directory
           mkdir -p "examples/pr-${{ github.event.pull_request.number }}"
           
+          # Remove all existing HTML files (we'll replace with current set)
+          rm -f "examples/pr-${{ github.event.pull_request.number }}"/*.html
+          
           # Copy HTML files from temp location
           cp /tmp/examples/*.html "examples/pr-${{ github.event.pull_request.number }}/"
           
@@ -110,7 +113,7 @@ jobs:
             
             try {
               const files = fs.readdirSync(examplesDir);
-              exampleFiles = files.filter(f => f.endsWith('.html'));
+              exampleFiles = files.filter(f => f.endsWith('.html') && f !== 'index.html');
               hasExamples = exampleFiles.length > 0;
             } catch (e) {
               console.log('No examples directory found for PR');

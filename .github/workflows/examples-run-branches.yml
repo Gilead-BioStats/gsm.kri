@@ -60,6 +60,9 @@ jobs:
           # Create target directory
           mkdir -p "${{ steps.target.outputs.dir }}"
           
+          # Remove all existing HTML files (we'll replace with current set)
+          rm -f "${{ steps.target.outputs.dir }}"/*.html
+          
           # Copy HTML files from temp location
           cp /tmp/examples/*.html "${{ steps.target.outputs.dir }}/"
           
