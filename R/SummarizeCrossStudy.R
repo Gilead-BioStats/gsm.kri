@@ -9,6 +9,7 @@
 #' @param dfResults `data.frame` A data frame containing results from multiple studies.
 #' @param strGroupLevel `character` The group level to summarize. Default is 'Site'.
 #' @param dfGroups `data.frame` Optional. A data frame containing group metadata (for InvestigatorName lookup).
+#' @param strNameCol `character` The column name in dfGroups to use for investigator names. Default is 'InvestigatorLastName'.
 #'
 #' @return `data.frame` Summary table with cross-study metrics per site, including per-study details.
 #'
