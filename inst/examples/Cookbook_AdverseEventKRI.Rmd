@@ -1,5 +1,6 @@
 ---
 title: "Cookbook - Adverse Event KRI Report"
+type: "Cookbook"
 output: 
   html_document:
     toc: true
