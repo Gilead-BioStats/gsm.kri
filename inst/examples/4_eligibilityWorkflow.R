@@ -16,6 +16,7 @@ dfMetrics <- gsm.core::reportingMetrics %>%
   filter(MetricID %in% "Analysis_qtl0001") %>%
   mutate(MetricID = "CTQ_eligibility")
 
+dfGroups <- gsm.core::reportingGroups
 
 mappings_wf <- gsm.core::MakeWorkflowList(
   strNames =c("IE", "EXCLUSION", "ENROLL", "PD"),
@@ -33,11 +34,12 @@ lListings <- list(
 lParams <- list(
   dfResults = dfResults,
   dfMetrics = dfMetrics,
+  dfGroups = dfGroups,
   lListings = lListings
 )
 
 gsm.kri::RenderRmd(
-  lParams = example_lparams,
+  lParams = lParams ,
   strOutputDir = getwd(),
   strOutputFile = "test.html",
   strInputPath = system.file("report/eligibility.Rmd", package = "gsm.kri")
