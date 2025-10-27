@@ -8,18 +8,32 @@ library(dplyr)
 devtools::load_all(".")
 
 # Single Study
-example_lparams <- gsm.qtl:::example_lparams
-
-example_lparams$dfResults <- example_lparams$dfResults %>%
+dfResults <- gsm.core::reportingResults %>%
   filter(MetricID %in% "Analysis_qtl0001") %>%
   mutate(MetricID = "CTQ_eligibility")
 
-example_lparams$dfMetrics <- example_lparams$dfMetrics %>%
+dfMetrics <- gsm.core::reportingMetrics %>%
   filter(MetricID %in% "Analysis_qtl0001") %>%
   mutate(MetricID = "CTQ_eligibility")
 
-example_lparams$lListings <- list(
-  CTQ = example_lparams$lListings$qtl0001
+
+mappings_wf <- gsm.core::MakeWorkflowList(
+  strNames =c("IE", "EXCLUSION", "ENROLL", "PD"),
+  strPath = "workflow/1_mappings",
+  strPackage = "gsm.mapping"
+)
+mappings_spec <- gsm.mapping::CombineSpecs(mappings_wf)
+lRaw <- map_depth(list(gsm.core::lSource), 1, gsm.mapping::Ingest, mappings_spec)
+mapped <- map_depth(lRaw, 1, ~ gsm.core::RunWorkflows(mappings_wf, .x))
+
+lListings <- list(
+  CTQ = mapped[[1]]$Mapped_EXCLUSION
+)
+
+lParams <- list(
+  dfResults = dfResults,
+  dfMetrics = dfMetrics,
+  lListings = lListings
 )
 
 gsm.kri::RenderRmd(

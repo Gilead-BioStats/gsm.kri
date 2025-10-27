@@ -43,15 +43,17 @@ CTQ_lineplot <- function(dfResults, strCTQ) {
         "Above CTQ Threshold" = "#FF5859",
         "Below CTQ Threshold" = "#3DAF06"
       ),
-      breaks = c(strCTQ, "Nominal Threshold", "QTL Threshold", "Above QTL Threshold", "Below QTL Threshold"),
+      breaks = c(strCTQ, "Above QTL Threshold", "Below QTL Threshold"),
       name = NULL
-    )
+    ) +
     theme_minimal() +
     theme(
       axis.text.x = element_text(angle = 30),
-      legend.position = "right",
-      axis.title.x = "Snapshot Date",
-      axis.title.y = strCTQ
+      legend.position = "right"
+    ) +
+    labs(
+      y = strCTQ,
+      x = "Snapshot Date"
     )
 
     g <- ggplotly(p, tooltip = "text")
