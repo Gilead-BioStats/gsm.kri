@@ -1,13 +1,13 @@
 library(gsm.datasim)
 library(gsm.mapping)
 library(gsm.reporting)
-library(gsm.core)
+library(gsm.core) # fix-96
 library(gsm.kri)
+library(gsm.qtl) # fix-58
 library(purrr)
 library(dplyr)
 devtools::load_all(".")
 
-# Single Study
 dfResults <- gsm.core::reportingResults %>%
   filter(MetricID %in% "Analysis_qtl0001") %>%
   mutate(MetricID = "CTQ_eligibility")
