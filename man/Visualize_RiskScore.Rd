@@ -4,19 +4,20 @@
 \alias{Visualize_RiskScore}
 \title{Visualize Risk Score}
 \usage{
-Visualize_RiskScore(dfResults, strGroupLevel = "Site")
+Visualize_RiskScore(dfResults, dfMetrics, dfGroups, strGroupLevel = "Site")
 }
 \arguments{
-\item{dfResults}{`data.frame` Analysis results containing RiskScore column}
+\item{dfResults}{`data.frame` Analysis results from CalculateRiskScore}
+
+\item{dfMetrics}{`data.frame` Metric metadata from gsm.core::reportingMetrics}
+
+\item{dfGroups}{`data.frame` Group metadata from gsm.core::reportingGroups}
 
 \item{strGroupLevel}{`character` The group level to filter the risk score data. Default is 'Site'.}
 }
 \description{
 Creates an interactive risk score widget for cross-study visualization.
 }
-\examples{
-# Cross-study risk score visualization
-dfResults \%>\%
-    Visualize_RiskScore()
-
+\details{
+For a working example see inst/examples/Example_CrossStudySRS.R.
 }

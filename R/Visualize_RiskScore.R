@@ -1,26 +1,22 @@
 #' Visualize Risk Score
 #'
-#' Creates an interactive risk score widget for cross-study visualization.
+#' Creates an interactive risk score widget for cross-study visualization. 
+#' 
+#' For a working example see inst/examples/Example_CrossStudySRS.R.
 #'
-#' @param dfResults `data.frame` Analysis results containing RiskScore column
+#' @param dfResults `data.frame` Analysis results from CalculateRiskScore
+#' @param dfMetrics `data.frame` Metric metadata from gsm.core::reportingMetrics
+#' @param dfGroups `data.frame` Group metadata from gsm.core::reportingGroups
 #' @param strGroupLevel `character` The group level to filter the risk score data. Default is 'Site'.
-#'
-#' @examples
-#' # Cross-study risk score visualization
-#' dfResults %>%
-#'     Visualize_RiskScore()
 #'
 #' @export
 
 Visualize_RiskScore <- function(
     dfResults,
+    dfMetrics,
+    dfGroups,
     strGroupLevel = 'Site'
 ) {
-    # Ensure RiskScore column exists
-    if (!"RiskScore" %in% names(dfResults)) {
-        stop("Input data frame must contain a 'RiskScore' column. Please run CalculateRiskScore on Reporting Results first.")
-    }
-
     # For cross-study functionality, use the cross-study widget
-    Widget_CrossStudyRiskScore(dfResults, strGroupLevel)
+    Widget_CrossStudyRiskScore(dfResults, dfMetrics, dfGroups, strGroupLevel)
 }

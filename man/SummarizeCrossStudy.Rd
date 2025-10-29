@@ -17,6 +17,8 @@ SummarizeCrossStudy(
 \item{strGroupLevel}{`character` The group level to summarize. Default is 'Site'.}
 
 \item{dfGroups}{`data.frame` Optional. A data frame containing group metadata (for InvestigatorName lookup).}
+
+\item{strNameCol}{`character` The column name in dfGroups to use for investigator names. Default is 'InvestigatorLastName'.}
 }
 \value{
 `data.frame` Summary table with cross-study metrics per site, including per-study details.
@@ -26,14 +28,4 @@ SummarizeCrossStudy(
 
 Creates a summary table showing cross-study metrics for each site, including
 number of studies, average risk scores, and aggregated flag counts.
-}
-\examples{
-\dontrun{
-# Simulate multi-study data
-dfMultiStudy <- sim_reportingResults \%>\%
-  CalculateRiskScore(gsm.kri::metricWeights)
-
-dfSummary <- SummarizeCrossStudy(dfMultiStudy)
-}
-
 }

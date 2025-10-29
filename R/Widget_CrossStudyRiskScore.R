@@ -6,18 +6,14 @@
 #' A widget that generates an interactive cross-study risk score table.
 #' Shows a summary view with click-to-expand details for each site.
 #'
+#' For a working example see inst/examples/Example_CrossStudySRS.R.
+#'
 #' @param dfResults `data.frame` Full results data for details.
 #' @param dfMetrics `data.frame` Metadata about metrics/KRIs.
 #' @param dfGroups `data.frame` Metadata about groups (sites/studies).
 #' @param strGroupLevel `character` The group level. Default is 'Site'.
 #'
 #' @return An htmlwidget for cross-study risk score visualization.
-#'
-#' @examples
-#' \dontrun{
-#' dfSummary <- SummarizeCrossStudy(dfMultiStudy)
-#' Widget_CrossStudyRiskScore(dfMultiStudy, gsm.core::reportingMetrics, gsm.core::reportingGroups)
-#' }
 #'
 #' @export
 Widget_CrossStudyRiskScore <- function(

@@ -81,19 +81,19 @@ Widget_GroupOverview <- function(
 
   ## don't include site risk score in dfMetrics, so it's not in the summary charts
   dfMetrics <- dfMetrics %>%
-    dplyr::filter(MetricID != strSiteRiskMetric)
+    dplyr::filter(.data$MetricID != strSiteRiskMetric)
 
   ## update dfResults to include site risk weights when available
   if (any(!is.na(dfMetrics$RiskScoreWeight))) {
     dfWeights <- dfMetrics %>%
-      filter(!is.na(RiskScoreWeight)) %>%
+      filter(!is.na(.data$RiskScoreWeight)) %>%
       mutate(
-        Weight = map(RiskScoreWeight, \(x) ParseThreshold(x, bSort = FALSE)),
-        Flag = map(Flag, \(x) ParseThreshold(x, bSort = FALSE)),
-        WeightMax = map_dbl(Weight, ~ max(.x, na.rm = TRUE))
+        Weight = map(.data$RiskScoreWeight, \(x) ParseThreshold(x, bSort = FALSE)),
+        Flag = map(.data$Flag, \(x) ParseThreshold(x, bSort = FALSE)),
+        WeightMax = map_dbl(.data$Weight, ~ max(.x, na.rm = TRUE))
       ) %>%
-      select(MetricID, Flag, Weight, WeightMax) %>%
-      unnest(cols = c(Flag, Weight))
+      select("MetricID", "Flag", "Weight", "WeightMax") %>%
+      unnest(cols = c(.data$Flag, .data$Weight))
 
     dfResults <- dfResults %>%
       left_join(dfWeights, by = c("Flag", "MetricID"))

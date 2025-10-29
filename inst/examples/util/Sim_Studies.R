@@ -77,37 +77,15 @@ Sim_Studies <- function(dfMetrics=gsm.core::reportingMetrics,
       )
     )
   
- 
   # Create weight table from dfMetrics
-  weight_table <- dfMetrics %>%
-    dplyr::filter(!is.na(Flag) & !is.na(RiskScoreWeight)) %>%
-    dplyr::select(MetricID, Flag, RiskScoreWeight) %>%
-    # Parse the comma-separated Flag and RiskScoreWeight values
-    dplyr::mutate(
-      flags_list = strsplit(Flag, ","),
-      weights_list = strsplit(RiskScoreWeight, ",")
-    ) %>%
-    # Expand to one row per flag-weight combination
-    tidyr::unnest_longer(c(flags_list, weights_list)) %>%
-    dplyr::mutate(
-      Flag = as.numeric(flags_list),
-      Weight = as.numeric(weights_list)
-    ) %>%
-    # Calculate WeightMax by metric
-    dplyr::group_by(MetricID) %>%
-    dplyr::mutate(WeightMax = max(Weight, na.rm = TRUE)) %>%
-    dplyr::ungroup()
-  
-  # Join weight data to results
-  sim_reportingResults <- sim_reportingResults %>%
-    dplyr::left_join(weight_table, by = c("MetricID", "Flag"))
-  
+  weight_table <- MakeWeights(dfMetrics)
+
   # Calculate Risk Scores separately for each study and combine with original data
   risk_scores_by_study <- sim_reportingResults %>%
     split(.$StudyID) %>%
     purrr::map_dfr(~ {
       study_id <- .x$StudyID[1]
-      result <- CalculateRiskScore(.x)
+      result <- CalculateRiskScore(.x, weight_table)
       result$StudyID <- study_id
       result
     })

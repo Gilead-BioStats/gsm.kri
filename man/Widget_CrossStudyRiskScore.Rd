@@ -28,11 +28,6 @@ An htmlwidget for cross-study risk score visualization.
 
 A widget that generates an interactive cross-study risk score table.
 Shows a summary view with click-to-expand details for each site.
-}
-\examples{
-\dontrun{
-dfSummary <- SummarizeCrossStudy(dfMultiStudy)
-Widget_CrossStudyRiskScore(dfMultiStudy, gsm.core::reportingMetrics, gsm.core::reportingGroups)
-}
 
+For a working example see inst/examples/Example_CrossStudySRS.R.
 }

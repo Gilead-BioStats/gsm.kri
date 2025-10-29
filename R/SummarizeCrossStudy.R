@@ -15,12 +15,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' # Simulate multi-study data
-#' dfMultiStudy <- sim_reportingResults %>%
-#'   CalculateRiskScore(gsm.kri::metricWeights)
-#'
-#' dfSummary <- SummarizeCrossStudy(dfMultiStudy)
-#' }
+#' # See inst/examples/Example_CrossStudySRS.Rmd
 #'
 #' @export
 SummarizeCrossStudy <- function(dfResults, strGroupLevel = "Site", dfGroups = NULL, strNameCol = "InvestigatorLastName") {

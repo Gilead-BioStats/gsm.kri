@@ -5,7 +5,8 @@
 #' creating a composite risk score as a percentage of the total possible risk.
 #'
 #' @param dfResults `data.frame` Dataframe of stacked analysis outputs from the metrics calculated in the
-#' `workflow/2_metrics` workflows. Must contain the columns `GroupLevel`, `GroupID`, `MetricID`, `Weight`, and `WeightMax`.
+#' `workflow/2_metrics` workflows. Must contain the columns `GroupLevel`, `GroupID`, `MetricID`, `Flag`.
+#' @param dfWeights `data.frame` Dataframe with Risk score weight information, including `MetricID`, `Flag`, `Weight` and `WeightMax`. This data.frame can be created by stacking results from `gsm.core::Flag()` for all relevant KRIs, or by calling `gsm.kri::MakeWeights(gsm.core::reportingMetrics)`
 #' @param strMetricID `character` The MetricID to assign to the calculated risk scores. Default is "Analysis_srs0001".
 #'
 #' @return `data.frame` with risk score data containing columns: `GroupLevel`, `GroupID`, `MetricID`, 
@@ -27,21 +28,27 @@
 #' # Prepare data with weights from gsm.core::reportingResults
 #' library(dplyr)
 #' 
-#' # Filter to remove any existing risk scores and add weight columns
+#' # Filter to single study/snapshot and remove any existing risk scores
 #' dfResults <- gsm.core::reportingResults %>%
-#'   dplyr::filter(!grepl("srs0001", MetricID))
+#'   dplyr::filter(!grepl("srs0001", MetricID)) %>%
+#'   FilterByLatestSnapshotDate()
+#'
+#' # Create weights table
+#' dfWeights <- gsm.kri::MakeWeights(gsm.core::reportingMetrics)
 #' 
 #' # Calculate risk scores
-#' dfRiskScore <- CalculateRiskScore(dfResults)
+#' dfRiskScore <- CalculateRiskScore(dfResults, dfWeights)
+#' 
 #' @export
 
 CalculateRiskScore <- function(
   dfResults,
+  dfWeights,
   strMetricID = "Analysis_srs0001"
 ) {
 
-  # Check that required columns are present
-  required_cols <- c("GroupLevel","GroupID","MetricID", "Weight", "WeightMax")
+  # Check that required columns for dfResults are present
+  required_cols <- c("GroupLevel","GroupID","MetricID", "Flag")
   if (!all(required_cols %in% colnames(dfResults))) {
     missing_cols <- required_cols[!required_cols %in% colnames(dfResults)]
     stop("Missing required columns in dfResults: ", paste(missing_cols, collapse = ", "))
@@ -53,30 +60,50 @@ CalculateRiskScore <- function(
     stop(paste("MetricID", strMetricID, "already exists in dfResults. Did you already calculate a site risk score?"))
   }
 
-  # Check that Weight and WeightMax are numeric
-  if (!is.numeric(dfResults$Weight) || !is.numeric(dfResults$WeightMax)) {
-    stop("Columns 'Weight' and 'WeightMax' must be numeric.")
-  }
-
   # Check that the combination of GroupLevel + GroupID + MetricID is unique
   if (any(duplicated(dfResults[, c("GroupLevel", "GroupID", "MetricID")]))) {
     stop("The combination of 'GroupLevel', 'GroupID', and 'MetricID' must be unique in dfResults. Do you have multiple Snapshots or Studies in your data?")
   }
 
+  # Check that dfWeights is not NULL and that required columns are present
+  if (is.null(dfWeights)) {
+    stop("dfWeights is NULL. Please provide a valid dfWeights data frame.")
+  }
+
+  required_cols_weights <- c("MetricID", "Flag", "Weight", "WeightMax")
+  if (!all(required_cols_weights %in% colnames(dfWeights))) {
+    missing_cols <- required_cols_weights[!required_cols_weights %in% colnames(dfWeights)]
+    stop("Missing required columns in dfWeights: ", paste(missing_cols, collapse = ", "))
+  }
+
+  # Check that Weight and WeightMax are numeric
+  if (!is.numeric(dfWeights$Weight) || !is.numeric(dfWeights$WeightMax)) {
+    stop("Columns 'Weight' and 'WeightMax' must be numeric.")
+  }
+
+  # Check that the combination of MetricID and Flag is unique
+  if (any(duplicated(dfWeights[, c("MetricID", "Flag")]))) {
+    stop("The combination of 'MetricID' and 'Flag' must be unique in dfWeights.")
+  }
+
+  # Combine dfResults and dfWeights
+  dfResults <- dfResults %>%
+    left_join(dfWeights, by = c("MetricID","Flag"))
+
   # Drop row that have NA values of Weight or WeightMax and throw a warning
   if (any(is.na(dfResults$Weight)) || any(is.na(dfResults$WeightMax))) {
     warning("Rows with NA values in 'Weight' or 'WeightMax' have been dropped.")
     dfResults <- dfResults %>%
-      filter(!is.na(Weight) & !is.na(WeightMax))
+      filter(!is.na(.data$Weight) & !is.na(.data$WeightMax))
   }
 
   # Check that WeightMax is the same within each MetricID
   dfMaxWeights <- dfResults %>% 
-  group_by(MetricID) %>%
+  group_by(.data$MetricID) %>%
   summarize(
-    distinct = n_distinct(WeightMax),
-    min_WeightMax = min(WeightMax),
-    max_WeightMax = max(WeightMax)
+    distinct = n_distinct(.data$WeightMax),
+    min_WeightMax = min(.data$WeightMax),
+    max_WeightMax = max(.data$WeightMax)
   ) %>% 
   ungroup() 
 
@@ -89,20 +116,20 @@ CalculateRiskScore <- function(
 
   dfRiskScore <- dfResults %>%
     group_by(
-      GroupLevel,
-      GroupID
+      .data$GroupLevel,
+      .data$GroupID
     ) %>%
     summarize(
       MetricID = strMetricID,
-      Numerator = sum(Weight, na.rm = TRUE),
+      Numerator = sum(.data$Weight, na.rm = TRUE),
       Denominator = GlobalDenominator,
-      Metric = Numerator / Denominator * 100,
-      Score = Metric
+      Metric = .data$Numerator / .data$Denominator * 100,
+      Score = .data$Metric,
+      .groups = "drop"
     ) %>%
     mutate(
       Flag = NA
-    ) %>%
-    ungroup()
+    )
 
   return(dfRiskScore)
 }
