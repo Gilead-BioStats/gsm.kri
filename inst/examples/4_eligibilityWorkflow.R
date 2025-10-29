@@ -8,15 +8,15 @@ library(purrr)
 library(dplyr)
 devtools::load_all(".")
 
-dfResults <- gsm.core::reportingResults %>%
+dfResults <- gsm.core::reportingResults_study %>%
   filter(MetricID %in% "Analysis_qtl0001") %>%
   mutate(MetricID = "CTQ_eligibility")
 
-dfMetrics <- gsm.core::reportingMetrics %>%
+dfMetrics <- gsm.core::reportingMetrics_study %>%
   filter(MetricID %in% "Analysis_qtl0001") %>%
   mutate(MetricID = "CTQ_eligibility")
 
-dfGroups <- gsm.core::reportingGroups
+dfGroups <- gsm.core::reportingGroups_study
 
 mappings_wf <- gsm.core::MakeWorkflowList(
   strNames =c("IE", "EXCLUSION", "ENROLL", "PD"),
