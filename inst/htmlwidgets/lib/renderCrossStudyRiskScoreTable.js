@@ -211,7 +211,6 @@ function renderCrossStudyRiskScoreTable(el, input) {
             const siteParticipantCount = siteCounts.find(count => 
                 count.StudyID === d.StudyID
             );
-            console.log(siteParticipantCount ? siteParticipantCount.Value : 'Not found')
         
             return {
                 ...d,
