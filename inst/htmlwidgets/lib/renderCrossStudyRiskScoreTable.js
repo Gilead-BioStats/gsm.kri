@@ -196,7 +196,7 @@ function renderCrossStudyRiskScoreTable(el, input) {
         // Transform data to use StudyID as GroupID (prepend as requested)
         const transformedResults = siteResults.map(d => ({
             ...d,
-            GroupID: `${d.StudyID} ${d.GroupID}`//,
+            GroupID: `${d.StudyID} ${d.GroupID}`
         }));
 
         // Prepare Metadata - Show study info on hover, but use enrollment info for the specific study
