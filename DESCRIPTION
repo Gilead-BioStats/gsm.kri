@@ -41,13 +41,12 @@ Imports:
     tidyr
 Suggests: 
     fontawesome,
-    gsm.qtl (>= 1.0.1),
     knitr,
     lubridate,
     testthat (>= 3.0.0),
     withr
 Remotes:
-    gsm.core=Gilead-BioStats/gsm.core@dev
+    gsm.core=Gilead-BioStats/gsm.core@fix-96
 VignetteBuilder: 
     knitr
 Config/Needs/qualification: Gilead-BioStats/gsm.qc@dev
