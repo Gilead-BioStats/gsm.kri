@@ -38,9 +38,20 @@ lParams <- list(
   lListings = lListings
 )
 
-gsm.kri::RenderRmd(
-  lParams = lParams ,
-  strOutputDir = getwd(),
-  strOutputFile = "test.html",
-  strInputPath = system.file("report/eligibility.Rmd", package = "gsm.kri")
-)
+# Via workflow
+eligibility_workflow <- gsm.core::MakeWorkflowList(strNames = "eligibility", strPath = "inst/workflow/4_modules")
+gsm.core::RunWorkflows(eligibility_workflow,
+                       lData = list(
+                         Reporting_Results = dfResults,
+                         Reporting_Metrics = dfMetrics,
+                         Reporting_Groups = dfGroups,
+                         Mapped_EXCLUSION = lListings$CTQ
+                       ))
+
+# Local call to render function
+# gsm.kri::RenderRmd(
+#   lParams = lParams ,
+#   strOutputDir = getwd(),
+#   strOutputFile = "test.html",
+#   strInputPath = system.file("report/eligibility.Rmd", package = "gsm.kri")
+# )
