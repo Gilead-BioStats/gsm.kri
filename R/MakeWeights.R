@@ -67,9 +67,39 @@ MakeWeights <- function(dfMetrics) {
     dplyr::mutate(
       flags_list = strsplit(.data$Flag, ","),
       weights_list = strsplit(.data$RiskScoreWeight, ",")
-    ) %>%
+    )
+  
+  # Check that flags_list and weights_list have the same length for each metric
+  length_check <- weight_table %>%
+    dplyr::mutate(
+      n_flags = sapply(.data$flags_list, length),
+      n_weights = sapply(.data$weights_list, length),
+      length_mismatch = .data$n_flags != .data$n_weights
+    )
+  
+  if (any(length_check$length_mismatch)) {
+    mismatched_metrics <- length_check %>%
+      dplyr::filter(.data$length_mismatch) %>%
+      dplyr::select(MetricID, n_flags, n_weights)
+    
+    error_details <- paste(
+      apply(mismatched_metrics, 1, function(row) {
+        glue::glue("  - {row['MetricID']}: {row['n_flags']} flags vs {row['n_weights']} weights")
+      }),
+      collapse = "\n"
+    )
+    
+    stop(
+      glue::glue(
+        "Flag and RiskScoreWeight lists must have the same length for each MetricID. ",
+        "Mismatched metrics:\n{error_details}"
+      )
+    )
+  }
+  
+  weight_table <- weight_table %>%
     # Expand to one row per flag-weight combination
-    tidyr::unnest_longer(c(.data$flags_list, .data$weights_list)) %>%
+    tidyr::unnest_longer(c("flags_list", "weights_list")) %>%
     dplyr::mutate(
       Flag = as.numeric(.data$flags_list),
       Weight = as.numeric(.data$weights_list)

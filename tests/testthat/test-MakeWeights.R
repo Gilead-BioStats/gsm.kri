@@ -312,3 +312,89 @@ test_that("MakeWeights handles asymmetric weights correctly", {
   expect_equal(dfWeights$Weight[dfWeights$Flag == 2], 2)
   expect_equal(dfWeights$WeightMax, rep(16, 5))  # Max is 16
 })
+
+# Length validation tests ----
+
+test_that("MakeWeights detects mismatched Flag and RiskScoreWeight lengths", {
+  # Test case: More flags than weights
+  dfMetrics_mismatch1 <- data.frame(
+    MetricID = "Analysis_kri0001",
+    Flag = "-2,-1,0,1,2",  # 5 flags
+    RiskScoreWeight = "4,2,0,2",  # 4 weights - mismatch!
+    stringsAsFactors = FALSE
+  )
+  
+  expect_error(
+    MakeWeights(dfMetrics_mismatch1),
+    "Flag and RiskScoreWeight lists must have the same length"
+  )
+  expect_error(
+    MakeWeights(dfMetrics_mismatch1),
+    "Analysis_kri0001: 5 flags vs 4 weights"
+  )
+})
+
+test_that("MakeWeights detects mismatched lengths with multiple metrics", {
+  # Test case: Multiple metrics with mismatches
+  dfMetrics_mismatch2 <- data.frame(
+    MetricID = c("Analysis_kri0001", "Analysis_kri0002"),
+    Flag = c("-2,-1,0", "0,1,2"),  # 3 flags each
+    RiskScoreWeight = c("4,2", "0,2,4,8"),  # 2 weights, 4 weights - both mismatch!
+    stringsAsFactors = FALSE
+  )
+  
+  expect_error(
+    MakeWeights(dfMetrics_mismatch2),
+    "Flag and RiskScoreWeight lists must have the same length"
+  )
+  expect_error(
+    MakeWeights(dfMetrics_mismatch2),
+    "Analysis_kri0001: 3 flags vs 2 weights"
+  )
+  expect_error(
+    MakeWeights(dfMetrics_mismatch2),
+    "Analysis_kri0002: 3 flags vs 4 weights"
+  )
+})
+
+test_that("MakeWeights detects fewer weights than flags", {
+  dfMetrics_mismatch3 <- data.frame(
+    MetricID = "Analysis_kri0001",
+    Flag = "0,1,2",  # 3 flags
+    RiskScoreWeight = "0,4",  # 2 weights
+    stringsAsFactors = FALSE
+  )
+  
+  expect_error(
+    MakeWeights(dfMetrics_mismatch3),
+    "3 flags vs 2 weights"
+  )
+})
+
+test_that("MakeWeights detects more weights than flags", {
+  dfMetrics_mismatch4 <- data.frame(
+    MetricID = "Analysis_kri0001",
+    Flag = "0,1",  # 2 flags
+    RiskScoreWeight = "0,2,4",  # 3 weights
+    stringsAsFactors = FALSE
+  )
+  
+  expect_error(
+    MakeWeights(dfMetrics_mismatch4),
+    "2 flags vs 3 weights"
+  )
+})
+
+test_that("MakeWeights succeeds when all lengths match", {
+  # Test case: All metrics have matching lengths
+  dfMetrics_match <- data.frame(
+    MetricID = c("Analysis_kri0001", "Analysis_kri0002", "Analysis_kri0003"),
+    Flag = c("-2,-1,0,1,2", "0,1", "-1,0,1"),
+    RiskScoreWeight = c("4,2,0,2,4", "0,4", "2,0,2"),
+    stringsAsFactors = FALSE
+  )
+  
+  # Should not throw an error
+  expect_silent(dfWeights <- MakeWeights(dfMetrics_match))
+  
+})

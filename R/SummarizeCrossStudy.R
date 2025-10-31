@@ -3,15 +3,20 @@
 #' @description
 #' `r lifecycle::badge("experimental")`
 #'
-#' Creates a summary table showing cross-study metrics for each site, including
-#' number of studies, average risk scores, and aggregated flag counts.
+#' Creates a summary table showing cross-study site risk score metrics including
+#' number of studies, average and maximum risk scores, and investigator names.
 #'
 #' @param dfResults `data.frame` A data frame containing results from multiple studies.
 #' @param strGroupLevel `character` The group level to summarize. Default is 'Site'.
-#' @param dfGroups `data.frame` Optional. A data frame containing group metadata (for InvestigatorName lookup).
+#' @param dfGroups `data.frame` Optional. A data frame containing group metadata (for InvestigatorName lookup). Must include StudyID, GroupID, Param, and Value columns.
 #' @param strNameCol `character` The column name in dfGroups to use for investigator names. Default is 'InvestigatorLastName'.
 #'
-#' @return `data.frame` Summary table with cross-study metrics per site, including per-study details.
+#' @return `data.frame` Summary table with the following columns:
+#' - GroupID: Site identifier
+#' - NumStudies: Number of studies the site participates in
+#' - AvgRiskScore: Average site risk score across studies
+#' - MaxRiskScore: Maximum site risk score across studies
+#' - InvestigatorName: Investigator name (if dfGroups provided)
 #'
 #' @examples
 #' \dontrun{
@@ -39,38 +44,11 @@ SummarizeCrossStudy <- function(dfResults, strGroupLevel = "Site", dfGroups = NU
       NumStudies = dplyr::n_distinct(.data$StudyID),
       AvgRiskScore = round(mean(.data$Score, na.rm = TRUE), 2),
       MaxRiskScore = round(max(.data$Score, na.rm = TRUE), 2),
-      MinRiskScore = round(min(.data$Score, na.rm = TRUE), 2),
       .groups = "drop"
     )
   
-  # Get KRI flag summaries (excluding risk score metric)
-  kri_results <- group_results %>%
-    dplyr::filter(.data$MetricID != "Analysis_srs0001")
-  
-  flag_summary <- kri_results %>%
-    dplyr::group_by(.data$GroupID) %>%
-    dplyr::summarise(
-      TotalFlags = dplyr::n(),
-      RedFlags = sum(abs(.data$Flag) == 2, na.rm = TRUE),
-      AmberFlags = sum(abs(.data$Flag) == 1, na.rm = TRUE),
-      GreenFlags = sum(.data$Flag == 0, na.rm = TRUE),
-      .groups = "drop"
-    )
-  
-  # Get per-study details for each site
-  per_study_details <- group_results %>%
-    dplyr::filter(.data$MetricID == "Analysis_srs0001") %>%
-    dplyr::select(.data$GroupID, .data$StudyID, SiteRiskScore = .data$Score)
-  
-  # Combine summaries
-  cross_study_summary <- risk_score_data %>%
-    dplyr::left_join(flag_summary, by = "GroupID") %>%
-    dplyr::mutate(
-      GroupLevel = strGroupLevel,
-      FlagRate_Red = round(.data$RedFlags / .data$TotalFlags * 100, 1),
-      FlagRate_Amber = round(.data$AmberFlags / .data$TotalFlags * 100, 1),
-      FlagRate_Green = round(.data$GreenFlags / .data$TotalFlags * 100, 1)
-    )
+  # Create summary with just the columns needed for the widget
+  cross_study_summary <- risk_score_data
   
   # Add InvestigatorName if dfGroups provided
   if (!is.null(dfGroups)) {
@@ -127,14 +105,8 @@ SummarizeCrossStudy <- function(dfResults, strGroupLevel = "Site", dfGroups = NU
   }
 
   
-  # Add per-study details as nested column
+  # Sort by average risk score (descending)
   cross_study_summary <- cross_study_summary %>%
-    dplyr::mutate(
-      StudyDetails = purrr::map(.data$GroupID, function(gid) {
-        per_study_details %>%
-          dplyr::filter(.data$GroupID == gid)
-      })
-    ) %>%
     dplyr::arrange(dplyr::desc(.data$AvgRiskScore))
   
   return(cross_study_summary)

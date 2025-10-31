@@ -93,7 +93,7 @@ Widget_GroupOverview <- function(
         WeightMax = map_dbl(.data$Weight, ~ max(.x, na.rm = TRUE))
       ) %>%
       select("MetricID", "Flag", "Weight", "WeightMax") %>%
-      unnest(cols = c(.data$Flag, .data$Weight))
+      unnest(cols = c(Flag, Weight))
 
     dfResults <- dfResults %>%
       left_join(dfWeights, by = c("Flag", "MetricID"))
