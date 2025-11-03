@@ -471,7 +471,6 @@
       <td headers="Value" class="gt_row gt_right">Ongoing</td></tr>
         </tbody>
         
-        
       </table>
       </div>
       <div id="study_table_hide" style="display: none;">
@@ -964,8 +963,7 @@
           <tr><td headers="Description" class="gt_row gt_left">Est Lplv</td>
       <td headers="Value" class="gt_row gt_right">2024-01-01</td></tr>
         </tbody>
-        
-        
+
       </table>
         </div>
       </div>
@@ -1446,8 +1444,7 @@
           <tr><td headers="Description" class="gt_row gt_left">Participant Enrollment</td>
       <td headers="Value" class="gt_row gt_right">763 / 1000 (76.3%)</td></tr>
         </tbody>
-        
-        
+
       </table>
       </div>
       <div id="study_table_hide" style="display: none;">
@@ -1948,8 +1945,7 @@
           <tr><td headers="Description" class="gt_row gt_left">Participant Enrollment</td>
       <td headers="Value" class="gt_row gt_right">763 / 1000 (76.3%)</td></tr>
         </tbody>
-        
-        
+
       </table>
         </div>
       </div>
