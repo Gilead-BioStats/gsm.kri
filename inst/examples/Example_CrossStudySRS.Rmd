@@ -43,16 +43,6 @@ sim_data <- Sim_Studies(
 )
 ```
 
-```{r create-summary}
-#### Step 2: Create Cross-Study Summary ####
-
-# Create the cross-study summary data
-dfCrossStudySummary <- SummarizeCrossStudy(
-  dfResults = sim_data$dfResults,
-  dfGroups = sim_data$dfGroups
-)
-```
-
 ```{r create-widget, results='asis'}
 #### Step 3: Create Cross-Study Widgets ####
 cross_study_widget <- Widget_CrossStudyRiskScore(
