@@ -4,36 +4,50 @@
 \alias{CalculateRiskScore}
 \title{Calculate Risk Score}
 \usage{
-CalculateRiskScore(dfFlaggedWeights)
+CalculateRiskScore(dfResults, dfWeights, strMetricID = "Analysis_srs0001")
 }
 \arguments{
-\item{dfFlaggedWeights}{`data.frame` Dataframe of stacked analysis outputs from the metrics calculated in the
-`workflow/2_metrics` workflows. Must contain the columns `GroupLevel`, `GroupID`, `Weight`, and `WeightMax`.}
+\item{dfResults}{`data.frame` Dataframe of stacked analysis outputs from the metrics calculated in the
+`workflow/2_metrics` workflows. Must contain the columns `GroupLevel`, `GroupID`, `MetricID`, `Flag`.}
+
+\item{dfWeights}{`data.frame` Dataframe with Risk score weight information, including `MetricID`, `Flag`, `Weight` and `WeightMax`. This data.frame can be created by stacking results from `gsm.core::Flag()` for all relevant KRIs, or by calling `gsm.kri::MakeWeights(gsm.core::reportingMetrics)`}
+
+\item{strMetricID}{`character` The MetricID to assign to the calculated risk scores. Default is "Analysis_srs0001".}
 }
 \value{
-`data.frame` that has the same features as Analysis_Summary.
+`data.frame` with risk score data containing columns: `GroupLevel`, `GroupID`, `MetricID`, 
+`Numerator` (sum of weights), `Denominator` (sum of max weights across all metrics), 
+`Metric` (risk score percentage), `Score` (same as Metric), and `Flag` (set to NA).
 }
 \description{
 Calculates the risk score for each group in the provided results data frame.
+The function aggregates weighted flag values across all metrics for each group,
+creating a composite risk score as a percentage of the total possible risk.
+}
+\details{
+The function calculates risk scores by:
+\enumerate{
+  \item Summing the `Weight` values for each group across all metrics
+  \item Calculating a global denominator as the sum of `WeightMax` values across all unique metrics
+  \item Computing the risk score as (Numerator / Denominator) * 100
+}
+
+Risk scores represent the percentage of total possible risk that each group exhibits,
+allowing for comparison across groups and identification of high-risk sites or entities.
 }
 \examples{
-analysisFlagged <- gsm.core::analyticsSummary \%>\%
-  dplyr::mutate(
-    Weight = dplyr::case_when(
-      abs(Flag) == 1 ~ 2,
-      abs(Flag) == 2 ~ 4,
-      Flag == 0 ~ 0,
-      TRUE ~ NA
-    ),
-    WeightMax = 4
-  )
+# Prepare data with weights from gsm.core::reportingResults
+library(dplyr)
 
-lAnalysis <- list("Analysis_kri0001" = list(
-  Analysis_Flagged = analysisFlagged,
-  ID = "Analysis_kri0001"
-))
-lAnalysis_filtered <- FilterAnalysis(lAnalysis)
-dfFlaggedWeights <- StackAnalysis(lAnalysis_filtered)
-dfRiskScore <- CalculateRiskScore(dfFlaggedWeights)
+# Filter to single study/snapshot and remove any existing risk scores
+dfResults <- gsm.core::reportingResults \%>\%
+  dplyr::filter(!grepl("srs0001", MetricID)) \%>\%
+  FilterByLatestSnapshotDate()
+
+# Create weights table
+dfWeights <- gsm.kri::MakeWeights(gsm.core::reportingMetrics)
+
+# Calculate risk scores
+dfRiskScore <- CalculateRiskScore(dfResults, dfWeights)
 
 }

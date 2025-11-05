@@ -1,3 +1,7 @@
+# gsm.kri 1.3.2
+
+This patch release addresses a bug that was impacting the country-level KRI report. 
+
 # gsm.kri 1.3.1
 
 This patch release addresses a bug related to the `gsm.viz` implementation of site risk score.

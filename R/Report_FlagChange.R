@@ -46,16 +46,16 @@ Report_FlagChange <- function(dfResults) {
   # Only show Risk Signals where flag has changed from previous snapshot
   changed <- dfResults %>%
     dplyr::filter(
-      (is.na(Flag) & !is.na(Flag_Previous)) |
-        (!is.na(Flag) & is.na(Flag_Previous)) |
-        (Flag != Flag_Previous)
+      (is.na(.data$Flag) & !is.na(.data$Flag_Previous)) |
+        (!is.na(.data$Flag) & is.na(.data$Flag_Previous)) |
+        (.data$Flag != .data$Flag_Previous)
     ) %>%
     # Drop rows where flag went from NA -> Green
-    filter(!(is.na(Flag_Previous) & Flag == 0)) %>%
+    filter(!(is.na(.data$Flag_Previous) & .data$Flag == 0)) %>%
     # Sort by previous flag and then current flag
-    dplyr::arrange(dplyr::desc(abs(Flag_Previous))) %>%
-    dplyr::arrange(dplyr::desc(abs(Flag))) %>%
-    mutate(absolute_flag = abs(Flag))
+    dplyr::arrange(dplyr::desc(abs(.data$Flag_Previous))) %>%
+    dplyr::arrange(dplyr::desc(abs(.data$Flag))) %>%
+    mutate(absolute_flag = abs(.data$Flag))
 
   # Split by absolute_flag and generate separate lists
   cat(glue::glue("<h3>Flags Changes</h3>"))
@@ -69,7 +69,7 @@ Report_FlagChange <- function(dfResults) {
   )
   rArrow <- "<span style='font-size:1.2em;'>&#8594;</span>"
   for (af in abs_flag_levels) {
-    changed_af <- changed %>% dplyr::filter(absolute_flag == af)
+    changed_af <- changed %>% dplyr::filter(.data$absolute_flag == af)
     color <- abs_flag_colors[[as.character(af)]]
     # Expand red flags by default, others minimized
     nested_class <- if (color == "red") {

@@ -1,0 +1,121 @@
+---
+title: "Reporting Workflow Examples"
+date: "`r format(Sys.time(), '%Y-%m-%d %H:%M:%S %Z')`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: show
+    self_contained: true
+    theme: cosmo
+---
+
+```{r rmd-setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = TRUE,
+  warning = TRUE,
+  results = 'markup',
+  comment = "#>"
+)
+```
+
+```{r load-packages}
+library(gsm.core)
+library(gsm.mapping)
+library(gsm.reporting)
+library(gsm.kri)
+library(yaml)
+library(dplyr)
+```
+
+## Example 3.1 - Create a KRI Report Using 12 Standard Metrics
+
+This example demonstrates using pre-calculated reporting data from `gsm.core` to create visualizations and reports.
+
+### Creating Interactive Charts
+
+```{r create-charts}
+lCharts <- MakeCharts(
+  dfResults = gsm.core::reportingResults,
+  dfGroups = gsm.core::reportingGroups,
+  dfMetrics = gsm.core::reportingMetrics,
+  dfBounds = gsm.core::reportingBounds
+)
+```
+
+### Generate KRI Report
+
+```{r generate-report}
+kri_report_path <- Report_KRI(
+  lCharts = lCharts,
+  dfResults =  FilterByLatestSnapshotDate(gsm.core::reportingResults),
+  dfGroups =  gsm.core::reportingGroups,
+  dfMetrics = gsm.core::reportingMetrics
+)
+```
+
+The KRI report has been generated at: `r kri_report_path`
+
+## Example 3.2 - Reporting Results with Changes from Previous Snapshot
+
+This example shows how to include historical comparison data to highlight changes from previous snapshots.
+
+```{r historical-comparison}
+# Prepare historical data  
+historical <- gsm.core::reportingResults %>% filter(SnapshotDate == "2025-03-01")
+
+# Re-run reporting with historical data
+reporting_wf <- MakeWorkflowList(strPath = "workflow/3_reporting", strPackage = "gsm.reporting")
+module_wf <- MakeWorkflowList(strPath = "workflow/4_modules", strPackage = "gsm.kri")
+
+# Note: This requires full mapped and analyzed data which would come from running
+# the complete data pipeline shown in the next section.
+```
+
+## Full Pipeline Example (Advanced)
+
+For a complete end-to-end workflow from raw data to reports, you would:
+
+1. **Prepare Raw Data** - Load and standardize table/column names
+2. **Create Mapped Data** - Run mapping workflows to transform raw data
+3. **Calculate Metrics** - Run KRI workflows on mapped data  
+4. **Create Reporting Layer** - Generate reporting datasets
+5. **Generate Reports** - Create final KRI reports
+
+Example code structure:
+
+```r
+# Step 0 - Data Ingestion
+mappings_spec <- CombineSpecs(mappings_wf)
+lRaw <- Ingest(gsm.core::lSource, mappings_spec)
+
+# Step 1 - Mappings
+mappings_wf <- MakeWorkflowList(strPath = "workflow/1_mappings", strPackage = "gsm.mapping")
+mapped <- RunWorkflows(mappings_wf, lRaw)
+
+# Step 2 - Metrics
+metrics_wf <- MakeWorkflowList(strPath = "workflow/2_metrics", strPackage = "gsm.kri")
+analyzed <- RunWorkflows(metrics_wf, mapped)
+
+# Step 3 - Reporting
+reporting_wf <- MakeWorkflowList(strPath = "workflow/3_reporting", strPackage = "gsm.reporting")
+reporting <- RunWorkflows(reporting_wf, c(mapped, list(lAnalyzed = analyzed, lWorkflows = metrics_wf)))
+
+# Step 4 - Modules
+module_wf <- MakeWorkflowList(strPath = "workflow/4_modules", strPackage = "gsm.kri")
+lReports <- RunWorkflows(module_wf, reporting)
+```
+
+## Notes on Study Configuration
+
+You can use study configuration files to specify data sources:
+
+```r
+# Example (commented out):
+# StudyConfig <- Read_yaml("workflow/config.yaml")
+# mapped <- RunWorkflows(mappings_wf, lConfig=StudyConfig)
+# analyzed <- RunWorkflows(metrics_wf,  lConfig=StudyConfig)
+# reporting <- RunWorkflows(reporting_wf,  lConfig=StudyConfig)
+# lReports <- RunWorkflows(module_wf,  lConfig=StudyConfig)
+```

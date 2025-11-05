@@ -1,0 +1,141 @@
+---
+title: "Cookbook - Adverse Event KRI Report"
+type: "Cookbook"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: show
+    theme: cosmo
+date: "`r format(Sys.time(), '%Y-%m-%d %H:%M:%S %Z')`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.width = 10, fig.height = 6)
+```
+
+## Overview
+
+This report demonstrates Key Risk Indicator (KRI) analysis for adverse events using the {gsm.kri} package. The examples show how to:
+
+1. Generate an Adverse Event (AE) metric using the standard {gsm} workflow
+2. Create a Serious Adverse Event (SAE) metric with filtering
+3. Visualize metric distributions using bar charts
+4. Create scatter plots with confidence bounds
+
+## Setup
+
+Load required packages and data:
+
+```{r load-packages}
+library(gsm.core)
+library(gsm.mapping)
+library(dplyr)
+devtools::load_all()
+
+# Load source data
+dm <- gsm.core::lSource$Raw_SUBJ
+ae <- gsm.core::lSource$Raw_AE
+```
+
+## Example 1.1: Generate Adverse Event Metric
+
+Generate an Adverse Event Metric using the standard {gsm} workflow:
+
+```{r ae-metric}
+dfInput <- Input_Rate(
+  dfSubjects = dm,
+  dfNumerator = ae,
+  dfDenominator = dm,
+  strSubjectCol = "subjid",
+  strGroupCol = "invid",
+  strNumeratorMethod = "Count",
+  strDenominatorMethod = "Sum",
+  strDenominatorCol = "timeonstudy"
+)
+
+dfTransformed <- Transform_Rate(dfInput)
+dfAnalyzed <- Analyze_NormalApprox(dfTransformed, strType = "rate")
+dfFlagged <- Flag(dfAnalyzed, vThreshold = c(-3, -2, 2, 3))
+dfSummarized <- Summarize(dfFlagged)
+```
+
+### Flag Distribution
+
+```{r ae-flags}
+table(dfSummarized$Flag)
+```
+
+## Example 1.2: Serious Adverse Event Metric
+
+Create an SAE Metric by adding a filter, using pipes for cleaner code:
+
+```{r sae-metric}
+SAE_KRI <- Input_Rate(
+  dfSubjects = dm,
+  dfNumerator = ae %>% filter(aeser == "Y"),
+  dfDenominator = dm,
+  strSubjectCol = "subjid",
+  strGroupCol = "invid",
+  strNumeratorMethod = "Count",
+  strDenominatorMethod = "Sum",
+  strDenominatorCol = "timeonstudy"
+) %>%
+  Transform_Rate() %>%
+  Analyze_NormalApprox(strType = "rate") %>%
+  Flag(vThreshold = c(-3, -2, 2, 3)) %>%
+  Summarize()
+```
+
+### SAE Flag Distribution
+
+```{r sae-flags}
+table(SAE_KRI$Flag)
+```
+
+## Example 1.3: Visualize Metric Distribution
+
+Create bar charts to visualize different aspects of the SAE metric:
+
+```{r bar-charts, fig.height=5}
+labels <- list(
+  Metric = "Serious Adverse Event Rate",
+  Numerator = "Serious Adverse Events",
+  Denominator = "Days on Study"
+)
+
+# Metric bar chart
+Widget_BarChart(dfResults = SAE_KRI, lMetric = labels, strOutcome = "Metric")
+
+# Score bar chart
+Widget_BarChart(dfResults = SAE_KRI, lMetric = labels, strOutcome = "Score")
+
+# Numerator bar chart
+Widget_BarChart(dfResults = SAE_KRI, lMetric = labels, strOutcome = "Numerator")
+```
+
+## Example 1.4: Scatter Plot with Confidence Bounds
+
+Create a scatter plot showing the relationship between metrics with confidence bounds:
+
+```{r scatter-plot, fig.height=6}
+dfBounds <- Analyze_NormalApprox_PredictBounds(SAE_KRI, vThreshold = c(-3, -2, 2, 3))
+Widget_ScatterPlot(SAE_KRI, lMetric = labels, dfBounds = dfBounds)
+```
+
+## Summary
+
+This report demonstrated the {gsm.kri} workflow for adverse event monitoring:
+
+- **Input**: Prepared data for rate calculations
+- **Transform**: Standardized metrics across sites
+- **Analyze**: Applied statistical methods (Normal Approximation)
+- **Flag**: Identified sites exceeding thresholds
+- **Summarize**: Generated final KRI summaries
+- **Visualize**: Created interactive charts and plots
+
+The methodology enables systematic monitoring of adverse event rates across study sites to identify potential safety signals.
+
+---
+
+*Generated with {gsm.kri} version `r packageVersion("gsm.kri")`*
