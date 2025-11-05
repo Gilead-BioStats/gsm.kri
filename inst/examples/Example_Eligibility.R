@@ -34,6 +34,15 @@ mappings_spec <- gsm.mapping::CombineSpecs(mappings_wf)
 lRaw <- map_depth(list(gsm.core::lSource), 1, gsm.mapping::Ingest, mappings_spec)
 mapped <- map_depth(lRaw, 1, ~ gsm.core::RunWorkflows(mappings_wf, .x))
 
+# test kri workflows
+metrics_wf<- gsm.core::MakeWorkflowList(
+  strNames = c("cou0014", "kri0014"),
+  strPath = "inst/workflow/2_metrics",
+)
+IE_kris <- map_depth(mapped, 1, ~gsm.core::RunWorkflows(metrics_wf, .x))
+
+
+# test rendering of report
 lListings <- list(
   IE = mapped[[1]]$Mapped_EXCLUSION
 )
