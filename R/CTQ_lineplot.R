@@ -43,7 +43,7 @@ CTQ_lineplot <- function(dfResults, strCTQ) {
         "Above CTQ Threshold" = "#FF5859",
         "Below CTQ Threshold" = "#3DAF06"
       ),
-      breaks = c(strCTQ, "Above QTL Threshold", "Below QTL Threshold"),
+      breaks = c(strCTQ, "Above CTQ Threshold", "Below CTQ Threshold"),
       name = NULL
     ) +
     theme_minimal() +

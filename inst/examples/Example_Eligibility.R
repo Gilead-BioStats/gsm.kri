@@ -17,11 +17,11 @@ pak::pak("Gilead-BioStats/gsm.core@fix-96")
 
 dfResults <- gsm.core::reportingResults_study %>%
   filter(MetricID %in% "Analysis_qtl0001") %>%
-  mutate(MetricID = "CTQ_eligibility")
+  mutate(MetricID = "study_eligibility")
 
 dfMetrics <- gsm.core::reportingMetrics_study %>%
   filter(MetricID %in% "Analysis_qtl0001") %>%
-  mutate(MetricID = "CTQ_eligibility")
+  mutate(MetricID = "study_eligibility")
 
 dfGroups <- gsm.core::reportingGroups_study
 
@@ -35,7 +35,7 @@ lRaw <- map_depth(list(gsm.core::lSource), 1, gsm.mapping::Ingest, mappings_spec
 mapped <- map_depth(lRaw, 1, ~ gsm.core::RunWorkflows(mappings_wf, .x))
 
 lListings <- list(
-  CTQ = mapped[[1]]$Mapped_EXCLUSION
+  IE = mapped[[1]]$Mapped_EXCLUSION
 )
 
 lParams <- list(
