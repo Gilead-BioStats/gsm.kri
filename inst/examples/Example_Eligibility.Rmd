@@ -36,12 +36,12 @@ latest_snapshot = max(dfResults$SnapshotDate)
 ```
 
 ---
-title: "CTQ Overview"
+title: " Ineligible Participant Overview"
 subtitle: "Study: `r unique(lListings[[1]]$studyid)`"
 date: "Snapshot Date: `r latest_snapshot`"
 ---
 
-# CTQ0001 - Ineligibility
+# Ineligible Participant Overview
 
 ## Study Overview
 ```{r, echo=FALSE}
