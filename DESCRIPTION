@@ -1,7 +1,7 @@
 Type: Package
 Package: gsm.kri
 Title: Good Statistical Monitoring KRIs
-Version: 1.3.1
+Version: 1.3.2
 Authors@R: c(
     person("Jeremy", "Wildfire", , "jwildfire@gmail.com", role = c("aut", "cre")),
     person("Laura", "Maxwell", , "lkmaxwell23@gmail.com", role = "aut"),
@@ -25,7 +25,7 @@ Imports:
     DT,
     ggplot2,
     glue,
-    gsm.core (>= 1.1.5),
+    gsm.core (>= 1.1.6),
     gt,
     htmltools,
     htmlwidgets,
@@ -46,7 +46,7 @@ Suggests:
     testthat (>= 3.0.0),
     withr
 Remotes:
-    gsm.core=Gilead-BioStats/gsm.core@dev
+    gsm.core=Gilead-BioStats/gsm.core@main
 VignetteBuilder: 
     knitr
 Config/Needs/qualification: Gilead-BioStats/gsm.qc@dev
