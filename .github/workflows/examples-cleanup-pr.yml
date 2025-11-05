@@ -1,0 +1,33 @@
+name: Clean Up PR Examples
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          fetch-depth: 0
+      
+      - name: Delete PR examples directory
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          if [ -d "examples/pr-${PR_NUMBER}" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git rm -rf "examples/pr-${PR_NUMBER}"
+            git commit -m "Clean up examples for PR #${PR_NUMBER}"
+            git push origin gh-pages
+            echo "✓ Deleted examples/pr-${PR_NUMBER}"
+          else
+            echo "ℹ No examples directory found for PR #${PR_NUMBER}"
+          fi
