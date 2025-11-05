@@ -50,7 +50,7 @@ gsm.kri::RenderRmd(
   lParams = lParams ,
   strOutputDir = file.path(getwd(), "inst", "examples", "output"),
   strOutputFile = "Example_Eligibility.html",
-  strInputPath = system.file("report/eligibility.Rmd", package = "gsm.kri")
+  strInputPath = system.file("examples/Example_Eligibility.Rmd", package = "gsm.kri")
 )
 
 # Via workflow
