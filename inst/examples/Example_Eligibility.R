@@ -61,6 +61,14 @@ gsm.kri::RenderRmd(
   strOutputFile = "Example_Eligibility.html",
   strInputPath = system.file("examples/Example_Eligibility.Rmd", package = "gsm.kri")
 )
+# Tinkering piece for TimeSeries
+# Widget_TimeSeries(
+#   dfResults = dfResults,
+#   lMetric = as.list(dfMetrics),
+#   dfGroups = dfGroups,
+#   strOutcome = "Metric"
+# )
+
 
 # Via workflow
 
@@ -70,5 +78,5 @@ gsm.kri::RenderRmd(
 #                          Reporting_Results = dfResults,
 #                          Reporting_Metrics = dfMetrics,
 #                          Reporting_Groups = dfGroups,
-#                          Mapped_EXCLUSION = lListings$CTQ
+#                          Mapped_EXCLUSION = lListings$IE
 #                        ))
