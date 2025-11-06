@@ -29,7 +29,8 @@ library(knitr)
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
 
-dfResults <- ResultsProcessor(dfResults = params$dfResults, dfMetrics = params$dfMetrics)
+dfResults <- params$dfResults
+dfMetrics <- params$dfMetrics
 dfGroups <- params$dfGroups
 lListings <- params$lListings
 latest_snapshot = max(dfResults$SnapshotDate)
@@ -45,7 +46,8 @@ date: "Snapshot Date: `r latest_snapshot`"
 
 ## Study Overview
 ```{r, echo=FALSE}
-QTL_Overview(dfResults = dfResults,
+dfResults_Overview <- ResultsProcessor(dfResults = dfResults, dfMetrics = dfMetrics)
+QTL_Overview(dfResults = dfResults_Overview,
              dSnapshot = latest_snapshot,
              strNum = "Ineligible Participants",
              strDenom = "Total Enrolled", 
@@ -54,13 +56,20 @@ QTL_Overview(dfResults = dfResults,
 
 ## Time Series Chart
 ```{r, echo=FALSE, results='asis', fig.height=4}
-# gsm.qtl::Widget_TimeSeriesQTL(
-#   dfResults = dfResults %>% filter(GroupLevel == "Study"),
+Widget_TimeSeries(
+  dfResults = dfResults,
+  lMetric = as.list(dfMetrics),
+  dfGroups = dfGroups,
+  strOutcome = "Metric"
+)
+
+# gsm.qtl::Widget_TimeSeries(
+#   dfResults = params$dfResults,
 #   dfGroups = dfGroups,
 #   strOutcome = "Metric"
 # )
 # Create reference table for funnel bounds per date
-CTQ_lineplot(dfResults = dfResults, strCTQ = "Ineligibility Rate")
+# CTQ_lineplot(dfResults = dfResults, strCTQ = "Ineligibility Rate")
 ```
 
 ## Bar Charts {.tabset .tabset-pills}
