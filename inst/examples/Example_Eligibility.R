@@ -61,12 +61,15 @@ gsm.kri::RenderRmd(
   strOutputFile = "Example_Eligibility.html",
   strInputPath = system.file("examples/Example_Eligibility.Rmd", package = "gsm.kri")
 )
+
 # Tinkering piece for TimeSeries
 # Widget_TimeSeries(
-#   dfResults = dfResults,
+#   dfResults = dfResults %>% mutate(Flag = NA),
 #   lMetric = as.list(dfMetrics),
 #   dfGroups = dfGroups,
-#   strOutcome = "Metric"
+#   strOutcome = "Metric",
+#   bAddGroupSelect = FALSE,
+#   selectedGroupIDs = "AA-AA-000-0000"
 # )
 
 

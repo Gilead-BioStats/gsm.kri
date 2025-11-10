@@ -57,10 +57,12 @@ QTL_Overview(dfResults = dfResults_Overview,
 ## Time Series Chart
 ```{r, echo=FALSE, results='asis', fig.height=4}
 Widget_TimeSeries(
-  dfResults = dfResults,
+  dfResults = dfResults %>% mutate(Flag = NA),
   lMetric = as.list(dfMetrics),
   dfGroups = dfGroups,
-  strOutcome = "Metric"
+  strOutcome = "Metric",
+  bAddGroupSelect = FALSE,
+  selectedGroupIDs = unique(dfResults$GroupID)
 )
 ```
 
