@@ -61,7 +61,7 @@ Widget_TimeSeries(
   lMetric = as.list(dfMetrics),
   dfGroups = dfGroups,
   strOutcome = "Metric",
-  bAddGroupSelect = FALSE,
+  # bAddGroupSelect = FALSE,
   selectedGroupIDs = unique(dfResults$GroupID)
 )
 ```
