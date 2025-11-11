@@ -182,6 +182,12 @@ cross_study_widget <- Widget_CrossStudyRiskScore(
 )
 ```
 
+The widget produces an interactive table showing risk score summaries across studies:
+
+```{r cross-study-screenshot, echo=FALSE, out.width="100%", fig.cap="Cross-Study Risk Score Widget showing site risk summaries across multiple studies"}
+knitr::include_graphics("figures/CrossStudySRS.png")
+```
+
 For a complete working example, see `inst/examples/Example_CrossStudySRS.Rmd`, which demonstrates:
 
 - Simulating multi-study data with site risk scores
