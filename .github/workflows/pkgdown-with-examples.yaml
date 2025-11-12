@@ -37,11 +37,15 @@ jobs:
           extra-packages: any::pkgdown, local::., Gilead-BioStats/gsm.utils
           needs: website
 
-      - name: Generate Examples Menu and Build site
-        run: |                 
-          gsm.utils::add_pkgdown_examples(pkgdown_yml = "_pkgdown.yml")
-          pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
+      - name: Generate examples menu
         shell: Rscript {0}
+        run: |
+          gsm.utils::add_pkgdown_examples(pkgdown_yml = "_pkgdown.yml")
+
+      - name: Build site
+        shell: Rscript {0}
+        run: |                 
+          pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
 
       - name: Deploy PR preview 🧪
         if: github.event_name == 'pull_request'
