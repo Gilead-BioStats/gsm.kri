@@ -2,16 +2,16 @@ url: https://gilead-biostats.github.io/gsm.kri
 template:
   bootstrap: 5
   bootswatch: yeti
-
 navbar:
   structure:
-    left: [articles, Reports, reference, news]
-    right: [search, github]
+    left:
+    - home
+    - reference
+    - news
+    right:
+    - search
+    - github
   components:
-    Reports:
-      text: Sample Reports
-      menu:
-        - text: Site Report
-          href: report_kri_site.html
-        - text: Country Report
-          href: report_kri_country.html
+    github:
+      icon: fab fa-github
+      href: https://github.com/gilead-biostats/gsm.kri
