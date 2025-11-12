@@ -34,7 +34,7 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::pkgdown, local::.
+          extra-packages: any::pkgdown, local::., Gilead-BioStats/gsm.utils
           needs: website
 
       - name: Generate examples menu
@@ -68,14 +68,40 @@ jobs:
         with:
           script: |
             const prSiteURL = `https://${context.repo.owner}.github.io/${context.repo.repo}/pr/${context.issue.number}/dev`
-            const comment = `🌐 PR pkdgown deployed: [${prSiteURL}](${prSiteURL})`;
+            const timestamp = new Date().toISOString();
+            const commentBody = `🌐 PR pkgdown deployed: [${prSiteURL}](${prSiteURL})\n\n_Last updated: ${timestamp}_`;
+            const commentMarker = '🌐 PR pkgdown deployed:';
 
-            await github.rest.issues.createComment({
+            // Get all comments on the PR
+            const comments = await github.rest.issues.listComments({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: comment,
             });
+
+            // Find existing comment from this bot
+            const existingComment = comments.data.find(comment => 
+              comment.user.login === 'github-actions[bot]' && 
+              comment.body.includes(commentMarker)
+            );
+
+            if (existingComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                comment_id: existingComment.id,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: commentBody,
+              });
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: commentBody,
+              });
+            }
 
       - name: Deploy pkgdown 📃
         if: github.event_name != 'pull_request'
