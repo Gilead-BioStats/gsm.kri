@@ -23,7 +23,12 @@
 #' # See inst/examples/Example_CrossStudySRS.Rmd
 #' }
 #' @export
-SummarizeCrossStudy <- function(dfResults, strGroupLevel = "Site", dfGroups = NULL, strNameCol = "InvestigatorLastName") {
+SummarizeCrossStudy <- function(
+  dfResults,
+  strGroupLevel = "Site",
+  dfGroups = NULL,
+  strNameCol = "InvestigatorLastName"
+) {
   stopifnot(is.data.frame(dfResults))
   stopifnot(is.character(strGroupLevel) && length(strGroupLevel) == 1)
   stopifnot(is.null(dfGroups) || is.data.frame(dfGroups))
