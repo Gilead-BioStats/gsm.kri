@@ -96,7 +96,11 @@ SummarizeCrossStudy <- function(
         # Set to "Multiple" for sites with different names
         investigator_counts <- investigator_counts %>%
           dplyr::mutate(
-            InvestigatorName = ifelse(.data$UniqueNames > 1, "Multiple", .data$InvestigatorName)
+            InvestigatorName = ifelse(
+              .data$UniqueNames > 1,
+              "Multiple",
+              .data$InvestigatorName
+            )
           )
       }
 
