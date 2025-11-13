@@ -1,4 +1,11 @@
 library(dplyr)
+
+# Helper: Split Flagged Weights into Results and Weights
+SplitFlaggedWeights <- function(dfFlaggedWeights) {
+  dfResults <- dfFlaggedWeights[, c("GroupLevel", "GroupID", "MetricID", "Flag")]
+  dfWeights <- unique(dfFlaggedWeights[, c("MetricID", "Flag", "Weight", "WeightMax")])
+  return(list(dfResults = dfResults, dfWeights = dfWeights))
+}
 #### 3.1 - Create a KRI Report using 12 standard metrics in a step-by-step workflow
 library(gsm.core)
 library(gsm.mapping)
@@ -16,7 +23,7 @@ lRaw <- list(
   Raw_PD = gsm.core::lSource$Raw_PD %>%
     rename(subjid = subjectenrollmentnumber),
   Raw_LB = gsm.core::lSource$Raw_LB,
-  Raw_PK = gsm.core::lSource$Raw_PK%>%
+  Raw_PK = gsm.core::lSource$Raw_PK %>%
     rename(visit = foldername),
   Raw_STUDCOMP = gsm.core::lSource$Raw_STUDCOMP %>%
     select(subjid, compyn),
@@ -51,6 +58,20 @@ mapped <- RunWorkflows(mappings_wf, lRaw)
 # Step 2 - Create Metrics - calculate metrics using mapped data
 metrics_wf <- MakeWorkflowList(strPath = "workflow/2_metrics", strPackage = "gsm.kri")
 analyzed <- RunWorkflows(metrics_wf, mapped)
+
+# --- Site Risk Score Calculation for srs0001 ---
+# Extract flagged weights for srs0001 from analyzed
+if (!is.null(analyzed[["Analysis_srs0001"]]) && !is.null(analyzed[["Analysis_srs0001"]][["Analysis_Flagged"]])) {
+  dfFlaggedWeights <- analyzed[["Analysis_srs0001"]][["Analysis_Flagged"]]
+  # Split into results and weights
+  split <- SplitFlaggedWeights(dfFlaggedWeights)
+  dfResults <- split$dfResults
+  dfWeights <- split$dfWeights
+  # Calculate risk score
+  dfRiskScore <- CalculateRiskScore(dfResults, dfWeights)
+} else {
+  warning("Analysis_srs0001 or Analysis_Flagged not found in analyzed object.")
+}
 
 # Step 3 - Create Reporting Layer - create reports using metrics data
 reporting_wf <- MakeWorkflowList(strPath = "workflow/3_reporting", strPackage = "gsm.reporting")
