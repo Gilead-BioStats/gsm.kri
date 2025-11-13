@@ -8,6 +8,7 @@
 <url><loc>https://gilead-biostats.github.io/gsm.kri/dev/examples/Cookbook_AdverseEventWorkflow.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/dev/examples/Cookbook_ReportingWorkflow.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/dev/examples/Example_CrossStudySRS.html</loc></url>
+<url><loc>https://gilead-biostats.github.io/gsm.kri/dev/examples/Example_Eligibility.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/dev/index.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/dev/news/index.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/dev/reference/CalculateRiskScore.html</loc></url>
@@ -57,5 +58,7 @@
 <url><loc>https://gilead-biostats.github.io/gsm.kri/dev/reference/index.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/dev/reference/pipe.html</loc></url>
 <url><loc>https://gilead-biostats.github.io/gsm.kri/dev/reference/shared-params.html</loc></url>
+<url><loc>https://gilead-biostats.github.io/gsm.kri/dev/report_kri_country.html</loc></url>
+<url><loc>https://gilead-biostats.github.io/gsm.kri/dev/report_kri_site.html</loc></url>
 </urlset>
 

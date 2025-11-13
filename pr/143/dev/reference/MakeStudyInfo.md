@@ -51,12 +51,12 @@ MakeStudyInfo(gsm.core::reportingGroups)
 #> 14                     product    Product Name 14                       Product
 #> 15                  SiteTarget                150                   Site Target
 #> 16           ParticipantTarget               1000            Participant Target
-#> 17            ParticipantCount                763         Participants Enrolled
+#> 17            ParticipantCount                764         Participants Enrolled
 #> 18                   SiteCount                145                Sites Enrolled
 #> 19       PercentSitesActivated               96.7       Percent Sites Activated
 #> 20              SiteActivation  145 / 150 (96.7%)               Site Activation
-#> 21 PercentParticipantsEnrolled               76.3 Percent Participants Enrolled
-#> 22       ParticipantEnrollment 763 / 1000 (76.3%)        Participant Enrollment
+#> 21 PercentParticipantsEnrolled               76.4 Percent Participants Enrolled
+#> 22       ParticipantEnrollment 764 / 1000 (76.4%)        Participant Enrollment
 MakeStudyInfo(gsm.core::reportingGroups, list(SiteCount = "# Sites"))
 #>                          Param              Value                   Description
 #> 1                      studyid     AA-AA-000-0000                       Studyid
@@ -75,10 +75,10 @@ MakeStudyInfo(gsm.core::reportingGroups, list(SiteCount = "# Sites"))
 #> 14                     product    Product Name 14                       Product
 #> 15                  SiteTarget                150                   Site Target
 #> 16           ParticipantTarget               1000            Participant Target
-#> 17            ParticipantCount                763             Participant Count
+#> 17            ParticipantCount                764             Participant Count
 #> 18                   SiteCount                145                       # Sites
 #> 19       PercentSitesActivated               96.7       Percent Sites Activated
 #> 20              SiteActivation  145 / 150 (96.7%)               Site Activation
-#> 21 PercentParticipantsEnrolled               76.3 Percent Participants Enrolled
-#> 22       ParticipantEnrollment 763 / 1000 (76.3%)        Participant Enrollment
+#> 21 PercentParticipantsEnrolled               76.4 Percent Participants Enrolled
+#> 22       ParticipantEnrollment 764 / 1000 (76.4%)        Participant Enrollment
 ```
