@@ -2,9 +2,9 @@
 
 \`r lifecycle::badge("experimental")\`
 
-Creates a summary table showing cross-study metrics for each site,
-including number of studies, average risk scores, and aggregated flag
-counts.
+Creates a summary table showing cross-study site risk score metrics
+including number of studies, average and maximum risk scores, and
+investigator names.
 
 ## Usage
 
@@ -30,7 +30,8 @@ SummarizeCrossStudy(
 - dfGroups:
 
   \`data.frame\` Optional. A data frame containing group metadata (for
-  InvestigatorName lookup).
+  InvestigatorName lookup). Must include StudyID, GroupID, Param, and
+  Value columns.
 
 - strNameCol:
 
@@ -39,5 +40,16 @@ SummarizeCrossStudy(
 
 ## Value
 
-\`data.frame\` Summary table with cross-study metrics per site,
-including per-study details.
+\`data.frame\` Summary table with the following columns: - GroupID: Site
+identifier - NumStudies: Number of studies the site participates in -
+AvgRiskScore: Average site risk score across studies - MaxRiskScore:
+Maximum site risk score across studies - InvestigatorName: Investigator
+name (if dfGroups provided)
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+# See inst/examples/Example_CrossStudySRS.Rmd
+} # }
+```
