@@ -25,7 +25,7 @@ HTMLWidgets.widget({
                     input.lChartConfig,
                     input.vThreshold,
                     null, // confidence intervals parameter
-                    input.dfGroups
+                    null // no group metadata needed in time-series chart
                 );
 
                 // Add dropdowns that highlight group IDs.
