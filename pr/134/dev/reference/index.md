@@ -2,8 +2,6 @@
 
 ## All functions
 
-- [`CTQ_lineplot()`](https://gilead-biostats.github.io/gsm.kri/dev/reference/CTQ_lineplot.md)
-  : CTQ Time Series Lineplot
 - [`CalculateRiskScore()`](https://gilead-biostats.github.io/gsm.kri/dev/reference/CalculateRiskScore.md)
   : Calculate Risk Score
 - [`FilterAnalysis()`](https://gilead-biostats.github.io/gsm.kri/dev/reference/FilterAnalysis.md)
