@@ -66,7 +66,6 @@ SummarizeCrossStudy <- function(
         paste(missing_cols, collapse = ", ")
       ))
     } else {
-
       # Get all investigator names for each site
       investigator_names_all <- dfGroups %>%
         dplyr::filter(.data$Param == strNameCol) %>%
