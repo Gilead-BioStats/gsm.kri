@@ -65,7 +65,7 @@ SummarizeCrossStudy <- function(
         "Can't add group metadata since dfGroups is missing required columns:",
         paste(missing_cols, collapse = ", ")
       ))
-    } else{
+    } else {
 
       # Get all investigator names for each site
       investigator_names_all <- dfGroups %>%
@@ -95,12 +95,19 @@ SummarizeCrossStudy <- function(
             sapply(
               1:min(5, nrow(multiple_names)),
               function(i) {
-                paste0("  - ", multiple_names$GroupID[i], ": ", multiple_names$AllNames[i])
+                paste0(
+                  "  - ",
+                  multiple_names$GroupID[i],
+                  ": ",
+                  multiple_names$AllNames[i]
+                )
               }
             ),
             collapse = "\n"
           ),
-          if (nrow(multiple_names) > 5) paste0("\n  ... and ", nrow(multiple_names) - 5, " more")
+          if (nrow(multiple_names) > 5) {
+            paste0("\n  ... and ", nrow(multiple_names) - 5, " more")
+          }
         )
         warning(warning_msg)
 
