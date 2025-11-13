@@ -21,29 +21,10 @@ steps:
     params:
       lAnalysis: lAnalysis_filtered
       strName: "Analysis_Flagged"
-  - output: dfResults
-    name: base::subset
-    params:
-      x: dfFlaggedWeights
-      select:
-        - GroupLevel
-        - GroupID
-        - MetricID
-        - Flag
-  - output: dfWeights
-    name: base::subset
-    params:
-      x: dfFlaggedWeights
-      select:
-        - MetricID
-        - Flag
-        - Weight
-        - WeightMax
   - output: Analysis_Summary
     name: gsm.kri::CalculateRiskScore
     params:
-      - dfResults
-      - dfWeights
+      dfFlaggedWeights: dfFlaggedWeights
   - output: lAnalysis
     name: list
     params:
