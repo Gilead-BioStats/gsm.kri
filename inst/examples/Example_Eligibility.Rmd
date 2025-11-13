@@ -1,0 +1,119 @@
+---
+output:
+  html_document:
+    mathjax: null
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    css: styles.css
+params:
+  dfResults: NA
+  dfMetrics: NA
+  dfGroups: NA
+  lListings: NA
+---
+
+```{r setup, include=FALSE} 
+library(dplyr)
+library(stringr)
+library(tidyr)
+library(gsm.kri)
+library(gsm.qtl)
+library(ggplot2)
+library(plotly)
+library(gt)
+library(htmltools)
+library(knitr)
+
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+
+
+dfResults <- params$dfResults
+dfMetrics <- params$dfMetrics
+dfGroups <- params$dfGroups
+lListings <- params$lListings
+latest_snapshot = max(dfResults$SnapshotDate)
+```
+
+---
+title: " Ineligible Participant Overview"
+subtitle: "Study: `r unique(lListings[[1]]$studyid)`"
+date: "Snapshot Date: `r latest_snapshot`"
+---
+
+# Ineligible Participant Overview
+
+## Study Overview
+```{r, echo=FALSE}
+dfResults_Overview <- ResultsProcessor(dfResults = dfResults, dfMetrics = dfMetrics)
+QTL_Overview(dfResults = dfResults_Overview,
+             dSnapshot = latest_snapshot,
+             strNum = "Ineligible Participants",
+             strDenom = "Total Enrolled", 
+             strQTL = "Current Ineligible Enrolled Rate")
+```
+
+## Time Series Chart
+```{r, echo=FALSE, results='asis', fig.height=4}
+Widget_TimeSeries(
+  dfResults = dfResults %>% mutate(Flag = NA),
+  lMetric = as.list(dfMetrics),
+  dfGroups = dfGroups,
+  strOutcome = "Metric",
+  bAddGroupSelect = FALSE,
+  selectedGroupIDs = unique(dfResults$GroupID)
+)
+```
+
+## Bar Charts {.tabset .tabset-pills}
+
+### Site
+```{r, echo = FALSE, results = 'asis', fig.height=4}
+eligibility_groupBar(df = lListings[[1]], varGroupID = invid, strGroupLabel = "Site")
+```
+
+### Country
+```{r, echo = FALSE, results = 'asis', fig.height=4}
+eligibility_groupBar(df = lListings[[1]], varGroupID = country, strGroupLabel = "Country")
+```
+
+### Source
+```{r, echo = FALSE, results = 'asis', fig.height=4}
+eligibility_sourceBar(df = lListings[[1]])
+```
+
+### Criteria/Site
+```{r, echo = FALSE, results = 'asis', fig.height=4}
+criteria_groupBar(df = lListings[[1]], varGroupID = invid, strGroupLabel = "Site")
+```
+
+### Criteria/Country
+```{r, echo = FALSE, results = 'asis', fig.height=4}
+criteria_groupBar(df = lListings[[1]], varGroupID = country, strGroupLabel = "Country")
+```
+
+## Inclusion/Exclusion Listing
+```{r, echo = FALSE}
+# output the listing on the html
+eligibility_listing(df = lListings[[1]])
+
+# grab the dataset to download
+x <- eligibility_listing(df = lListings[[1]], download = TRUE)
+csv_txt <- paste(capture.output(write.csv(x, row.names = FALSE)), collapse = "\n")# turn into a data-URI (single-file HTML friendly)
+href <- base64enc::dataURI(charToRaw(csv_txt), mime = "text/csv;charset=utf-8")
+
+knitr::asis_output(
+  sprintf('<p><a class="btn btn-primary" download="eligibility_listing.csv" href="%s">
+            ⬇️ Download CSV
+          </a></p>', href)
+)
+```
+
+
+```{r echo=FALSE}
+toggle_toc <- system.file('report', 'lib', 'toggleTOC.js', package = "gsm.kri")
+```
+
+```{js, file={toggle_toc}, echo=FALSE}
+```

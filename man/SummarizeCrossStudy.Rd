@@ -16,16 +16,26 @@ SummarizeCrossStudy(
 
 \item{strGroupLevel}{`character` The group level to summarize. Default is 'Site'.}
 
-\item{dfGroups}{`data.frame` Optional. A data frame containing group metadata (for InvestigatorName lookup).}
+\item{dfGroups}{`data.frame` Optional. A data frame containing group metadata (for InvestigatorName lookup). Must include StudyID, GroupID, Param, and Value columns.}
 
 \item{strNameCol}{`character` The column name in dfGroups to use for investigator names. Default is 'InvestigatorLastName'.}
 }
 \value{
-`data.frame` Summary table with cross-study metrics per site, including per-study details.
+`data.frame` Summary table with the following columns:
+- GroupID: Site identifier
+- NumStudies: Number of studies the site participates in
+- AvgRiskScore: Average site risk score across studies
+- MaxRiskScore: Maximum site risk score across studies
+- InvestigatorName: Investigator name (if dfGroups provided)
 }
 \description{
 `r lifecycle::badge("experimental")`
 
-Creates a summary table showing cross-study metrics for each site, including
-number of studies, average risk scores, and aggregated flag counts.
+Creates a summary table showing cross-study site risk score metrics including
+number of studies, average and maximum risk scores, and investigator names.
+}
+\examples{
+\dontrun{
+# See inst/examples/Example_CrossStudySRS.Rmd
+}
 }
