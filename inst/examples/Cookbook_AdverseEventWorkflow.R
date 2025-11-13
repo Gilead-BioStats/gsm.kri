@@ -116,8 +116,15 @@ Widget_BarChart(
   strOutcome = "Numerator"
 )
 
-dfBounds <- Analyze_NormalApprox_PredictBounds(AE_KRI$Analysis_Flagged, vThreshold = c(-3,-2,2,3))
-Widget_ScatterPlot(AE_KRI$Analysis_Summary, lMetric = labels, dfBounds = dfBounds)
+dfBounds <- Analyze_NormalApprox_PredictBounds(
+  AE_KRI$Analysis_Flagged,
+  vThreshold = c(-3, -2, 2, 3)
+)
+Widget_ScatterPlot(
+  AE_KRI$Analysis_Summary,
+  lMetric = labels,
+  dfBounds = dfBounds
+)
 
 
 #### Example 2.2 - Run Country-Level Metric
