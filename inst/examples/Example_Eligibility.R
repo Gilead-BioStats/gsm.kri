@@ -10,7 +10,6 @@
 # devtools::load_all("../gsm.qtl") # fix-58
 # devtools::load_all("../gsm.kri") # fix-131
 
-
 pak::pak("Gilead-BioStats/gsm.qtl@fix-58")
 devtools::load_all()
 pak::pak("Gilead-BioStats/gsm.core@fix-96")
@@ -26,20 +25,25 @@ dfMetrics <- gsm.core::reportingMetrics_study %>%
 dfGroups <- gsm.core::reportingGroups_study
 
 mappings_wf <- gsm.core::MakeWorkflowList(
-  strNames =c("IE", "EXCLUSION", "ENROLL", "PD"),
+  strNames = c("IE", "EXCLUSION", "ENROLL", "PD"),
   strPath = "workflow/1_mappings",
   strPackage = "gsm.mapping"
 )
 mappings_spec <- gsm.mapping::CombineSpecs(mappings_wf)
-lRaw <- map_depth(list(gsm.core::lSource), 1, gsm.mapping::Ingest, mappings_spec)
+lRaw <- map_depth(
+  list(gsm.core::lSource),
+  1,
+  gsm.mapping::Ingest,
+  mappings_spec
+)
 mapped <- map_depth(lRaw, 1, ~ gsm.core::RunWorkflows(mappings_wf, .x))
 
 # test kri workflows
-metrics_wf<- gsm.core::MakeWorkflowList(
+metrics_wf <- gsm.core::MakeWorkflowList(
   strNames = c("cou0014", "kri0014"),
   strPath = "inst/workflow/2_metrics",
 )
-IE_kris <- map_depth(mapped, 1, ~gsm.core::RunWorkflows(metrics_wf, .x))
+IE_kris <- map_depth(mapped, 1, ~ gsm.core::RunWorkflows(metrics_wf, .x))
 
 
 # test rendering of report
@@ -56,10 +60,13 @@ lParams <- list(
 
 # Local call to render function - run from pkg root
 gsm.kri::RenderRmd(
-  lParams = lParams ,
+  lParams = lParams,
   strOutputDir = file.path(getwd(), "pkgdown", "assets", "examples"),
   strOutputFile = "Example_Eligibility.html",
-  strInputPath = system.file("examples/Example_Eligibility.Rmd", package = "gsm.kri")
+  strInputPath = system.file(
+    "examples/Example_Eligibility.Rmd",
+    package = "gsm.kri"
+  )
 )
 
 # Tinkering piece for TimeSeries
@@ -71,7 +78,6 @@ gsm.kri::RenderRmd(
 #   bAddGroupSelect = FALSE,
 #   selectedGroupIDs = "AA-AA-000-0000"
 # )
-
 
 # Via workflow
 
