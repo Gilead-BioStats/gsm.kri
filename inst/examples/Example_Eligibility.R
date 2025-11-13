@@ -1,7 +1,7 @@
 # library(gsm.datasim)
 # library(gsm.mapping)
 # library(gsm.reporting)
-# library(gsm.core) # fix-96
+# library(gsm.core) # dev
 # library(gsm.kri)
 # library(gsm.qtl) # fix-58
 # library(purrr)
@@ -12,7 +12,7 @@
 
 pak::pak("Gilead-BioStats/gsm.qtl@fix-58")
 devtools::load_all()
-pak::pak("Gilead-BioStats/gsm.core@fix-96")
+pak::pak("Gilead-BioStats/gsm.core@dev")
 
 dfResults <- gsm.core::reportingResults_study %>%
   filter(MetricID %in% "Analysis_qtl0001") %>%
