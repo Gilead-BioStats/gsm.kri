@@ -104,7 +104,6 @@ test_that("Output is expected object", {
         StudyID = "ABC-123"
       )
     )
-  
   x <- Report_MetricTable(reportingResults_filt, gsm.core::reportingGroups)
   
   # Check structure
