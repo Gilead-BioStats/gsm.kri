@@ -105,7 +105,6 @@ test_that("Output is expected object", {
       )
     )
   x <- Report_MetricTable(reportingResults_filt, gsm.core::reportingGroups)
-  
   # Check structure
   expect_s3_class(x, "shiny.tag")
   expect_equal(x$name, "p")
