@@ -1,10 +1,13 @@
 test_that("Empty data frames return default message", {
-  dfResults_empty <- gsm.core::reportingResults[-c(1:nrow(gsm.core::reportingResults)), ]
-  dfGroups_empty <- gsm.core::reportingGroups[-c(1:nrow(gsm.core::reportingGroups)), ]
-  expect_equal(
-    Report_MetricTable(dfResults_empty, dfGroups_empty),
-    htmltools::tags$p("Nothing flagged for this KRI.")
-  )
+  dfResults_empty <- gsm.core::reportingResults[
+    -c(1:nrow(gsm.core::reportingResults)),
+  ]
+  dfGroups_empty <- gsm.core::reportingGroups[
+    -c(1:nrow(gsm.core::reportingGroups)),
+  ]
+  result <- Report_MetricTable(dfResults_empty, dfGroups_empty)
+  expected <- htmltools::tags$p("Nothing flagged for this KRI.")
+  expect_equal(as.character(result), as.character(expected))
 })
 
 test_that("Default message when nothing flagged", {
@@ -14,10 +17,27 @@ test_that("Default message when nothing flagged", {
     Flag == 0
   )
   dfGroups <- gsm.core::reportingGroups
-  expect_equal(
-    Report_MetricTable(dfResults, dfGroups),
-    htmltools::tags$p("Nothing flagged for this KRI.")
+  result <- Report_MetricTable(dfResults, dfGroups)
+  expected <- htmltools::tags$p("Nothing flagged for this KRI.")
+  expect_equal(as.character(result), as.character(expected))
+})
+
+test_that("output_label attribute is set even with no flags (Issue #107)", {
+  # Create test data with all Flag=0
+  dfResults <- dplyr::filter(
+    gsm.core::reportingResults,
+    MetricID == "kri0001",
+    Flag == 0
   )
+  dfGroups <- gsm.core::reportingGroups
+
+  # Get result from Report_MetricTable
+  result <- Report_MetricTable(dfResults, dfGroups)
+
+  # Check that output_label attribute exists and is not NULL
+  output_label <- attr(result, "output_label")
+  expect_false(is.null(output_label))
+  expect_true(grepl("Metric Table", output_label))
 })
 
 test_that("Correct data structure when proper dataframe is passed", {
@@ -45,7 +65,10 @@ test_that("Score rounding works correctly", {
 })
 
 test_that("Errors out when multiple MetricIDs passed in", {
-  expect_error(Report_MetricTable(gsm.core::reportingResults, gsm.core::reportingGroups))
+  expect_error(Report_MetricTable(
+    gsm.core::reportingResults,
+    gsm.core::reportingGroups
+  ))
 })
 
 test_that("Runs with just results with NULL group argument", {
@@ -81,8 +104,10 @@ test_that("Output is expected object", {
         StudyID = "ABC-123"
       )
     )
-  expect_snapshot({
-    x <- Report_MetricTable(reportingResults_filt, gsm.core::reportingGroups)
-    str(x, max.level = 2)
-  })
+  x <- Report_MetricTable(reportingResults_filt, gsm.core::reportingGroups)
+  # Check structure
+  expect_s3_class(x, "shiny.tag")
+  expect_equal(x$name, "p")
+  expect_true("output_label" %in% names(attributes(x)))
+  expect_true(grepl("Metric Table", attr(x, "output_label")))
 })
