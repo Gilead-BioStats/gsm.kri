@@ -17,6 +17,6 @@ gsm.kri::Report_KRI(
   dfResults = gsm.kri::FilterByLatestSnapshotDate(gsm.core::reportingResults_country),
   dfGroups = gsm.core::reportingGroups_country,
   dfMetrics = gsm.core::reportingMetrics_country,
-  strOutputDir = here::here("pkgdown", "assets"),
+  strOutputDir = here::here("pkgdown", "assets", "examples"),
   strOutputFile = "report_kri_country.html"
 )
