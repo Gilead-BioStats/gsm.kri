@@ -24,3 +24,5 @@ rmarkdown::render(
   output_dir = example_path
 )
 source('inst/examples/Example_Eligibility.R')
+source('inst/examples/Cookbook_SiteReport.R')
+source('inst/examples/Cookbook_CountryReport.R')

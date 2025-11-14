@@ -1,3 +1,4 @@
+library(dplyr)
 #### 3.1 - Create a KRI Report using 12 standard metrics in a step-by-step workflow
 library(gsm.core)
 library(gsm.mapping)
@@ -6,6 +7,7 @@ library(gsm.kri)
 library(yaml)
 library(dplyr)
 
+<<<<<<< HEAD
 core_mappings <- c(
   "AE",
   "COUNTRY",
@@ -24,6 +26,12 @@ core_mappings <- c(
   "SDRGCOMP",
   "SITE",
   "SUBJ"
+=======
+
+core_mappings <- c(
+  "AE", "COUNTRY", "DATACHG", "DATAENT", "ENROLL", "LB", "VISIT",
+  "PD", "PK", "QUERY", "STUDY", "STUDCOMP", "SDRGCOMP", "SITE", "SUBJ"
+>>>>>>> fix-133
 )
 
 lRaw <- list(
@@ -38,10 +46,16 @@ lRaw <- list(
     ),
   Raw_LB = gsm.core::lSource$Raw_LB,
   Raw_PK = gsm.core::lSource$Raw_PK %>%
+<<<<<<< HEAD
     rename(
       visit = foldername
     ),
   Raw_STUDCOMP = gsm.core::lSource$Raw_STUDCOMP,
+=======
+    rename(visit = foldername),
+  Raw_STUDCOMP = gsm.core::lSource$Raw_STUDCOMP %>%
+    select(subjid, compyn),
+>>>>>>> fix-133
   Raw_SDRGCOMP = gsm.core::lSource$Raw_SDRGCOMP,
   Raw_DATACHG = gsm.core::lSource$Raw_DATACHG %>%
     rename(
@@ -67,6 +81,7 @@ lRaw <- list(
       Country = country
     ),
   Raw_STUDY = gsm.core::lSource$Raw_STUDY %>%
+<<<<<<< HEAD
     rename(
       studyid = protocol_number
     ),
@@ -75,6 +90,12 @@ lRaw <- list(
       visit = foldername
     ),
   Raw_IE = gsm.core::lSource$Raw_IE # added to {gsm.core} after v1.1.6, currently only in dev branch
+=======
+    rename(studyid = protocol_number) %>%
+    rename(Status = status),
+  Raw_VISIT = gsm.core::lSource$Raw_VISIT %>%
+    rename(visit = foldername)
+>>>>>>> fix-133
 )
 
 # Step 1 - Create Mapped Data Layer - filter, aggregate and join raw data to create mapped data layer
