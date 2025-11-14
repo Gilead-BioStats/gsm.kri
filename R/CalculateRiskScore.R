@@ -92,9 +92,17 @@ CalculateRiskScore <- function(
 
   # Drop row that have NA values of Weight or WeightMax and throw a warning
   if (any(is.na(dfResults$Weight)) || any(is.na(dfResults$WeightMax))) {
-    warning("Rows with NA values in 'Weight' or 'WeightMax' have been dropped.")
+    strMetricIDs <- unique(dfResults$MetricID)
     dfResults <- dfResults %>%
       filter(!is.na(.data$Weight) & !is.na(.data$WeightMax))
+    strMetricIDsWithoutWeights <- setdiff(
+      strMetricIDs,
+      unique(dfResults$MetricID)
+    )
+    warning(glue::glue(
+        "Rows with NA values in 'Weight' or 'WeightMax' have been dropped, corresponding to the",
+        "following metric IDs:\n- {paste(strMetricIDsWithoutWeights, collapse = '\n- ')}."
+    ))
   }
 
   # Check that WeightMax is the same within each MetricID
