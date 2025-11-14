@@ -93,7 +93,11 @@ reporting <- RunWorkflows(reporting_wf, c(mapped, list(lAnalyzed = analyzed,
                                                        lWorkflows = metrics_wf)))
 
 # Step 4 - Create KRI Reports - create KRI report using reporting data
-module_wf <- MakeWorkflowList('kri', strPath = "workflow/4_modules", strPackage = "gsm.kri")
+module_wf <- MakeWorkflowList(
+  'kri',
+  strPath = "workflow/4_modules",
+  strPackage = "gsm.kri"
+)
 lReports <- RunWorkflows(module_wf, reporting)
 
 #### 3.2 - Automate data ingestion using Ingest() and CombineSpecs()
