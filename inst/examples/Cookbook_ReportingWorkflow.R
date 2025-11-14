@@ -4,6 +4,7 @@ library(gsm.mapping)
 library(gsm.reporting)
 library(gsm.kri)
 library(yaml)
+library(dplyr)
 
 core_mappings <- c(
   "AE",
@@ -89,12 +90,14 @@ analyzed <- RunWorkflows(metrics_wf, c(mapped, list(lWorkflows = metrics_wf)))
 
 # Step 3 - Create Reporting Layer - create reports using metrics data
 reporting_wf <- MakeWorkflowList(strPath = "workflow/3_reporting", strPackage = "gsm.reporting")
-reporting <- RunWorkflows(reporting_wf, c(mapped, list(lAnalyzed = analyzed,
-                                                       lWorkflows = metrics_wf)))
+reporting <- RunWorkflows(reporting_wf, c(mapped, list(
+  lAnalyzed = analyzed,
+  lWorkflows = metrics_wf
+)))
 
 # Step 4 - Create KRI Reports - create KRI report using reporting data
 module_wf <- MakeWorkflowList(
-  'kri',
+  "kri",
   strPath = "workflow/4_modules",
   strPackage = "gsm.kri"
 )
@@ -111,20 +114,22 @@ mapped <- RunWorkflows(mappings_wf, lRaw)
 
 # Step 2 - Create Metrics - calculate metrics using mapped data
 metrics_wf <- MakeWorkflowList(strPath = "workflow/2_metrics", strPackage = "gsm.kri")
-analyzed <- RunWorkflows(metrics_wf, mapped)
+analyzed <- RunWorkflows(metrics_wf, c(mapped, list(lWorkflows = metrics_wf)))
 
 # Step 3 - Create Reporting Layer - create reports using metrics data
 reporting_wf <- MakeWorkflowList(strPath = "workflow/3_reporting", strPackage = "gsm.reporting")
-reporting <- RunWorkflows(reporting_wf, c(mapped, list(lAnalyzed = analyzed,
-                                                       lWorkflows = metrics_wf)))
+reporting <- RunWorkflows(reporting_wf, c(mapped, list(
+  lAnalyzed = analyzed,
+  lWorkflows = metrics_wf
+)))
 
 # Step 4 - Create KRI Report - create KRI report using reporting data
 module_wf <- MakeWorkflowList(strNames = "report", strPath = "workflow/4_modules", strPackage = "gsm.kri")
 lReports <- RunWorkflows(module_wf, reporting)
 
 #### 3.4 - Combine steps in to a single workflow
-#ss_wf <- MakeWorkflowList(strNames = "Snapshot")
-#lReports <- RunWorkflows(ss_wf, lSource)
+# ss_wf <- MakeWorkflowList(strNames = "Snapshot")
+# lReports <- RunWorkflows(ss_wf, lSource)
 
 #### 3.4 - Use Study configuration to specify data sources
 # StudyConfig <- Read_yaml("workflow/config.yaml")
@@ -143,8 +148,8 @@ lCharts <- MakeCharts(
 
 kri_report_path <- Report_KRI(
   lCharts = lCharts,
-  dfResults =  FilterByLatestSnapshotDate(gsm.core::reportingResults),
-  dfGroups =  gsm.core::reportingGroups,
+  dfResults = FilterByLatestSnapshotDate(gsm.core::reportingResults),
+  dfGroups = gsm.core::reportingGroups,
   dfMetrics = gsm.core::reportingMetrics
 )
 
@@ -156,4 +161,3 @@ historical <- gsm.core::reportingResults %>% filter(SnapshotDate == "2025-03-01"
 # Re-run reporting model and KRI report with historical data
 reporting_long <- gsm.core::RunWorkflows(reporting_wf, c(mapped, list(lAnalyzed = analyzed, Reporting_Results_Longitudinal = historical, lWorkflows = metrics_wf)))
 lReports_long <- gsm.core::RunWorkflows(module_wf, reporting_long)
-
