@@ -204,7 +204,7 @@ test_that("Returns empty data frame when Analysis_srs0001 not present - #71", {
     expect_equal(nrow(result), 0)
 })
 
-test_that("Validates input types - #144", {
+test_that("Validates input types - #71", {
     dfResults <- create_test_results()
 
     # dfResults must be a data.frame
@@ -226,7 +226,7 @@ test_that("Validates input types - #144", {
     )
 })
 
-test_that("Works with custom strNameCol parameter - #144", {
+test_that("Works with custom strNameCol parameter - #71", {
     dfResults <- create_test_results()
     dfGroups <- tibble::tibble(
         GroupID = rep(c("Site001", "Site002"), each = 2),
