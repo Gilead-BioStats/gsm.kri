@@ -6,8 +6,23 @@ library(gsm.kri)
 library(yaml)
 
 core_mappings <- c(
-  "AE", "COUNTRY", "DATACHG", "DATAENT", "ENROLL", "EXCLUSION", "IE", "LB", "VISIT",
-  "PD", "PK", "QUERY", "STUDY", "STUDCOMP", "SDRGCOMP", "SITE", "SUBJ"
+  "AE",
+  "COUNTRY",
+  "DATACHG",
+  "DATAENT",
+  "ENROLL",
+  "EXCLUSION",
+  "IE",
+  "LB",
+  "VISIT",
+  "PD",
+  "PK",
+  "QUERY",
+  "STUDY",
+  "STUDCOMP",
+  "SDRGCOMP",
+  "SITE",
+  "SUBJ"
 )
 
 lRaw <- list(
