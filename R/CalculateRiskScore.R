@@ -100,8 +100,8 @@ CalculateRiskScore <- function(
       unique(dfResults$MetricID)
     )
     warning(glue::glue(
-        "Rows with NA values in 'Weight' or 'WeightMax' have been dropped, corresponding to the",
-        "following metric IDs:\n- {paste(strMetricIDsWithoutWeights, collapse = '\n- ')}."
+      "Rows with NA values in 'Weight' or 'WeightMax' have been dropped, corresponding to the",
+      "following metric IDs:\n- {paste(strMetricIDsWithoutWeights, collapse = '\n- ')}."
     ))
   }
 
