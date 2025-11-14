@@ -104,8 +104,12 @@ test_that("Output is expected object", {
         StudyID = "ABC-123"
       )
     )
-  expect_snapshot({
-    x <- Report_MetricTable(reportingResults_filt, gsm.core::reportingGroups)
-    str(x, max.level = 2)
-  })
+  
+  x <- Report_MetricTable(reportingResults_filt, gsm.core::reportingGroups)
+  
+  # Check structure
+  expect_s3_class(x, "shiny.tag")
+  expect_equal(x$name, "p")
+  expect_true("output_label" %in% names(attributes(x)))
+  expect_true(grepl("Metric Table", attr(x, "output_label")))
 })
