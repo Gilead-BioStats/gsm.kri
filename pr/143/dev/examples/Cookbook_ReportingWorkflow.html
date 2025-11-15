@@ -11,7 +11,7 @@
 
 
 
-<title>Reporting Workflow Examples</title>
+<title>Cookbook - Reporting Workflow Examples</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -1583,30 +1583,103 @@ border-radius: 0px;
 
 
 
-<h1 class="title toc-ignore">Reporting Workflow Examples</h1>
-<h4 class="date">2025-10-24 10:12:13 EDT</h4>
+<h1 class="title toc-ignore">Cookbook - Reporting Workflow Examples</h1>
+<h4 class="date">2025-11-14 21:47:39 EST</h4>
 
 </div>
 
 
-<pre class="r"><code>library(gsm.core)
+<pre class="r"><code>library(dplyr)
+library(gsm.core)
 library(gsm.mapping)
 library(gsm.reporting)
 library(gsm.kri)
-library(yaml)
-library(dplyr)</code></pre>
-<pre><code>#&gt; 
-#&gt; Attaching package: &#39;dplyr&#39;</code></pre>
-<pre><code>#&gt; The following objects are masked from &#39;package:stats&#39;:
-#&gt; 
-#&gt;     filter, lag</code></pre>
-<pre><code>#&gt; The following objects are masked from &#39;package:base&#39;:
-#&gt; 
-#&gt;     intersect, setdiff, setequal, union</code></pre>
-<div id="example-3.1---create-a-kri-report-using-12-standard-metrics" class="section level2">
-<h2>Example 3.1 - Create a KRI Report Using 12 Standard Metrics</h2>
-<p>This example demonstrates using pre-calculated reporting data from
-<code>gsm.core</code> to create visualizations and reports.</p>
+library(yaml)</code></pre>
+<div id="example-3.1---create-a-kri-report-using-12-standard-metrics-in-a-step-by-step-workflow" class="section level2">
+<h2>Example 3.1 - Create a KRI Report using 12 standard metrics in a
+step-by-step workflow</h2>
+<p>This example demonstrates a complete workflow from raw data to KRI
+reports using standard metrics.</p>
+<div id="prepare-raw-data" class="section level3">
+<h3>Prepare Raw Data</h3>
+<pre class="r"><code>core_mappings &lt;- c(
+  &quot;AE&quot;, &quot;COUNTRY&quot;, &quot;DATACHG&quot;, &quot;DATAENT&quot;, &quot;ENROLL&quot;, &quot;EXCLUSION&quot;, &quot;IE&quot;, &quot;LB&quot;, &quot;VISIT&quot;,
+  &quot;PD&quot;, &quot;PK&quot;, &quot;QUERY&quot;, &quot;STUDY&quot;, &quot;STUDCOMP&quot;, &quot;SDRGCOMP&quot;, &quot;SITE&quot;, &quot;SUBJ&quot;
+)
+
+lRaw &lt;- list(
+  Raw_SUBJ = gsm.core::lSource$Raw_SUBJ,
+  Raw_AE = gsm.core::lSource$Raw_AE,
+  Raw_PD = gsm.core::lSource$Raw_PD %&gt;%
+    rename(
+      subjid = subjectenrollmentnumber,
+      dvdecod = crocategory,
+      dvterm = description,
+      dvdtm = deviationdate
+    ),
+  Raw_LB = gsm.core::lSource$Raw_LB,
+  Raw_PK = gsm.core::lSource$Raw_PK %&gt;%
+    rename(
+      visit = foldername
+    ),
+  Raw_STUDCOMP = gsm.core::lSource$Raw_STUDCOMP,
+  Raw_SDRGCOMP = gsm.core::lSource$Raw_SDRGCOMP,
+  Raw_DATACHG = gsm.core::lSource$Raw_DATACHG %&gt;%
+    rename(subject_nsv = subjectname),
+  Raw_DATAENT = gsm.core::lSource$Raw_DATAENT %&gt;%
+    rename(subject_nsv = subjectname),
+  Raw_QUERY = gsm.core::lSource$Raw_QUERY %&gt;%
+    rename(subject_nsv = subjectname),
+  Raw_ENROLL = gsm.core::lSource$Raw_ENROLL,
+  Raw_SITE = gsm.core::lSource$Raw_SITE %&gt;%
+    rename(
+      studyid = protocol,
+      invid = pi_number,
+      InvestigatorFirstName = pi_first_name,
+      InvestigatorLastName = pi_last_name,
+      City = city,
+      State = state,
+      Country = country
+    ),
+  Raw_STUDY = gsm.core::lSource$Raw_STUDY %&gt;%
+    rename(studyid = protocol_number),
+  Raw_VISIT = gsm.core::lSource$Raw_VISIT %&gt;%
+    rename(visit = foldername),
+  Raw_IE = gsm.core::lSource$Raw_IE
+)</code></pre>
+</div>
+<div id="step-1---create-mapped-data-layer" class="section level3">
+<h3>Step 1 - Create Mapped Data Layer</h3>
+<p>Filter, aggregate and join raw data to create mapped data layer.</p>
+<pre class="r"><code>mappings_wf &lt;- MakeWorkflowList(strNames = core_mappings, strPath = &quot;workflow/1_mappings&quot;, strPackage = &quot;gsm.mapping&quot;)
+mapped &lt;- RunWorkflows(mappings_wf, lRaw)</code></pre>
+</div>
+<div id="step-2---create-metrics" class="section level3">
+<h3>Step 2 - Create Metrics</h3>
+<p>Calculate metrics using mapped data.</p>
+<pre class="r"><code>metrics_wf &lt;- MakeWorkflowList(strPath = &quot;inst/workflow/2_metrics&quot;, strPackage = &quot;gsm.kri&quot;)
+analyzed &lt;- RunWorkflows(metrics_wf, c(mapped, list(lWorkflows = metrics_wf)))</code></pre>
+</div>
+<div id="step-3---create-reporting-layer" class="section level3">
+<h3>Step 3 - Create Reporting Layer</h3>
+<p>Create reports using metrics data.</p>
+<pre class="r"><code>reporting_wf &lt;- MakeWorkflowList(strPath = &quot;workflow/3_reporting&quot;, strPackage = &quot;gsm.reporting&quot;)
+reporting &lt;- RunWorkflows(reporting_wf, c(mapped, list(
+  lAnalyzed = analyzed,
+  lWorkflows = metrics_wf
+)))</code></pre>
+</div>
+<div id="step-4---create-kri-reports" class="section level3">
+<h3>Step 4 - Create KRI Reports</h3>
+<p>Create KRI Site and Country reports using reporting data.</p>
+<pre class="r"><code>module_wf &lt;- MakeWorkflowList(&quot;kri&quot;, strPath = &quot;inst/workflow/4_modules&quot;, strPackage = &quot;gsm.kri&quot;)
+lReports &lt;- RunWorkflows(module_wf, reporting)</code></pre>
+</div>
+</div>
+<div id="example-3.2---site-level-kri-report-with-multiple-snapshotdate" class="section level2">
+<h2>Example 3.2 - Site-Level KRI Report with multiple SnapshotDate</h2>
+<p>This example demonstrates creating visualizations and reports using
+pre-calculated reporting data from <code>gsm.core</code>.</p>
 <div id="creating-interactive-charts" class="section level3">
 <h3>Creating Interactive Charts</h3>
 <pre class="r"><code>lCharts &lt;- MakeCharts(
@@ -1615,129 +1688,31 @@ library(dplyr)</code></pre>
   dfMetrics = gsm.core::reportingMetrics,
   dfBounds = gsm.core::reportingBounds
 )</code></pre>
-<pre><code>#&gt; Parsed -2,-1,2,3 to numeric vector: -2, -1, 2, 3
-#&gt; Parsed -2,-1,2,3 to numeric vector: -2, -1, 2, 3
-#&gt; Parsed -3,-2,2,3 to numeric vector: -3, -2, 2, 3
-#&gt; Parsed -3,-2,2,3 to numeric vector: -3, -2, 2, 3
-#&gt; Parsed 2,3 to numeric vector: 2, 3
-#&gt; Parsed 2,3 to numeric vector: 2, 3
-#&gt; Parsed 2,3 to numeric vector: 2, 3
-#&gt; Parsed 2,3 to numeric vector: 2, 3
-#&gt; Parsed 2,3 to numeric vector: 2, 3
-#&gt; Parsed 2,3 to numeric vector: 2, 3
-#&gt; Parsed 2,3 to numeric vector: 2, 3
-#&gt; Parsed -3,-2,2,3 to numeric vector: -3, -2, 2, 3
-#&gt; MetricID not found in dfBounds. Please double check input data if intentional.
-#&gt; Parsed 0.9,0.85 to numeric vector: 0.9, 0.85
-#&gt; MetricID not found in dfBounds. Please double check input data if intentional.</code></pre>
-<pre><code>#&gt; Warning: Warning: Failed to parse strThreshold (&#39;NA&#39;) to a numeric vector.</code></pre>
 </div>
 <div id="generate-kri-report" class="section level3">
 <h3>Generate KRI Report</h3>
 <pre class="r"><code>kri_report_path &lt;- Report_KRI(
   lCharts = lCharts,
-  dfResults =  FilterByLatestSnapshotDate(gsm.core::reportingResults),
-  dfGroups =  gsm.core::reportingGroups,
+  dfResults = FilterByLatestSnapshotDate(gsm.core::reportingResults),
+  dfGroups = gsm.core::reportingGroups,
   dfMetrics = gsm.core::reportingMetrics
 )</code></pre>
-<pre><code>#&gt; 
-#&gt; 
-#&gt; processing file: Report_KRI.Rmd</code></pre>
-<pre><code>#&gt; 1/26                   
-#&gt; 2/26 [setup]           
-#&gt; 3/26                   
-#&gt; 4/26 [unnamed-chunk-1] 
-#&gt; 5/26                   
-#&gt; 6/26 [unnamed-chunk-2] 
-#&gt; 7/26                   
-#&gt; 8/26 [unnamed-chunk-3] 
-#&gt; 9/26                   
-#&gt; 10/26 [unnamed-chunk-4] 
-#&gt; 11/26                   
-#&gt; 12/26 [flag-change-html]
-#&gt; 13/26                   
-#&gt; 14/26 [unnamed-chunk-5] 
-#&gt; 15/26                   
-#&gt; 16/26 [unnamed-chunk-6] 
-#&gt; 17/26                   
-#&gt; 18/26 [unnamed-chunk-7] 
-#&gt; 19/26                   
-#&gt; 20/26 [unnamed-chunk-8] 
-#&gt; 21/26                   
-#&gt; 22/26 [unnamed-chunk-9] 
-#&gt; 23/26                   
-#&gt; 24/26 [unnamed-chunk-10]
-#&gt; 25/26                   
-#&gt; 26/26 [unnamed-chunk-11]</code></pre>
-<pre><code>#&gt; output file: /private/var/folders/gc/cy0mn68j4dn1cnlsf_y4571w0000gp/T/RtmpYyTXU0/Report_KRI.knit.md</code></pre>
-<pre><code>#&gt; /usr/local/bin/pandoc +RTS -K512m -RTS /private/var/folders/gc/cy0mn68j4dn1cnlsf_y4571w0000gp/T/RtmpYyTXU0/Report_KRI.knit.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output /Users/jwildfire/github/gsm.kri/inst/examples/kri_report_AAAA0000000_Site_20250401.html --lua-filter /Users/jwildfire/Library/R/arm64/4.4/library/rmarkdown/rmarkdown/lua/pagebreak.lua --lua-filter /Users/jwildfire/Library/R/arm64/4.4/library/rmarkdown/rmarkdown/lua/latex-div.lua --embed-resources --standalone --variable bs3=TRUE --section-divs --table-of-contents --toc-depth 3 --variable toc_float=1 --variable toc_selectors=h1,h2,h3 --variable toc_smooth_scroll=1 --variable toc_print=1 --template /Users/jwildfire/Library/R/arm64/4.4/library/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --variable theme=bootstrap --css styles.css --include-in-header /var/folders/gc/cy0mn68j4dn1cnlsf_y4571w0000gp/T//RtmpYyTXU0/rmarkdown-str56e312f8965.html</code></pre>
-<pre><code>#&gt; 
-#&gt; Output created: kri_report_AAAA0000000_Site_20250401.html</code></pre>
-<p>The KRI report has been generated at:
-/Users/jwildfire/github/gsm.kri/inst/examples/kri_report_AAAA0000000_Site_20250401.html</p>
 </div>
 </div>
-<div id="example-3.2---reporting-results-with-changes-from-previous-snapshot" class="section level2">
-<h2>Example 3.2 - Reporting Results with Changes from Previous
-Snapshot</h2>
+<div id="example-3.4---reporting-results-with-changes-from-previous-snapshot" class="section level2">
+<h2>Example 3.4 - Reporting Results with Changes from previous
+snapshot</h2>
 <p>This example shows how to include historical comparison data to
 highlight changes from previous snapshots.</p>
-<pre class="r"><code># Prepare historical data  
-historical &lt;- gsm.core::reportingResults %&gt;% filter(SnapshotDate == &quot;2025-03-01&quot;)
-
-# Re-run reporting with historical data
-reporting_wf &lt;- MakeWorkflowList(strPath = &quot;workflow/3_reporting&quot;, strPackage = &quot;gsm.reporting&quot;)
-module_wf &lt;- MakeWorkflowList(strPath = &quot;workflow/4_modules&quot;, strPackage = &quot;gsm.kri&quot;)
-
-# Note: This requires full mapped and analyzed data which would come from running
-# the complete data pipeline shown in the next section.</code></pre>
+<div id="prepare-historical-data" class="section level3">
+<h3>Prepare Historical Data</h3>
+<pre class="r"><code>historical &lt;- gsm.core::reportingResults %&gt;% filter(SnapshotDate == &quot;2025-03-01&quot;)</code></pre>
 </div>
-<div id="full-pipeline-example-advanced" class="section level2">
-<h2>Full Pipeline Example (Advanced)</h2>
-<p>For a complete end-to-end workflow from raw data to reports, you
-would:</p>
-<ol style="list-style-type: decimal">
-<li><strong>Prepare Raw Data</strong> - Load and standardize
-table/column names</li>
-<li><strong>Create Mapped Data</strong> - Run mapping workflows to
-transform raw data</li>
-<li><strong>Calculate Metrics</strong> - Run KRI workflows on mapped
-data<br />
-</li>
-<li><strong>Create Reporting Layer</strong> - Generate reporting
-datasets</li>
-<li><strong>Generate Reports</strong> - Create final KRI reports</li>
-</ol>
-<p>Example code structure:</p>
-<pre class="r"><code># Step 0 - Data Ingestion
-mappings_spec &lt;- CombineSpecs(mappings_wf)
-lRaw &lt;- Ingest(gsm.core::lSource, mappings_spec)
-
-# Step 1 - Mappings
-mappings_wf &lt;- MakeWorkflowList(strPath = &quot;workflow/1_mappings&quot;, strPackage = &quot;gsm.mapping&quot;)
-mapped &lt;- RunWorkflows(mappings_wf, lRaw)
-
-# Step 2 - Metrics
-metrics_wf &lt;- MakeWorkflowList(strPath = &quot;workflow/2_metrics&quot;, strPackage = &quot;gsm.kri&quot;)
-analyzed &lt;- RunWorkflows(metrics_wf, mapped)
-
-# Step 3 - Reporting
-reporting_wf &lt;- MakeWorkflowList(strPath = &quot;workflow/3_reporting&quot;, strPackage = &quot;gsm.reporting&quot;)
-reporting &lt;- RunWorkflows(reporting_wf, c(mapped, list(lAnalyzed = analyzed, lWorkflows = metrics_wf)))
-
-# Step 4 - Modules
-module_wf &lt;- MakeWorkflowList(strPath = &quot;workflow/4_modules&quot;, strPackage = &quot;gsm.kri&quot;)
-lReports &lt;- RunWorkflows(module_wf, reporting)</code></pre>
+<div id="re-run-reporting-model-and-kri-report-with-historical-data" class="section level3">
+<h3>Re-run reporting model and KRI report with historical data</h3>
+<pre class="r"><code>reporting_long &lt;- gsm.core::RunWorkflows(reporting_wf, c(mapped, list(lAnalyzed = analyzed, Reporting_Results_Longitudinal = historical, lWorkflows = metrics_wf)))
+lReports_long &lt;- gsm.core::RunWorkflows(module_wf, reporting_long)</code></pre>
 </div>
-<div id="notes-on-study-configuration" class="section level2">
-<h2>Notes on Study Configuration</h2>
-<p>You can use study configuration files to specify data sources:</p>
-<pre class="r"><code># Example (commented out):
-# StudyConfig &lt;- Read_yaml(&quot;workflow/config.yaml&quot;)
-# mapped &lt;- RunWorkflows(mappings_wf, lConfig=StudyConfig)
-# analyzed &lt;- RunWorkflows(metrics_wf,  lConfig=StudyConfig)
-# reporting &lt;- RunWorkflows(reporting_wf,  lConfig=StudyConfig)
-# lReports &lt;- RunWorkflows(module_wf,  lConfig=StudyConfig)</code></pre>
 </div>
 
 
