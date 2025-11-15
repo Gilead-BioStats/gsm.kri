@@ -79,5 +79,6 @@ dfWeights <- gsm.kri::MakeWeights(gsm.core::reportingMetrics)
 
 # Calculate risk scores
 dfRiskScore <- CalculateRiskScore(dfResults, dfWeights)
-#> Warning: Rows with NA values in 'Weight' or 'WeightMax' have been dropped.
+#> Warning: Rows with NA values in 'Weight' or 'WeightMax' have been dropped, corresponding to thefollowing metric IDs:
+#> - Analysis_kri0013.
 ```
