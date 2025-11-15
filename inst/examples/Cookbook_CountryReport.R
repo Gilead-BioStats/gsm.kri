@@ -14,7 +14,9 @@ lCharts_country <- gsm.kri::MakeCharts(
 ## Render example report
 gsm.kri::Report_KRI(
   lCharts = lCharts_country,
-  dfResults = gsm.kri::FilterByLatestSnapshotDate(gsm.core::reportingResults_country),
+  dfResults = gsm.kri::FilterByLatestSnapshotDate(
+    gsm.core::reportingResults_country
+  ),
   dfGroups = gsm.core::reportingGroups_country,
   dfMetrics = gsm.core::reportingMetrics_country,
   strOutputDir = here::here("pkgdown", "assets", "examples"),

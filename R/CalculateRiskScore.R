@@ -51,13 +51,20 @@ CalculateRiskScore <- function(
   required_cols <- c("GroupLevel","GroupID","MetricID", "Flag")
   if (!all(required_cols %in% colnames(dfResults))) {
     missing_cols <- required_cols[!required_cols %in% colnames(dfResults)]
-    stop("Missing required columns in dfResults: ", paste(missing_cols, collapse = ", "))
-    }
+    stop(
+      "Missing required columns in dfResults: ",
+      paste(missing_cols, collapse = ", ")
+    )
+  }
 
   # Check that MetricID is not present in dfResults$MetricID
 
   if (strMetricID %in% dfResults$MetricID) {
-    stop(paste("MetricID", strMetricID, "already exists in dfResults. Did you already calculate a site risk score?"))
+    stop(paste(
+      "MetricID",
+      strMetricID,
+      "already exists in dfResults. Did you already calculate a site risk score?"
+    ))
   }
 
   # Check that the combination of GroupLevel + GroupID + MetricID is unique
