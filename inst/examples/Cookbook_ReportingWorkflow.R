@@ -1,14 +1,14 @@
 library(dplyr)
-#### 3.1 - Create a KRI Report using 12 standard metrics in a step-by-step workflow
 library(gsm.core)
 library(gsm.mapping)
 library(gsm.reporting)
 library(gsm.kri)
 library(yaml)
 
+#### 3.1 - Create a KRI Report using 12 standard metrics in a step-by-step workflow
 
 core_mappings <- c(
-  "AE", "COUNTRY", "DATACHG", "DATAENT", "ENROLL", "LB", "VISIT",
+  "AE", "COUNTRY", "DATACHG", "DATAENT", "ENROLL", "EXCLUSION", "IE", "LB", "VISIT",
   "PD", "PK", "QUERY", "STUDY", "STUDCOMP", "SDRGCOMP", "SITE", "SUBJ"
 )
 
@@ -16,12 +16,18 @@ lRaw <- list(
   Raw_SUBJ = gsm.core::lSource$Raw_SUBJ,
   Raw_AE = gsm.core::lSource$Raw_AE,
   Raw_PD = gsm.core::lSource$Raw_PD %>%
-    rename(subjid = subjectenrollmentnumber),
+    rename(
+      subjid = subjectenrollmentnumber,
+      dvdecod = crocategory,
+      dvterm = description,
+      dvdtm = deviationdate
+    ),
   Raw_LB = gsm.core::lSource$Raw_LB,
   Raw_PK = gsm.core::lSource$Raw_PK %>%
-    rename(visit = foldername),
-  Raw_STUDCOMP = gsm.core::lSource$Raw_STUDCOMP %>%
-    select(subjid, compyn),
+    rename(
+      visit = foldername
+    ),
+  Raw_STUDCOMP = gsm.core::lSource$Raw_STUDCOMP,
   Raw_SDRGCOMP = gsm.core::lSource$Raw_SDRGCOMP,
   Raw_DATACHG = gsm.core::lSource$Raw_DATACHG %>%
     rename(subject_nsv = subjectname),
@@ -31,19 +37,24 @@ lRaw <- list(
     rename(subject_nsv = subjectname),
   Raw_ENROLL = gsm.core::lSource$Raw_ENROLL,
   Raw_SITE = gsm.core::lSource$Raw_SITE %>%
-    rename(studyid = protocol) %>%
-    rename(invid = pi_number) %>%
-    rename(InvestigatorFirstName = pi_first_name) %>%
-    rename(InvestigatorLastName = pi_last_name) %>%
-    rename(City = city) %>%
-    rename(State = state) %>%
-    rename(Country = country) %>%
-    rename(Status = site_status),
+    rename(
+      studyid = protocol,
+      invid = pi_number,
+      InvestigatorFirstName = pi_first_name,
+      InvestigatorLastName = pi_last_name,
+      City = city,
+      State = state,
+      Country = country
+    ),
   Raw_STUDY = gsm.core::lSource$Raw_STUDY %>%
-    rename(studyid = protocol_number) %>%
-    rename(Status = status),
+    rename(
+      studyid = protocol_number
+    ),
   Raw_VISIT = gsm.core::lSource$Raw_VISIT %>%
-    rename(visit = foldername)
+    rename(
+      visit = foldername
+    ),
+  Raw_IE = gsm.core::lSource$Raw_IE # added to {gsm.core} after v1.1.6, currently only in dev branch
 )
 
 # Step 1 - Create Mapped Data Layer - filter, aggregate and join raw data to create mapped data layer
@@ -51,8 +62,8 @@ mappings_wf <- MakeWorkflowList(strNames = core_mappings, strPath = "workflow/1_
 mapped <- RunWorkflows(mappings_wf, lRaw)
 
 # Step 2 - Create Metrics - calculate metrics using mapped data
-metrics_wf <- MakeWorkflowList(strPath = "workflow/2_metrics", strPackage = "gsm.kri")
-analyzed <- RunWorkflows(metrics_wf, mapped)
+metrics_wf <- MakeWorkflowList(strPath = "inst/workflow/2_metrics", strPackage = "gsm.kri")
+analyzed <- RunWorkflows(metrics_wf, c(mapped, list(lWorkflows = metrics_wf)))
 
 # Step 3 - Create Reporting Layer - create reports using metrics data
 reporting_wf <- MakeWorkflowList(strPath = "workflow/3_reporting", strPackage = "gsm.reporting")
@@ -62,9 +73,10 @@ reporting <- RunWorkflows(reporting_wf, c(mapped, list(
 )))
 
 # Step 4 - Create KRI Reports - create KRI report using reporting data
-module_wf <- MakeWorkflowList(strPath = "workflow/4_modules", strPackage = "gsm.kri")
+module_wf <- MakeWorkflowList('kri', strPath = "inst/workflow/4_modules", strPackage = "gsm.kri")
 lReports <- RunWorkflows(module_wf, reporting)
 
+######## The example 3.2 has to be fixed
 #### 3.2 - Automate data ingestion using Ingest() and CombineSpecs()
 # Step 0 - Data Ingestion - standardize tables/columns names
 mappings_wf <- MakeWorkflowList(strNames = core_mappings, strPath = "workflow/1_mappings", strPackage = "gsm.mapping")
@@ -75,8 +87,8 @@ lRaw <- Ingest(gsm.core::lSource, mappings_spec)
 mapped <- RunWorkflows(mappings_wf, lRaw)
 
 # Step 2 - Create Metrics - calculate metrics using mapped data
-metrics_wf <- MakeWorkflowList(strPath = "workflow/2_metrics", strPackage = "gsm.kri")
-analyzed <- RunWorkflows(metrics_wf, mapped)
+metrics_wf <- MakeWorkflowList(strPath = "inst/workflow/2_metrics", strPackage = "gsm.kri")
+analyzed <- RunWorkflows(metrics_wf, mapped) # this is the step workflow is failing on
 
 # Step 3 - Create Reporting Layer - create reports using metrics data
 reporting_wf <- MakeWorkflowList(strPath = "workflow/3_reporting", strPackage = "gsm.reporting")
@@ -88,6 +100,7 @@ reporting <- RunWorkflows(reporting_wf, c(mapped, list(
 # Step 4 - Create KRI Report - create KRI report using reporting data
 module_wf <- MakeWorkflowList(strNames = "report", strPath = "workflow/4_modules", strPackage = "gsm.kri")
 lReports <- RunWorkflows(module_wf, reporting)
+#######
 
 #### 3.4 - Combine steps in to a single workflow
 # ss_wf <- MakeWorkflowList(strNames = "Snapshot")

@@ -18,5 +18,5 @@ gsm.kri::Report_KRI(
   dfGroups = gsm.core::reportingGroups_country,
   dfMetrics = gsm.core::reportingMetrics_country,
   strOutputDir = here::here("pkgdown", "assets", "examples"),
-  strOutputFile = "report_kri_country.html"
+  strOutputFile = "Report_KRI_Country.html"
 )
