@@ -100,12 +100,31 @@ labels <- list(
   Denominator= "Days on Study"
 )
 
-Widget_BarChart(dfResults = AE_KRI, lMetric=labels, strOutcome="Metric")
-Widget_BarChart(dfResults = AE_KRI, lMetric=labels, strOutcome="Score")
-Widget_BarChart(dfResults = AE_KRI, lMetric=labels, strOutcome="Numerator")
+Widget_BarChart(
+  dfResults = AE_KRI$Analysis_Summary,
+  lMetric = labels,
+  strOutcome = "Metric"
+)
+Widget_BarChart(
+  dfResults = AE_KRI$Analysis_Summary,
+  lMetric = labels,
+  strOutcome = "Score"
+)
+Widget_BarChart(
+  dfResults = AE_KRI$Analysis_Summary,
+  lMetric = labels,
+  strOutcome = "Numerator"
+)
 
-dfBounds <- Analyze_NormalApprox_PredictBounds(AE_KRI, vThreshold = c(-3,-2,2,3))
-Widget_ScatterPlot(AE_KRI, lMetric = labels, dfBounds = dfBounds)
+dfBounds <- Analyze_NormalApprox_PredictBounds(
+  AE_KRI$Analysis_Flagged,
+  vThreshold = c(-3, -2, 2, 3)
+)
+Widget_ScatterPlot(
+  AE_KRI$Analysis_Summary,
+  lMetric = labels,
+  dfBounds = dfBounds
+)
 
 
 #### Example 2.2 - Run Country-Level Metric

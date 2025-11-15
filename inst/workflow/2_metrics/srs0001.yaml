@@ -16,15 +16,24 @@ steps:
     params:
       lAnalysis: lData
       strFilterIDPattern: kri
-  - output: dfFlaggedWeights
+  - output: dfResults
     name: gsm.kri::StackAnalysis
     params:
       lAnalysis: lAnalysis_filtered
-      strName: "Analysis_Flagged"
+      strName: "Analysis_Summary"
+  - output: dfMetrics
+    name: gsm.reporting::MakeMetric
+    params:
+      lWorkflows: lWorkflows
+  - output: dfWeights
+    name: gsm.kri::MakeWeights
+    params:
+      dfMetrics: dfMetrics
   - output: Analysis_Summary
     name: gsm.kri::CalculateRiskScore
     params:
-      dfFlaggedWeights: dfFlaggedWeights
+      dfResults: dfResults
+      dfWeights: dfWeights
   - output: lAnalysis
     name: list
     params:
