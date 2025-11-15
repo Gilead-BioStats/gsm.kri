@@ -5,7 +5,7 @@
 #' This script renders all example files to the output directory.
 #' Run from the gsm.kri package root directory.
 
-example_path <- "pkgdown/assetts/examples"
+example_path <- "pkgdown/assets/examples"
 # Render each RMD file
 rmarkdown::render(
   "inst/examples/Cookbook_AdverseEventKRI.Rmd",

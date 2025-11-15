@@ -30,7 +30,7 @@ navbar:
         href: examples/Example_CrossStudySRS.html
       - text: Example Eligibility
         href: examples/Example_Eligibility.html
-      - text: Report Kri Country
-        href: examples/report_kri_country.html
-      - text: Report Kri Site
-        href: examples/report_kri_site.html
+      - text: Report KRI Country
+        href: examples/Report_KRI_Country.html
+      - text: Report KRI Site
+        href: examples/Report_KRI_Site.html
