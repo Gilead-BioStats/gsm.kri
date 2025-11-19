@@ -46,12 +46,30 @@ Widget_ScatterPlot <- function(
   bDebug = FALSE,
   ...
 ) {
-  gsm.core::stop_if(cnd = !is.data.frame(dfResults), "dfResults is not a data.frame")
-  gsm.core::stop_if(cnd = !(is.null(lMetric) || (is.list(lMetric) && !is.data.frame(lMetric))), "lMetric must be a list, but not a data.frame")
-  gsm.core::stop_if(cnd = !(is.null(dfGroups) || is.data.frame(dfGroups)), "dfGroups is not a data.frame")
-  gsm.core::stop_if(cnd = !(is.null(dfBounds) || is.data.frame(dfBounds)), "dfBounds is not a data.frame")
-  gsm.core::stop_if(cnd = !is.logical(bAddGroupSelect), "bAddGroupSelect is not a logical")
-  gsm.core::stop_if(cnd = !is.character(strShinyGroupSelectID), "strShinyGroupSelectID is not a character")
+  gsm.core::stop_if(
+    cnd = !is.data.frame(dfResults),
+    "dfResults is not a data.frame"
+  )
+  gsm.core::stop_if(
+    cnd = !(is.null(lMetric) || (is.list(lMetric) && !is.data.frame(lMetric))),
+    "lMetric must be a list, but not a data.frame"
+  )
+  gsm.core::stop_if(
+    cnd = !(is.null(dfGroups) || is.data.frame(dfGroups)),
+    "dfGroups is not a data.frame"
+  )
+  gsm.core::stop_if(
+    cnd = !(is.null(dfBounds) || is.data.frame(dfBounds)),
+    "dfBounds is not a data.frame"
+  )
+  gsm.core::stop_if(
+    cnd = !is.logical(bAddGroupSelect),
+    "bAddGroupSelect is not a logical"
+  )
+  gsm.core::stop_if(
+    cnd = !is.character(strShinyGroupSelectID),
+    "strShinyGroupSelectID is not a character"
+  )
   gsm.core::stop_if(cnd = !is.logical(bDebug), "bDebug is not a logical")
 
   # define widget inputs
@@ -72,7 +90,11 @@ Widget_ScatterPlot <- function(
     lChartConfig = lChartConfig,
     bAddGroupSelect = bAddGroupSelect,
     strShinyGroupSelectID = strShinyGroupSelectID,
-    strFootnote = ifelse(!is.null(dfGroups), "Point size is relative to the number of enrolled participants.", ""),
+    strFootnote = ifelse(
+      !is.null(dfGroups),
+      "Point size is relative to the number of enrolled participants.",
+      ""
+    ),
     bDebug = bDebug
   )
 
@@ -123,15 +145,34 @@ Widget_ScatterPlot <- function(
 #' @name Widget_ScatterPlot-shiny
 #'
 #' @export
-Widget_ScatterPlotOutput <- function(outputId, width = "100%", height = "400px") {
-  htmlwidgets::shinyWidgetOutput(outputId, "Widget_ScatterPlot", width, height, package = "gsm.kri")
+Widget_ScatterPlotOutput <- function(
+  outputId,
+  width = "100%",
+  height = "400px"
+) {
+  htmlwidgets::shinyWidgetOutput(
+    outputId,
+    "Widget_ScatterPlot",
+    width,
+    height,
+    package = "gsm.kri"
+  )
 }
 
 #' @rdname Widget_ScatterPlot-shiny
 #' @export
-renderWidget_ScatterPlot <- function(expr, env = parent.frame(), quoted = FALSE) {
+renderWidget_ScatterPlot <- function(
+  expr,
+  env = parent.frame(),
+  quoted = FALSE
+) {
   if (!quoted) {
     expr <- substitute(expr)
   } # force quoted
-  htmlwidgets::shinyRenderWidget(expr, Widget_ScatterPlotOutput, env, quoted = TRUE)
+  htmlwidgets::shinyRenderWidget(
+    expr,
+    Widget_ScatterPlotOutput,
+    env,
+    quoted = TRUE
+  )
 }

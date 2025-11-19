@@ -35,7 +35,11 @@ Report_MetricTable <- function(
   vFlags = c(-2, -1, 1, 2)
 ) {
   dfRiskSignals <- MakeMetricTable(
-    dfResults, dfGroups, strGroupLevel, strGroupDetailsParams, vFlags
+    dfResults,
+    dfGroups,
+    strGroupLevel,
+    strGroupDetailsParams,
+    vFlags
   )
 
   if (!nrow(dfRiskSignals)) {

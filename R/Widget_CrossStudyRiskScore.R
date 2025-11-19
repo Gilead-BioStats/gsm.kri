@@ -17,10 +17,10 @@
 #'
 #' @export
 Widget_CrossStudyRiskScore <- function(
-    dfResults,
-    dfMetrics,
-    dfGroups,
-    strGroupLevel = "Site"
+  dfResults,
+  dfMetrics,
+  dfGroups,
+  strGroupLevel = "Site"
 ) {
   stopifnot(is.data.frame(dfResults))
   stopifnot(is.data.frame(dfMetrics))
@@ -28,8 +28,8 @@ Widget_CrossStudyRiskScore <- function(
   #Check that Analysis_srs0001 is present
   stopifnot("Analysis_srs0001" %in% dfResults$MetricID)
 
-  dfCrossStudySummary <- SummarizeCrossStudy( 
-    dfResults = dfResults,  
+  dfCrossStudySummary <- SummarizeCrossStudy(
+    dfResults = dfResults,
     strGroupLevel = strGroupLevel,
     dfGroups = dfGroups
   )
@@ -43,7 +43,7 @@ Widget_CrossStudyRiskScore <- function(
     strGroupLabelKey = "GroupID",
     strSiteRiskMetric = "Analysis_srs0001"
   )
-  
+
   # Create widget using the same pattern as Widget_GroupOverview
   lWidget <- htmlwidgets::createWidget(
     name = "Widget_CrossStudyRiskScore",
@@ -59,7 +59,7 @@ Widget_CrossStudyRiskScore <- function(
     width = "100%",
     package = "gsm.kri"
   )
-  
+
   return(lWidget)
 }
 
@@ -73,15 +73,34 @@ Widget_CrossStudyRiskScore <- function(
 #'
 #' @name Widget_CrossStudyRiskScore-shiny
 #' @export
-Widget_CrossStudyRiskScoreOutput <- function(outputId, width = "100%", height = "600px") {
-  htmlwidgets::shinyWidgetOutput(outputId, "Widget_CrossStudyRiskScore", width, height, package = "gsm.kri")
+Widget_CrossStudyRiskScoreOutput <- function(
+  outputId,
+  width = "100%",
+  height = "600px"
+) {
+  htmlwidgets::shinyWidgetOutput(
+    outputId,
+    "Widget_CrossStudyRiskScore",
+    width,
+    height,
+    package = "gsm.kri"
+  )
 }
 
 #' @rdname Widget_CrossStudyRiskScore-shiny
 #' @export
-renderWidget_CrossStudyRiskScore <- function(expr, env = parent.frame(), quoted = FALSE) {
+renderWidget_CrossStudyRiskScore <- function(
+  expr,
+  env = parent.frame(),
+  quoted = FALSE
+) {
   if (!quoted) {
     expr <- substitute(expr)
   }
-  htmlwidgets::shinyRenderWidget(expr, Widget_CrossStudyRiskScoreOutput, env, quoted = TRUE)
+  htmlwidgets::shinyRenderWidget(
+    expr,
+    Widget_CrossStudyRiskScoreOutput,
+    env,
+    quoted = TRUE
+  )
 }

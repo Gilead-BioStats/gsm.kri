@@ -86,7 +86,15 @@ Report_KRI <- function(
       GroupLevel <- gsub("[^[:alnum:]]", "", GroupLevel)
       SnapshotDate <- gsub("[^[:alnum:]]", "", as.character(SnapshotDate))
 
-      strOutputFile <- paste0("kri_report_", StudyID, "_", GroupLevel, "_", SnapshotDate, ".html")
+      strOutputFile <- paste0(
+        "kri_report_",
+        StudyID,
+        "_",
+        GroupLevel,
+        "_",
+        SnapshotDate,
+        ".html"
+      )
     } else {
       strOutputFile <- "kri_report.html"
     }

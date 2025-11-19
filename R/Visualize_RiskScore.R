@@ -1,7 +1,7 @@
 #' Visualize Risk Score
 #'
-#' Creates an interactive risk score widget for cross-study visualization. 
-#' 
+#' Creates an interactive risk score widget for cross-study visualization.
+#'
 #' For a working example see inst/examples/Example_CrossStudySRS.R.
 #'
 #' @param dfResults `data.frame` Analysis results from CalculateRiskScore
@@ -12,11 +12,11 @@
 #' @export
 
 Visualize_RiskScore <- function(
-    dfResults,
-    dfMetrics,
-    dfGroups,
-    strGroupLevel = 'Site'
+  dfResults,
+  dfMetrics,
+  dfGroups,
+  strGroupLevel = 'Site'
 ) {
-    # For cross-study functionality, use the cross-study widget
-    Widget_CrossStudyRiskScore(dfResults, dfMetrics, dfGroups, strGroupLevel)
+  # For cross-study functionality, use the cross-study widget
+  Widget_CrossStudyRiskScore(dfResults, dfMetrics, dfGroups, strGroupLevel)
 }
