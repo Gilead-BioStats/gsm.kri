@@ -124,7 +124,7 @@ module_wf <- MakeWorkflowList("kri", strPath = "inst/workflow/4_modules", strPac
 lReports <- RunWorkflows(module_wf, reporting)
 ```
 
-## Example 3.2 - Site-Level KRI Report with multiple SnapshotDate
+## Example 3.3 - Site-Level KRI Report with multiple SnapshotDate
 
 This example demonstrates creating visualizations and reports using pre-calculated reporting data from `gsm.core`.
 
