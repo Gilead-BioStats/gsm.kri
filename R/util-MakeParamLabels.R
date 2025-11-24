@@ -72,6 +72,7 @@ ParamToLabel <- function(chrParams) {
   stringr::str_replace_all(chrParams, "[^A-Za-z0-9]", " ") %>%
     stringr::str_replace_all("([[:lower:]])([[:upper:]])", "\\1 \\2") %>%
     stringr::str_replace_all(
-      "(^| )([[:lower:]])", toupper
+      "(^| )([[:lower:]])",
+      toupper
     )
 }

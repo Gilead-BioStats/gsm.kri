@@ -46,13 +46,34 @@ Widget_TimeSeries <- function(
   bDebug = FALSE,
   ...
 ) {
-  gsm.core::stop_if(cnd = !is.data.frame(dfResults), "dfResults is not a data.frame")
-  gsm.core::stop_if(cnd = !(is.null(lMetric) || (is.list(lMetric) && !is.data.frame(lMetric))), "lMetric must be a list, but not a data.frame")
-  gsm.core::stop_if(cnd = !(is.null(dfGroups) || is.data.frame(dfGroups)), "dfGroups is not a data.frame")
-  gsm.core::stop_if(cnd = length(strOutcome) != 1, "strOutcome must be length 1")
-  gsm.core::stop_if(cnd = !is.character(strOutcome), "strOutcome is not a character")
-  gsm.core::stop_if(cnd = !is.logical(bAddGroupSelect), "bAddGroupSelect is not a logical")
-  gsm.core::stop_if(cnd = !is.character(strShinyGroupSelectID), "strShinyGroupSelectID is not a character")
+  gsm.core::stop_if(
+    cnd = !is.data.frame(dfResults),
+    "dfResults is not a data.frame"
+  )
+  gsm.core::stop_if(
+    cnd = !(is.null(lMetric) || (is.list(lMetric) && !is.data.frame(lMetric))),
+    "lMetric must be a list, but not a data.frame"
+  )
+  gsm.core::stop_if(
+    cnd = !(is.null(dfGroups) || is.data.frame(dfGroups)),
+    "dfGroups is not a data.frame"
+  )
+  gsm.core::stop_if(
+    cnd = length(strOutcome) != 1,
+    "strOutcome must be length 1"
+  )
+  gsm.core::stop_if(
+    cnd = !is.character(strOutcome),
+    "strOutcome is not a character"
+  )
+  gsm.core::stop_if(
+    cnd = !is.logical(bAddGroupSelect),
+    "bAddGroupSelect is not a logical"
+  )
+  gsm.core::stop_if(
+    cnd = !is.character(strShinyGroupSelectID),
+    "strShinyGroupSelectID is not a character"
+  )
   gsm.core::stop_if(cnd = !is.logical(bDebug), "bDebug is not a logical")
 
   # Parse `vThreshold` from comma-delimited character string to numeric vector.
@@ -138,15 +159,34 @@ Widget_TimeSeries <- function(
 #' @name Widget_TimeSeries-shiny
 #'
 #' @export
-Widget_TimeSeriesOutput <- function(outputId, width = "100%", height = "400px") {
-  htmlwidgets::shinyWidgetOutput(outputId, "Widget_TimeSeries", width, height, package = "gsm.kri")
+Widget_TimeSeriesOutput <- function(
+  outputId,
+  width = "100%",
+  height = "400px"
+) {
+  htmlwidgets::shinyWidgetOutput(
+    outputId,
+    "Widget_TimeSeries",
+    width,
+    height,
+    package = "gsm.kri"
+  )
 }
 
 #' @rdname Widget_TimeSeries-shiny
 #' @export
-renderWidget_TimeSeries <- function(expr, env = parent.frame(), quoted = FALSE) {
+renderWidget_TimeSeries <- function(
+  expr,
+  env = parent.frame(),
+  quoted = FALSE
+) {
   if (!quoted) {
     expr <- substitute(expr)
   } # force quoted
-  htmlwidgets::shinyRenderWidget(expr, Widget_TimeSeriesOutput, env, quoted = TRUE)
+  htmlwidgets::shinyRenderWidget(
+    expr,
+    Widget_TimeSeriesOutput,
+    env,
+    quoted = TRUE
+  )
 }

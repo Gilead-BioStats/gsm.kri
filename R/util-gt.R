@@ -74,7 +74,8 @@ cols_label_month <- function(data, columns = gt::everything()) {
 fmt_sign <- function(
   data,
   columns = gt::everything(),
-  rows = gt::everything()) {
+  rows = gt::everything()
+) {
   gt::fmt(
     data,
     columns = columns,
@@ -106,7 +107,8 @@ n_to_rag <- function(x) {
 fmt_present <- function(
   data,
   columns = gt::everything(),
-  rows = gt::everything()) {
+  rows = gt::everything()
+) {
   gt::fmt(
     data,
     columns = columns,

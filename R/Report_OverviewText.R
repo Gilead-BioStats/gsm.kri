@@ -27,10 +27,13 @@ Report_OverviewText <- function(lSetup, dfResults, lStudy) {
     group_count <- lStudy$CountryCount
   }
 
-  glue("
+  glue(
+    "
     <div style = 'margin-top: 1em;'>As of {lSetup$SnapshotDate}, {lSetup$StudyID} has {as.numeric(lStudy$ParticipantCount)} participants enrolled across {group_count} {group_type}. {length(amber_or_red_KRI_groups)} {lSetup$GroupLevel}-KRI combinations have been flagged across {length(unique(amber_or_red_KRI_groups))} {group_type} as shown in the Study Overview Table above.</div>
     - <div>{length(unique(red_KRI_groups))} {group_type} have at least one red KRI</div>
     - <div>{length(unique(amber_or_red_KRI_groups))} {group_type} have at least one red or amber KRI</div>
     - <div>{length(unique(no_alert_groups))} {group_type} have neither red nor amber KRIs</div>
-  ") %>% cat()
+  "
+  ) %>%
+    cat()
 }

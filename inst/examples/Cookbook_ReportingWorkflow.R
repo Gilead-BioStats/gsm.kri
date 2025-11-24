@@ -7,6 +7,13 @@ library(yaml)
 
 #### 3.1 - Create a KRI Report using 12 standard metrics in a step-by-step workflow
 
+# Set up arguments
+subjectenrollmentnumber <- "Subject enrollment number"
+crocategory <- "CRO category"
+description <- "Description"
+deviationdate <- "YYYY-MM-DD"
+foldername <- "Folder name"
+
 core_mappings <- c(
   "AE",
   "COUNTRY",
@@ -73,7 +80,11 @@ lRaw <- list(
 )
 
 # Step 1 - Create Mapped Data Layer - filter, aggregate and join raw data to create mapped data layer
-mappings_wf <- MakeWorkflowList(strNames = core_mappings, strPath = "workflow/1_mappings", strPackage = "gsm.mapping")
+mappings_wf <- MakeWorkflowList(
+  strNames = core_mappings,
+  strPath = "workflow/1_mappings",
+  strPackage = "gsm.mapping"
+)
 mapped <- RunWorkflows(mappings_wf, lRaw)
 
 # Step 2 - Create Metrics - calculate metrics using mapped data
@@ -84,11 +95,20 @@ metrics_wf <- MakeWorkflowList(
 analyzed <- RunWorkflows(metrics_wf, c(mapped, list(lWorkflows = metrics_wf)))
 
 # Step 3 - Create Reporting Layer - create reports using metrics data
-reporting_wf <- MakeWorkflowList(strPath = "workflow/3_reporting", strPackage = "gsm.reporting")
-reporting <- RunWorkflows(reporting_wf, c(mapped, list(
-  lAnalyzed = analyzed,
-  lWorkflows = metrics_wf
-)))
+reporting_wf <- MakeWorkflowList(
+  strPath = "workflow/3_reporting",
+  strPackage = "gsm.reporting"
+)
+reporting <- RunWorkflows(
+  reporting_wf,
+  c(
+    mapped,
+    list(
+      lAnalyzed = analyzed,
+      lWorkflows = metrics_wf
+    )
+  )
+)
 
 # Step 4 - Create KRI Reports - create KRI report using reporting data
 module_wf <- MakeWorkflowList(
@@ -120,11 +140,20 @@ metrics_wf <- MakeWorkflowList(
 analyzed <- RunWorkflows(metrics_wf, mapped) # this is the step workflow is failing on
 
 # Step 3 - Create Reporting Layer - create reports using metrics data
-reporting_wf <- MakeWorkflowList(strPath = "workflow/3_reporting", strPackage = "gsm.reporting")
-reporting <- RunWorkflows(reporting_wf, c(mapped, list(
-  lAnalyzed = analyzed,
-  lWorkflows = metrics_wf
-)))
+reporting_wf <- MakeWorkflowList(
+  strPath = "workflow/3_reporting",
+  strPackage = "gsm.reporting"
+)
+reporting <- RunWorkflows(
+  reporting_wf,
+  c(
+    mapped,
+    list(
+      lAnalyzed = analyzed,
+      lWorkflows = metrics_wf
+    )
+  )
+)
 
 # Step 4 - Create KRI Report - create KRI report using reporting data
 module_wf <- MakeWorkflowList(
@@ -164,7 +193,8 @@ kri_report_path <- Report_KRI(
 #### 3.4 Reporting Results with Changes from previous snapshot
 
 # Prepare historical data
-historical <- gsm.core::reportingResults %>% filter(SnapshotDate == "2025-03-01")
+historical <- gsm.core::reportingResults %>%
+  filter(SnapshotDate == "2025-03-01")
 
 # Re-run reporting model and KRI report with historical data
 reporting_long <- gsm.core::RunWorkflows(

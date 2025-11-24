@@ -22,10 +22,11 @@
 #'   ID = "Analysis_kri0001"
 #' ))
 #' lAnalysis_filtered <- FilterAnalysis(lAnalysis)
-FilterAnalysis <- function(lAnalysis,
-  strFilterIDPattern = "kri") {
+FilterAnalysis <- function(lAnalysis, strFilterIDPattern = "kri") {
   ## filter to site-level analysis output only and stack results
-  lAnalysis_filtered <- purrr::keep(lAnalysis, \(.x) "ID" %in% names(.x) && grepl(strFilterIDPattern, .x$ID))
+  lAnalysis_filtered <- purrr::keep(lAnalysis, \(.x) {
+    "ID" %in% names(.x) && grepl(strFilterIDPattern, .x$ID)
+  })
 
   return(lAnalysis_filtered)
 }
@@ -57,8 +58,7 @@ FilterAnalysis <- function(lAnalysis,
 #' lAnalysis_filtered <- FilterAnalysis(lAnalysis)
 #' dfFlaggedWeights <- StackAnalysis(lAnalysis_filtered)
 #'
-StackAnalysis <- function(lAnalysis,
-  strName = "Analysis_Flagged") {
+StackAnalysis <- function(lAnalysis, strName = "Analysis_Flagged") {
   output <- lAnalysis %>%
     purrr::imap(function(result, metric) {
       subResult <- result[[strName]]

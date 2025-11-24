@@ -46,10 +46,16 @@ MakeMetricTable <- function(
   if (!nrow(dfResults)) {
     return(
       data.frame(
-        StudyID = character(), GroupID = character(), MetricID = character(),
-        Group = character(), SnapshoteDate = as.Date(integer()),
-        Enrolled = integer(), Numerator = integer(),
-        Denominator = integer(), Metric = double(), Score = double(),
+        StudyID = character(),
+        GroupID = character(),
+        MetricID = character(),
+        Group = character(),
+        SnapshoteDate = as.Date(integer()),
+        Enrolled = integer(),
+        Numerator = integer(),
+        Denominator = integer(),
+        Metric = double(),
+        Score = double(),
         Flag = character()
       )
     )
@@ -59,11 +65,10 @@ MakeMetricTable <- function(
   if (length(metric_ids) > 1) {
     LogMessage(
       level = "fatal",
-      message =
-        paste0(
-          "{dfResults} must only contain one unique `MetricID`.",
-          "{dfResults} contains these `MetricID` values: {metric_ids}."
-        )
+      message = paste0(
+        "{dfResults} must only contain one unique `MetricID`.",
+        "{dfResults} contains these `MetricID` values: {metric_ids}."
+      )
     )
   }
 

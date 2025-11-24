@@ -61,7 +61,8 @@ Report_Setup <- function(dfGroups = NULL, dfMetrics = NULL, dfResults = NULL) {
     as.list()
 
   if (output$GroupLevel == "Country") {
-    output$lStudy$CountryCount <- length(unique(dfResults$GroupID)) %>% as.character()
+    output$lStudy$CountryCount <- length(unique(dfResults$GroupID)) %>%
+      as.character()
   }
 
   output$StudyID <- dfGroups %>%
@@ -69,7 +70,8 @@ Report_Setup <- function(dfGroups = NULL, dfMetrics = NULL, dfResults = NULL) {
     pull("GroupID") %>%
     unique()
 
-  output$StudyLabel <- ifelse(is.na(output$lStudy$nickname) || is.null(output$lStudy$nickname),
+  output$StudyLabel <- ifelse(
+    is.na(output$lStudy$nickname) || is.null(output$lStudy$nickname),
     output$StudyID,
     glue::glue("{output$StudyID} ({output$lStudy$nickname})")
   )

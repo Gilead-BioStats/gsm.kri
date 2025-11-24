@@ -80,9 +80,12 @@ FilterByFlags <- function(
   }
 
   dfResultsFlagged <- dfResultsFlagged %>%
-    select(-all_of(c(
-      "flagsum", "flaglatest"
-    )))
+    select(
+      -all_of(c(
+        "flagsum",
+        "flaglatest"
+      ))
+    )
 
   return(dfResultsFlagged)
 }
@@ -104,7 +107,11 @@ add_Groups_metadata <- function(
 ) {
   if (nrow(dfResults)) {
     strGroupLevel <- rlang::arg_match(strGroupLevel)
-    dfGroups_wide <- widen_dfGroups(dfGroups, strGroupLevel, strGroupDetailsParams)
+    dfGroups_wide <- widen_dfGroups(
+      dfGroups,
+      strGroupLevel,
+      strGroupDetailsParams
+    )
     if (nrow(dfGroups)) {
       dfResults <- dplyr::left_join(
         dfResults,
@@ -129,7 +136,10 @@ widen_dfGroups <- function(dfGroups, strGroupLevel, strGroupDetailsParams) {
     if (is.null(strGroupDetailsParams)) {
       if (strGroupLevel == "Site") {
         strGroupDetailsParams <- c(
-          "Country", "Status", "InvestigatorLastName", "ParticipantCount"
+          "Country",
+          "Status",
+          "InvestigatorLastName",
+          "ParticipantCount"
         )
       } else if (strGroupLevel == "Country") {
         strGroupDetailsParams <- c("SiteCount", "ParticipantCount")

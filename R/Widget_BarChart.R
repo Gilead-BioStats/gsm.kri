@@ -47,14 +47,38 @@ Widget_BarChart <- function(
   bDebug = FALSE,
   ...
 ) {
-  gsm.core::stop_if(cnd = !is.data.frame(dfResults), message = "dfResults is not a data.frame")
-  gsm.core::stop_if(cnd = !(is.null(lMetric) || (is.list(lMetric) && !is.data.frame(lMetric))), message = "lMetric must be a list, but not a data.frame")
-  gsm.core::stop_if(cnd = !(is.null(dfGroups) || is.data.frame(dfGroups)), message = "dfGroups is not a data.frame")
-  gsm.core::stop_if(cnd = !length(strOutcome) == 1, message = "strOutcome must be length 1")
-  gsm.core::stop_if(cnd = !is.character(strOutcome), message = "strOutcome is not a character")
-  gsm.core::stop_if(cnd = !is.logical(bAddGroupSelect), message = "bAddGroupSelect is not a logical")
-  gsm.core::stop_if(cnd = !is.character(strShinyGroupSelectID), message = "strShinyGroupSelectID is not a character")
-  gsm.core::stop_if(cnd = !is.logical(bDebug), message = "bDebug is not a logical")
+  gsm.core::stop_if(
+    cnd = !is.data.frame(dfResults),
+    message = "dfResults is not a data.frame"
+  )
+  gsm.core::stop_if(
+    cnd = !(is.null(lMetric) || (is.list(lMetric) && !is.data.frame(lMetric))),
+    message = "lMetric must be a list, but not a data.frame"
+  )
+  gsm.core::stop_if(
+    cnd = !(is.null(dfGroups) || is.data.frame(dfGroups)),
+    message = "dfGroups is not a data.frame"
+  )
+  gsm.core::stop_if(
+    cnd = !length(strOutcome) == 1,
+    message = "strOutcome must be length 1"
+  )
+  gsm.core::stop_if(
+    cnd = !is.character(strOutcome),
+    message = "strOutcome is not a character"
+  )
+  gsm.core::stop_if(
+    cnd = !is.logical(bAddGroupSelect),
+    message = "bAddGroupSelect is not a logical"
+  )
+  gsm.core::stop_if(
+    cnd = !is.character(strShinyGroupSelectID),
+    message = "strShinyGroupSelectID is not a character"
+  )
+  gsm.core::stop_if(
+    cnd = !is.logical(bDebug),
+    message = "bDebug is not a logical"
+  )
 
   # Parse `vThreshold` from comma-delimited character string to numeric vector.
   if (!is.null(vThreshold)) {
@@ -140,7 +164,13 @@ Widget_BarChart <- function(
 #'
 #' @export
 Widget_BarChartOutput <- function(outputId, width = "100%", height = "400px") {
-  htmlwidgets::shinyWidgetOutput(outputId, "Widget_BarChart", width, height, package = "gsm.kri")
+  htmlwidgets::shinyWidgetOutput(
+    outputId,
+    "Widget_BarChart",
+    width,
+    height,
+    package = "gsm.kri"
+  )
 }
 
 #' @rdname Widget_BarChart-shiny
@@ -149,5 +179,10 @@ renderWidget_BarChart <- function(expr, env = parent.frame(), quoted = FALSE) {
   if (!quoted) {
     expr <- substitute(expr)
   } # force quoted
-  htmlwidgets::shinyRenderWidget(expr, Widget_BarChartOutput, env, quoted = TRUE)
+  htmlwidgets::shinyRenderWidget(
+    expr,
+    Widget_BarChartOutput,
+    env,
+    quoted = TRUE
+  )
 }

@@ -5,8 +5,8 @@ devtools::load_all()
 #### Example 2.1 - Configurable Adverse Event Workflow
 
 # Define YAML workflow
-AE_workflow <- yaml::read_yaml(text=
-'meta:
+AE_workflow <- yaml::read_yaml(
+  text = 'meta:
   Type: Analysis
   ID: kri0001
   GroupLevel: Site
@@ -77,16 +77,17 @@ steps:
       Analysis_Analyzed: Analysis_Analyzed
       Analysis_Flagged: Analysis_Flagged
       Analysis_Summary: Analysis_Summary
-')
+'
+)
 
 # Grab simulated data
 dm <- gsm.core::lSource$Raw_SUBJ
 ae <- gsm.core::lSource$Raw_AE
 
 # Run the workflow
-AE_data <-list(
-  Mapped_SUBJ= dm,
-  Mapped_AE= ae
+AE_data <- list(
+  Mapped_SUBJ = dm,
+  Mapped_AE = ae
 )
 AE_KRI <- RunWorkflow(lWorkflow = AE_workflow, lData = AE_data)
 
@@ -95,9 +96,9 @@ Widget_BarChart(dfResults = AE_KRI$Analysis_Summary)
 
 # Visualize Metric distribution using Bar Charts and Scatterplots using provided htmlwidgets
 labels <- list(
-  Metric= "Adverse Event Rate",
-  Numerator= "Adverse Events",
-  Denominator= "Days on Study"
+  Metric = "Adverse Event Rate",
+  Numerator = "Adverse Events",
+  Denominator = "Days on Study"
 )
 
 Widget_BarChart(
@@ -133,7 +134,10 @@ AE_country_workflow$meta$GroupLevel <- "Country"
 AE_country_workflow$steps[[2]]$params$strGroupCol <- "country"
 
 AE_country_KRI <- RunWorkflow(lWorkflow = AE_country_workflow, lData = AE_data)
-Widget_BarChart(dfResults = AE_country_KRI$Analysis_Summary, lMetric = AE_country_workflow$meta)
+Widget_BarChart(
+  dfResults = AE_country_KRI$Analysis_Summary,
+  lMetric = AE_country_workflow$meta
+)
 
 #### Example 2.3 - Create SAE workflow
 
@@ -147,16 +151,16 @@ SAE_workflow$meta$Numerator <- "Serious Adverse Events"
 filterStep <- list(list(
   name = "RunQuery",
   output = "Mapped_AE",
-  params= list(
-    df= "Mapped_AE",
+  params = list(
+    df = "Mapped_AE",
     strQuery = "SELECT * FROM df WHERE aeser = 'Y'"
-  ))
-)
-SAE_workflow$steps <- SAE_workflow$steps %>% append(filterStep, after=0)
+  )
+))
+SAE_workflow$steps <- SAE_workflow$steps %>% append(filterStep, after = 0)
 
 # Run the updated workflow and visualize
 SAE_KRI <- RunWorkflow(lWorkflow = SAE_workflow, lData = AE_data)
-Widget_BarChart(dfResults = SAE_KRI$Analysis_Summary, lMetric = SAE_workflow$meta)
-
-
-
+Widget_BarChart(
+  dfResults = SAE_KRI$Analysis_Summary,
+  lMetric = SAE_workflow$meta
+)
