@@ -20,7 +20,7 @@ navbar:
     examples:
       text: Examples
       menu:
-      - text: Cookbook Adverse Event KRI
+      - text: Cookbook AdverseEventKRI
         href: examples/Cookbook_AdverseEventKRI.html
       - text: Cookbook AdverseEventWorkflow
         href: examples/Cookbook_AdverseEventWorkflow.html
