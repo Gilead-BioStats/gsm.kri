@@ -15,8 +15,8 @@ output:
 knitr::opts_chunk$set(
   echo = TRUE,
   eval = FALSE,
-  message = TRUE,
-  warning = TRUE,
+  message = FALSE,
+  warning = FALSE,
   results = 'markup',
   comment = "#>"
 )
