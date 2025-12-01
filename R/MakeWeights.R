@@ -29,7 +29,7 @@
 #' @examples
 #' # Create weight table from gsm.core::reportingMetrics
 #' dfWeights <- MakeWeights(gsm.core::reportingMetrics)
-#' 
+#'
 #' # Join to KRI results
 #' library(dplyr)
 #' dfResults <- gsm.core::reportingResults %>%
@@ -37,22 +37,26 @@
 #'
 #' @export
 MakeWeights <- function(dfMetrics) {
-  
   # Input validation
   required_cols <- c("MetricID", "Flag", "RiskScoreWeight")
   if (!all(required_cols %in% colnames(dfMetrics))) {
     missing_cols <- required_cols[!required_cols %in% colnames(dfMetrics)]
-    stop("Missing required columns in dfMetrics: ", paste(missing_cols, collapse = ", "))
+    stop(
+      "Missing required columns in dfMetrics: ",
+      paste(missing_cols, collapse = ", ")
+    )
   }
-  
+
   # Create weight table from dfMetrics
   weight_table <- dfMetrics %>%
     dplyr::filter(!is.na(.data$Flag) & !is.na(.data$RiskScoreWeight)) %>%
     dplyr::select("MetricID", "Flag", "RiskScoreWeight")
-  
+
   # Return empty data frame with correct structure if no valid rows
   if (nrow(weight_table) == 0) {
-    warning("No valid rows found in dfMetrics with non-NA Flag and RiskScoreWeight values. Returning dfWeights data.frame with 0 rows.")
+    warning(
+      "No valid rows found in dfMetrics with non-NA Flag and RiskScoreWeight values. Returning dfWeights data.frame with 0 rows."
+    )
     return(data.frame(
       MetricID = character(0),
       Flag = numeric(0),
@@ -61,14 +65,14 @@ MakeWeights <- function(dfMetrics) {
       stringsAsFactors = FALSE
     ))
   }
-  
+
   weight_table <- weight_table %>%
     # Parse the comma-separated Flag and RiskScoreWeight values
     dplyr::mutate(
       flags_list = strsplit(.data$Flag, ","),
       weights_list = strsplit(.data$RiskScoreWeight, ",")
     )
-  
+
   # Check that flags_list and weights_list have the same length for each metric
   length_check <- weight_table %>%
     dplyr::mutate(
@@ -76,19 +80,21 @@ MakeWeights <- function(dfMetrics) {
       n_weights = sapply(.data$weights_list, length),
       length_mismatch = .data$n_flags != .data$n_weights
     )
-  
+
   if (any(length_check$length_mismatch)) {
     mismatched_metrics <- length_check %>%
       dplyr::filter(.data$length_mismatch) %>%
       dplyr::select(MetricID, n_flags, n_weights)
-    
+
     error_details <- paste(
       apply(mismatched_metrics, 1, function(row) {
-        glue::glue("  - {row['MetricID']}: {row['n_flags']} flags vs {row['n_weights']} weights")
+        glue::glue(
+          "  - {row['MetricID']}: {row['n_flags']} flags vs {row['n_weights']} weights"
+        )
       }),
       collapse = "\n"
     )
-    
+
     stop(
       glue::glue(
         "Flag and RiskScoreWeight lists must have the same length for each MetricID. ",
@@ -96,7 +102,7 @@ MakeWeights <- function(dfMetrics) {
       )
     )
   }
-  
+
   weight_table <- weight_table %>%
     # Expand to one row per flag-weight combination
     tidyr::unnest_longer(c("flags_list", "weights_list")) %>%
@@ -110,6 +116,6 @@ MakeWeights <- function(dfMetrics) {
     dplyr::ungroup() %>%
     # Keep only the necessary columns
     dplyr::select("MetricID", "Flag", "Weight", "WeightMax")
-  
+
   return(weight_table)
 }

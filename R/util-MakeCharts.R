@@ -30,14 +30,16 @@ MakeCharts <- function(
   )
 
   lCharts <- strMetrics %>%
-    purrr::map(~ {
-      lArgs$strMetricID <- .x
+    purrr::map(
+      ~ {
+        lArgs$strMetricID <- .x
 
-      do.call(
-        "Visualize_Metric",
-        lArgs
-      )
-    }) %>%
+        do.call(
+          "Visualize_Metric",
+          lArgs
+        )
+      }
+    ) %>%
     stats::setNames(strMetrics)
 
   return(lCharts)

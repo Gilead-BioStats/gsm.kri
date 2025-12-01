@@ -39,11 +39,26 @@ Visualize_Score <- function(
   bFlagFilter = FALSE,
   strTitle = ""
 ) {
-  gsm.core::stop_if(cnd = !is.character(strTitle), message = "strTitle must be character")
-  gsm.core::stop_if(cnd = !is.logical(bFlagFilter), message = "bFlagFilter must be logical")
-  gsm.core::stop_if(cnd = !is.data.frame(dfResults), message = "dfResults must be a data.frame")
-  gsm.core::stop_if(cnd = !(length(strType) == 1), message = "strType must be length 1")
-  gsm.core::stop_if(cnd = !(strType %in% c("Metric", "Score")), message = "strType must be 'Metric' or 'Score'")
+  gsm.core::stop_if(
+    cnd = !is.character(strTitle),
+    message = "strTitle must be character"
+  )
+  gsm.core::stop_if(
+    cnd = !is.logical(bFlagFilter),
+    message = "bFlagFilter must be logical"
+  )
+  gsm.core::stop_if(
+    cnd = !is.data.frame(dfResults),
+    message = "dfResults must be a data.frame"
+  )
+  gsm.core::stop_if(
+    cnd = !(length(strType) == 1),
+    message = "strType must be length 1"
+  )
+  gsm.core::stop_if(
+    cnd = !(strType %in% c("Metric", "Score")),
+    message = "strType must be 'Metric' or 'Score'"
+  )
 
   dfResults$FlagAbs <- abs(dfResults$Flag)
   flagBreaks <- as.character(unique(sort(dfResults$FlagAbs)))
@@ -104,7 +119,6 @@ Visualize_Score <- function(
       ThresholdLow <- NA
       ThresholdHigh <- NA
     }
-
 
     dfResultsWithTooltip <- dfResults %>%
       mutate(

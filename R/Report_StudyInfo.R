@@ -23,7 +23,10 @@ Report_StudyInfo <- function(
   tagHeader = htmltools::h2("Study Status"),
   lStudy = deprecated()
 ) {
-  rlang::check_installed("gt", reason = "to render table from `Report_StudyInfo`")
+  rlang::check_installed(
+    "gt",
+    reason = "to render table from `Report_StudyInfo`"
+  )
 
   study_status_table <- MakeStudyInfo(dfGroups, lStudyLabels, lStudy = lStudy)
 

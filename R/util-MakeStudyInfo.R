@@ -19,11 +19,12 @@ MakeStudyInfo <- function(
   lStudy = deprecated()
 ) {
   # Default values for labels.
-  lStudyLabels <- lStudyLabels %||% list(
-    SiteCount = "Sites Enrolled",
-    ParticipantCount = "Participants Enrolled",
-    Status = "Study Status"
-  )
+  lStudyLabels <- lStudyLabels %||%
+    list(
+      SiteCount = "Sites Enrolled",
+      ParticipantCount = "Participants Enrolled",
+      Status = "Study Status"
+    )
 
   dfGroups <- Choose_dfGroups(dfGroups, lStudy) %>%
     dplyr::filter(.data$GroupLevel == "Study") %>%

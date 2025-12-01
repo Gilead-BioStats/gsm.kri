@@ -70,8 +70,14 @@ Visualize_Scatter <- function(
       tooltip = paste(
         paste0("Group: ", groupLabel),
         paste0("GroupID: ", .data$GroupID),
-        paste0("Exposure (days): ", format(.data$Denominator, big.mark = ",", trim = TRUE)),
-        paste0("# of Events: ", format(.data$Numerator, big.mark = ",", trim = TRUE)),
+        paste0(
+          "Exposure (days): ",
+          format(.data$Denominator, big.mark = ",", trim = TRUE)
+        ),
+        paste0(
+          "# of Events: ",
+          format(.data$Numerator, big.mark = ",", trim = TRUE)
+        ),
         sep = "\n"
       )
     )
@@ -81,7 +87,6 @@ Visualize_Scatter <- function(
   if (nrow(dfResultsWithTooltip) == 0) {
     return(NULL)
   }
-
 
   # Account for incomplete set of flags
   dfResultsWithTooltip$FlagAbs <- abs(dfResultsWithTooltip$Flag)
@@ -112,7 +117,9 @@ Visualize_Scatter <- function(
     ) +
     # Add chart elements
     geom_point() +
-    xlab(glue::glue("{groupLabel} Total (Denominator) ({strUnit} - log scale)")) +
+    xlab(glue::glue(
+      "{groupLabel} Total (Denominator) ({strUnit} - log scale)"
+    )) +
     ylab(glue::glue("{groupLabel} Total (Numerator)"))
 
   # Add bound lines one at a time.
@@ -126,26 +133,31 @@ Visualize_Scatter <- function(
       thresholdAb <- thresholdAbs[thresholdAbs == abs(threshold)]
       color <- vColors[match(thresholdAb, thresholdAbs)]
 
-      p <- p + geom_line(
-        data = dfBounds %>%
-          filter(
-            .data$Threshold == threshold,
-            !is.nan(.data$Numerator)
+      p <- p +
+        geom_line(
+          data = dfBounds %>%
+            filter(
+              .data$Threshold == threshold,
+              !is.nan(.data$Numerator)
+            ),
+          aes(
+            x = .data$LogDenominator,
+            y = .data$Numerator
           ),
-        aes(
-          x = .data$LogDenominator,
-          y = .data$Numerator
-        ),
-        color = color,
-        inherit.aes = FALSE
-      )
+          color = color,
+          inherit.aes = FALSE
+        )
     }
   }
 
   p <- p +
     geom_text(
       data = dfResultsWithTooltip %>% filter(.data$FlagAbs != 0),
-      aes(x = log(.data$Denominator), y = .data$Numerator, label = .data$GroupID),
+      aes(
+        x = log(.data$Denominator),
+        y = .data$Numerator,
+        label = .data$GroupID
+      ),
       vjust = 1.5,
       col = "black",
       size = 3.5
