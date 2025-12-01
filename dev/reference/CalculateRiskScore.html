@@ -33,6 +33,8 @@ creating a composite risk score as a percentage of the total possible risk."><me
     <li><a class="dropdown-item" href="../examples/Cookbook_ReportingWorkflow.html">Cookbook ReportingWorkflow</a></li>
     <li><a class="dropdown-item" href="../examples/Example_CrossStudySRS.html">Example CrossStudySRS</a></li>
     <li><a class="dropdown-item" href="../examples/Example_Eligibility.html">Example Eligibility</a></li>
+    <li><a class="dropdown-item" href="../examples/report_kri_country.html">Report Kri Country</a></li>
+    <li><a class="dropdown-item" href="../examples/report_kri_site.html">Report Kri Site</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -116,7 +118,8 @@ allowing for comparison across groups and identification of high-risk sites or e
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Calculate risk scores</span></span></span>
 <span class="r-in"><span><span class="va">dfRiskScore</span> <span class="op">&lt;-</span> <span class="fu">CalculateRiskScore</span><span class="op">(</span><span class="va">dfResults</span>, <span class="va">dfWeights</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Rows with NA values in 'Weight' or 'WeightMax' have been dropped.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Rows with NA values in 'Weight' or 'WeightMax' have been dropped, corresponding to thefollowing metric IDs:</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> - Analysis_kri0013.</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
