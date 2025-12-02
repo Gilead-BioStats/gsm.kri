@@ -25,7 +25,7 @@ create_minimal_metrics <- function() {
 
 # Basic functionality tests ----
 
-test_that("MakeWeights returns correct structure", {
+test_that("MakeWeights returns correct structure (#135)", {
   dfMetrics <- create_sample_metrics()
   dfWeights <- MakeWeights(dfMetrics)
 
@@ -40,7 +40,7 @@ test_that("MakeWeights returns correct structure", {
   expect_type(dfWeights$MetricID, "character")
 })
 
-test_that("MakeWeights parses comma-separated values correctly", {
+test_that("MakeWeights parses comma-separated values correctly (#135)", {
   dfMetrics <- data.frame(
     MetricID = "Analysis_kri0001",
     Flag = "-2,-1,0,1,2",
@@ -64,7 +64,7 @@ test_that("MakeWeights parses comma-separated values correctly", {
   expect_equal(dfWeights$Weight[dfWeights$Flag == 2], 4)
 })
 
-test_that("MakeWeights calculates WeightMax correctly", {
+test_that("MakeWeights calculates WeightMax correctly (#135)", {
   dfMetrics <- create_sample_metrics()
   dfWeights <- MakeWeights(dfMetrics)
 
@@ -82,7 +82,7 @@ test_that("MakeWeights calculates WeightMax correctly", {
   expect_true(all(kri0004_weights$WeightMax == 16)) # max(16,8,0,8,16) = 16
 })
 
-test_that("MakeWeights handles multiple metrics", {
+test_that("MakeWeights handles multiple metrics (#135)", {
   dfMetrics <- create_sample_metrics()
   dfWeights <- MakeWeights(dfMetrics)
 
@@ -96,7 +96,7 @@ test_that("MakeWeights handles multiple metrics", {
 
 # Input validation tests ----
 
-test_that("MakeWeights validates required columns", {
+test_that("MakeWeights validates required columns (#135)", {
   dfMetrics <- create_sample_metrics()
 
   # Test missing MetricID
@@ -126,7 +126,7 @@ test_that("MakeWeights validates required columns", {
 
 # NA handling tests ----
 
-test_that("MakeWeights filters out NA values", {
+test_that("MakeWeights filters out NA values (#135)", {
   dfMetrics <- data.frame(
     MetricID = c("Analysis_kri0001", "Analysis_kri0002", "Analysis_kri0003"),
     Flag = c("-1,0,1", NA, "-1,0,1"),
@@ -141,7 +141,7 @@ test_that("MakeWeights filters out NA values", {
   expect_equal(unique(dfWeights$MetricID), "Analysis_kri0001")
 })
 
-test_that("MakeWeights handles empty data after filtering NAs", {
+test_that("MakeWeights handles empty data after filtering NAs (#135)", {
   dfMetrics <- data.frame(
     MetricID = c("Analysis_kri0001", "Analysis_kri0002"),
     Flag = c(NA, NA),
@@ -161,7 +161,7 @@ test_that("MakeWeights handles empty data after filtering NAs", {
 
 # Edge cases ----
 
-test_that("MakeWeights handles single flag-weight pair", {
+test_that("MakeWeights handles single flag-weight pair (#135)", {
   dfMetrics <- data.frame(
     MetricID = "Analysis_kri0001",
     Flag = "1",
@@ -177,7 +177,7 @@ test_that("MakeWeights handles single flag-weight pair", {
   expect_equal(dfWeights$WeightMax, 5)
 })
 
-test_that("MakeWeights handles zero weights", {
+test_that("MakeWeights handles zero weights (#135)", {
   dfMetrics <- data.frame(
     MetricID = "Analysis_kri0001",
     Flag = "-1,0,1",
@@ -192,7 +192,7 @@ test_that("MakeWeights handles zero weights", {
   expect_true(all(dfWeights$WeightMax == 0))
 })
 
-test_that("MakeWeights handles negative flags", {
+test_that("MakeWeights handles negative flags (#135)", {
   dfMetrics <- data.frame(
     MetricID = "Analysis_kri0001",
     Flag = "-2,-1,0",
@@ -207,7 +207,7 @@ test_that("MakeWeights handles negative flags", {
   expect_equal(dfWeights$Weight[dfWeights$Flag == -1], 4)
 })
 
-test_that("MakeWeights handles large numbers", {
+test_that("MakeWeights handles large numbers (#135)", {
   dfMetrics <- data.frame(
     MetricID = "Analysis_kri0001",
     Flag = "0,1",
@@ -221,7 +221,7 @@ test_that("MakeWeights handles large numbers", {
   expect_equal(dfWeights$WeightMax, c(999999, 999999))
 })
 
-test_that("MakeWeights handles decimal weights", {
+test_that("MakeWeights handles decimal weights (#135)", {
   dfMetrics <- data.frame(
     MetricID = "Analysis_kri0001",
     Flag = "0,1,2",
@@ -238,7 +238,7 @@ test_that("MakeWeights handles decimal weights", {
 
 # Integration tests ----
 
-test_that("MakeWeights output can be joined to results data", {
+test_that("MakeWeights output can be joined to results data (#135)", {
   dfMetrics <- create_sample_metrics()
   dfWeights <- MakeWeights(dfMetrics)
 
@@ -267,7 +267,7 @@ test_that("MakeWeights output can be joined to results data", {
   )
 })
 
-test_that("MakeWeights works with gsm.core::reportingMetrics", {
+test_that("MakeWeights works with gsm.core::reportingMetrics (#135)", {
   skip_if_not_installed("gsm.core")
 
   # Test with actual gsm.core data
@@ -287,7 +287,7 @@ test_that("MakeWeights works with gsm.core::reportingMetrics", {
 
 # Symmetric weights tests ----
 
-test_that("MakeWeights handles symmetric weights correctly", {
+test_that("MakeWeights handles symmetric weights correctly (#135)", {
   dfMetrics <- data.frame(
     MetricID = "Analysis_kri0001",
     Flag = "-2,-1,0,1,2",
@@ -308,7 +308,7 @@ test_that("MakeWeights handles symmetric weights correctly", {
   )
 })
 
-test_that("MakeWeights handles asymmetric weights correctly", {
+test_that("MakeWeights handles asymmetric weights correctly (#135)", {
   dfMetrics <- data.frame(
     MetricID = "Analysis_kri0001",
     Flag = "-2,-1,0,1,2",
@@ -330,7 +330,7 @@ test_that("MakeWeights handles asymmetric weights correctly", {
 
 # Length validation tests ----
 
-test_that("MakeWeights detects mismatched Flag and RiskScoreWeight lengths", {
+test_that("MakeWeights detects mismatched Flag and RiskScoreWeight lengths (#135)", {
   # Test case: More flags than weights
   dfMetrics_mismatch1 <- data.frame(
     MetricID = "Analysis_kri0001",
@@ -349,7 +349,7 @@ test_that("MakeWeights detects mismatched Flag and RiskScoreWeight lengths", {
   )
 })
 
-test_that("MakeWeights detects mismatched lengths with multiple metrics", {
+test_that("MakeWeights detects mismatched lengths with multiple metrics (#135)", {
   # Test case: Multiple metrics with mismatches
   dfMetrics_mismatch2 <- data.frame(
     MetricID = c("Analysis_kri0001", "Analysis_kri0002"),
@@ -372,7 +372,7 @@ test_that("MakeWeights detects mismatched lengths with multiple metrics", {
   )
 })
 
-test_that("MakeWeights detects fewer weights than flags", {
+test_that("MakeWeights detects fewer weights than flags (#135)", {
   dfMetrics_mismatch3 <- data.frame(
     MetricID = "Analysis_kri0001",
     Flag = "0,1,2", # 3 flags
@@ -386,7 +386,7 @@ test_that("MakeWeights detects fewer weights than flags", {
   )
 })
 
-test_that("MakeWeights detects more weights than flags", {
+test_that("MakeWeights detects more weights than flags (#135)", {
   dfMetrics_mismatch4 <- data.frame(
     MetricID = "Analysis_kri0001",
     Flag = "0,1", # 2 flags
@@ -400,7 +400,7 @@ test_that("MakeWeights detects more weights than flags", {
   )
 })
 
-test_that("MakeWeights succeeds when all lengths match", {
+test_that("MakeWeights succeeds when all lengths match (#135)", {
   # Test case: All metrics have matching lengths
   dfMetrics_match <- data.frame(
     MetricID = c("Analysis_kri0001", "Analysis_kri0002", "Analysis_kri0003"),

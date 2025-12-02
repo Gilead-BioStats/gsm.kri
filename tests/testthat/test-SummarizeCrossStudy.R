@@ -26,7 +26,7 @@ create_test_groups <- function() {
   )
 }
 
-test_that("Returns correct structure with required columns - #71", {
+test_that("Returns correct structure with required columns (#71, #144)", {
   dfResults <- create_test_results()
 
   result <- SummarizeCrossStudy(dfResults)
@@ -44,7 +44,7 @@ test_that("Returns correct structure with required columns - #71", {
   expect_equal(nrow(result), 3)
 })
 
-test_that("Calculates metrics correctly for multiple studies - #71", {
+test_that("Calculates metrics correctly for multiple studies (#71, #144)", {
   dfResults <- create_test_results()
 
   result <- SummarizeCrossStudy(dfResults)
@@ -68,7 +68,7 @@ test_that("Calculates metrics correctly for multiple studies - #71", {
   expect_equal(site003$MaxRiskScore, 3.1)
 })
 
-test_that("Sorts by average risk score descending - #71", {
+test_that("Sorts by average risk score descending (#71, #144)", {
   dfResults <- create_test_results()
 
   result <- SummarizeCrossStudy(dfResults)
@@ -80,7 +80,7 @@ test_that("Sorts by average risk score descending - #71", {
   expect_equal(result$GroupID[nrow(result)], "Site002")
 })
 
-test_that("Works with single study per site - #71", {
+test_that("Works with single study per site (#71, #144)", {
   dfResults <- tibble::tibble(
     GroupID = c("Site001", "Site002"),
     GroupLevel = "Site",
@@ -101,7 +101,7 @@ test_that("Works with single study per site - #71", {
   expect_equal(result$AvgRiskScore[1], result$MaxRiskScore[1])
 })
 
-test_that("Adds InvestigatorName when dfGroups provided - #71", {
+test_that("Adds InvestigatorName when dfGroups provided (#71, #144)", {
   dfResults <- create_test_results()
   dfGroups <- create_test_groups()
 
@@ -118,7 +118,7 @@ test_that("Adds InvestigatorName when dfGroups provided - #71", {
   expect_equal(result$InvestigatorName[result$GroupID == "Site002"], "Jones")
 })
 
-test_that("Handles multiple investigator names per site - #71", {
+test_that("Handles multiple investigator names per site (#71, #144)", {
   dfResults <- create_test_results()
   dfGroups <- create_test_groups()
 
@@ -135,7 +135,7 @@ test_that("Handles multiple investigator names per site - #71", {
   )
 })
 
-test_that("Handles missing columns in dfGroups gracefully - #71", {
+test_that("Handles missing columns in dfGroups gracefully (#71, #144)", {
   dfResults <- create_test_results()
   dfGroups_incomplete <- tibble::tibble(
     GroupID = c("Site001", "Site002"),
@@ -155,7 +155,7 @@ test_that("Handles missing columns in dfGroups gracefully - #71", {
   expect_false("InvestigatorName" %in% names(result))
 })
 
-test_that("Respects strGroupLevel parameter - #71", {
+test_that("Respects strGroupLevel parameter (#71, #144)", {
   dfResults <- create_test_results() %>%
     dplyr::bind_rows(
       tibble::tibble(
@@ -183,7 +183,7 @@ test_that("Respects strGroupLevel parameter - #71", {
   expect_equal(result_country$GroupID[1], "Country001")
 })
 
-test_that("Errors when no data for specified GroupLevel - #71", {
+test_that("Errors when no data for specified GroupLevel (#71, #144)", {
   dfResults <- create_test_results()
 
   expect_error(
@@ -192,7 +192,7 @@ test_that("Errors when no data for specified GroupLevel - #71", {
   )
 })
 
-test_that("Returns empty data frame when Analysis_srs0001 not present - #71", {
+test_that("Returns empty data frame when Analysis_srs0001 not present (#71, #144)", {
   dfResults <- create_test_results() %>%
     dplyr::mutate(MetricID = "kri0001") # Change to different metric
 
@@ -204,7 +204,7 @@ test_that("Returns empty data frame when Analysis_srs0001 not present - #71", {
   expect_equal(nrow(result), 0)
 })
 
-test_that("Validates input types - #71", {
+test_that("Validates input types (#71, #144)", {
   dfResults <- create_test_results()
 
   # dfResults must be a data.frame
@@ -226,7 +226,7 @@ test_that("Validates input types - #71", {
   )
 })
 
-test_that("Works with custom strNameCol parameter - #71", {
+test_that("Works with custom strNameCol parameter (#71, #144)", {
   dfResults <- create_test_results()
   dfGroups <- tibble::tibble(
     GroupID = rep(c("Site001", "Site002"), each = 2),

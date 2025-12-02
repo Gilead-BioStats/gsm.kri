@@ -62,7 +62,7 @@ create_minimal_results <- function() {
 
 # Basic functionality tests ----
 
-test_that("CalculateRiskScore returns correct structure", {
+test_that("CalculateRiskScore returns correct structure (#127)", {
   dfResults <- create_sample_results()
   dfMetrics <- create_sample_metrics()
   dfWeights <- MakeWeights(dfMetrics)
@@ -92,7 +92,7 @@ test_that("CalculateRiskScore returns correct structure", {
   expect_equal(nrow(dfRiskScore), nrow(expected_groups))
 })
 
-test_that("CalculateRiskScore calculates risk scores correctly", {
+test_that("CalculateRiskScore calculates risk scores correctly (#127)", {
   dfResults <- create_sample_results()
   dfMetrics <- create_sample_metrics()
   dfWeights <- MakeWeights(dfMetrics)
@@ -115,7 +115,7 @@ test_that("CalculateRiskScore calculates risk scores correctly", {
   expect_true(is.na(site001_row$Flag))
 })
 
-test_that("CalculateRiskScore handles custom MetricID", {
+test_that("CalculateRiskScore handles custom MetricID (#127)", {
   dfResults <- create_sample_results()
   dfMetrics <- create_sample_metrics()
   dfWeights <- MakeWeights(dfMetrics)
@@ -131,7 +131,7 @@ test_that("CalculateRiskScore handles custom MetricID", {
 
 # Input validation tests ----
 
-test_that("CalculateRiskScore validates required columns in dfResults", {
+test_that("CalculateRiskScore validates required columns in dfResults (#127)", {
   dfResults <- create_sample_results()
   dfMetrics <- create_sample_metrics()
   dfWeights <- MakeWeights(dfMetrics)
@@ -147,7 +147,7 @@ test_that("CalculateRiskScore validates required columns in dfResults", {
   }
 })
 
-test_that("CalculateRiskScore validates required columns in dfWeights", {
+test_that("CalculateRiskScore validates required columns in dfWeights (#127)", {
   dfResults <- create_sample_results()
   dfMetrics <- create_sample_metrics()
   dfWeights <- MakeWeights(dfMetrics)
@@ -163,7 +163,7 @@ test_that("CalculateRiskScore validates required columns in dfWeights", {
   }
 })
 
-test_that("CalculateRiskScore validates MetricID uniqueness", {
+test_that("CalculateRiskScore validates MetricID uniqueness (#127)", {
   dfResults <- create_sample_results()
   dfMetrics <- create_sample_metrics()
   dfWeights <- MakeWeights(dfMetrics)
@@ -191,7 +191,7 @@ test_that("CalculateRiskScore validates MetricID uniqueness", {
   )
 })
 
-test_that("CalculateRiskScore validates numeric Weight and WeightMax", {
+test_that("CalculateRiskScore validates numeric Weight and WeightMax (#127)", {
   dfResults <- create_sample_results()
   dfMetrics <- create_sample_metrics()
   dfWeights <- MakeWeights(dfMetrics)
@@ -215,7 +215,7 @@ test_that("CalculateRiskScore validates numeric Weight and WeightMax", {
   )
 })
 
-test_that("CalculateRiskScore validates unique combinations", {
+test_that("CalculateRiskScore validates unique combinations (#127)", {
   dfResults <- create_sample_results()
   dfMetrics <- create_sample_metrics()
   dfWeights <- MakeWeights(dfMetrics)
@@ -228,7 +228,7 @@ test_that("CalculateRiskScore validates unique combinations", {
   )
 })
 
-test_that("CalculateRiskScore validates consistent WeightMax per MetricID", {
+test_that("CalculateRiskScore validates consistent WeightMax per MetricID (#127)", {
   dfResults <- create_sample_results()
   dfMetrics <- create_sample_metrics()
   dfWeights <- MakeWeights(dfMetrics)
@@ -249,7 +249,7 @@ test_that("CalculateRiskScore validates consistent WeightMax per MetricID", {
 
 # NA handling tests ----
 
-test_that("CalculateRiskScore handles NA values with warning", {
+test_that("CalculateRiskScore handles NA values with warning (#127)", {
   dfResults <- data.frame(
     GroupLevel = rep("Site", 4),
     GroupID = rep(c("Site001", "Site002"), each = 2),
@@ -276,7 +276,7 @@ test_that("CalculateRiskScore handles NA values with warning", {
   expect_equal(nrow(dfRiskScore), 2)
 })
 
-test_that("CalculateRiskScore works with all NA weights for a group", {
+test_that("CalculateRiskScore works with all NA weights for a group (#127)", {
   dfResults <- data.frame(
     GroupLevel = rep("Site", 4),
     GroupID = rep(c("Site001", "Site002"), each = 2),
@@ -303,7 +303,7 @@ test_that("CalculateRiskScore works with all NA weights for a group", {
 
 # Edge cases ----
 
-test_that("CalculateRiskScore handles single row input", {
+test_that("CalculateRiskScore handles single row input (#127)", {
   dfResults <- create_minimal_results()
   dfMetrics <- data.frame(
     MetricID = "Analysis_kri0001",
@@ -321,7 +321,7 @@ test_that("CalculateRiskScore handles single row input", {
   expect_equal(dfRiskScore$Metric, 100) # (4/4) * 100
 })
 
-test_that("CalculateRiskScore handles zero weights", {
+test_that("CalculateRiskScore handles zero weights (#127)", {
   dfResults <- create_sample_results()
   dfMetrics <- data.frame(
     MetricID = unique(dfResults$MetricID),
@@ -340,7 +340,7 @@ test_that("CalculateRiskScore handles zero weights", {
   expect_true(all(is.nan(dfRiskScore$Metric)))
 })
 
-test_that("CalculateRiskScore handles large numbers", {
+test_that("CalculateRiskScore handles large numbers (#127)", {
   dfResults <- create_minimal_results()
   dfMetrics <- data.frame(
     MetricID = "Analysis_kri0001",
@@ -359,7 +359,7 @@ test_that("CalculateRiskScore handles large numbers", {
 
 # Group aggregation tests ----
 
-test_that("CalculateRiskScore aggregates weights correctly across metrics", {
+test_that("CalculateRiskScore aggregates weights correctly across metrics (#127)", {
   dfResults <- data.frame(
     GroupLevel = rep("Site", 6),
     GroupID = rep(c("Site001", "Site002"), each = 3),
@@ -394,7 +394,7 @@ test_that("CalculateRiskScore aggregates weights correctly across metrics", {
   expect_equal(site002_score$Denominator, 28)
 })
 
-test_that("CalculateRiskScore handles multiple group levels", {
+test_that("CalculateRiskScore handles multiple group levels (#127)", {
   dfResults <- data.frame(
     GroupLevel = c("Site", "Country", "Site", "Country"),
     GroupID = c("Site001", "USA", "Site002", "Canada"),

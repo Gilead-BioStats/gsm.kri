@@ -9,7 +9,7 @@ test_that("Widget_GroupOverview creates a valid HTML widget (#145)", {
   expect_s3_class(widget, c("WidgetGroupOverview", "htmlwidget"))
 })
 
-test_that("Widget_GroupOverview returns expected data", {
+test_that("Widget_GroupOverview returns expected data (#125)", {
   TestAtLogLevel()
   widget <- Widget_GroupOverview(
     gsm.core::reportingResults,
