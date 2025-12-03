@@ -6,15 +6,15 @@ meta:
   Metric: Inclusion/Exclusion Violation Rate
   Numerator: Number of subjects ineligible
   Denominator: Number of subjects enrolled
-  # stuff below here needs modification
   Model: Normal Approximation
-  Score: Adjusted Z-Score
+  Score: Percentage of participants ineligible # Not sure how much we care about this, but probably worth calculating but not using to flag. Or we could just pass through numerator.
   AnalysisType: binary
-  Threshold: -2, 2
-  Flag: "-1,0,1"
-  RiskScoreWeight: "0,8,16"
+  FlagCol: Numerator
+  Threshold: 2.5 # Red flag when there are 3 or more possibly ineligible participants. Green otherwise
+  Flag: "0,2"
+  RiskScoreWeight: "0,16" # need RAs to set value for red flag
   AccrualThreshold: 3
-  AccrualMetric: Numerator
+  AccrualMetric: Denominator # Probably only run once 3 participants enrolled
 spec:
   Mapped_EXCLUSION:
     subjid:
@@ -70,15 +70,15 @@ steps:
     name: gsm.core::Transform_Rate
     params:
       dfInput: Analysis_Input
-  - output: Analysis_Analyzed
-    name: Analyze_NormalApprox
+ - output: Analysis_Analyzed
+    name: gsm.core::Analyze_Identity
     params:
       dfTransformed: Analysis_Transformed
-      strType: AnalysisType
   - output: Analysis_Flagged
     name: gsm.core::Flag
     params:
       dfAnalyzed: Analysis_Analyzed
+      strColumn: FlagCol
       vThreshold: vThreshold
       vFlag: vFlag
       vRiskScoreWeight: vRiskScoreWeight
