@@ -10,7 +10,7 @@
 # devtools::load_all("../gsm.qtl") # fix-58
 # devtools::load_all("../gsm.kri") # fix-131
 
-pak::pak("Gilead-BioStats/gsm.qtl@fix-58")
+pak::pak("Gilead-BioStats/gsm.qtl@fix-60")
 devtools::load_all()
 pak::pak("Gilead-BioStats/gsm.core@dev")
 
