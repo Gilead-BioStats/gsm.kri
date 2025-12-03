@@ -6,6 +6,7 @@ meta:
   Metric: Inclusion/Exclusion Violation Rate
   Numerator: Number of subjects ineligible
   Denominator: Number of subjects enrolled
+  # stuff below here needs modification
   Model: Normal Approximation
   Score: Adjusted Z-Score
   AnalysisType: binary
@@ -13,7 +14,7 @@ meta:
   Flag: "-1,0,1"
   RiskScoreWeight: "0,8,16"
   AccrualThreshold: 3
-  AccrualMetric: Denominator
+  AccrualMetric: Numerator
 spec:
   Mapped_EXCLUSION:
     subjid:
