@@ -3,11 +3,11 @@
 # library(gsm.reporting)
 # library(gsm.core) # dev
 # library(gsm.kri)
-# library(gsm.qtl) # fix-58
+# library(gsm.qtl) # fix-60
 # library(purrr)
 # library(dplyr)
 # devtools::load_all(".") # fix-96
-# devtools::load_all("../gsm.qtl") # fix-58
+# devtools::load_all("../gsm.qtl") # fix-60
 # devtools::load_all("../gsm.kri") # fix-131
 
 pak::pak("Gilead-BioStats/gsm.qtl@fix-60")
