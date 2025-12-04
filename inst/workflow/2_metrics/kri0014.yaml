@@ -10,9 +10,9 @@ meta:
   Score: Ineligible Participants
   AnalysisType: identity
   ScoreCol: Numerator
-  Threshold: '2.5' # Red flag when there are 3 or more possibly ineligible participants. Green otherwise
-  Flag: "0,2"
-  RiskScoreWeight: "0,16" # need RAs to set value for red flag
+  Threshold: "1.5,2.5" # Red flag when there are 3 or more possibly ineligible participants. Green otherwise
+  Flag: "0,1,2"
+  RiskScoreWeight: "0,8,16" # need RAs to set value for red flag
   AccrualThreshold: 3
   AccrualMetric: Denominator # Probably only run once 3 participants enrolled
 spec:
