@@ -69,16 +69,6 @@ gsm.kri::RenderRmd(
   )
 )
 
-# Tinkering piece for TimeSeries
-# Widget_TimeSeries(
-#   dfResults = dfResults %>% mutate(Flag = NA),
-#   lMetric = as.list(dfMetrics),
-#   dfGroups = dfGroups,
-#   strOutcome = "Metric",
-#   bAddGroupSelect = FALSE,
-#   selectedGroupIDs = "AA-AA-000-0000"
-# )
-
 # Via workflow
 
 # eligibility_workflow <- gsm.core::MakeWorkflowList(strNames = "report_eligibility", strPath = "inst/workflow/4_modules")
