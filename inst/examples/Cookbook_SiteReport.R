@@ -2,12 +2,17 @@
 library(gsm.core)
 library(gsm.kri)
 library(here)
-
+lWorkflows <- MakeWorkflowList(
+  strPath = "inst/workflow/2_metrics",
+  strNames = "kri",
+  strPackage = "gsm.kri"
+)
+dfMetrics <- gsm.reporting::MakeMetric(lWorkflows)
 ## Site Report
 lCharts <- gsm.kri::MakeCharts(
   dfResults = gsm.core::reportingResults,
   dfGroups = gsm.core::reportingGroups,
-  dfMetrics = gsm.core::reportingMetrics,
+  dfMetrics = dfMetrics,
   dfBounds = gsm.core::reportingBounds
 )
 

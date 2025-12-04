@@ -6,10 +6,10 @@ meta:
   Metric: Inclusion/Exclusion Violation Rate
   Numerator: Number of subjects ineligible
   Denominator: Number of subjects enrolled
-  Model: Normal Approximation
-  Score: Percentage of participants ineligible # Not sure how much we care about this, but probably worth calculating but not using to flag. Or we could just pass through numerator.
-  AnalysisType: binary
-  FlagCol: Numerator
+  Model: Identity (Numerator)
+  Score: Ineligible Participants
+  AnalysisType: identity
+  ScoreCol: Numerator
   Threshold: '2.5' # Red flag when there are 3 or more possibly ineligible participants. Green otherwise
   Flag: "0,2"
   RiskScoreWeight: "0,16" # need RAs to set value for red flag
@@ -74,11 +74,11 @@ steps:
     name: gsm.core::Analyze_Identity
     params:
       dfTransformed: Analysis_Transformed
+      strValueCol: ScoreCol
   - output: Analysis_Flagged
     name: gsm.core::Flag
     params:
       dfAnalyzed: Analysis_Analyzed
-      strColumn: FlagCol
       vThreshold: vThreshold
       vFlag: vFlag
       vRiskScoreWeight: vRiskScoreWeight
