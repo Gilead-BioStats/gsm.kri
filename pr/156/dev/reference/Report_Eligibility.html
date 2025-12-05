@@ -73,26 +73,19 @@ This function generates a Eligibility report based on the provided inputs.'><met
 
 
 <dl><dt id="arg-dfresults">dfResults<a class="anchor" aria-label="anchor" href="#arg-dfresults"></a></dt>
-<dd><p>`data.frame` A stacked summary of analysis pipeline output.
-Created by passing a list of results returned by [Summarize()] to
-[BindResults()]. Expected columns: `GroupID`, `GroupLevel`, `Numerator`,
-`Denominator`, `Metric`, `Score`, `Flag`, `MetricID`, `StudyID`,
-`SnapshotDate`.</p></dd>
+<dd><p>`data.frame` Analysis results data.</p></dd>
 
 
 <dt id="arg-dfmetrics">dfMetrics<a class="anchor" aria-label="anchor" href="#arg-dfmetrics"></a></dt>
-<dd><p>`data.frame` Metric-specific metadata for use in charts and
-reporting. Created by passing an `lWorkflow` object to [MakeMetric()].
-Expected columns: `File`, `MetricID`, `Group`, `Abbreviation`, `Metric`,
-`Numerator`, `Denominator`, `Model`, `Score`, and `Threshold`. For more
-details see the Data Model vignette: `vignette("DataModel", package =
-"gsm.core")`.</p></dd>
+<dd><p>`data.frame` Analysis metrics data.</p></dd>
 
 
 <dt id="arg-dfgroups">dfGroups<a class="anchor" aria-label="anchor" href="#arg-dfgroups"></a></dt>
-<dd><p>`data.frame` Group-level metadata dictionary. Created by
-passing CTMS site and study data to [MakeLongMeta()]. Expected columns:
-`GroupID`, `GroupLevel`, `Param`, `Value`.</p></dd>
+<dd><p>`data.frame` Analysis groups data.</p></dd>
+
+
+<dt id="arg-llistings">lListings<a class="anchor" aria-label="anchor" href="#arg-llistings"></a></dt>
+<dd><p>`list` List containing appropriate dataset to display for eligiiblity listing</p></dd>
 
 
 <dt id="arg-stroutputdir">strOutputDir<a class="anchor" aria-label="anchor" href="#arg-stroutputdir"></a></dt>
@@ -107,10 +100,6 @@ the report will be named based on the study ID, Group Level and Date.</p></dd>
 
 <dt id="arg-strinputpath">strInputPath<a class="anchor" aria-label="anchor" href="#arg-strinputpath"></a></dt>
 <dd><p>`string` or `fs_path` Path to the template `Rmd` file.</p></dd>
-
-
-<dt id="arg-lcharts">lCharts<a class="anchor" aria-label="anchor" href="#arg-lcharts"></a></dt>
-<dd><p>A list of charts to include in the report.</p></dd>
 
 </dl></div>
     <div class="section level2">
