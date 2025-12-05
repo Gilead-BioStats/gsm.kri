@@ -59,12 +59,15 @@ lParams <- list(
 )
 
 # Local call to render function - run from pkg root
-gsm.kri::RenderRmd(
-  lParams = lParams,
+Report_Eligibility(
+  dfResults = dfResults,
+  dfMetrics = dfMetrics,
+  dfGroups = dfGroups,
+  lListings = lListings,
   strOutputDir = file.path(getwd(), "pkgdown", "assets", "examples"),
-  strOutputFile = "Example_Eligibility.html",
+  strOutputFile = "Report_Eligibility.html",
   strInputPath = system.file(
-    "examples/Example_Eligibility.Rmd",
+    "report/Report_Eligibility.Rmd",
     package = "gsm.kri"
   )
 )
