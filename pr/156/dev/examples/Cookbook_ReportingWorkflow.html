@@ -1584,7 +1584,7 @@ border-radius: 0px;
 
 
 <h1 class="title toc-ignore">Cookbook - Reporting Workflow Examples</h1>
-<h4 class="date">2025-11-25 14:46:47 EST</h4>
+<h4 class="date">2025-12-03 14:10:52 EST</h4>
 
 </div>
 
@@ -1713,6 +1713,103 @@ highlight changes from previous snapshots.</p>
 <pre class="r"><code>reporting_long &lt;- gsm.core::RunWorkflows(reporting_wf, c(mapped, list(lAnalyzed = analyzed, Reporting_Results_Longitudinal = historical, lWorkflows = metrics_wf)))
 lReports_long &lt;- gsm.core::RunWorkflows(module_wf, reporting_long)</code></pre>
 </div>
+</div>
+<div id="example-3.5---reading-and-writing-from-external-data-sources" class="section level2">
+<h2>Example 3.5 - Reading and Writing from External Data Sources</h2>
+<p>This example extends the previous examples to use data from an
+external source, by specifying <code>LoadData()</code> and
+<code>SaveData()</code> functions to be used in
+<code>RunWorkflows()</code> <code>lConfig</code> argument.</p>
+<pre class="r"><code>LoadData &lt;- function(lWorkflow, lConfig, lData = NULL) {
+  lData &lt;- lData
+    purrr::imap(
+        lWorkflow$spec,
+        ~ {
+            input &lt;- lConfig$Domains[[ .y ]]
+
+            if (is.data.frame(input)) {
+                data &lt;- input
+            } else if (is.function(input)) {
+                data &lt;- input()
+            } else if (is.character(input)) {
+                data &lt;- read.csv(input)
+            } else {
+                cli::cli_abort(&quot;Invalid data source: {input}.&quot;)
+            }
+
+            lData[[ .y ]] &lt;&lt;- (ApplySpec(data, .x))
+        }
+    )
+    return(lData)
+}
+
+SaveData &lt;- function(lWorkflow, lConfig) {
+    domain &lt;- paste0(lWorkflow$meta$Type, &#39;_&#39;, lWorkflow$meta$ID)
+    cli::cli_alert_info(domain)
+
+    if (exists(domain, lConfig$Domains)) {
+        output &lt;- lConfig$Domains[[ domain ]]
+        cli::cli_alert_info(output)
+
+        cli::cli_alert_info(
+            &#39;Saving output of `lWorkflow` to `{output}`.&#39;
+        )
+
+        write.csv(
+            lWorkflow$lResult,
+            output
+        )
+    } else {
+        cli::cli_alert_info(
+            &#39;{domain} not found.&#39;
+        )
+    }
+}
+
+lConfig &lt;- list(
+    LoadData = LoadData,
+    SaveData = SaveData,
+    Domains = c(
+        Raw_STUDY = function() { gsm.core::lSource$Raw_STUDY },
+        Raw_SITE = function() { gsm.core::lSource$Raw_SITE },
+        Raw_PD = function() { gsm.core::lSource$Raw_PD },
+
+        Raw_SUBJ = function() { gsm.core::lSource$Raw_SUBJ },
+        Raw_ENROLL = function() { gsm.core::lSource$Raw_ENROLL },
+        Raw_SDRGCOMP = function() { gsm.core::lSource$Raw_SDRGCOMP },
+        Raw_STUDCOMP = function() { gsm.core::lSource$Raw_STUDCOMP },
+        Raw_LB = function() { gsm.core::lSource$Raw_LB },
+        Raw_AE = function() { gsm.core::lSource$Raw_AE },
+
+        Raw_DATAENT = function() { gsm.core::lSource$Raw_DATAENT },
+        Raw_DATACHG = function() { gsm.core::lSource$Raw_DATACHG },
+        Raw_QUERY = function() { gsm.core::lSource$Raw_QUERY },
+
+        Mapped_STUDY = file.path(tempdir(), &#39;mapped-study.csv&#39;),
+        Mapped_SITE = file.path(tempdir(), &#39;mapped-site.csv&#39;),
+        Mapped_COUNTRY = file.path(tempdir(), &#39;mapped-country.csv&#39;),
+        Mapped_PD = file.path(tempdir(), &#39;mapped-pd.csv&#39;),
+
+        Mapped_SUBJ = file.path(tempdir(), &#39;mapped-subj.csv&#39;),
+        Mapped_ENROLL = file.path(tempdir(), &#39;mapped-enroll.csv&#39;),
+        Mapped_SDRGCOMP = file.path(tempdir(), &#39;mapped-sdrgcomp.csv&#39;),
+        Mapped_STUDCOMP = file.path(tempdir(), &#39;mapped-studcomp.csv&#39;),
+        Mapped_LB = file.path(tempdir(), &#39;mapped-lb.csv&#39;),
+        Mapped_AE = file.path(tempdir(), &#39;mapped-ae.csv&#39;),
+
+        Mapped_DATAENT = file.path(tempdir(), &#39;mapped-dataent.csv&#39;),
+        Mapped_DATACHG = file.path(tempdir(), &#39;mapped-datachg.csv&#39;),
+        Mapped_QUERY = file.path(tempdir(), &#39;mapped-query.csv&#39;)
+    )
+)
+
+core_mappings &lt;- c(&quot;AE&quot;, &quot;COUNTRY&quot;, &quot;DATACHG&quot;, &quot;DATAENT&quot;, &quot;ENROLL&quot;, &quot;LB&quot;,
+                   &quot;PD&quot;, &quot;QUERY&quot;, &quot;STUDY&quot;, &quot;STUDCOMP&quot;, &quot;SDRGCOMP&quot;, &quot;SITE&quot;, &quot;SUBJ&quot;)
+
+lMappedData &lt;- RunWorkflows(
+    MakeWorkflowList(strNames = core_mappings, strPath = &#39;workflow/1_mappings&#39;, strPackage = &quot;gsm.mapping&quot;),
+    lConfig = lConfig
+)</code></pre>
 </div>
 
 

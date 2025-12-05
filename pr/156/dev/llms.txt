@@ -182,6 +182,8 @@ lCharts <- RunWorkflow(
   : Create Weight Table from Metrics Metadata
 - [`RenderRmd()`](https://gilead-biostats.github.io/gsm.kri/dev/reference/RenderRmd.md)
   : Custom Rmarkdown render function
+- [`Report_Eligibility()`](https://gilead-biostats.github.io/gsm.kri/dev/reference/Report_Eligibility.md)
+  : Report_Eligibility function
 - [`Report_FlagChange()`](https://gilead-biostats.github.io/gsm.kri/dev/reference/Report_FlagChange.md)
   : Report Flag Changes
 - [`Report_FlagOverTime()`](https://gilead-biostats.github.io/gsm.kri/dev/reference/Report_FlagOverTime.md)
