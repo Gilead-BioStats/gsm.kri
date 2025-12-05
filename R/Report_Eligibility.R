@@ -6,7 +6,10 @@
 #' This function generates a Eligibility report based on the provided inputs.
 #'
 #' @inheritParams shared-params
-#' @param lCharts A list of charts to include in the report.
+#' @param dfResults `data.frame` Analysis results data.
+#' @param dfMetrics `data.frame` Analysis metrics data.
+#' @param dfGroups `data.frame` Analysis groups data.
+#' @param lListings `list` List containing appropriate dataset to display for eligiiblity listing
 #' @param strOutputDir The output directory path for the generated report. If not provided,
 #'  the report will be saved in the current working directory.
 #' @param strOutputFile The output file name for the generated report. If not provided,

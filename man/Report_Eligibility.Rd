@@ -15,22 +15,13 @@ Report_Eligibility(
 )
 }
 \arguments{
-\item{dfResults}{`data.frame` A stacked summary of analysis pipeline output.
-Created by passing a list of results returned by [Summarize()] to
-[BindResults()]. Expected columns: `GroupID`, `GroupLevel`, `Numerator`,
-`Denominator`, `Metric`, `Score`, `Flag`, `MetricID`, `StudyID`,
-`SnapshotDate`.}
+\item{dfResults}{`data.frame` Analysis results data.}
 
-\item{dfMetrics}{`data.frame` Metric-specific metadata for use in charts and
-reporting. Created by passing an `lWorkflow` object to [MakeMetric()].
-Expected columns: `File`, `MetricID`, `Group`, `Abbreviation`, `Metric`,
-`Numerator`, `Denominator`, `Model`, `Score`, and `Threshold`. For more
-details see the Data Model vignette: `vignette("DataModel", package =
-"gsm.core")`.}
+\item{dfMetrics}{`data.frame` Analysis metrics data.}
 
-\item{dfGroups}{`data.frame` Group-level metadata dictionary. Created by
-passing CTMS site and study data to [MakeLongMeta()]. Expected columns:
-`GroupID`, `GroupLevel`, `Param`, `Value`.}
+\item{dfGroups}{`data.frame` Analysis groups data.}
+
+\item{lListings}{`list` List containing appropriate dataset to display for eligiiblity listing}
 
 \item{strOutputDir}{The output directory path for the generated report. If not provided,
 the report will be saved in the current working directory.}
@@ -39,8 +30,6 @@ the report will be saved in the current working directory.}
 the report will be named based on the study ID, Group Level and Date.}
 
 \item{strInputPath}{`string` or `fs_path` Path to the template `Rmd` file.}
-
-\item{lCharts}{A list of charts to include in the report.}
 }
 \value{
 File path of the saved report html is returned invisibly. Save to object to view absolute output path.
