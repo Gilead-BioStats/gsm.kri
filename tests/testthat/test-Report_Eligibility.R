@@ -39,7 +39,7 @@ lListings <- list(
   IE = dfEXCLUSION
 )
 
-test_that("Check default output path when strOutpath is NULL", {
+test_that("Ensure report renders normally", {
   expect_output(
     Report_Eligibility(
       dfResults = dfResults,
