@@ -6,7 +6,7 @@ ae_workflow_custom <- flatten(MakeWorkflowList(
 ))
 ae_workflow_default <- flatten(MakeWorkflowList(
   "kri0001",
-  defalt_path,
+  default_path,
   strPackage = "gsm.kri"
 ))
 
