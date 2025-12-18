@@ -1442,7 +1442,7 @@
           <tr><td headers="Description" class="gt_row gt_left">Site Activation</td>
       <td headers="Value" class="gt_row gt_right">145 / 150 (96.7%)</td></tr>
           <tr><td headers="Description" class="gt_row gt_left">Participant Enrollment</td>
-      <td headers="Value" class="gt_row gt_right">764 / 1000 (76.4%)</td></tr>
+      <td headers="Value" class="gt_row gt_right">763 / 1000 (76.3%)</td></tr>
         </tbody>
         
       </table>
@@ -1933,7 +1933,7 @@
           <tr><td headers="Description" class="gt_row gt_left">Participant Target</td>
       <td headers="Value" class="gt_row gt_right">1000</td></tr>
           <tr><td headers="Description" class="gt_row gt_left">Participants Enrolled</td>
-      <td headers="Value" class="gt_row gt_right">764</td></tr>
+      <td headers="Value" class="gt_row gt_right">763</td></tr>
           <tr><td headers="Description" class="gt_row gt_left">Sites Enrolled</td>
       <td headers="Value" class="gt_row gt_right">145</td></tr>
           <tr><td headers="Description" class="gt_row gt_left">Percent Sites Activated</td>
@@ -1941,9 +1941,9 @@
           <tr><td headers="Description" class="gt_row gt_left">Site Activation</td>
       <td headers="Value" class="gt_row gt_right">145 / 150 (96.7%)</td></tr>
           <tr><td headers="Description" class="gt_row gt_left">Percent Participants Enrolled</td>
-      <td headers="Value" class="gt_row gt_right">76.4</td></tr>
+      <td headers="Value" class="gt_row gt_right">76.3</td></tr>
           <tr><td headers="Description" class="gt_row gt_left">Participant Enrollment</td>
-      <td headers="Value" class="gt_row gt_right">764 / 1000 (76.4%)</td></tr>
+      <td headers="Value" class="gt_row gt_right">763 / 1000 (76.3%)</td></tr>
         </tbody>
         
       </table>
