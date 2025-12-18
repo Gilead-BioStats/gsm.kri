@@ -4,7 +4,8 @@ kri_workflows <- MakeWorkflowList(
   strPath = "inst/workflow/2_metrics",
   strPackage = "gsm.kri"
 )
-analyzed <- RunWorkflows(kri_workflows, mapped_data) %>% suppressWarnings() # Exclude pk/pd since thats not counting to SRS
+analyzed <- RunWorkflows(kri_workflows, lData = c(mapped_data, list(lWorkflows = kri_workflows))) %>% suppressWarnings()
+# Exclude pk/pd since thats not counting to SRS
 
 ## Test Code
 testthat::test_that("Given summarized analytics data, all appropriate aspects of site risk score are available to calculate it correctly", {
@@ -49,6 +50,7 @@ testthat::test_that("Given summarized analytics data, all appropriate aspects of
     }
   ) %>%
     bind_rows() %>%
+    filter(!is.na(.data$Weight) & !is.na(.data$WeightMax)) %>%
     group_by(GroupID) %>%
     summarize(
       Numerator = sum(Weight, na.rm = TRUE),
