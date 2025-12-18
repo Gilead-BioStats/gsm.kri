@@ -1,16 +1,32 @@
 meta:
   Type: Mapped
   ID: AE
-  Description: Adverse Event Data Mapping 
+  Description: Adverse Event Data Mapping
   Priority: 1
-spec: 
+spec:
  Raw_AE:
+    studyid:
+      type: character
     subjid:
-      required: true
       type: character
     aeser:
-      required: true
       type: character
+    aest_dt:
+      type: Date
+    aeen_dt:
+      type: Date
+    mdrpt_nsv:
+      type: character
+    mdrsoc_nsv:
+      type: character
+    aetoxgr:
+      type: character
+    aeongo:
+      type: character
+    aerel:
+      type: character
+    mincreated_dts:
+      type: timestamp
 steps:
   - output: Mapped_AE
     name: =

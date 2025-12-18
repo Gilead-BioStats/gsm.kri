@@ -1,19 +1,20 @@
 meta:
   Type: Mapped
   ID: SDRGCOMP
-  Description: Study Drug Completion Data Mapping 
+  Description: Study Drug Completion Data Mapping
   Priority: 1
-spec: 
+spec:
  Raw_SDRGCOMP:
+    studyid:
+      type: character
     subjid:
-      required: true
       type: character
     sdrgyn:
-      required: true
       type: character
     phase:
-      required: true
       type: character
+    mincreated_dts:
+      type: timestamp
 steps:
   - output: Mapped_SDRGCOMP
     name: =

@@ -1,16 +1,18 @@
 meta:
   Type: Mapped
   ID: LB
-  Description: Lab Data Mapping 
+  Description: Lab Data Mapping
   Priority: 1
-spec: 
+spec:
   Raw_LB:
+    studyid:
+      type: character
     subjid:
-      required: true
       type: character
     toxgrg_nsv:
-      required: true
       type: character
+    lb_dt:
+      type: Date
 steps:
   - output: Mapped_LB
     name: =

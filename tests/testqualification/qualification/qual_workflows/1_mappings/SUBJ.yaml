@@ -1,34 +1,41 @@
 meta:
   Type: Mapped
   ID: SUBJ
-  Description: Subject Data Mapping 
+  Description: Subject Data Mapping
   Priority: 1
-spec: 
+spec:
   Raw_SUBJ:
     studyid:
-      required: true
       type: character
     invid:
-      required: true
       type: character
     country:
-      required: true
       type: character
     subjid:
-      required: true
       type: character
     subject_nsv:
-      required: true
       type: character
     enrollyn:
-      required: true
       type: character
     timeonstudy:
-      required: true
       type: integer
+    firstparticipantdate:
+      type: Date
+    firstdosedate:
+      type: Date
+    timeontreatment:
+      type: numeric
+    agerep:
+      type: character
+    sex:
+      type: character
+    race:
+      type: character
+    mincreated_dts:
+      type: timestamp
 steps:
   - output: Mapped_SUBJ
-    name: RunQuery
+    name: gsm.core::RunQuery
     params:
       df: Raw_SUBJ
       strQuery: "SELECT * FROM df WHERE enrollyn == 'Y'"
