@@ -5,7 +5,7 @@ kri_workflows <- MakeWorkflowList(
   strPackage = "gsm.kri"
 )
 reporting_workflows <- MakeWorkflowList(strPackage = "gsm.reporting")
-analyzed <- RunWorkflows(kri_workflows, mapped_data) %>% suppressWarnings()
+analyzed <- RunWorkflows(kri_workflows, lData = c(mapped_data, list(lWorkflows = kri_workflows))) %>% suppressWarnings()
 outputs <- map(reporting_workflows, \(x) x$steps[[length(x$steps)]]$output)
 historical_reporting_results <- gsm.core::reportingResults %>%
   dplyr::filter(SnapshotDate < max(.data$SnapshotDate))
