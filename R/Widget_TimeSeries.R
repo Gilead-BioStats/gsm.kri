@@ -37,6 +37,7 @@ Widget_TimeSeries <- function(
   dfGroups = NULL,
   vThreshold = NULL,
   strOutcome = "Score",
+  vOutcomeOptions = c("Score", "Metric", "Numerator"),
   bAddGroupSelect = TRUE,
   strShinyGroupSelectID = "GroupID",
   strOutputLabel = paste0(
@@ -65,6 +66,14 @@ Widget_TimeSeries <- function(
   gsm.core::stop_if(
     cnd = !is.character(strOutcome),
     "strOutcome is not a character"
+  )
+  gsm.core::stop_if(
+    cnd = !is.character(vOutcomeOptions),
+    "vOutcomeOptions is not a character vector"
+  )
+  gsm.core::stop_if(
+    cnd = !strOutcome %in% vOutcomeOptions,
+    "strOutcome must be one of vOutcomeOptions"
   )
   gsm.core::stop_if(
     cnd = !is.logical(bAddGroupSelect),
@@ -107,6 +116,7 @@ Widget_TimeSeries <- function(
     vThreshold = vThreshold,
     lChartConfig = lChartConfig,
     strOutcome = strOutcome,
+    vOutcomeOptions = vOutcomeOptions,
     bAddGroupSelect = bAddGroupSelect,
     strShinyGroupSelectID = strShinyGroupSelectID,
     bDebug = bDebug
