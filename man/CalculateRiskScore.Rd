@@ -15,8 +15,8 @@ CalculateRiskScore(dfResults, dfWeights, strMetricID = "Analysis_srs0001")
 \item{strMetricID}{`character` The MetricID to assign to the calculated risk scores. Default is "Analysis_srs0001".}
 }
 \value{
-`data.frame` with risk score data containing columns: `GroupLevel`, `GroupID`, `MetricID`, 
-`Numerator` (sum of weights), `Denominator` (sum of max weights across all metrics), 
+`data.frame` with risk score data containing columns: `GroupLevel`, `GroupID`, `MetricID`,
+`Numerator` (sum of weights), `Denominator` (sum of max weights across all metrics),
 `Metric` (risk score percentage), `Score` (same as Metric), and `Flag` (set to NA).
 }
 \description{
