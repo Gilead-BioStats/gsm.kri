@@ -104,9 +104,9 @@ Widget_GroupOverview <- function(
       filter(!is.na(.data$RiskScoreWeight)) %>%
       mutate(
         Weight = map(.data$RiskScoreWeight, \(x) {
-          ParseThreshold(x, bSort = FALSE)
+          gsm.core::ParseThreshold(x, bSort = FALSE)
         }),
-        Flag = map(.data$Flag, \(x) ParseThreshold(x, bSort = FALSE)),
+        Flag = map(.data$Flag, \(x) gsm.core::ParseThreshold(x, bSort = FALSE)),
         WeightMax = map_dbl(.data$Weight, ~ max(.x, na.rm = TRUE))
       ) %>%
       select("MetricID", "Flag", "Weight", "WeightMax") %>%

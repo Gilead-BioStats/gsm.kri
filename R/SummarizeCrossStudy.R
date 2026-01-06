@@ -69,7 +69,7 @@ SummarizeCrossStudy <- function(
       # Get all investigator names for each site
       investigator_names_all <- dfGroups %>%
         dplyr::filter(.data$Param == strNameCol) %>%
-        dplyr::select(GroupID = .data$GroupID, InvestigatorName = .data$Value)
+        dplyr::select("GroupID", InvestigatorName = "Value")
 
       # Check for multiple investigator names per site
       investigator_counts <- investigator_names_all %>%
@@ -123,7 +123,7 @@ SummarizeCrossStudy <- function(
 
       # Select final columns
       investigator_names <- investigator_counts %>%
-        dplyr::select(.data$GroupID, .data$InvestigatorName)
+        dplyr::select("GroupID", "InvestigatorName")
 
       cross_study_summary <- cross_study_summary %>%
         dplyr::left_join(investigator_names, by = "GroupID")
