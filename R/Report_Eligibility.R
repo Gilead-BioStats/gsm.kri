@@ -84,6 +84,13 @@ Report_Eligibility <- function(
   rlang::check_installed("rmarkdown", reason = "to run `Report_Eligibility()`")
   rlang::check_installed("knitr", reason = "to run `Report_Eligibility()`")
 
+  if (!requireNamespace("ggplot2", quietly = TRUE)) {
+    stop(
+      "Package 'gsm.qtl' is required for `Report_Eligibility()`.",
+      call. = FALSE
+    )
+  }
+
   # set output path
   if (is.null(strOutputFile)) {
     strOutputFile <- "Report_Eligibility.html"
