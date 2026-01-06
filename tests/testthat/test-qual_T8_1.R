@@ -1,19 +1,19 @@
-# Test Setup -------------------------------------------------------
+## Test Setup
 kri_workflows <- MakeWorkflowList(
-  c(sprintf("kri%04d", 1:2), sprintf("cou%04d", 1:2)),
+  c(sprintf("kri%04d", 6:7), sprintf("cou%04d", 6:7)),
   default_path,
   strPackage = "gsm.kri"
 )
 kri_custom <- MakeWorkflowList(
-  c(sprintf("kri%04d_custom", 1:2), sprintf("cou%04d_custom", 1:2)),
+  c(sprintf("kri%04d_custom", 6:7), sprintf("cou%04d_custom", 6:7)),
   yaml_path_custom_metrics,
   strPackage = "gsm.kri"
 )
 
 outputs <- map(kri_workflows, ~ map_vec(.x$steps, ~ .x$output))
 
-## Test Code -------------------------------------------------------
-testthat::test_that("Given appropriate metadata (i.e. vThresholds), bounds are properly applied to generate flags", {
+## Test Code
+testthat::test_that("Qual: Given appropriate raw participant-level data, a Dispositon Assessment can be done using the Normal Approximation method  (#159)", {
   # default ---------------------------------
   test <- map(kri_workflows, ~ robust_runworkflow(.x, mapped_data))
 
@@ -38,7 +38,7 @@ testthat::test_that("Given appropriate metadata (i.e. vThresholds), bounds are p
   # verify vThreshold was converted to threshold vector of length 4
   walk(
     test,
-    ~ expect_true(is.vector(.x$vThreshold) & length(.x$vThreshold) == 4)
+    ~ expect_true(is.vector(.x$vThreshold) & length(.x$vThreshold) == 2)
   )
 
   # custom ----------------------------------

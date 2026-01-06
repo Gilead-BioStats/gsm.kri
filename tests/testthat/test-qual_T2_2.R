@@ -10,8 +10,8 @@ outputs <- map_vec(kri_workflows$steps, ~ .x$output)
 
 
 ## Test Code
-testthat::test_that("Given raw participant-level data with missingness,
-                    a properly specified Workflow for a KRI creates summarized and flagged data", {
+testthat::test_that("Qual: Given raw participant-level data with missingness,
+                    a properly specified Workflow for a KRI creates summarized and flagged data (#159)", {
   test <- robust_runworkflow(kri_workflows, mapped_data_missing_values) %>%
     suppressWarnings()
   a <- capture_warnings(robust_runworkflow(

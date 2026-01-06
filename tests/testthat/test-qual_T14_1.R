@@ -1,11 +1,11 @@
 ## Test Setup
 kri_workflows <- MakeWorkflowList(
-  c(sprintf("kri%04d", 10), sprintf("cou%04d", 10)),
+  c(sprintf("kri%04d", 13), sprintf("cou%04d", 13)),
   default_path,
   strPackage = "gsm.kri"
 )
 kri_custom <- MakeWorkflowList(
-  c(sprintf("kri%04d_custom", 10), sprintf("cou%04d_custom", 10)),
+  c(sprintf("kri%04d_custom", 13), sprintf("cou%04d_custom", 13)),
   yaml_path_custom_metrics,
   strPackage = "gsm.kri"
 )
@@ -13,7 +13,7 @@ kri_custom <- MakeWorkflowList(
 outputs <- map(kri_workflows, ~ map_vec(.x$steps, ~ .x$output))
 
 ## Test Code
-testthat::test_that("Given appropriate raw participant-level data, a Data Entry Lag Assessment can be done using the Normal Approximation method.", {
+testthat::test_that("Qual: Given appropriate raw participant-level data, a PK Compliance Assessment can be done using the Identity method (#159)", {
   # default ---------------------------------
   test <- map(kri_workflows, ~ robust_runworkflow(.x, mapped_data)) %>%
     suppressWarnings()
@@ -36,7 +36,7 @@ testthat::test_that("Given appropriate raw participant-level data, a Data Entry 
     )
   )
 
-  # verify vThreshold was converted to threshold vector of length 2
+  # verify vThreshold was converted to threshold vector of length 4
   walk(
     test,
     ~ expect_true(is.vector(.x$vThreshold) & length(.x$vThreshold) == 2)
@@ -53,16 +53,17 @@ testthat::test_that("Given appropriate raw participant-level data, a Data Entry 
     all(
       imap_lgl(test_custom, function(kri, kri_name) {
         all(map_lgl(
-          kri[outputs[[kri_name]][
-            !(outputs[[kri_name]] %in% c("vThreshold", "lAnalysis"))
-          ]],
+          kri[outputs[[kri_name]][str_detect(
+            outputs[[kri_name]],
+            pattern = "Analysis_"
+          )]],
           is.data.frame
         ))
       })
     )
   )
 
-  # verify vThreshold was converted to threshold vector of length 2
+  # verify vThreshold was converted to threshold vector of length 4
   walk(
     test_custom,
     ~ expect_true(is.vector(.x$vThreshold) & length(.x$vThreshold) == 2)
@@ -75,7 +76,7 @@ testthat::test_that("Given appropriate raw participant-level data, a Data Entry 
         output <- kri$Analysis_Flagged %>%
           mutate(
             hardcode_flag = case_when(
-              Score >= kri$vThreshold[2] ~ 2,
+              Score <= kri$vThreshold[1] ~ 2,
               (Score > kri$vThreshold[1] & Score <= kri$vThreshold[2]) ~ 1,
               TRUE ~ 0
             )

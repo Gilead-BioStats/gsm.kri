@@ -38,9 +38,7 @@ Imports:
     rmarkdown,
     stringr,
     tibble,
-    tidyr,
-    gsm.mapping,
-    gsm.reporting
+    tidyr
 Suggests: 
     fontawesome,
     knitr,
@@ -48,7 +46,9 @@ Suggests:
     testthat (>= 3.0.0),
     withr,
     yaml,
-    here
+    here,
+    gsm.mapping,
+    gsm.reporting
 Remotes:
     gsm.core=Gilead-BioStats/gsm.core@main,
     gsm.mapping=Gilead-BioStats/gsm.mapping@main,

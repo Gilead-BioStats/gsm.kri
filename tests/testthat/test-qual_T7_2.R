@@ -11,7 +11,7 @@ kri_custom <- MakeWorkflowList(
 )
 
 ## Test Code
-testthat::test_that("Protocol Deviation Assessments can be done correctly using a grouping variable, such as Site or Country for KRIs, and Study for QTLs, when applicable.", {
+testthat::test_that("Qual: Protocol Deviation Assessments can be done correctly using a grouping variable, such as Site or Country for KRIs, and Study for QTLs, when applicable (#159)", {
   ## regular -----------------------------------------
   test <- map(kri_workflows, ~ robust_runworkflow(.x, mapped_data, steps = 1:7))
 

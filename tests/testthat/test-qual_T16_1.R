@@ -4,11 +4,15 @@ kri_workflows <- MakeWorkflowList(
   strPath = "inst/workflow/2_metrics",
   strPackage = "gsm.kri"
 )
-analyzed <- RunWorkflows(kri_workflows, lData = c(mapped_data, list(lWorkflows = kri_workflows))) %>% suppressWarnings()
+analyzed <- RunWorkflows(
+  kri_workflows,
+  lData = c(mapped_data, list(lWorkflows = kri_workflows))
+) %>%
+  suppressWarnings()
 # Exclude pk/pd since thats not counting to SRS
 
 ## Test Code
-testthat::test_that("Given summarized analytics data, all appropriate aspects of site risk score are available to calculate it correctly", {
+testthat::test_that("Qual: Given summarized analytics data, all appropriate aspects of site risk score are available to calculate it correctly (#159)", {
   # Check all kri workflows have 1:1 mapped flags and respective weights, exclude PK-PD and SRS
   expect_equal(
     map(kri_workflows[-13], function(x) {

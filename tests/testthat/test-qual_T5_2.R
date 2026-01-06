@@ -18,7 +18,7 @@ partial_mapped_workflows <- map(
 )
 
 ## Test Code
-testthat::test_that("Given appropriate raw participant-level data, flag values are correctly assigned as NA for sites with low enrollment.", {
+testthat::test_that("Qual: Given appropriate raw participant-level data, flag values are correctly assigned as NA for sites with low enrollment (#159)", {
   # define custom min denominator
   test_nMinDenominator <- c(500, 1000, 1500)
 

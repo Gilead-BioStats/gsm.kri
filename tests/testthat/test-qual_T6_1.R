@@ -13,7 +13,7 @@ kri_custom <- MakeWorkflowList(
 outputs <- map(kri_workflows, ~ map_vec(.x$steps, ~ .x$output))
 
 ## Test Code
-testthat::test_that("Given appropriate raw participant-level data, an Adverse Event Assessment can be done using the Normal Approximation method.
+testthat::test_that("Qual: Given appropriate raw participant-level data, an Adverse Event Assessment can be done using the Normal Approximation method (#159)
 ", {
   # default
   test <- map(kri_workflows, ~ robust_runworkflow(.x, mapped_data))

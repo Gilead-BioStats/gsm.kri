@@ -7,7 +7,7 @@ kri_workflows <- flatten(MakeWorkflowList(
 outputs <- map_vec(kri_workflows$steps, ~ .x$output)
 
 ## Test Code
-testthat::test_that("Given appropriate metadata (i.e. vThresholds), flagged observations are properly marked in summary data", {
+testthat::test_that("Qual: Given appropriate metadata (i.e. vThresholds), flagged observations are properly marked in summary data (#159)", {
   test <- robust_runworkflow(kri_workflows, mapped_data)
   expect_true(all(outputs %in% names(test)))
   expect_true(is.vector(test[["vThreshold"]]))

@@ -1,13 +1,12 @@
 source(system.file(
   "tests",
-  "testqualification",
-  "qualification",
+  "testthat",
   "qual_data.R",
   package = "gsm.kri"
 ))
 
 # Priority 1 mappings
-test_that("mappings now done by individual domain, test that inputs and outputs of priority 1 mappings are completed as expected", {
+test_that("Qual: mappings now done by individual domain, test that inputs and outputs of priority 1 mappings are completed as expected (#159)", {
   priority1 <- c(
     "AE.yaml",
     "ENROLL.yaml",
@@ -23,8 +22,7 @@ test_that("mappings now done by individual domain, test that inputs and outputs 
     ~ read_yaml(
       system.file(
         "tests",
-        "testqualification",
-        "qualification",
+        "testthat",
         "qual_workflows",
         "1_mappings",
         .x,
@@ -61,7 +59,7 @@ test_that("mappings now done by individual domain, test that inputs and outputs 
 
 # Priority 2 Mappings
 
-test_that("mappings now done by individual domain, test that inputs and outputs of priority 2 mappings are completed as expected", {
+test_that("Qual: mappings now done by individual domain, test that inputs and outputs of priority 2 mappings are completed as expected (#159)", {
   priority2 <- c("DATACHG.yaml", "DATAENT.yaml", "QUERY.yaml")
 
   mapped_p2_yaml <- map(
@@ -69,8 +67,7 @@ test_that("mappings now done by individual domain, test that inputs and outputs 
     ~ read_yaml(
       system.file(
         "tests",
-        "testqualification",
-        "qualification",
+        "testthat",
         "qual_workflows",
         "1_mappings",
         .x,
@@ -102,7 +99,7 @@ test_that("mappings now done by individual domain, test that inputs and outputs 
 
 # Priority 3 Mappings
 
-test_that("mappings now done by individual domain, test that inputs and outputs of priority 3 mappings are completed as expected", {
+test_that("Qual: mappings now done by individual domain, test that inputs and outputs of priority 3 mappings are completed as expected (#159)", {
   priority3 <- c("COUNTRY.yaml", "SITE.yaml", "STUDY.yaml")
 
   mapped_p3_yaml <- map(
@@ -110,8 +107,7 @@ test_that("mappings now done by individual domain, test that inputs and outputs 
     ~ read_yaml(
       system.file(
         "tests",
-        "testqualification",
-        "qualification",
+        "testthat",
         "qual_workflows",
         "1_mappings",
         .x,

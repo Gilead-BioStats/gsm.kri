@@ -11,7 +11,7 @@ kri_custom <- MakeWorkflowList(
 )
 
 ## Test Code
-testthat::test_that("PK Compliance Assessments can be done correctly using a grouping variable, such as Site, Country, or Study, when applicable.", {
+testthat::test_that("Qual: PK Compliance Assessments can be done correctly using a grouping variable, such as Site, Country, or Study, when applicable (#159)", {
   ## regular -----------------------------------------
   expect_warning(
     test <- map(

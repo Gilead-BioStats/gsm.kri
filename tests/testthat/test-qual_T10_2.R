@@ -1,27 +1,29 @@
 ## Test Setup
 kri_workflows <- MakeWorkflowList(
-  c("kri0005", "cou0005"),
+  c("kri0011", "cou0011"),
   default_path,
   strPackage = "gsm.kri"
 )
 kri_custom <- MakeWorkflowList(
-  c("kri0005_custom", "cou0005_custom"),
+  c("kri0011_custom", "cou0011_custom"),
   yaml_path_custom_metrics,
   strPackage = "gsm.kri"
 )
 
 ## Test Code
-testthat::test_that("Labs Assessments can be done correctly using a grouping variable, such as Site or Country for KRIs, and Study for QTLs, when applicable.", {
+testthat::test_that("Qual: Data Change Rate Assessments can be done correctly using a grouping variable, such as Site, Country, or Study, when applicable (#159)", {
   ## regular -----------------------------------------
   test <- map(
     kri_workflows,
-    ~ robust_runworkflow(.x, mapped_data, steps = 1:8)
+    ~ robust_runworkflow(.x, mapped_data, steps = 1:7)
   ) %>%
     suppressWarnings()
-  a <- capture_warnings(map(
+  a <- map(
     kri_workflows,
     ~ robust_runworkflow(.x, mapped_data, steps = 1:8)
-  ))
+  ) %>%
+    capture_warnings()
+
   removed <- ifelse(
     length(a) == 0,
     0,
@@ -32,6 +34,7 @@ testthat::test_that("Labs Assessments can be done correctly using a grouping var
       str_extract(., "\\d+$") %>%
       as.numeric()
   )
+
   # grouping col in yaml file is interpreted correctly in dfInput GroupID
   iwalk(
     test,
@@ -48,27 +51,27 @@ testthat::test_that("Labs Assessments can be done correctly using a grouping var
 
   # data is properly transformed by correct group in dfTransformed
   expect_equal(
-    n_distinct(test$cou0005$Mapped_SUBJ[[
+    n_distinct(test$cou0011$Mapped_SUBJ[[
       kri_workflows[[1]]$steps[[which(
         map_chr(kri_workflows[[1]]$steps, ~ .x$name) == "gsm.core::Input_Rate"
       )]]$params$strGroupCol
     ]]),
-    nrow(test$cou0005$Analysis_Transformed)
+    nrow(test$cou0011$Analysis_Transformed)
   )
   expect_equal(
-    n_distinct(test$kri0005$Mapped_SUBJ[[
+    n_distinct(test$kri0011$Mapped_SUBJ[[
       kri_workflows[[2]]$steps[[which(
         map_chr(kri_workflows[[2]]$steps, ~ .x$name) == "gsm.core::Input_Rate"
       )]]$params$strGroupCol
     ]]) -
       removed,
-    nrow(test$kri0005$Analysis_Transformed)
+    nrow(test$kri0011$Analysis_Transformed)
   )
 
   ## custom -------------------------------------------
   test_custom <- map(
     kri_custom,
-    ~ robust_runworkflow(.x, mapped_data, steps = 1:5)
+    ~ robust_runworkflow(.x, mapped_data, steps = 1:4)
   )
 
   # grouping col in custom yaml file is interpreted correctly in dfInput GroupID

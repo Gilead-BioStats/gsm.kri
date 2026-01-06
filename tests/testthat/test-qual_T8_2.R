@@ -1,38 +1,19 @@
 ## Test Setup
 kri_workflows <- MakeWorkflowList(
-  c(sprintf("kri%04d", 10), sprintf("cou%04d", 10)),
+  c("kri0006", "kri0007", "cou0006", "cou0007"),
   default_path,
   strPackage = "gsm.kri"
 )
 kri_custom <- MakeWorkflowList(
-  c(sprintf("kri%04d_custom", 10), sprintf("cou%04d_custom", 10)),
+  c("kri0006_custom", "kri0007_custom", "cou0006_custom", "cou0007_custom"),
   yaml_path_custom_metrics,
   strPackage = "gsm.kri"
 )
 
 ## Test Code
-testthat::test_that("Data Entry Lag Assessments can be done correctly using a grouping variable, such as Site, Country, or Study, when applicable.", {
+testthat::test_that("Qual: Disposition Assessments can be done correctly using a grouping variable, such as Site or Country for KRIs, and Study for QTLs, when applicable (#159)", {
   ## regular -----------------------------------------
-  test <- map(
-    kri_workflows,
-    ~ robust_runworkflow(.x, mapped_data, steps = 1:7)
-  ) %>%
-    suppressWarnings()
-  a <- map(
-    kri_workflows,
-    ~ robust_runworkflow(.x, mapped_data, steps = 1:8)
-  ) %>%
-    capture_warnings()
-  removed <- ifelse(
-    length(a) == 0,
-    0,
-    a[1] %>%
-      strsplit(., " ") %>%
-      unlist() %>%
-      dplyr::first() %>%
-      str_extract(., "\\d+$") %>%
-      as.numeric()
-  )
+  test <- map(kri_workflows, ~ robust_runworkflow(.x, mapped_data, steps = 1:7))
 
   # grouping col in yaml file is interpreted correctly in dfInput GroupID
   iwalk(
@@ -49,22 +30,17 @@ testthat::test_that("Data Entry Lag Assessments can be done correctly using a gr
   )
 
   # data is properly transformed by correct group in dfTransformed
-  expect_equal(
-    n_distinct(test$cou0010$Mapped_SUBJ[[
-      kri_workflows[[1]]$steps[[which(
-        map_chr(kri_workflows[[1]]$steps, ~ .x$name) == "gsm.core::Input_Rate"
-      )]]$params$strGroupCol
-    ]]),
-    nrow(test$cou0010$Analysis_Transformed)
-  )
-  expect_equal(
-    n_distinct(test$kri0010$Mapped_SUBJ[[
-      kri_workflows[[2]]$steps[[which(
-        map_chr(kri_workflows[[2]]$steps, ~ .x$name) == "gsm.core::Input_Rate"
-      )]]$params$strGroupCol
-    ]]) -
-      removed,
-    nrow(test$kri0010$Analysis_Transformed)
+  iwalk(
+    test,
+    ~ expect_equal(
+      n_distinct(.x$Mapped_SUBJ[[
+        kri_workflows[[.y]]$steps[[which(
+          map_chr(kri_workflows[[.y]]$steps, ~ .x$name) ==
+            "gsm.core::Input_Rate"
+        )]]$params$strGroupCol
+      ]]),
+      nrow(.x$Analysis_Transformed)
+    )
   )
 
   ## custom -------------------------------------------

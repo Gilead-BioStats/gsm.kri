@@ -5,11 +5,15 @@ kri_workflows <- MakeWorkflowList(
   strPackage = "gsm.kri"
 )
 reporting_workflows <- MakeWorkflowList(strPackage = "gsm.reporting")
-analyzed <- RunWorkflows(kri_workflows, lData = c(mapped_data, list(lWorkflows = kri_workflows))) %>% suppressWarnings()
+analyzed <- RunWorkflows(
+  kri_workflows,
+  lData = c(mapped_data, list(lWorkflows = kri_workflows))
+) %>%
+  suppressWarnings()
 outputs <- map(reporting_workflows, \(x) x$steps[[length(x$steps)]]$output)
 
 ## Test Code
-testthat::test_that("Given summarized analytics data, a properly specified reporting workflow creates cross-sectional results data set with one record per metric per group.", {
+testthat::test_that("Qual: Given summarized analytics data, a properly specified reporting workflow creates cross-sectional results data set with one record per metric per group  (#159)", {
   test <- RunWorkflows(
     reporting_workflows,
     lData = c(

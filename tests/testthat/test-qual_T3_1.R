@@ -10,7 +10,7 @@ steps <- seq(1, length(ae_workflow$steps))
 outputs <- map_vec(ae_workflow$steps[steps], ~ .x$output)
 
 ## Test Code
-testthat::test_that("Given pre-processed input data, a properly specified Workflow for a KRI creates summarized and flagged data", {
+testthat::test_that("Qual: Given pre-processed input data, a properly specified Workflow for a KRI creates summarized and flagged data (#159)", {
   test <- robust_runworkflow(
     ae_workflow,
     list(Analysis_Input = gsm.core::analyticsInput),

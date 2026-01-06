@@ -1,11 +1,11 @@
 ## Test Setup
 kri_workflows <- MakeWorkflowList(
-  c("kri0011", "cou0011"),
+  c(sprintf("kri%04d", 8:9), sprintf("cou%04d", 8:9)),
   default_path,
   strPackage = "gsm.kri"
 )
 kri_custom <- MakeWorkflowList(
-  c("kri0011_custom", "cou0011_custom"),
+  c(sprintf("kri%04d_custom", 8:9), sprintf("cou%04d_custom", 8:9)),
   yaml_path_custom_metrics,
   strPackage = "gsm.kri"
 )
@@ -13,12 +13,11 @@ kri_custom <- MakeWorkflowList(
 outputs <- map(kri_workflows, ~ map_vec(.x$steps, ~ .x$output))
 
 ## Test Code
-testthat::test_that("Given appropriate raw participant-level data, a Data Change Rate Assessment can be done using the Normal Approximation method.", {
+testthat::test_that("Qual: Given appropriate raw participant-level data, a Query Rate Assessment can be done using the Normal Approximation method (#159)", {
   # default ---------------------------------
-  expect_warning(
-    test <- map(kri_workflows, ~ robust_runworkflow(.x, mapped_data)),
-    "value of 0 removed."
-  )
+  test <- map(kri_workflows, ~ robust_runworkflow(.x, mapped_data)) %>%
+    suppressWarnings()
+
   # verify outputs names exported
   iwalk(test, ~ expect_true(all(outputs[[.y]] %in% names(.x))))
 
@@ -64,10 +63,10 @@ testthat::test_that("Given appropriate raw participant-level data, a Data Change
     )
   )
 
-  # verify vThreshold was converted to threshold vector of length 2
+  # verify vThreshold was converted to threshold vector of length 4
   walk(
     test_custom,
-    ~ expect_true(is.vector(.x$vThreshold) & length(.x$vThreshold) == 2)
+    ~ expect_true(is.vector(.x$vThreshold) & length(.x$vThreshold) == 4)
   )
 
   # verify vThreshold was properly applied to data to assign flags
@@ -77,8 +76,10 @@ testthat::test_that("Given appropriate raw participant-level data, a Data Change
         output <- kri$Analysis_Flagged %>%
           mutate(
             hardcode_flag = case_when(
-              Score >= kri$vThreshold[2] ~ 2,
-              (Score < kri$vThreshold[2] & Score >= kri$vThreshold[1]) ~ 1,
+              Score <= kri$vThreshold[1] |
+                Score >= kri$vThreshold[4] ~ 2,
+              (Score > kri$vThreshold[1] & Score <= kri$vThreshold[2]) |
+                (Score < kri$vThreshold[4] & Score >= kri$vThreshold[3]) ~ 1,
               TRUE ~ 0
             )
           ) %>%

@@ -11,9 +11,9 @@ lData <- list(
   Raw_SUBJ = lSource$Raw_SUBJ,
   Raw_AE = lSource$Raw_AE,
   Raw_PD = lSource$Raw_PD %>%
-    rename(subjid = subjectenrollmentnumber)%>%
-    rename(dvdecod = crocategory)%>%
-    rename(dvterm = description)%>%
+    rename(subjid = subjectenrollmentnumber) %>%
+    rename(dvdecod = crocategory) %>%
+    rename(dvterm = description) %>%
     rename(dvdtm = deviationdate),
   Raw_LB = lSource$Raw_LB,
   Raw_STUDCOMP = lSource$Raw_STUDCOMP,
@@ -57,8 +57,8 @@ lData_missing_values <- map(lData, function(df) {
 })
 
 ## custom kris path instead of inst/workflow
-yaml_path_custom_mappings <- "tests/testqualification/qualification/qual_workflows/1_mappings"
-yaml_path_custom_metrics <- "tests/testqualification/qualification/qual_workflows/2_metrics"
+yaml_path_custom_mappings <- "tests/testthat/qual_workflows/1_mappings"
+yaml_path_custom_metrics <- "tests/testthat/qual_workflows/2_metrics"
 
 ## default kri path
 default_path <- "inst/workflow"

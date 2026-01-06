@@ -1,11 +1,11 @@
 ## Test Setup
 kri_workflows <- MakeWorkflowList(
-  c("kri0005", "cou0005"),
+  c(sprintf("kri%04d", 8:9), sprintf("cou%04d", 8:9)),
   default_path,
   strPackage = "gsm.kri"
 )
 kri_custom <- MakeWorkflowList(
-  c("kri0005_custom", "cou0005_custom"),
+  c(sprintf("kri%04d_custom", 8:9), sprintf("cou%04d_custom", 8:9)),
   yaml_path_custom_metrics,
   strPackage = "gsm.kri"
 )
@@ -13,11 +13,10 @@ kri_custom <- MakeWorkflowList(
 outputs <- map(kri_workflows, ~ map_vec(.x$steps, ~ .x$output))
 
 ## Test Code
-testthat::test_that("Given appropriate raw participant-level data, a Labs Assessment can be done using the Normal Approximation method.", {
-  test <- suppressWarnings(map(
-    kri_workflows,
-    ~ robust_runworkflow(.x, mapped_data)
-  ))
+testthat::test_that("Qual: Given appropriate raw participant-level data, a Query Age Assessment can be done using the Normal Approximation method (#159)", {
+  # default ---------------------------------
+  test <- map(kri_workflows, ~ robust_runworkflow(.x, mapped_data)) %>%
+    suppressWarnings()
 
   # verify outputs names exported
   iwalk(test, ~ expect_true(all(outputs[[.y]] %in% names(.x))))
@@ -37,7 +36,7 @@ testthat::test_that("Given appropriate raw participant-level data, a Labs Assess
     )
   )
 
-  # verify vThreshold was converted to threshold vector of length 4
+  # verify vThreshold was converted to threshold vector of length 2
   walk(
     test,
     ~ expect_true(is.vector(.x$vThreshold) & length(.x$vThreshold) == 2)
@@ -54,17 +53,16 @@ testthat::test_that("Given appropriate raw participant-level data, a Labs Assess
     all(
       imap_lgl(test_custom, function(kri, kri_name) {
         all(map_lgl(
-          kri[outputs[[kri_name]][str_detect(
-            outputs[[kri_name]],
-            pattern = "Analysis_"
-          )]],
+          kri[outputs[[kri_name]][
+            !(outputs[[kri_name]] %in% c("vThreshold", "lAnalysis"))
+          ]],
           is.data.frame
         ))
       })
     )
   )
 
-  # verify vThreshold was converted to threshold vector of length 4
+  # verify vThreshold was converted to threshold vector of length 2
   walk(
     test_custom,
     ~ expect_true(is.vector(.x$vThreshold) & length(.x$vThreshold) == 4)

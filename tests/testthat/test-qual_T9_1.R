@@ -1,11 +1,11 @@
 ## Test Setup
 kri_workflows <- MakeWorkflowList(
-  c(sprintf("kri%04d", 6:7), sprintf("cou%04d", 6:7)),
+  c("kri0005", "cou0005"),
   default_path,
   strPackage = "gsm.kri"
 )
 kri_custom <- MakeWorkflowList(
-  c(sprintf("kri%04d_custom", 6:7), sprintf("cou%04d_custom", 6:7)),
+  c("kri0005_custom", "cou0005_custom"),
   yaml_path_custom_metrics,
   strPackage = "gsm.kri"
 )
@@ -13,9 +13,11 @@ kri_custom <- MakeWorkflowList(
 outputs <- map(kri_workflows, ~ map_vec(.x$steps, ~ .x$output))
 
 ## Test Code
-testthat::test_that("Given appropriate raw participant-level data, a Dispositon Assessment can be done using the Normal Approximation method.", {
-  # default ---------------------------------
-  test <- map(kri_workflows, ~ robust_runworkflow(.x, mapped_data))
+testthat::test_that("Qual: Given appropriate raw participant-level data, a Labs Assessment can be done using the Normal Approximation method (#159)", {
+  test <- suppressWarnings(map(
+    kri_workflows,
+    ~ robust_runworkflow(.x, mapped_data)
+  ))
 
   # verify outputs names exported
   iwalk(test, ~ expect_true(all(outputs[[.y]] %in% names(.x))))
