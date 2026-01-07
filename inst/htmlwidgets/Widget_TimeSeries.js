@@ -44,7 +44,8 @@ HTMLWidgets.widget({
                         input.dfResults,
                         input.lChartConfig,
                         input.dfGroups,
-                        input.strOutcome
+                        input.strOutcome,
+                        input.vOutcomeOptions
                     );
                 }
             },
