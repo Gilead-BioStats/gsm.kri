@@ -19,19 +19,4 @@ library(glue)
 library(yaml)
 library(stringr)
 
-source(file.path("tests", "testthat", "qual_data.R"))
-
-source(system.file(
-  "tests",
-  "testthat",
-  "helper-StudyInfo.R",
-  package = "gsm.kri"
-))
-source(system.file(
-  "tests",
-  "testthat",
-  "helper-qualification.R",
-  package = "gsm.kri"
-))
-
 test_check("gsm.kri")
