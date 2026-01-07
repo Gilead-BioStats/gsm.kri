@@ -57,8 +57,8 @@ lData_missing_values <- map(lData, function(df) {
 })
 
 ## custom kris path instead of inst/workflow
-yaml_path_custom_mappings <- "tests/testthat/qual_workflows/1_mappings"
-yaml_path_custom_metrics <- "tests/testthat/qual_workflows/2_metrics"
+yaml_path_custom_mappings <- test_path("qual_workflows/1_mappings")
+yaml_path_custom_metrics <- test_path("qual_workflows/2_metrics")
 
 ## default kri path
 # default_path <- "inst/workflow"
@@ -74,11 +74,11 @@ mapping_output <- map(mappings_wf, ~ .x$steps[[1]]$output) %>% unlist()
 
 # Robust version of Runworkflow no config that will always run even with errors, and can be specified for specific steps in workflow to run
 robust_runworkflow <- function(
-  lWorkflow,
-  lData,
-  steps = seq(lWorkflow$steps),
-  bReturnResult = TRUE,
-  bKeepInputData = TRUE
+    lWorkflow,
+    lData,
+    steps = seq(lWorkflow$steps),
+    bReturnResult = TRUE,
+    bKeepInputData = TRUE
 ) {
     # Create a unique identifier for the workflow
     uid <- paste0(lWorkflow$meta$Type, "_", lWorkflow$meta$ID)
@@ -101,7 +101,9 @@ robust_runworkflow <- function(
         CheckSpec(lData, lWorkflow$spec)
     } else {
         lWorkflow$spec <- NULL
-        cli::cli_h3("No spec found in workflow. Proceeding without checking data.")
+        cli::cli_h3(
+            "No spec found in workflow. Proceeding without checking data."
+        )
     }
 
     if (length(steps) > 1) {
