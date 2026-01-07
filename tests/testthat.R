@@ -8,5 +8,11 @@
 
 library(testthat)
 library(gsm.kri)
+library(gsm.mapping)
+library(gsm.reporting)
+
+source("tests/testthat/qual_data.R")
+source("tests/testthat/helper-StudyInfo.R")
+source("tests/testthat/helper-qualification.R")
 
 test_check("gsm.kri")
