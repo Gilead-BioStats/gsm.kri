@@ -11,8 +11,23 @@ library(gsm.kri)
 library(gsm.mapping)
 library(gsm.reporting)
 
-source("tests/testthat/qual_data.R")
-source("tests/testthat/helper-StudyInfo.R")
-source("tests/testthat/helper-qualification.R")
+source(system.file(
+  "tests",
+  "testthat",
+  "qual_data.R",
+  package = "gsm.kri"
+))
+source(system.file(
+  "tests",
+  "testthat",
+  "helper-StudyInfo.R",
+  package = "gsm.kri"
+))
+source(system.file(
+  "tests",
+  "testthat",
+  "helper-qualification.R",
+  package = "gsm.kri"
+))
 
 test_check("gsm.kri")
