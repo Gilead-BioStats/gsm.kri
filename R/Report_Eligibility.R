@@ -84,7 +84,7 @@ Report_Eligibility <- function(
   rlang::check_installed("rmarkdown", reason = "to run `Report_Eligibility()`")
   rlang::check_installed("knitr", reason = "to run `Report_Eligibility()`")
 
-  if (!requireNamespace("ggplot2", quietly = TRUE)) {
+  if (!requireNamespace("gsm.qtl", quietly = TRUE)) {
     stop(
       "Package 'gsm.qtl' is required for `Report_Eligibility()`.",
       call. = FALSE
