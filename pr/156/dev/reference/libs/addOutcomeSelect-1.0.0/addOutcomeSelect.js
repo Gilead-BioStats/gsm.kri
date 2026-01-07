@@ -1,22 +1,19 @@
 /**
  * Add a dropdown that allows the user to select the outcome to display on the y-axis of the chart.
  *
- * @param {HTMLElement} el - The chart element.
+ * @param {HTMLElement} widgetControls - The widget controls container element.
  * @param {Object} dfResults - Analysis results data.
  * @param {Object} lMetric - Metric-level metadata.
  * @param {Object} dfGroups - Group-level metadata.
  * @param {string} strOutcome - The initial outcome to display on the y-axis.
+ * @param {Array} vOutcomeOptions - Array of outcome options for the dropdown.
  */
 
-const addOutcomeSelect = function(widgetControls, dfResults, lMetric, dfGroups, strOutcome) {
+const addOutcomeSelect = function(widgetControls, dfResults, lMetric, dfGroups, strOutcome, vOutcomeOptions = ['Score', 'Metric', 'Numerator']) {
     const outcomeSelect = addSelectControl(
         widgetControls,
         'Outcome (y-axis)',
-        [
-            'Score',
-            'Metric',
-            'Numerator'
-        ],
+        vOutcomeOptions,
         false, // disable "None" option
         strOutcome // set initial selectection
     );
