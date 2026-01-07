@@ -1,7 +1,7 @@
 ## Test Setup
 kri_workflows <- flatten(MakeWorkflowList(
   strNames = "kri0001",
-  default_path,
+  #default_path,
   strPackage = "gsm.kri"
 ))
 
