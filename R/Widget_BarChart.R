@@ -38,6 +38,7 @@ Widget_BarChart <- function(
   dfGroups = NULL,
   vThreshold = NULL,
   strOutcome = "Score",
+  vOutcomeOptions = c("Score", "Metric", "Numerator"),
   bAddGroupSelect = TRUE,
   strShinyGroupSelectID = "GroupID",
   strOutputLabel = paste0(
@@ -66,6 +67,14 @@ Widget_BarChart <- function(
   gsm.core::stop_if(
     cnd = !is.character(strOutcome),
     message = "strOutcome is not a character"
+  )
+  gsm.core::stop_if(
+    cnd = !is.character(vOutcomeOptions),
+    message = "vOutcomeOptions is not a character vector"
+  )
+  gsm.core::stop_if(
+    cnd = !strOutcome %in% vOutcomeOptions,
+    message = "strOutcome must be one of vOutcomeOptions"
   )
   gsm.core::stop_if(
     cnd = !is.logical(bAddGroupSelect),
@@ -111,6 +120,7 @@ Widget_BarChart <- function(
     vThreshold = vThreshold,
     lChartConfig = lChartConfig,
     strOutcome = strOutcome,
+    vOutcomeOptions = vOutcomeOptions,
     bAddGroupSelect = bAddGroupSelect,
     strShinyGroupSelectID = strShinyGroupSelectID,
     bDebug = bDebug
