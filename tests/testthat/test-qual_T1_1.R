@@ -1,10 +1,3 @@
-source(system.file(
-  "tests",
-  "testthat",
-  "qual_data.R",
-  package = "gsm.kri"
-))
-
 # Priority 1 mappings
 test_that("Qual: mappings now done by individual domain, test that inputs and outputs of priority 1 mappings are completed as expected (#159)", {
   priority1 <- c(
