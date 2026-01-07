@@ -1,4 +1,4 @@
-test_that("Widget_BarChart creates a valid HTML widget", {
+test_that("Widget_BarChart creates a valid HTML widget {#166}", {
   reportingResults_filter <- gsm.core::reportingResults %>%
     dplyr::filter(MetricID == "Analysis_kri0001" & SnapshotDate == max(SnapshotDate))
 
@@ -16,7 +16,7 @@ test_that("Widget_BarChart creates a valid HTML widget", {
   expect_s3_class(widget, c("Widget_BarChart", "htmlwidget"))
 })
 
-test_that("Widget_BarChart works with custom vOutcomeOptions", {
+test_that("Widget_BarChart works with custom vOutcomeOptions {#166}", {
   reportingResults_filter <- gsm.core::reportingResults %>%
     dplyr::filter(MetricID == "Analysis_kri0001" & SnapshotDate == max(SnapshotDate)) %>%
     dplyr::mutate(CustomMetric = Numerator * 2)
@@ -37,7 +37,7 @@ test_that("Widget_BarChart works with custom vOutcomeOptions", {
   expect_s3_class(widget, c("Widget_BarChart", "htmlwidget"))
 })
 
-test_that("Widget_BarChart assertions work", {
+test_that("Widget_BarChart assertions work {#166}", {
   reportingResults_filter <- gsm.core::reportingResults %>%
     dplyr::filter(MetricID == "Analysis_kri0001" & SnapshotDate == max(SnapshotDate))
 
