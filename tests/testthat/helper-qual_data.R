@@ -65,8 +65,7 @@ yaml_path_custom_metrics <- test_path("qual_workflows/2_metrics")
 
 ## Get Mapped data
 mappings_wf <- MakeWorkflowList(
-    strPath = yaml_path_custom_mappings,
-    strPackage = "gsm.kri"
+    strPath = yaml_path_custom_mappings
 )
 mapped_data <- RunWorkflows(mappings_wf, lData)
 
