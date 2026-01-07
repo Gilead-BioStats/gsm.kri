@@ -5,7 +5,6 @@
 #'
 #' This function generates a Eligibility report based on the provided inputs.
 #'
-#' @inheritParams shared-params
 #' @param dfResults `data.frame` Analysis results data.
 #' @param dfMetrics `data.frame` Analysis metrics data.
 #' @param dfGroups `data.frame` Analysis groups data.
