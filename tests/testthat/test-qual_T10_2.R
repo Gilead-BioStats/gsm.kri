@@ -1,7 +1,7 @@
 ## Test Setup
 kri_workflows <- MakeWorkflowList(
   c("kri0011", "cou0011"),
-  default_path,
+  #default_path,
   strPackage = "gsm.kri"
 )
 kri_custom <- MakeWorkflowList(

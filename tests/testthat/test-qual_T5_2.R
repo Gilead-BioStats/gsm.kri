@@ -2,7 +2,7 @@
 kri_workflows <- c(
   MakeWorkflowList(
     c("kri0001", "cou0001"),
-    default_path,
+    #default_path,
     strPackage = "gsm.kri"
   ),
   MakeWorkflowList(

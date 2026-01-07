@@ -61,7 +61,7 @@ yaml_path_custom_mappings <- "tests/testthat/qual_workflows/1_mappings"
 yaml_path_custom_metrics <- "tests/testthat/qual_workflows/2_metrics"
 
 ## default kri path
-default_path <- "inst/workflow"
+#default_path <- "inst/workflow"
 
 ## Get Mapped data
 mappings_wf <- MakeWorkflowList(

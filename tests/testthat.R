@@ -8,5 +8,15 @@
 
 library(testthat)
 library(gsm.kri)
+library(gsm.mapping)
+library(gsm.reporting)
+library(gsm.kri)
+library(dplyr)
+library(purrr)
+library(tidyr)
+library(cli)
+library(glue)
+library(yaml)
+library(stringr)
 
 test_check("gsm.kri")
