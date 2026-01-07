@@ -10,13 +10,17 @@ library(testthat)
 library(gsm.kri)
 library(gsm.mapping)
 library(gsm.reporting)
+library(gsm.kri)
+library(dplyr)
+library(purrr)
+library(tidyr)
+library(cli)
+library(glue)
+library(yaml)
+library(stringr)
 
-source(system.file(
-  "tests",
-  "testthat",
-  "qual_data.R",
-  package = "gsm.kri"
-))
+source(file.path("tests", "testthat", "qual_data.R"))
+
 source(system.file(
   "tests",
   "testthat",
