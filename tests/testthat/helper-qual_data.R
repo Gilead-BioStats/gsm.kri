@@ -70,11 +70,22 @@ GetDefaultKRIPath <- function() {
 mappings_wf <- MakeWorkflowList(
   strPath = test_path("qual_workflows/1_mappings")
 )
+
+ConsoleAppender <- log4r::console_appender(layout = gsm.core::cli_fmt)
+gsm.core::SetLogger(log4r::logger(
+  threshold = "WARN",
+  appenders = ConsoleAppender
+))
 mapped_data <- RunWorkflows(mappings_wf, lData)
+gsm.core::SetLogger(log4r::logger(
+  "DEBUG",
+  appenders = ConsoleAppender
+))
 
 mapping_output <- map(mappings_wf, ~ .x$steps[[1]]$output) %>% unlist()
 
-# Robust version of Runworkflow no config that will always run even with errors, and can be specified for specific steps in workflow to run
+# Robust version of Runworkflow no config that will always run even with errors,
+# and can be specified for specific steps in workflow to run
 robust_runworkflow <- function(
   lWorkflow,
   lData,
@@ -84,28 +95,28 @@ robust_runworkflow <- function(
 ) {
   # Create a unique identifier for the workflow
   uid <- paste0(lWorkflow$meta$Type, "_", lWorkflow$meta$ID)
-  cli::cli_h1("Initializing `{uid}` Workflow")
+  # cli::cli_h1("Initializing `{uid}` Workflow")
 
   # check that the workflow has steps
-  if (length(lWorkflow$steps) == 0) {
-    cli::cli_alert("Workflow `{uid}` has no `steps` property.")
-  }
+  # if (length(lWorkflow$steps) == 0) {
+  #   cli::cli_alert("Workflow `{uid}` has no `steps` property.")
+  # }
 
-  if (!"meta" %in% names(lWorkflow)) {
-    cli::cli_alert("Workflow `{uid}` has no `meta` property.")
-  }
+  # if (!"meta" %in% names(lWorkflow)) {
+  #   cli::cli_alert("Workflow `{uid}` has no `meta` property.")
+  # }
 
   lWorkflow$lData <- lData
 
   # If the workflow has a spec, check that the data and spec are compatible
   if ("spec" %in% names(lWorkflow)) {
-    cli::cli_h3("Checking data against spec")
+    # cli::cli_h3("Checking data against spec")
     CheckSpec(lData, lWorkflow$spec)
   } else {
     lWorkflow$spec <- NULL
-    cli::cli_h3(
-      "No spec found in workflow. Proceeding without checking data."
-    )
+    # cli::cli_h3(
+    #   "No spec found in workflow. Proceeding without checking data."
+    # )
   }
 
   if (length(steps) > 1) {
@@ -117,15 +128,15 @@ robust_runworkflow <- function(
   # Run through each steps in lWorkflow$workflow
   stepCount <- 1
   for (steps in lWorkflow$steps) {
-    cli::cli_h2(paste0(
-      "Workflow steps ",
-      stepCount,
-      " of ",
-      length(lWorkflow$steps),
-      ": `",
-      steps$name,
-      "`"
-    ))
+    # cli::cli_h2(paste0(
+    #   "Workflow steps ",
+    #   stepCount,
+    #   " of ",
+    #   length(lWorkflow$steps),
+    #   ": `",
+    #   steps$name,
+    #   "`"
+    # ))
 
     result0 <- purrr::safely(
       ~ gsm.core::RunStep(
@@ -150,13 +161,13 @@ robust_runworkflow <- function(
     lWorkflow$lResult <- result1
 
     if (is.data.frame(result1)) {
-      cli::cli_h3(
-        "{paste(dim(result1),collapse='x')} data.frame saved as `lData${steps$output}`."
-      )
+      # cli::cli_h3(
+      #   "{paste(dim(result1),collapse='x')} data.frame saved as `lData${steps$output}`."
+      # )
     } else {
-      cli::cli_h3(
-        "{typeof(result1)} of length {length(result1)} saved as `lData${steps$output}`."
-      )
+      # cli::cli_h3(
+      #   "{typeof(result1)} of length {length(result1)} saved as `lData${steps$output}`."
+      # )
     }
 
     stepCount <- stepCount + 1
@@ -181,7 +192,7 @@ robust_runworkflow <- function(
 
 # get only the relevant data for a workflow to speed up mapping
 # Just a fancy wrapper for robust_runworkflow
-get_data <- function(lWorkflow, data, steps) {
+get_data <- function(lWorkflow, data) {
   if ("spec" %in% names(lWorkflow)) {
     lWorkflow <- list(lWorkflow)
   }

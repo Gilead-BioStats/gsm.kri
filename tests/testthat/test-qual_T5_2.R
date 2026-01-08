@@ -10,6 +10,7 @@ kri_workflows <- c(
   )
 )
 
+TestAtLogLevel("WARN")
 partial_mapped_workflows <- map(
   kri_workflows,
   ~ robust_runworkflow(.x, mapped_data, steps = 1:7)
@@ -17,6 +18,7 @@ partial_mapped_workflows <- map(
 
 ## Test Code
 testthat::test_that("Qual: Given appropriate raw participant-level data, flag values are correctly assigned as NA for sites with low enrollment (#159)", {
+  TestAtLogLevel("INFO")
   # define custom min denominator
   test_nMinDenominator <- c(500, 1000, 1500)
 
@@ -48,6 +50,7 @@ testthat::test_that("Qual: Given appropriate raw participant-level data, flag va
   expect_equal(test_output, hardcode_output)
 
   # test for identical output
+  TestAtLogLevel("WARN")
   yaml_test <- map(test_nMinDenominator, function(test) {
     for (workflow in names(kri_workflows)) {
       kri_workflows[[workflow]]$meta$AccrualThreshold <- test

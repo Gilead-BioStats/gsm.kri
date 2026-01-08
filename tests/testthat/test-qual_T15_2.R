@@ -1,3 +1,4 @@
+TestAtLogLevel("WARN")
 ## Test Setup
 kri_workflows <- MakeWorkflowList(
   strNames = c("kri", "srs"),
