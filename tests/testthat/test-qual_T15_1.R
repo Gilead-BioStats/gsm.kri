@@ -14,14 +14,19 @@ outputs <- map(reporting_workflows, \(x) x$steps[[length(x$steps)]]$output)
 
 ## Test Code
 testthat::test_that("Qual: Given summarized analytics data, a properly specified reporting workflow creates cross-sectional results data set with one record per metric per group  (#159)", {
-  test <- RunWorkflows(
-    reporting_workflows,
-    lData = c(
-      mapped_data,
-      list(lAnalyzed = analyzed, lWorkflows = kri_workflows)
-    )
-  ) %>%
-    suppressWarnings()
+  expect_message(
+    {
+      test <- RunWorkflows(
+        reporting_workflows,
+        lData = c(
+          mapped_data,
+          list(lAnalyzed = analyzed, lWorkflows = kri_workflows)
+        )
+      ) %>%
+        suppressWarnings()
+    },
+    "dfResultsLongitudinal"
+  )
 
   # test output stucture
   expect_true(all(map_lgl(test, \(x) is.data.frame(x))))
