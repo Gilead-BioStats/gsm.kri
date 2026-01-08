@@ -38,7 +38,7 @@ lListings <- list(
   IE = dfEXCLUSION
 )
 
-test_that("Ensure report renders normally", {
+test_that("Ensure report renders normally {#157}", {
   testthat::skip_if_not_installed("gsm.qtl")
   expect_output(
     Report_Eligibility(
