@@ -1,12 +1,13 @@
 ## Test Setup
 kri_workflows <- flatten(MakeWorkflowList(
   "kri0001_custom",
-  yaml_path_custom_metrics
+  GetYamlPathCustomMetrics()
 ))
 outputs <- map_vec(kri_workflows$steps, ~ .x$output)
 
 ## Test Code
 testthat::test_that("Qual: Given appropriate metadata (i.e. vThresholds), flagged observations are properly marked in summary data (#159)", {
+  TestAtLogLevel("WARN")
   test <- robust_runworkflow(kri_workflows, mapped_data)
   expect_true(all(outputs %in% names(test)))
   expect_true(is.vector(test[["vThreshold"]]))
@@ -24,9 +25,11 @@ testthat::test_that("Qual: Given appropriate metadata (i.e. vThresholds), flagge
     mutate(
       flagged_hardcode = case_when(
         Score <= test$vThreshold[1] |
-          Score >= test$vThreshold[4] ~ 2,
+          Score >= test$vThreshold[4] ~
+          2,
         (Score <= test$vThreshold[2] & Score > test$vThreshold[1]) |
-          (Score >= test$vThreshold[3] & Score < test$vThreshold[4]) ~ 1,
+          (Score >= test$vThreshold[3] & Score < test$vThreshold[4]) ~
+          1,
         Flag == 0 | is.na(Flag) ~ 0
       )
     )

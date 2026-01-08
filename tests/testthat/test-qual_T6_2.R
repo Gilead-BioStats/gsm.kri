@@ -1,17 +1,18 @@
 ## Test Setup
 kri_workflows <- MakeWorkflowList(
   c(sprintf("kri%04d", 1:2), sprintf("cou%04d", 1:2)),
-  default_path
+  GetDefaultKRIPath()
 )
 kri_custom <- MakeWorkflowList(
   c(sprintf("kri%04d_custom", 1:2), sprintf("cou%04d_custom", 1:2)),
-  yaml_path_custom_metrics
+  GetYamlPathCustomMetrics()
 )
 
 outputs <- map(kri_workflows, ~ map_vec(.x$steps, ~ .x$output))
 
 ## Test Code
 testthat::test_that("Qual: Adverse Event Assessments can be done correctly using a grouping variable, such as Site or Country for KRIs, and Study for QTLs, when applicable (#159)", {
+  TestAtLogLevel("WARN")
   ## regular -----------------------------------------
   test <- map(kri_workflows, ~ robust_runworkflow(.x, mapped_data, steps = 1:7))
 
@@ -66,8 +67,6 @@ testthat::test_that("Qual: Adverse Event Assessments can be done correctly using
       nrow(.x$Analysis_Transformed)
     )
   )
-
-  mapped_data$Mapped_SUBJ %>% glimpse()
 
   ## custom edits -------------------------------------
   kri_custom2 <- map(kri_workflows, function(kri) {

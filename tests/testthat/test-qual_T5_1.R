@@ -1,14 +1,15 @@
 # Test Setup -------------------------------------------------------
 ae_workflow_custom <- flatten(MakeWorkflowList(
   "kri0001_custom",
-  yaml_path_custom_metrics
+  GetYamlPathCustomMetrics()
 ))
 ae_workflow_default <- flatten(MakeWorkflowList(
   "kri0001",
-  default_path
+  GetDefaultKRIPath()
 ))
 
 # define Data ------------------------------------------------------
+TestAtLogLevel("WARN")
 test_custom <- robust_runworkflow(ae_workflow_custom, mapped_data)
 test_default <- robust_runworkflow(ae_workflow_default, mapped_data)
 
@@ -17,11 +18,13 @@ hardcode_flag_custom <- test_custom$Analysis_Flagged %>%
     "hardcode_flag" = case_when(
       Denominator < 30 ~ NA,
       Score <= test_custom$vThreshold[1] |
-        Score >= test_custom$vThreshold[4] ~ 2,
+        Score >= test_custom$vThreshold[4] ~
+        2,
       Score > test_custom$vThreshold[1] &
         Score <= test_custom$vThreshold[2] |
         Score < test_custom$vThreshold[4] &
-          Score >= test_custom$vThreshold[3] ~ 1,
+          Score >= test_custom$vThreshold[3] ~
+        1,
       TRUE ~ 0
     )
   )
@@ -31,11 +34,13 @@ hardcode_flag_default <- test_default$Analysis_Flagged %>%
     "hardcode_flag" = case_when(
       Denominator < 30 ~ NA,
       Score <= test_default$vThreshold[1] |
-        Score >= test_default$vThreshold[4] ~ 2,
+        Score >= test_default$vThreshold[4] ~
+        2,
       Score > test_default$vThreshold[1] &
         Score <= test_default$vThreshold[2] |
         Score < test_default$vThreshold[4] &
-          Score >= test_default$vThreshold[3] ~ 1,
+          Score >= test_default$vThreshold[3] ~
+        1,
       TRUE ~ 0
     )
   )

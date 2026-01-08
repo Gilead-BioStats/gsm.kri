@@ -1,15 +1,16 @@
 ## Test Setup
 kri_workflows <- MakeWorkflowList(
   c("kri0005", "cou0005"),
-  default_path
+  GetDefaultKRIPath()
 )
 kri_custom <- MakeWorkflowList(
   c("kri0005_custom", "cou0005_custom"),
-  yaml_path_custom_metrics
+  GetYamlPathCustomMetrics()
 )
 
 ## Test Code
 testthat::test_that("Qual: Labs Assessments can be done correctly using a grouping variable, such as Site or Country for KRIs, and Study for QTLs, when applicable (#159)", {
+  TestAtLogLevel("WARN")
   ## regular -----------------------------------------
   test <- map(
     kri_workflows,

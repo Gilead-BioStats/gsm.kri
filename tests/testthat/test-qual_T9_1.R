@@ -1,17 +1,18 @@
 ## Test Setup
 kri_workflows <- MakeWorkflowList(
   c("kri0005", "cou0005"),
-  default_path
+  GetDefaultKRIPath()
 )
 kri_custom <- MakeWorkflowList(
   c("kri0005_custom", "cou0005_custom"),
-  yaml_path_custom_metrics
+  GetYamlPathCustomMetrics()
 )
 
 outputs <- map(kri_workflows, ~ map_vec(.x$steps, ~ .x$output))
 
 ## Test Code
 testthat::test_that("Qual: Given appropriate raw participant-level data, a Labs Assessment can be done using the Normal Approximation method (#159)", {
+  TestAtLogLevel("WARN")
   test <- suppressWarnings(map(
     kri_workflows,
     ~ robust_runworkflow(.x, mapped_data)
@@ -76,9 +77,11 @@ testthat::test_that("Qual: Given appropriate raw participant-level data, a Labs 
           mutate(
             hardcode_flag = case_when(
               Score <= kri$vThreshold[1] |
-                Score >= kri$vThreshold[4] ~ 2,
+                Score >= kri$vThreshold[4] ~
+                2,
               (Score > kri$vThreshold[1] & Score <= kri$vThreshold[2]) |
-                (Score < kri$vThreshold[4] & Score >= kri$vThreshold[3]) ~ 1,
+                (Score < kri$vThreshold[4] & Score >= kri$vThreshold[3]) ~
+                1,
               TRUE ~ 0
             )
           ) %>%

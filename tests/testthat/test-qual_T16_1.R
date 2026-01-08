@@ -1,7 +1,8 @@
+TestAtLogLevel("WARN")
 ## Test Setup
 kri_workflows <- MakeWorkflowList(
   strNames = c(paste0("kri000", 1:9), paste0("kri00", 10:12), "srs"),
-  strPath = default_path
+  strPath = GetDefaultKRIPath()
 )
 analyzed <- RunWorkflows(
   kri_workflows,

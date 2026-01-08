@@ -1,13 +1,14 @@
 ## Test Setup
 kri_workflows <- MakeWorkflowList(
   c("kri0003", "kri0004", "cou0003", "cou0004"),
-  default_path
+  GetDefaultKRIPath()
 )
 
 outputs <- map(kri_workflows, ~ map_vec(.x$steps, ~ .x$output))
 
 ## Test Code
 testthat::test_that("Qual: Given appropriate raw participant-level data, a Protocol Deviation Assessment can be done using the Normal Approximation method (#159)", {
+  TestAtLogLevel("WARN")
   test <- map(kri_workflows, ~ robust_runworkflow(.x, mapped_data))
   expect_true(
     all(

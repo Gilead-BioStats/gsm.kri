@@ -1,15 +1,16 @@
 ## Test Setup
 kri_workflows <- MakeWorkflowList(
   c("kri0011", "cou0011"),
-  default_path
+  GetDefaultKRIPath()
 )
 kri_custom <- MakeWorkflowList(
   c("kri0011_custom", "cou0011_custom"),
-  yaml_path_custom_metrics
+  GetYamlPathCustomMetrics()
 )
 
 ## Test Code
 testthat::test_that("Qual: Data Change Rate Assessments can be done correctly using a grouping variable, such as Site, Country, or Study, when applicable (#159)", {
+  TestAtLogLevel("WARN")
   ## regular -----------------------------------------
   test <- map(
     kri_workflows,

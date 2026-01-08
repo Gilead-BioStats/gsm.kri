@@ -1,7 +1,7 @@
 ## Test Setup
 ae_workflow <- flatten(MakeWorkflowList(
   "kri0001b_custom",
-  strPath = yaml_path_custom_metrics
+  strPath = GetYamlPathCustomMetrics()
 ))
 
 steps <- seq(1, length(ae_workflow$steps))
@@ -10,6 +10,7 @@ outputs <- map_vec(ae_workflow$steps[steps], ~ .x$output)
 
 ## Test Code
 testthat::test_that("Qual: Given pre-processed input data, a properly specified Workflow for a KRI creates summarized and flagged data (#159)", {
+  TestAtLogLevel("WARN")
   test <- robust_runworkflow(
     ae_workflow,
     list(Analysis_Input = gsm.core::analyticsInput),
