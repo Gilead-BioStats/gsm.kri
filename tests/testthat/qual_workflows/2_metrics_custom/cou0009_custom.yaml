@@ -73,7 +73,7 @@ steps:
     name: Summarize
     params:
       dfFlagged: Analysis_Flagged
-      nMinDenominator: nMinDenominator
+      
   - output: lAnalysis
     name: list
     params:

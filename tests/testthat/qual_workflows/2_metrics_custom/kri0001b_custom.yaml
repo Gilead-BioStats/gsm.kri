@@ -55,7 +55,7 @@ steps:
     output: Analysis_Summary
     params:
       dfFlagged: Analysis_Flagged
-      nMinDenominator: nMinDenominator
+      
   - name: list
     output: lAnalysis
     params:
