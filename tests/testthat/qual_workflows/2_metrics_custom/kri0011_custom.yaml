@@ -75,7 +75,6 @@ steps:
     name: Summarize
     params:
       dfFlagged: Analysis_Flagged
-      
   - output: lAnalysis
     name: list
     params:
