@@ -10,6 +10,7 @@ Widget_TimeSeries(
   dfGroups = NULL,
   vThreshold = NULL,
   strOutcome = "Score",
+  vOutcomeOptions = c("Score", "Metric", "Numerator"),
   bAddGroupSelect = TRUE,
   strShinyGroupSelectID = "GroupID",
   strOutputLabel = paste0(fontawesome::fa("chart-line", fill = "#337ab7"),
@@ -39,6 +40,9 @@ passing CTMS site and study data to [MakeLongMeta()]. Expected columns:
 \item{vThreshold}{`numeric` Threshold value(s).}
 
 \item{strOutcome}{`character` Outcome variable. Default: 'Score'.}
+
+\item{vOutcomeOptions}{`character` Vector of outcome options for the y-axis dropdown.
+Default: `c("Score", "Metric", "Numerator")`. Must include `strOutcome`.}
 
 \item{bAddGroupSelect}{`logical` Add a dropdown to highlight sites? Default: `TRUE`.}
 
