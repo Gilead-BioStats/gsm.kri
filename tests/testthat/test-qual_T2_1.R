@@ -1,8 +1,7 @@
 ## Test Setup
 kri_workflows <- flatten(MakeWorkflowList(
   strNames = "kri0001",
-  #default_path,
-  strPackage = "gsm.kri"
+  default_path
 ))
 
 outputs <- map_vec(kri_workflows$steps, ~ .x$output)

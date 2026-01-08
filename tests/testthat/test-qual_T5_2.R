@@ -2,13 +2,11 @@
 kri_workflows <- c(
   MakeWorkflowList(
     c("kri0001", "cou0001"),
-    #default_path,
-    strPackage = "gsm.kri"
+    default_path
   ),
   MakeWorkflowList(
     "kri0001_custom",
-    yaml_path_custom_metrics,
-    strPackage = "gsm.kri"
+    yaml_path_custom_metrics
   )
 )
 

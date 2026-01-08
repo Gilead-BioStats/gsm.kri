@@ -58,10 +58,10 @@ lData_missing_values <- map(lData, function(df) {
 
 ## custom kris path instead of inst/workflow
 yaml_path_custom_mappings <- test_path("qual_workflows/1_mappings")
-yaml_path_custom_metrics <- test_path("qual_workflows/2_metrics")
+yaml_path_custom_metrics <- test_path("qual_workflows/2_metrics_custom")
 
 ## default kri path
-# default_path <- "inst/workflow"
+ default_path <- test_path("qual_workflows/2_metrics")
 
 ## Get Mapped data
 mappings_wf <- MakeWorkflowList(

@@ -1,13 +1,11 @@
 ## Test Setup
 kri_workflows <- MakeWorkflowList(
   c(sprintf("kri%04d", 13), sprintf("cou%04d", 13)),
-  #default_path,
-  strPackage = "gsm.kri"
+  default_path
 )
 kri_custom <- MakeWorkflowList(
   c(sprintf("kri%04d_custom", 13), sprintf("cou%04d_custom", 13)),
-  yaml_path_custom_metrics,
-  strPackage = "gsm.kri"
+  yaml_path_custom_metrics
 )
 
 ## Test Code
