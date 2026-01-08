@@ -71,10 +71,6 @@ steps:
     name: Summarize
     params:
       dfFlagged: Analysis_Flagged
-<<<<<<< HEAD
-      
-=======
->>>>>>> 9fd234c4b3d58c2e3ac891bd989b84d1fba6f791
   - output: lAnalysis
     name: list
     params:
