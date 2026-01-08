@@ -39,6 +39,7 @@ lListings <- list(
 )
 
 test_that("Ensure report renders normally", {
+  testthat::skip_if_not_installed("gsm.qtl")
   expect_output(
     Report_Eligibility(
       dfResults = dfResults,
