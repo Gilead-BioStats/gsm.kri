@@ -44,13 +44,20 @@ Suggests:
     knitr,
     lubridate,
     testthat (>= 3.0.0),
-    withr
+    withr,
+    yaml,
+    here,
+    gsm.mapping,
+    gsm.reporting
 Remotes:
-    gsm.core=Gilead-BioStats/gsm.core@dev
+    gsm.core=Gilead-BioStats/gsm.core@main,
+    gsm.mapping=Gilead-BioStats/gsm.mapping@main,
+    gsm.reporting=Gilead-BioStats/gsm.reporting@main
 VignetteBuilder: 
     knitr
-Config/Needs/qualification: Gilead-BioStats/gsm.qc@dev
+Config/Needs/qualification: Gilead-BioStats/gsm.mapping@dev
 Config/testthat/edition: 3
+Config/testthat/parallel: false
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.3

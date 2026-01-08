@@ -1,0 +1,91 @@
+meta:
+  Type: Analysis
+  ID: kri0013_custom
+  GroupLevel: Sex
+  Abbreviation: PK
+  Metric: PK Collection Compliance Rate
+  Numerator: PK Samples Collected
+  Denominator: PK Samples Expected
+  Model: Identity
+  Score: PK Collection Compliance Rate
+  AnalysisType: identity
+  Threshold: "0.7,0.55"
+  Flag: "2,1,0"
+  AccrualThreshold: 3
+  AccrualMetric: Numerator
+spec:
+  Mapped_SUBJ:
+    subjid:
+      required: true
+      type: character
+    invid:
+      required: true
+      type: character
+    sex:
+      required: true
+      type: character
+  Mapped_PK:
+    subjid:
+      required: true
+      type: character
+    pktpt:
+      required: true
+      type: character
+    pkperf:
+      required: true
+      type: character
+steps:
+  - output: vThreshold
+    name: gsm.core::ParseThreshold
+    params:
+      strThreshold: Threshold
+  - output: vFlag
+    name: gsm.core::ParseThreshold
+    params:
+      strThreshold: Flag
+      bSort: false
+  - output: Temp_PK_Complete
+    name: gsm.core::RunQuery
+    params:
+      df: Mapped_PK
+      strQuery: "SELECT * FROM df WHERE pkperf = 'Yes'"
+  - output: Analysis_Input
+    name: gsm.core::Input_Rate
+    params:
+      dfSubjects: Mapped_SUBJ
+      dfNumerator: Temp_PK_Complete
+      dfDenominator: Mapped_PK
+      strSubjectCol: subjid
+      strGroupCol: sex
+      strGroupLevel: GroupLevel
+      strNumeratorMethod: Count
+      strDenominatorMethod: Count
+  - output: Analysis_Transformed
+    name: gsm.core::Transform_Rate
+    params:
+      dfInput: Analysis_Input
+  - output: Analysis_Analyzed
+    name: gsm.core::Analyze_Identity
+    params:
+      dfTransformed: Analysis_Transformed
+  - output: Analysis_Flagged
+    name: gsm.core::Flag
+    params:
+      dfAnalyzed: Analysis_Analyzed
+      vThreshold: vThreshold
+      vFlag: vFlag
+      nAccrualThreshold: AccrualThreshold
+      strAccrualMetric: AccrualMetric
+  - output: Analysis_Summary
+    name: gsm.core::Summarize
+    params:
+      dfFlagged: Analysis_Flagged
+  - output: lAnalysis
+    name: list
+    params:
+      ID: ID
+      Analysis_Input: Analysis_Input
+      Analysis_Transformed: Analysis_Transformed
+      Analysis_Analyzed: Analysis_Analyzed
+      Analysis_Flagged: Analysis_Flagged
+      Analysis_Summary: Analysis_Summary
