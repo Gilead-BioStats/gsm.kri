@@ -1,7 +1,7 @@
 ## Test Setup
 kri_workflows <- flatten(MakeWorkflowList(
   strNames = "kri0001",
-  default_path
+  GetDefaultKRIPath()
 ))
 
 outputs <- map_vec(kri_workflows$steps, ~ .x$output)

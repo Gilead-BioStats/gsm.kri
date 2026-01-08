@@ -13,7 +13,7 @@ spec:
       source_col: foldername
       type: character
     pkdat:
-      type: character
+      type: Date
     pktpt:
       type: character
     pkperf:

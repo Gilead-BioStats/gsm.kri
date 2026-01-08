@@ -1,11 +1,11 @@
 # Test Setup -------------------------------------------------------
 ae_workflow_custom <- flatten(MakeWorkflowList(
   "kri0001_custom",
-  yaml_path_custom_metrics
+  GetYamlPathCustomMetrics()
 ))
 ae_workflow_default <- flatten(MakeWorkflowList(
   "kri0001",
-  default_path
+  GetDefaultKRIPath()
 ))
 
 # define Data ------------------------------------------------------

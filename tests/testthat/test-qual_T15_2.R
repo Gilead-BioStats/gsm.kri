@@ -1,7 +1,7 @@
 ## Test Setup
 kri_workflows <- MakeWorkflowList(
   strNames = c("kri", "srs"),
-  strPath = default_path
+  strPath = GetDefaultKRIPath()
 )
 reporting_workflows <- MakeWorkflowList(strPackage = "gsm.reporting")
 analyzed <- RunWorkflows(
