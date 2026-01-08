@@ -38,15 +38,17 @@ as the first step to incorporating the KRI into a final report. The
 first step in this process is to ensure that the data is
 programmatically available to be pulled down from a centralized data
 store. Once this is confirmed, an issue is to be filed in
-`{gsm.mapping}` repo using the `Add New Domain` issue template and
-filling in the relevant information.
+[gsm.mapping](https://github.com/Gilead-BioStats/gsm.mapping) repo using
+the `Add New Domain` issue template and filling in the relevant
+information.
 
 With the issue filed, and the requirements laid out, a specification
 mapping file is created that indicates the name of each data source, and
 all required fields from each respective data source along with their
 data types. An example of this specification yaml file is below. More
 details about the construction of these files can be found in
-`{gsm.mapping}` package documentation.
+[gsm.mapping](https://github.com/Gilead-BioStats/gsm.mapping) package
+documentation.
 
     meta:
       Type: Mapped
@@ -68,10 +70,12 @@ details about the construction of these files can be found in
           rhs: Raw_PD
 
 It is possible that some of the domains that are needed for a given KRI
-may already be mapped in `{gsm.mapping}`. In this case, check the
-existing spec for that domain for all relevant fields, and if any are
-missing, create an issue to `Request New Domain or Variable`, and fill
-in all fields. Once the edits have been made following the [Contributor
+may already be mapped in
+[gsm.mapping](https://github.com/Gilead-BioStats/gsm.mapping). In this
+case, check the existing spec for that domain for all relevant fields,
+and if any are missing, create an issue to
+`Request New Domain or Variable`, and fill in all fields. Once the edits
+have been made following the [Contributor
 Guidelines](https://gilead-biostats.github.io/gsm.core/articles/ContributorGuidelines.html),
 submit a Pull Request to merge in the edits required for adding this new
 KRI.
