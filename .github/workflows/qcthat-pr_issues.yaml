@@ -52,6 +52,9 @@ jobs:
             cli::cli_abort("Could not determine PR number.")
           }
 
+          # Temporary fix to avoid parallel tests (fixed in next version of qcthat).
+          Sys.setenv(TESTTHAT_PARALLEL = "FALSE")
+
           IssueTestMatrix <- qcthat::QCPR(intPRNumber = prNumber)
           print(IssueTestMatrix)
 

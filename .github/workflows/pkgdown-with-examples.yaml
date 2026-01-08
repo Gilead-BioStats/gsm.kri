@@ -58,6 +58,7 @@ jobs:
           folder: docs
           # Deploy to a subdirectory named after the PR number
           target-folder: pr/${{ github.event.number }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: PR site URL 🌐
         if: github.event_name == 'pull_request'

@@ -1,0 +1,42 @@
+meta:
+  Type: Analysis
+  ID: srs0001
+  GroupLevel: Site
+  Abbreviation: SRS
+  Metric: Site Risk Score
+  Numerator: Weight
+  Denominator: Maximum Weights
+  Model: Identity
+  Score: Normalized Risk Score
+  AnalysisType: identity
+  Priority: 4
+steps:
+  - output: lAnalysis_filtered
+    name: gsm.kri::FilterAnalysis
+    params:
+      lAnalysis: lData
+      strFilterIDPattern: kri
+  - output: dfResults
+    name: gsm.kri::StackAnalysis
+    params:
+      lAnalysis: lAnalysis_filtered
+      strName: "Analysis_Summary"
+  - output: dfMetrics
+    name: gsm.reporting::MakeMetric
+    params:
+      lWorkflows: lWorkflows
+  - output: dfWeights
+    name: gsm.kri::MakeWeights
+    params:
+      dfMetrics: dfMetrics
+  - output: Analysis_Summary
+    name: gsm.kri::CalculateRiskScore
+    params:
+      dfResults: dfResults
+      dfWeights: dfWeights
+  - output: lAnalysis
+    name: list
+    params:
+      ID: ID
+      Analysis_Summary: Analysis_Summary
+
