@@ -47,8 +47,8 @@ Suggests:
     testthat (>= 3.0.0),
     withr
 Remotes:
-    gsm.core=Gilead-BioStats/gsm.core@dev,
-    gsm.qtl=Gilead-BioStats/gsm.qtl@fix-circ-deps
+    gsm.core=Gilead-BioStats/gsm.core@main,
+    gsm.qtl=Gilead-BioStats/gsm.qtl@main
 VignetteBuilder: 
     knitr
 Config/Needs/qualification: Gilead-BioStats/gsm.qc@dev
