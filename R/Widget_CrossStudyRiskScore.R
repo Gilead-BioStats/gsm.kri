@@ -25,7 +25,7 @@ Widget_CrossStudyRiskScore <- function(
   stopifnot(is.data.frame(dfResults))
   stopifnot(is.data.frame(dfMetrics))
   stopifnot(is.data.frame(dfGroups))
-  #Check that Analysis_srs0001 is present
+  # Check that Analysis_srs0001 is present
   stopifnot("Analysis_srs0001" %in% dfResults$MetricID)
 
   dfCrossStudySummary <- SummarizeCrossStudy(

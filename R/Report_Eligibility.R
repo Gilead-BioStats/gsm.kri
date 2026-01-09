@@ -72,17 +72,17 @@
 #'
 
 Report_Eligibility <- function(
-    dfResults = dfResults,
-    dfMetrics = dfMetrics,
-    dfGroups = dfGroups,
-    lListings = lListings,
-    strOutputDir = getwd(),
-    strOutputFile = NULL,
-    strInputPath = system.file("report", "Report_Eligibility.Rmd", package = "gsm.kri")
+  dfResults = dfResults,
+  dfMetrics = dfMetrics,
+  dfGroups = dfGroups,
+  lListings = lListings,
+  strOutputDir = getwd(),
+  strOutputFile = NULL,
+  strInputPath = system.file("report", "Report_Eligibility.Rmd", package = "gsm.kri")
 ) {
   rlang::check_installed("rmarkdown", reason = "to run `Report_Eligibility()`")
   rlang::check_installed("knitr", reason = "to run `Report_Eligibility()`")
-  rlang::check_installed("gsm.qtl",reason = "to run `Report_Eligibility()`")
+  rlang::check_installed("gsm.qtl", reason = "to run `Report_Eligibility()`")
 
   # set output path
   if (is.null(strOutputFile)) {

@@ -1,4 +1,4 @@
- suppressPackageStartupMessages({
+suppressPackageStartupMessages({
   library(gsm.kri)
   library(dplyr)
   library(purrr)

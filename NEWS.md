@@ -1,3 +1,5 @@
+# gsm.kri v1.4.0
+
 # gsm.kri 1.3.2
 
 This patch release addresses a bug that was impacting the country-level KRI report. 

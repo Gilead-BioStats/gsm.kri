@@ -15,7 +15,7 @@ Visualize_RiskScore <- function(
   dfResults,
   dfMetrics,
   dfGroups,
-  strGroupLevel = 'Site'
+  strGroupLevel = "Site"
 ) {
   # For cross-study functionality, use the cross-study widget
   Widget_CrossStudyRiskScore(dfResults, dfMetrics, dfGroups, strGroupLevel)
