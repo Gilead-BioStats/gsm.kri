@@ -2,6 +2,16 @@
 
 ## gsm.kri v1.4.0
 
+This minor release updates the comprehensive site risk score (SRS)
+functionality in gsm.kri v1.4.0, including calculation methods,
+cross-study visualization capabilities, and extensive test coverage.
+Additionally, this release does the following: - Introduces new
+visualization widgets for time series, bar charts, and cross-study risk
+score display - Expands vignette documentation with detailed SRS
+methodology and implementation examples - Adds comprehensive test suite
+covering all KRI types with updated YAML workflow configurations - Adds
+new Inclusion/Exclusion Violation Rate KRI (0014)
+
 ## gsm.kri 1.3.2
 
 This patch release addresses a bug that was impacting the country-level
