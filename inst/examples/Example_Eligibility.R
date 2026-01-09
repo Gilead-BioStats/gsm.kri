@@ -3,16 +3,16 @@
 # library(gsm.reporting)
 # library(gsm.core) # dev
 # library(gsm.kri)
-# library(gsm.qtl) # fix-58
+# library(gsm.qtl) # fix-60
 # library(purrr)
 # library(dplyr)
 # devtools::load_all(".") # fix-96
-# devtools::load_all("../gsm.qtl") # fix-58
+# devtools::load_all("../gsm.qtl") # fix-60
 # devtools::load_all("../gsm.kri") # fix-131
 
-pak::pak("Gilead-BioStats/gsm.qtl@fix-58")
+pak::pak("Gilead-BioStats/gsm.qtl@fix-60")
 devtools::load_all()
-pak::pak("Gilead-BioStats/gsm.core@dev")
+pak::pak("Gilead-BioStats/gsm.core@fix-105")
 
 dfResults <- gsm.core::reportingResults_study %>%
   filter(MetricID %in% "Analysis_qtl0001") %>%
@@ -59,25 +59,18 @@ lParams <- list(
 )
 
 # Local call to render function - run from pkg root
-gsm.kri::RenderRmd(
-  lParams = lParams,
+Report_Eligibility(
+  dfResults = dfResults,
+  dfMetrics = dfMetrics,
+  dfGroups = dfGroups,
+  lListings = lListings,
   strOutputDir = file.path(getwd(), "pkgdown", "assets", "examples"),
-  strOutputFile = "Example_Eligibility.html",
+  strOutputFile = "Report_Eligibility.html",
   strInputPath = system.file(
-    "examples/Example_Eligibility.Rmd",
+    "report/Report_Eligibility.Rmd",
     package = "gsm.kri"
   )
 )
-
-# Tinkering piece for TimeSeries
-# Widget_TimeSeries(
-#   dfResults = dfResults %>% mutate(Flag = NA),
-#   lMetric = as.list(dfMetrics),
-#   dfGroups = dfGroups,
-#   strOutcome = "Metric",
-#   bAddGroupSelect = FALSE,
-#   selectedGroupIDs = "AA-AA-000-0000"
-# )
 
 # Via workflow
 

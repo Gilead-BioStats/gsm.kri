@@ -25,7 +25,7 @@ Imports:
     DT,
     ggplot2,
     glue,
-    gsm.core (>= 1.1.6),
+    gsm.core (>= 1.1.7),
     gt,
     htmltools,
     htmlwidgets,
@@ -41,18 +41,20 @@ Imports:
     tidyr
 Suggests: 
     fontawesome,
+    gsm.mapping,
+    gsm.reporting,
+    gsm.qtl (>= 1.1.0),
+    here,
     knitr,
     lubridate,
     testthat (>= 3.0.0),
     withr,
-    yaml,
-    here,
-    gsm.mapping,
-    gsm.reporting
+    yaml
 Remotes:
     gsm.core=Gilead-BioStats/gsm.core@main,
     gsm.mapping=Gilead-BioStats/gsm.mapping@main,
-    gsm.reporting=Gilead-BioStats/gsm.reporting@main
+    gsm.reporting=Gilead-BioStats/gsm.reporting@main,
+    gsm.qtl=Gilead-BioStats/gsm.qtl@main
 VignetteBuilder: 
     knitr
 Config/Needs/qualification: Gilead-BioStats/gsm.mapping@dev
