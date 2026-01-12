@@ -108,3 +108,18 @@ testthat::test_that("Widget_CrossStudyRiskScore validates inputs (#71)", {
   )
 })
 
+test_that("Cross-study SRS report widget allows filtering on multiple studies (#171)", {
+  qcthat::ExpectUserAccepts(
+    "Can filter cross-study SRS report on multiple studies.",
+    intIssue = 171,
+    chrInstructions = paste(
+      "1. Navigate to the [Cross-Study SRS Report example]() (if that link doesn't work, try [this one](https://gilead-biostats.github.io/gsm.kri/dev/examples/Example_CrossStudySRS.html).",
+      "2. Use the 'Filter by Study' option, following the instructions on the page.",
+      sep = "\n"
+    ),
+    chrChecks = c(
+      "The instructions for filtering by multiple studies make sense.",
+      "The filters work as expected."
+    )
+  )
+})
