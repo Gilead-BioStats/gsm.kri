@@ -72,8 +72,8 @@ function renderCrossStudyRiskScoreTable(el, input) {
     // Study Filter
     html += '<div style="flex:1; min-width:200px;">';
     html += '<label style="display:block; font-weight:bold; margin-bottom:5px;">Filter by Study:</label>';
-    html += '<select id="study-filter" style="width:100%; padding:4px;">';
-    html += '<option value="">All Studies</option>';
+    html += '<div style="font-size:12px; color:#555; margin-bottom:5px;">Hold Cmd (Mac) or Ctrl (Windows) to select multiple studies</div>';
+    html += '<select id="study-filter" multiple style="width:100%; padding:4px; min-height:120px;">';
     uniqueStudies.forEach(study => {
         html += `<option value="${study}">${study}</option>`;
     });
@@ -366,7 +366,7 @@ function setupFilters(el, dfSummary) {
         const minSRS = parseFloat(srsMinSlider.value);
         const maxSRS = parseFloat(srsMaxSlider.value);
         const minStudyCount = parseInt(studyCountFilter.value);
-        const selectedStudy = studyFilter.value;
+        const selectedStudies = Array.from(studyFilter.selectedOptions || []).map(option => option.value).filter(Boolean);
         const searchTerm = searchBox.value.toLowerCase().trim();
         
         let visibleCount = 0;
@@ -400,7 +400,7 @@ function setupFilters(el, dfSummary) {
             }
             
             // Check study filter
-            if (selectedStudy && !siteStudies.includes(selectedStudy)) {
+            if (selectedStudies.length > 0 && !selectedStudies.some(study => siteStudies.includes(study))) {
                 show = false;
             }
             
@@ -426,8 +426,8 @@ function setupFilters(el, dfSummary) {
         if (minStudyCount > 1) {
             filters.push(`Min ${minStudyCount} studies`);
         }
-        if (selectedStudy) {
-            filters.push(`Study: ${selectedStudy}`);
+        if (selectedStudies.length > 0) {
+            filters.push(`Studies: ${selectedStudies.join(', ')}`);
         }
         if (searchTerm) {
             filters.push(`Search: "${searchTerm}"`);
@@ -473,7 +473,9 @@ function setupFilters(el, dfSummary) {
         srsMinValue.textContent = srsMinSlider.min;
         srsMaxValue.textContent = srsMaxSlider.max;
         studyCountFilter.value = 1;
-        studyFilter.value = '';
+        Array.from(studyFilter.options || []).forEach(option => {
+            option.selected = false;
+        });
         searchBox.value = '';
         sortBy.value = 'srs-desc';
         applySorting();
