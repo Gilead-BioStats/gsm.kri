@@ -109,6 +109,7 @@ testthat::test_that("Widget_CrossStudyRiskScore validates inputs (#71)", {
 })
 
 test_that("Cross-study SRS report widget allows filtering on multiple studies (#171)", {
+  skip_if_not_installed("qcthat")
   qcthat::ExpectUserAccepts(
     "Can filter cross-study SRS report on multiple studies.",
     intIssue = 171,
