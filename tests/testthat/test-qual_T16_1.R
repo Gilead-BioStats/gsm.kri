@@ -43,7 +43,7 @@ testthat::test_that("Qual: Given summarized analytics data, all appropriate aspe
       .by = MetricID
     ) %>%
     pull(GlobalDenominator) %>%
-    sum
+    sum()
 
   SRS_by_hand <- map2(
     analyzed[-13],

@@ -96,14 +96,14 @@ First, `Threshold`, `Flag`, and `RiskScoreWeight` values provided in the metadat
 
 # Site Risk Score Calculation
 
-Once all flagsd and weights for all metrics are calculated, a **site risk score** is calculated by taking the sum of the weights associated for each KRI. Below is a worked example for one site:
+Once all flags and weights for all metrics are calculated, a **site risk score** is calculated by taking the sum of the weights associated for each KRI. Below is a worked example for one site:
   
 ```{r, echo=FALSE}
 site_example <- data.frame(
   KRI = c("Adverse Event", "Serious Adverse Event", "Protocol Deviations", "Important Protocol Deviations",
           "Labs", "Query Rate", "Delayed Query Rate", "Delayed Data Entry Rate", "Data Change Rate",
           "Screen Failure", "Treatment Discontinuation", "Study Discontinuation"),
-  Flag= c(-2,0,-1,0,0,1,0,0,0,1,0,0),
+  Flag = c(-2,0,-1,0,0,1,0,0,0,1,0,0),
   Contribution = c(32, 0, 4, 0, 0, 1, 0, 0, 0, 8, 0, 0)
 )
 
