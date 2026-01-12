@@ -121,9 +121,9 @@ function to compute flags and weights for each site.
 
 ## Site Risk Score Calculation
 
-Once all flagsd and weights for all metrics are calculated, a **site
-risk score** is calculated by taking the sum of the weights associated
-for each KRI. Below is a worked example for one site:
+Once all flags and weights for all metrics are calculated, a **site risk
+score** is calculated by taking the sum of the weights associated for
+each KRI. Below is a worked example for one site:
 
 | KRI                           | Flag | Contribution |
 |:------------------------------|-----:|-------------:|
