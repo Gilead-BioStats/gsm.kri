@@ -25,7 +25,7 @@ HTMLWidgets.widget({
                     input.lChartConfig,
                     input.vThreshold,
                     null, // confidence intervals parameter
-                    input.dfGroups
+                    null // no group metadata needed in time-series chart
                 );
 
                 // Add dropdowns that highlight group IDs.
@@ -37,14 +37,17 @@ HTMLWidgets.widget({
                     input.bAddGroupSelect
                 );
 
-                // Add a dropdown that changes the outcome variable.
-                const outcomeSelect = addOutcomeSelect(
-                    widgetControls,
-                    input.dfResults,
-                    input.lChartConfig,
-                    input.dfGroups,
-                    input.strOutcome
-                );
+                // Add a dropdown that changes the outcome variable (only if widgetControls exists).
+                if (widgetControls) {
+                    const outcomeSelect = addOutcomeSelect(
+                        widgetControls,
+                        input.dfResults,
+                        input.lChartConfig,
+                        input.dfGroups,
+                        input.strOutcome,
+                        input.vOutcomeOptions
+                    );
+                }
             },
             resize: function(width, height) {
             }

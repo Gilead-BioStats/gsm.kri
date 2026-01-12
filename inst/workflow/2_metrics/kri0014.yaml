@@ -1,0 +1,99 @@
+meta:
+  Type: Analysis
+  ID: kri0014
+  GroupLevel: Site
+  Abbreviation: IE
+  Metric: Inclusion/Exclusion Violation Rate
+  Numerator: Number of subjects ineligible
+  Denominator: Number of subjects enrolled
+  Model: Identity (Numerator)
+  Score: Ineligible Participants
+  AnalysisType: identity
+  ScoreCol: Numerator
+  Threshold: "1.5,2.5" # Red flag when there are 3 or more possibly ineligible participants. Green otherwise
+  Flag: "0,1,2"
+  RiskScoreWeight: "0,8,16" # need RAs to set value for red flag
+  AccrualThreshold: 3
+  AccrualMetric: Denominator # Probably only run once 3 participants enrolled
+spec:
+  Mapped_EXCLUSION:
+    subjid:
+      type: character
+    subjectid:
+      type: character
+    Source:
+      type: character
+    studyid:
+      type: character
+    invid:
+      type: character
+    country:
+      type: character
+    eligibility_criteria:
+      type: character
+    ie_violation:
+      type: character
+steps:
+  - output: vThreshold
+    name: gsm.core::ParseThreshold
+    params:
+      strThreshold: Threshold
+  - output: vRiskScoreWeight
+    name: gsm.core::ParseThreshold
+    params:
+      strThreshold: RiskScoreWeight
+      bSort: false
+  - output: vFlag
+    name: gsm.core::ParseThreshold
+    params:
+      strThreshold: Flag
+      bSort: false
+  - output: numerator_df
+    name: gsm.core::RunQuery
+    params:
+      df: Mapped_EXCLUSION
+      strQuery: "SELECT * FROM df WHERE Source != 'Neither'"
+  - output: Analysis_Input
+    name: gsm.core::Input_Rate
+    params:
+      dfSubjects: Mapped_EXCLUSION
+      dfNumerator: numerator_df
+      dfDenominator: Mapped_EXCLUSION
+      strNumeratorCol: subjectid
+      strDenominatorCol: subjectid
+      strSubjectCol: subjectid
+      strGroupCol: invid
+      strGroupLevel: GroupLevel
+      strNumeratorMethod: Count
+      strDenominatorMethod: Count
+  - output: Analysis_Transformed
+    name: gsm.core::Transform_Rate
+    params:
+      dfInput: Analysis_Input
+  - output: Analysis_Analyzed
+    name: gsm.core::Analyze_Identity
+    params:
+      dfTransformed: Analysis_Transformed
+      strValueCol: ScoreCol
+  - output: Analysis_Flagged
+    name: gsm.core::Flag
+    params:
+      dfAnalyzed: Analysis_Analyzed
+      vThreshold: vThreshold
+      vFlag: vFlag
+      vRiskScoreWeight: vRiskScoreWeight
+      nAccrualThreshold: AccrualThreshold
+      strAccrualMetric: AccrualMetric
+  - output: Analysis_Summary
+    name: gsm.core::Summarize
+    params:
+      dfFlagged: Analysis_Flagged
+  - output: lAnalysis
+    name: list
+    params:
+      ID: ID
+      Analysis_Input: Analysis_Input
+      Analysis_Transformed: Analysis_Transformed
+      Analysis_Analyzed: Analysis_Analyzed
+      Analysis_Flagged: Analysis_Flagged
+      Analysis_Summary: Analysis_Summary

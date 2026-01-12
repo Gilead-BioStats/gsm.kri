@@ -62,11 +62,26 @@ Widget_GroupOverview <- function(
   bDebug = FALSE,
   ...
 ) {
-  gsm.core::stop_if(cnd = !is.data.frame(dfResults), "dfResults is not a data.frame")
-  gsm.core::stop_if(cnd = !is.data.frame(dfMetrics), "dfMetrics is not a data.frame")
-  gsm.core::stop_if(cnd = !is.data.frame(dfGroups), "dfGroups is not a data.frame")
-  gsm.core::stop_if(cnd = !is.character(strGroupSubset), "strGroupSubset is not a character")
-  gsm.core::stop_if(cnd = !is.character(strGroupLabelKey) && !is.null(strGroupLabelKey), "strGroupLabelKey is not a character or NULL")
+  gsm.core::stop_if(
+    cnd = !is.data.frame(dfResults),
+    "dfResults is not a data.frame"
+  )
+  gsm.core::stop_if(
+    cnd = !is.data.frame(dfMetrics),
+    "dfMetrics is not a data.frame"
+  )
+  gsm.core::stop_if(
+    cnd = !is.data.frame(dfGroups),
+    "dfGroups is not a data.frame"
+  )
+  gsm.core::stop_if(
+    cnd = !is.character(strGroupSubset),
+    "strGroupSubset is not a character"
+  )
+  gsm.core::stop_if(
+    cnd = !is.character(strGroupLabelKey) && !is.null(strGroupLabelKey),
+    "strGroupLabelKey is not a character or NULL"
+  )
   gsm.core::stop_if(cnd = !is.logical(bDebug), "bDebug is not a logical")
 
   # set strGroupLevel if NULL and dfMetrics is not NULL
@@ -81,18 +96,20 @@ Widget_GroupOverview <- function(
 
   ## don't include site risk score in dfMetrics, so it's not in the summary charts
   dfMetrics <- dfMetrics %>%
-    dplyr::filter(MetricID != strSiteRiskMetric)
+    dplyr::filter(.data$MetricID != strSiteRiskMetric)
 
   ## update dfResults to include site risk weights when available
   if (any(!is.na(dfMetrics$RiskScoreWeight))) {
     dfWeights <- dfMetrics %>%
-      filter(!is.na(RiskScoreWeight)) %>%
+      filter(!is.na(.data$RiskScoreWeight)) %>%
       mutate(
-        Weight = map(RiskScoreWeight, \(x) ParseThreshold(x, bSort = FALSE)),
-        Flag = map(Flag, \(x) ParseThreshold(x, bSort = FALSE)),
-        WeightMax = map_dbl(Weight, ~ max(.x, na.rm = TRUE))
+        Weight = map(.data$RiskScoreWeight, \(x) {
+          gsm.core::ParseThreshold(x, bSort = FALSE)
+        }),
+        Flag = map(.data$Flag, \(x) gsm.core::ParseThreshold(x, bSort = FALSE)),
+        WeightMax = map_dbl(.data$Weight, ~ max(.x, na.rm = TRUE))
       ) %>%
-      select(MetricID, Flag, Weight, WeightMax) %>%
+      select("MetricID", "Flag", "Weight", "WeightMax") %>%
       unnest(cols = c(Flag, Weight))
 
     dfResults <- dfResults %>%
@@ -166,15 +183,34 @@ Widget_GroupOverview <- function(
 #' @name Widget_GroupOverview-shiny
 #'
 #' @export
-Widget_GroupOverviewOutput <- function(outputId, width = "100%", height = "400px") {
-  htmlwidgets::shinyWidgetOutput(outputId, "Widget_GroupOverview", width, height, package = "gsm.kri")
+Widget_GroupOverviewOutput <- function(
+  outputId,
+  width = "100%",
+  height = "400px"
+) {
+  htmlwidgets::shinyWidgetOutput(
+    outputId,
+    "Widget_GroupOverview",
+    width,
+    height,
+    package = "gsm.kri"
+  )
 }
 
 #' @rdname Widget_GroupOverview-shiny
 #' @export
-renderWidget_GroupOverview <- function(expr, env = parent.frame(), quoted = FALSE) {
+renderWidget_GroupOverview <- function(
+  expr,
+  env = parent.frame(),
+  quoted = FALSE
+) {
   if (!quoted) {
     expr <- substitute(expr)
   } # force quoted
-  htmlwidgets::shinyRenderWidget(expr, Widget_GroupOverviewOutput, env, quoted = TRUE)
+  htmlwidgets::shinyRenderWidget(
+    expr,
+    Widget_GroupOverviewOutput,
+    env,
+    quoted = TRUE
+  )
 }

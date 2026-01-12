@@ -1,16 +1,38 @@
-test_that("Widget_GroupOverview creates a valid HTML widget", {
-  widget <- Widget_GroupOverview(gsm.core::reportingResults, gsm.core::reportingMetrics, gsm.core::reportingGroups, strGroupLevel = "Site")
+test_that("Widget_GroupOverview creates a valid HTML widget (#145)", {
+  TestAtLogLevel()
+  widget <- Widget_GroupOverview(
+    gsm.core::reportingResults,
+    gsm.core::reportingMetrics,
+    gsm.core::reportingGroups,
+    strGroupLevel = "Site"
+  )
   expect_s3_class(widget, c("WidgetGroupOverview", "htmlwidget"))
 })
 
-test_that("Widget_GroupOverview returns expected data", {
-  widget <- Widget_GroupOverview(gsm.core::reportingResults, gsm.core::reportingMetrics, gsm.core::reportingGroups, strGroupLevel = "Site")
+test_that("Widget_GroupOverview returns expected data (#125)", {
+  TestAtLogLevel()
+  widget <- Widget_GroupOverview(
+    gsm.core::reportingResults,
+    gsm.core::reportingMetrics,
+    gsm.core::reportingGroups,
+    strGroupLevel = "Site"
+  )
 
   expect_named(
     fromJSON(widget$x$dfResults),
     c(
-      "GroupID", "GroupLevel", "Numerator", "Denominator", "Metric", "Score",
-      "Flag", "MetricID", "SnapshotDate", "StudyID", "Weight", "WeightMax"
+      "GroupID",
+      "GroupLevel",
+      "Numerator",
+      "Denominator",
+      "Metric",
+      "Score",
+      "Flag",
+      "MetricID",
+      "SnapshotDate",
+      "StudyID",
+      "Weight",
+      "WeightMax"
     )
   )
 
@@ -24,6 +46,7 @@ test_that("Widget_GroupOverview returns correct class", {
 })
 
 test_that("Widget_GroupOverview uses correct Group or errors out when strGroupLevel is NULL", {
+  TestAtLogLevel()
   widget <- Widget_GroupOverview(
     gsm.core::reportingResults,
     gsm.core::reportingMetrics,
@@ -42,27 +65,54 @@ test_that("Widget_GroupOverview assertions works", {
   reportingMetrics_modified <- as.list(gsm.core::reportingMetrics)
   reportingGroups_modified <- as.list(gsm.core::reportingGroups)
   expect_error(
-    Widget_GroupOverview(reportingResults_modified, gsm.core::reportingMetrics, gsm.core::reportingGroups),
+    Widget_GroupOverview(
+      reportingResults_modified,
+      gsm.core::reportingMetrics,
+      gsm.core::reportingGroups
+    ),
     "dfResults is not a data.frame"
   )
   expect_error(
-    Widget_GroupOverview(gsm.core::reportingResults, reportingMetrics_modified, gsm.core::reportingGroups),
+    Widget_GroupOverview(
+      gsm.core::reportingResults,
+      reportingMetrics_modified,
+      gsm.core::reportingGroups
+    ),
     "dfMetrics is not a data.frame"
   )
   expect_error(
-    Widget_GroupOverview(gsm.core::reportingResults, gsm.core::reportingMetrics, reportingGroups_modified),
+    Widget_GroupOverview(
+      gsm.core::reportingResults,
+      gsm.core::reportingMetrics,
+      reportingGroups_modified
+    ),
     "dfGroups is not a data.frame"
   )
   expect_error(
-    Widget_GroupOverview(gsm.core::reportingResults, gsm.core::reportingMetrics, gsm.core::reportingGroups, strGroupSubset = 1),
+    Widget_GroupOverview(
+      gsm.core::reportingResults,
+      gsm.core::reportingMetrics,
+      gsm.core::reportingGroups,
+      strGroupSubset = 1
+    ),
     "strGroupSubset is not a character"
   )
   expect_error(
-    Widget_GroupOverview(gsm.core::reportingResults, gsm.core::reportingMetrics, gsm.core::reportingGroups, strGroupLabelKey = 1),
+    Widget_GroupOverview(
+      gsm.core::reportingResults,
+      gsm.core::reportingMetrics,
+      gsm.core::reportingGroups,
+      strGroupLabelKey = 1
+    ),
     "strGroupLabelKey is not a character"
   )
   expect_error(
-    Widget_GroupOverview(gsm.core::reportingResults, gsm.core::reportingMetrics, gsm.core::reportingGroups, bDebug = 1),
+    Widget_GroupOverview(
+      gsm.core::reportingResults,
+      gsm.core::reportingMetrics,
+      gsm.core::reportingGroups,
+      bDebug = 1
+    ),
     "bDebug is not a logical"
   )
 })

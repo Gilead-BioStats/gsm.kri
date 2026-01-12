@@ -1,0 +1,267 @@
+---
+title: "Cookbook - Reporting Workflow Examples"
+type: "Cookbook"
+date: "`r format(Sys.time(), '%Y-%m-%d %H:%M:%S %Z')`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: show
+    self_contained: true
+    theme: cosmo
+---
+
+```{r rmd-setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  eval = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  results = 'markup',
+  comment = "#>"
+)
+```
+
+```{r load-packages}
+library(dplyr)
+library(gsm.core)
+library(gsm.mapping)
+library(gsm.reporting)
+library(gsm.kri)
+library(yaml)
+```
+
+## Example 3.1 - Create a KRI Report using 12 standard metrics in a step-by-step workflow
+
+This example demonstrates a complete workflow from raw data to KRI reports using standard metrics.
+
+### Prepare Raw Data
+
+```{r prepare-raw-data}
+core_mappings <- c(
+  "AE", "COUNTRY", "DATACHG", "DATAENT", "ENROLL", "EXCLUSION", "IE", "LB", "VISIT",
+  "PD", "PK", "QUERY", "STUDY", "STUDCOMP", "SDRGCOMP", "SITE", "SUBJ"
+)
+
+lRaw <- list(
+  Raw_SUBJ = gsm.core::lSource$Raw_SUBJ,
+  Raw_AE = gsm.core::lSource$Raw_AE,
+  Raw_PD = gsm.core::lSource$Raw_PD %>%
+    rename(
+      subjid = subjectenrollmentnumber,
+      dvdecod = crocategory,
+      dvterm = description,
+      dvdtm = deviationdate
+    ),
+  Raw_LB = gsm.core::lSource$Raw_LB,
+  Raw_PK = gsm.core::lSource$Raw_PK %>%
+    rename(
+      visit = foldername
+    ),
+  Raw_STUDCOMP = gsm.core::lSource$Raw_STUDCOMP,
+  Raw_SDRGCOMP = gsm.core::lSource$Raw_SDRGCOMP,
+  Raw_DATACHG = gsm.core::lSource$Raw_DATACHG %>%
+    rename(subject_nsv = subjectname),
+  Raw_DATAENT = gsm.core::lSource$Raw_DATAENT %>%
+    rename(subject_nsv = subjectname),
+  Raw_QUERY = gsm.core::lSource$Raw_QUERY %>%
+    rename(subject_nsv = subjectname),
+  Raw_ENROLL = gsm.core::lSource$Raw_ENROLL,
+  Raw_SITE = gsm.core::lSource$Raw_SITE %>%
+    rename(
+      studyid = protocol,
+      invid = pi_number,
+      InvestigatorFirstName = pi_first_name,
+      InvestigatorLastName = pi_last_name,
+      City = city,
+      State = state,
+      Country = country
+    ),
+  Raw_STUDY = gsm.core::lSource$Raw_STUDY %>%
+    rename(studyid = protocol_number),
+  Raw_VISIT = gsm.core::lSource$Raw_VISIT %>%
+    rename(visit = foldername),
+  Raw_IE = gsm.core::lSource$Raw_IE
+)
+```
+
+### Step 1 - Create Mapped Data Layer
+
+Filter, aggregate and join raw data to create mapped data layer.
+
+```{r create-mapped-data, results='hide', warning=FALSE, message=FALSE}
+mappings_wf <- MakeWorkflowList(strNames = core_mappings, strPath = "workflow/1_mappings", strPackage = "gsm.mapping")
+mapped <- RunWorkflows(mappings_wf, lRaw)
+```
+
+### Step 2 - Create Metrics
+
+Calculate metrics using mapped data.
+
+```{r create-metrics, results='hide', warning=FALSE, message=FALSE}
+metrics_wf <- MakeWorkflowList(strPath = "inst/workflow/2_metrics", strPackage = "gsm.kri")
+analyzed <- RunWorkflows(metrics_wf, c(mapped, list(lWorkflows = metrics_wf)))
+```
+
+### Step 3 - Create Reporting Layer
+
+Create reports using metrics data.
+
+```{r create-reporting, results='hide', warning=FALSE, message=FALSE}
+reporting_wf <- MakeWorkflowList(strPath = "workflow/3_reporting", strPackage = "gsm.reporting")
+reporting <- RunWorkflows(reporting_wf, c(mapped, list(
+  lAnalyzed = analyzed,
+  lWorkflows = metrics_wf
+)))
+```
+
+### Step 4 - Create KRI Reports
+
+Create KRI Site and Country reports using reporting data.
+
+```{r create-kri-reports, results='hide', warning=FALSE, message=FALSE}
+module_wf <- MakeWorkflowList("kri", strPath = "inst/workflow/4_modules", strPackage = "gsm.kri")
+lReports <- RunWorkflows(module_wf, reporting)
+```
+
+## Example 3.3 - Site-Level KRI Report with multiple SnapshotDate
+
+This example demonstrates creating visualizations and reports using pre-calculated reporting data from `gsm.core`.
+
+### Creating Interactive Charts
+
+```{r create-charts-3-3}
+lCharts <- MakeCharts(
+  dfResults = gsm.core::reportingResults,
+  dfGroups = gsm.core::reportingGroups,
+  dfMetrics = gsm.core::reportingMetrics,
+  dfBounds = gsm.core::reportingBounds
+)
+```
+
+### Generate KRI Report
+
+```{r generate-report-3-3, results='hide', warning=FALSE, message=FALSE}
+kri_report_path <- Report_KRI(
+  lCharts = lCharts,
+  dfResults = FilterByLatestSnapshotDate(gsm.core::reportingResults),
+  dfGroups = gsm.core::reportingGroups,
+  dfMetrics = gsm.core::reportingMetrics
+)
+```
+
+
+## Example 3.4 - Reporting Results with Changes from previous snapshot
+
+This example shows how to include historical comparison data to highlight changes from previous snapshots.
+
+### Prepare Historical Data
+
+```{r historical-data-3-4}
+historical <- gsm.core::reportingResults %>% filter(SnapshotDate == "2025-03-01")
+```
+
+### Re-run reporting model and KRI report with historical data
+
+```{r reporting-with-historical-3-4, results='hide', warning=FALSE, message=FALSE}
+reporting_long <- gsm.core::RunWorkflows(reporting_wf, c(mapped, list(lAnalyzed = analyzed, Reporting_Results_Longitudinal = historical, lWorkflows = metrics_wf)))
+lReports_long <- gsm.core::RunWorkflows(module_wf, reporting_long)
+```
+
+## Example 3.5 - Reading and Writing from External Data Sources
+
+This example extends the previous examples to use data from an external source, by specifying `LoadData()` and `SaveData()` functions to be used in `RunWorkflows()` `lConfig` argument.
+
+
+```{r}
+LoadData <- function(lWorkflow, lConfig, lData = NULL) {
+  lData <- lData
+    purrr::imap(
+        lWorkflow$spec,
+        ~ {
+            input <- lConfig$Domains[[ .y ]]
+
+            if (is.data.frame(input)) {
+                data <- input
+            } else if (is.function(input)) {
+                data <- input()
+            } else if (is.character(input)) {
+                data <- read.csv(input)
+            } else {
+                cli::cli_abort("Invalid data source: {input}.")
+            }
+
+            lData[[ .y ]] <<- (ApplySpec(data, .x))
+        }
+    )
+    return(lData)
+}
+
+SaveData <- function(lWorkflow, lConfig) {
+    domain <- paste0(lWorkflow$meta$Type, '_', lWorkflow$meta$ID)
+    cli::cli_alert_info(domain)
+
+    if (exists(domain, lConfig$Domains)) {
+        output <- lConfig$Domains[[ domain ]]
+        cli::cli_alert_info(output)
+
+        cli::cli_alert_info(
+            'Saving output of `lWorkflow` to `{output}`.'
+        )
+
+        write.csv(
+            lWorkflow$lResult,
+            output
+        )
+    } else {
+        cli::cli_alert_info(
+            '{domain} not found.'
+        )
+    }
+}
+
+lConfig <- list(
+    LoadData = LoadData,
+    SaveData = SaveData,
+    Domains = c(
+        Raw_STUDY = function() { gsm.core::lSource$Raw_STUDY },
+        Raw_SITE = function() { gsm.core::lSource$Raw_SITE },
+        Raw_PD = function() { gsm.core::lSource$Raw_PD },
+
+        Raw_SUBJ = function() { gsm.core::lSource$Raw_SUBJ },
+        Raw_ENROLL = function() { gsm.core::lSource$Raw_ENROLL },
+        Raw_SDRGCOMP = function() { gsm.core::lSource$Raw_SDRGCOMP },
+        Raw_STUDCOMP = function() { gsm.core::lSource$Raw_STUDCOMP },
+        Raw_LB = function() { gsm.core::lSource$Raw_LB },
+        Raw_AE = function() { gsm.core::lSource$Raw_AE },
+
+        Raw_DATAENT = function() { gsm.core::lSource$Raw_DATAENT },
+        Raw_DATACHG = function() { gsm.core::lSource$Raw_DATACHG },
+        Raw_QUERY = function() { gsm.core::lSource$Raw_QUERY },
+
+        Mapped_STUDY = file.path(tempdir(), 'mapped-study.csv'),
+        Mapped_SITE = file.path(tempdir(), 'mapped-site.csv'),
+        Mapped_COUNTRY = file.path(tempdir(), 'mapped-country.csv'),
+        Mapped_PD = file.path(tempdir(), 'mapped-pd.csv'),
+
+        Mapped_SUBJ = file.path(tempdir(), 'mapped-subj.csv'),
+        Mapped_ENROLL = file.path(tempdir(), 'mapped-enroll.csv'),
+        Mapped_SDRGCOMP = file.path(tempdir(), 'mapped-sdrgcomp.csv'),
+        Mapped_STUDCOMP = file.path(tempdir(), 'mapped-studcomp.csv'),
+        Mapped_LB = file.path(tempdir(), 'mapped-lb.csv'),
+        Mapped_AE = file.path(tempdir(), 'mapped-ae.csv'),
+
+        Mapped_DATAENT = file.path(tempdir(), 'mapped-dataent.csv'),
+        Mapped_DATACHG = file.path(tempdir(), 'mapped-datachg.csv'),
+        Mapped_QUERY = file.path(tempdir(), 'mapped-query.csv')
+    )
+)
+
+core_mappings <- c("AE", "COUNTRY", "DATACHG", "DATAENT", "ENROLL", "LB",
+                   "PD", "QUERY", "STUDY", "STUDCOMP", "SDRGCOMP", "SITE", "SUBJ")
+
+lMappedData <- RunWorkflows(
+    MakeWorkflowList(strNames = core_mappings, strPath = 'workflow/1_mappings', strPackage = "gsm.mapping"),
+    lConfig = lConfig
+)
+```

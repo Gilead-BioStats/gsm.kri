@@ -35,11 +35,21 @@ Report_MetricTable <- function(
   vFlags = c(-2, -1, 1, 2)
 ) {
   dfRiskSignals <- MakeMetricTable(
-    dfResults, dfGroups, strGroupLevel, strGroupDetailsParams, vFlags
+    dfResults,
+    dfGroups,
+    strGroupLevel,
+    strGroupDetailsParams,
+    vFlags
   )
 
   if (!nrow(dfRiskSignals)) {
-    return(htmltools::tags$p("Nothing flagged for this KRI."))
+    emptyMessage <- htmltools::tags$p("Nothing flagged for this KRI.")
+    strOutputLabel <- paste0(
+      fontawesome::fa("table", fill = "#337ab7"),
+      "  Metric Table"
+    )
+    base::attr(emptyMessage, "output_label") <- strOutputLabel
+    return(emptyMessage)
   }
 
   # Check these columns against columns in the output of [ MakeMetricTable ].

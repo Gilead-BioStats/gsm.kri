@@ -1,7 +1,7 @@
 Type: Package
 Package: gsm.kri
 Title: Good Statistical Monitoring KRIs
-Version: 1.3.2
+Version: 1.4.0
 Authors@R: c(
     person("Jeremy", "Wildfire", , "jwildfire@gmail.com", role = c("aut", "cre")),
     person("Laura", "Maxwell", , "lkmaxwell23@gmail.com", role = "aut"),
@@ -25,7 +25,7 @@ Imports:
     DT,
     ggplot2,
     glue,
-    gsm.core (>= 1.1.6),
+    gsm.core (>= 1.1.7),
     gt,
     htmltools,
     htmlwidgets,
@@ -41,16 +41,25 @@ Imports:
     tidyr
 Suggests: 
     fontawesome,
+    gsm.mapping,
+    gsm.reporting,
+    gsm.qtl (>= 1.1.0),
+    here,
     knitr,
     lubridate,
     testthat (>= 3.0.0),
-    withr
+    withr,
+    yaml
 Remotes:
-    gsm.core=Gilead-BioStats/gsm.core@main
+    gsm.core=Gilead-BioStats/gsm.core@main,
+    gsm.mapping=Gilead-BioStats/gsm.mapping@main,
+    gsm.reporting=Gilead-BioStats/gsm.reporting@main,
+    gsm.qtl=Gilead-BioStats/gsm.qtl@main
 VignetteBuilder: 
     knitr
-Config/Needs/qualification: Gilead-BioStats/gsm.qc@dev
+Config/Needs/qualification: Gilead-BioStats/gsm.mapping@dev
 Config/testthat/edition: 3
+Config/testthat/parallel: false
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.3
