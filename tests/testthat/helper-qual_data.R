@@ -63,12 +63,14 @@ GetYamlPathCustomMetrics <- function() {
 
 ## default kri path
 GetDefaultKRIPath <- function() {
-  test_path("qual_workflows/2_metrics")
+  file.path(system.file(package = "gsm.kri"), "workflow", "2_metrics")
 }
 
 ## Get Mapped data
+domains <- gsub("Raw_", "", names(lSource))
 mappings_wf <- MakeWorkflowList(
-  strPath = test_path("qual_workflows/1_mappings")
+  strNames = domains,
+  strPackage= "gsm.mapping"
 )
 
 ConsoleAppender <- log4r::console_appender(layout = gsm.core::cli_fmt)
