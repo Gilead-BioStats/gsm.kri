@@ -9,7 +9,7 @@
 # devtools::load_all(".")
 # devtools::load_all("../gsm.qtl") # fix-70
 # devtools::load_all("../gsm.kri")
-# pak::pak("Gilead-BioStats/gsm.qtl@fix-70")
+pak::pak("Gilead-BioStats/gsm.qtl@fix-70")
 
 dfResults <- gsm.core::reportingResults_study %>%
   filter(MetricID %in% "Analysis_qtl0001") %>%
