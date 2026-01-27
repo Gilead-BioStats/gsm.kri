@@ -54,7 +54,7 @@ Remotes:
     gsm.core=Gilead-BioStats/gsm.core@main,
     gsm.mapping=Gilead-BioStats/gsm.mapping@main,
     gsm.reporting=Gilead-BioStats/gsm.reporting@main,
-    gsm.qtl=Gilead-BioStats/gsm.qtl@main
+    gsm.qtl=Gilead-BioStats/gsm.qtl@fix-70
 VignetteBuilder: 
     knitr
 Config/Needs/qualification: Gilead-BioStats/gsm.mapping@dev
