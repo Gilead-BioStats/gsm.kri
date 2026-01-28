@@ -1,14 +1,14 @@
-# library(gsm.datasim)
-# library(gsm.mapping)
-# library(gsm.reporting)
-# library(gsm.core)
-# library(gsm.kri)
-# library(gsm.qtl)
-# library(purrr)
-# library(dplyr)
-# devtools::load_all(".")
-# devtools::load_all("../gsm.qtl") # fix-70
-# devtools::load_all("../gsm.kri")
+library(gsm.datasim)
+library(gsm.mapping)
+library(gsm.reporting)
+library(gsm.core)
+library(gsm.kri)
+library(gsm.qtl)
+library(purrr)
+library(dplyr)
+devtools::load_all(".")
+devtools::load_all("../gsm.qtl") # fix-70
+devtools::load_all("../gsm.kri")
 pak::pak("Gilead-BioStats/gsm.qtl@fix-70")
 
 dfResults <- gsm.core::reportingResults_study %>%
