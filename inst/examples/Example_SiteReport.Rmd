@@ -1,0 +1,62 @@
+---
+title: "Site KRI Report"
+author: "[gsm.kri](https://gilead-biostats.github.io/gsm.kri) Example"
+description: "Example of a Site KRI Report generated using standard KRIs in gsm.kri"
+index: 1
+date: "`r format(Sys.time(), '%B %d, %Y %H:%M:%S %Z')`"
+output:
+  html_document:
+    mathjax: null
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    css: ../report/styles.css
+---
+
+# Set Up
+
+This page provides a sample Site KRI Report generated using the standard KRIs included in the `gsm.kri` package. Expand the "Setup" section below to see the code used to generate the report. Or scroll down for the standard KRI report output.
+
+<details>
+<summary>Setup</summary>
+
+```{r}
+# Load libraries
+library(gsm.core)
+library(gsm.kri)
+library(here)
+
+## Site Report
+lCharts <- gsm.kri::MakeCharts(
+  dfResults = gsm.core::reportingResults,
+  dfGroups = gsm.core::reportingGroups,
+  dfMetrics = gsm.core::reportingMetrics,
+  dfBounds = gsm.core::reportingBounds
+)
+```
+
+</details>
+
+# Report
+
+```{r, echo=FALSE, results='asis'}
+## Render example report inline using knit_child
+child_env <- list2env(
+  list(
+    params = list(
+      lCharts = lCharts,
+      dfResults = gsm.kri::FilterByLatestSnapshotDate(gsm.core::reportingResults),
+      dfGroups = gsm.core::reportingGroups,
+      dfMetrics = gsm.core::reportingMetrics
+    )
+  ),
+  parent = environment()
+)
+report_kri <- knitr::knit_child(
+  system.file("report", "Report_KRI.Rmd", package = "gsm.kri"),
+  envir = child_env,
+  quiet = TRUE
+)
+cat(report_kri, sep = "\n")
+```

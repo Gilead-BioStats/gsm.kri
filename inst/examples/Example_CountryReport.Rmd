@@ -1,0 +1,63 @@
+---
+title: "Country KRI Report"
+author: "[gsm.kri](https://gilead-biostats.github.io/gsm.kri) Example"
+description: "Example of a Country KRI Report generated using standard KRIs in gsm.kri"
+index: 2
+date: "`r format(Sys.time(), '%B %d, %Y %H:%M:%S %Z')`"
+output:
+  html_document:
+    mathjax: null
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    css: ../report/styles.css
+---
+
+
+# Set Up
+
+This page provides a sample Country KRI Report generated using the standard KRIs included in the `gsm.kri` package. Expand the "Setup" section below to see the code used to generate the report. Or scroll down for the standard KRI report output.
+<details>
+<summary>Setup</summary>
+
+```{r}
+# Load libraries
+library(gsm.core)
+library(gsm.kri)
+library(here)
+
+## Country Report
+lCharts_country <- gsm.kri::MakeCharts(
+  dfResults = gsm.core::reportingResults_country,
+  dfGroups = gsm.core::reportingGroups_country,
+  dfMetrics = gsm.core::reportingMetrics_country,
+  dfBounds = gsm.core::reportingBounds_country
+)
+```
+
+</details>
+
+# Report
+```{r, echo=FALSE, results='asis'}
+## Render example report inline using knit_child
+child_env <- list2env(
+  list(
+    params = list(
+      lCharts = lCharts_country,
+      dfResults = gsm.kri::FilterByLatestSnapshotDate(
+        gsm.core::reportingResults_country
+      ),
+      dfGroups = gsm.core::reportingGroups_country,
+      dfMetrics = gsm.core::reportingMetrics_country
+    )
+  ),
+  parent = environment()
+)
+report_kri <- knitr::knit_child(
+  system.file("report", "Report_KRI.Rmd", package = "gsm.kri"),
+  envir = child_env,
+  quiet = TRUE
+)
+cat(report_kri, sep = "\n")
+```
