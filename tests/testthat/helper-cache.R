@@ -21,8 +21,15 @@
 # - clear_cache() # to remove all cache files
 
 # Set up cache directory using R_user_dir()
-get_cache_dir <- function() {
-  cache_dir <- tools::R_user_dir("gsm", "cache")
+get_cache_dir <- function(cache_subdir = NULL) {
+  base_cache_dir <- tools::R_user_dir("gsm", "cache")
+  
+  if (!is.null(cache_subdir)) {
+    cache_dir <- file.path(base_cache_dir, cache_subdir)
+  } else {
+    cache_dir <- base_cache_dir
+  }
+  
   if (!dir.exists(cache_dir)) {
     dir.create(cache_dir, recursive = TRUE)
   }
@@ -53,8 +60,10 @@ is_cache_outdated <- function(cache_file, source_mtime) {
 }
 
 # Get or create cached mapped data
-get_cached_mapped_data <- function(lData, mappings_wf, force_refresh = FALSE) {
-  cache_dir <- get_cache_dir()
+get_cached_mapped_data <- function(lData, mappings_wf, force_refresh = FALSE, cache_dir = NULL) {
+  if (is.null(cache_dir)) {
+    cache_dir <- get_cache_dir()
+  }
   mapped_data_cache <- file.path(cache_dir, "mapped_data.rds")
   mappings_wf_cache <- file.path(cache_dir, "mappings_wf.rds")
   
@@ -86,8 +95,10 @@ get_cached_mapped_data <- function(lData, mappings_wf, force_refresh = FALSE) {
 }
 
 # Get mapping output names
-get_cached_mapping_output <- function(mappings_wf, force_refresh = FALSE) {
-  cache_dir <- get_cache_dir()
+get_cached_mapping_output <- function(mappings_wf, force_refresh = FALSE, cache_dir = NULL) {
+  if (is.null(cache_dir)) {
+    cache_dir <- get_cache_dir()
+  }
   mapping_output_cache <- file.path(cache_dir, "mapping_output.rds")
   
   # Get modification time of relevant workflow files
@@ -115,9 +126,13 @@ get_cached_mapping_output <- function(mappings_wf, force_refresh = FALSE) {
 }
 
 # Clear cache files
-clear_cache <- function() {
-  cache_dir <- get_cache_dir()
+clear_cache <- function(cache_dir = NULL) {
+  if (is.null(cache_dir)) {
+    cache_dir <- get_cache_dir()
+  }
   cache_files <- list.files(cache_dir, pattern = "(mapped_data|mappings_wf|mapping_output)\\.rds$", full.names = TRUE)
-  file.remove(cache_files)
+  if (length(cache_files) > 0) {
+    file.remove(cache_files)
+  }
   message("Cache cleared: ", length(cache_files), " files removed")
 }
