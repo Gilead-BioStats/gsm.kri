@@ -6,11 +6,11 @@ meta:
   Metric: Inclusion/Exclusion Violation Rate
   Numerator: Number of subjects ineligible
   Denominator: Number of subjects enrolled
-  Model: Normal Approximation
-  Score: Adjusted Z-Score
-  AnalysisType: binary
-  Threshold: -2, 2
-  Flag: "-1,0,1"
+  Model: Identity (Numerator)
+  Score: Ineligible Participants
+  AnalysisType: identity
+  Threshold: "1.5, 2.5"
+  Flag: "0,1,2"
   RiskScoreWeight: "0,8,16"
   AccrualThreshold: 3
   AccrualMetric: Denominator
