@@ -3,7 +3,7 @@
 This patch release addresses the following issues:
 
 - Updates bug in cou0014 metric to use Identity method instead of Normal Approximation
-- Converts example R scripts to Rmd format with proper indexing for documentation
+- Converts example R scripts to Rmd format with proper indexing for documentation using new gsm.utils implementation
 - Streamlines GitHub Actions workflow for releases
 
 # gsm.kri v1.4.0
