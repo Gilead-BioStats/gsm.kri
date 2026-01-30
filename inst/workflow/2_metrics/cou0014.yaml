@@ -3,7 +3,7 @@ meta:
   ID: cou0014
   GroupLevel: Country
   Abbreviation: IE
-  Metric: Inclusion/Exclusion Violation Rate
+  Metric: Ineligibility
   Numerator: Number of subjects ineligible
   Denominator: Number of subjects enrolled
   Model: Identity (Numerator)
