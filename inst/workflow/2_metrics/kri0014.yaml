@@ -3,7 +3,7 @@ meta:
   ID: kri0014
   GroupLevel: Site
   Abbreviation: IE
-  Metric: Inclusion/Exclusion Violation Rate
+  Metric: Ineligibility
   Numerator: Number of subjects ineligible
   Denominator: Number of subjects enrolled
   Model: Identity (Numerator)
