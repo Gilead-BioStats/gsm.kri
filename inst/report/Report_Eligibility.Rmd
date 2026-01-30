@@ -47,7 +47,7 @@ date: "Snapshot Date: `r latest_snapshot`"
 ## Study Overview
 ```{r, echo=FALSE}
 Eligibility_Overview(
-  dfResults = dfResults_Overview,
+  dfResults = dfResults,
   dSnapshot = latest_snapshot,
   strNum = "Ineligible Participants",
   strDenom = "Total Enrolled", 
