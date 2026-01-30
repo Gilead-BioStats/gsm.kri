@@ -7,7 +7,7 @@ kri_workflows <- MakeWorkflowList(
 outputs <- map(kri_workflows, ~ map_vec(.x$steps, ~ .x$output))
 
 ## Test Code
-testthat::test_that("Qual: Given appropriate raw participant-level data, a Ineligibility Assessment can be done using the Identity method (#183)", {
+testthat::test_that("Qual: Given appropriate raw participant-level data, an Ineligibility Assessment can be done using the Identity method (#183)", {
   TestAtLogLevel("WARN")
   # default ---------------------------------
   test <- map(kri_workflows, ~ robust_runworkflow(.x, mapped_data)) %>%
