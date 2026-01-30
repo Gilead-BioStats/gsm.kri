@@ -8,6 +8,7 @@ meta:
   Denominator: Number of subjects enrolled
   Model: Identity (Numerator)
   Score: Ineligible Participants
+  ScoreCol: Numerator
   AnalysisType: identity
   Threshold: "1.5, 2.5"
   Flag: "0,1,2"
@@ -70,10 +71,10 @@ steps:
     params:
       dfInput: Analysis_Input
   - output: Analysis_Analyzed
-    name: Analyze_NormalApprox
+    name: Analyze_Identity
     params:
       dfTransformed: Analysis_Transformed
-      strType: AnalysisType
+      strValueCol: ScoreCol
   - output: Analysis_Flagged
     name: gsm.core::Flag
     params:
