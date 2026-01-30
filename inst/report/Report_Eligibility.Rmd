@@ -46,12 +46,13 @@ date: "Snapshot Date: `r latest_snapshot`"
 
 ## Study Overview
 ```{r, echo=FALSE}
-dfResults_Overview <- ResultsProcessor(dfResults = dfResults, dfMetrics = dfMetrics)
-QTL_Overview(dfResults = dfResults_Overview,
-             dSnapshot = latest_snapshot,
-             strNum = "Ineligible Participants",
-             strDenom = "Total Enrolled", 
-             strQTL = "Current Ineligible Enrolled Rate")
+Eligibility_Overview(
+  dfResults = dfResults_Overview,
+  dSnapshot = latest_snapshot,
+  strNum = "Ineligible Participants",
+  strDenom = "Total Enrolled", 
+  strQTL = "Current Ineligible Enrolled Rate"
+)
 ```
 
 ## Time Series Chart
