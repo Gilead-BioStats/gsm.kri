@@ -20,20 +20,17 @@ df_bounds_basic <- data.frame(
 )
 
 testthat::test_that("Visualize_Scatter returns NULL if all Flags are NA", {
-
   p <- Visualize_Scatter(df_results_all_na_flag)
 
   expect_null(p)
 })
 testthat::test_that("Visualize_Scatter returns a ggplot object with basic input", {
-
   p <- Visualize_Scatter(df_results_basic)
 
   testthat::expect_s3_class(p, "ggplot")
 })
 
 testthat::test_that("Visualize_Scatter includes tooltip text aesthetic", {
-
   p <- Visualize_Scatter(df_results_basic)
 
   aes_names <- names(p$mapping)
@@ -42,7 +39,6 @@ testthat::test_that("Visualize_Scatter includes tooltip text aesthetic", {
 })
 
 testthat::test_that("Visualize_Scatter maps color to absolute Flag", {
-
   p <- Visualize_Scatter(df_results_basic)
 
   expect_equal(
@@ -53,7 +49,6 @@ testthat::test_that("Visualize_Scatter maps color to absolute Flag", {
 
 
 testthat::test_that("Visualize_Scatter facets when strGroupCol is provided", {
-
   p <- Visualize_Scatter(
     dfResults = df_results_basic,
     strGroupCol = "Category"
@@ -63,7 +58,6 @@ testthat::test_that("Visualize_Scatter facets when strGroupCol is provided", {
 })
 
 testthat::test_that("Visualize_Scatter uses correct axis labels", {
-
   p <- Visualize_Scatter(
     dfResults = df_results_basic,
     strGroupLabel = "Site",
@@ -75,7 +69,6 @@ testthat::test_that("Visualize_Scatter uses correct axis labels", {
 })
 
 testthat::test_that("Visualize_Scatter handles zero denominators", {
-
   df_results_zero_denom <- data.frame(
     GroupID = c("A", "B"),
     Denominator = c(0, 200),

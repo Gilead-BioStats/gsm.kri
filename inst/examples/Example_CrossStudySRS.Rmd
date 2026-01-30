@@ -1,6 +1,7 @@
 ---
 title: "Cross-Study KRI Report"
 date: "`r format(Sys.time(), '%Y-%m-%d %H:%M:%S %Z')`"
+index: 4
 output:
   html_document:
     toc: false

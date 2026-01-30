@@ -1,0 +1,87 @@
+---
+title: "Eligibility Report"
+author: "[gsm.kri](https://gilead-biostats.github.io/gsm.kri) Example"
+description: "Example eligibility report generated with gsm.kri"
+index: 3
+date: "`r format(Sys.time(), '%B %d, %Y %H:%M:%S %Z')`"
+output:
+  html_document:
+    mathjax: null
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    css: ../report/styles.css
+---
+# Set Up 
+This page provides a sample Eligibility Report generated using `gsm.kri` package. Expand the "Setup" section below to see the code used to generate the report. Or scroll down for the standard report output.
+
+
+<details>
+<summary>Setup</summary>
+
+```{r}
+# Load libraries
+library(dplyr)
+library(purrr)
+library(gsm.core)
+library(gsm.kri)
+library(gsm.mapping)
+library(gsm.qtl)
+
+# Prepare example data
+
+dfResults <- gsm.core::reportingResults_study %>%
+  filter(MetricID %in% "Analysis_qtl0001") %>%
+  mutate(MetricID = "study_eligibility")
+
+dfMetrics <- gsm.core::reportingMetrics_study %>%
+  filter(MetricID %in% "Analysis_qtl0001") %>%
+  mutate(MetricID = "study_eligibility")
+
+dfGroups <- gsm.core::reportingGroups_study
+
+mappings_wf <- gsm.core::MakeWorkflowList(
+  strNames = c("IE", "EXCLUSION", "ENROLL", "PD"),
+  strPath = "workflow/1_mappings",
+  strPackage = "gsm.mapping"
+)
+
+mappings_spec <- gsm.mapping::CombineSpecs(mappings_wf)
+
+lRaw <- map_depth(
+  list(gsm.core::lSource),
+  1,
+  gsm.mapping::Ingest,
+  mappings_spec
+)
+
+mapped <- map_depth(lRaw, 1, ~ gsm.core::RunWorkflows(mappings_wf, .x))
+
+lListings <- list(
+  IE = mapped[[1]]$Mapped_EXCLUSION
+)
+```
+
+</details>
+
+```{r, echo=FALSE, results='asis'}
+## Render example report inline using knit_child
+child_env <- list2env(
+  list(
+    params = list(
+      dfResults = dfResults,
+      dfMetrics = dfMetrics,
+      dfGroups = dfGroups,
+      lListings = lListings
+    )
+  ),
+  parent = environment()
+)
+report_eligibility <- knitr::knit_child(
+  system.file("report", "Report_Eligibility.Rmd", package = "gsm.kri"),
+  envir = child_env,
+  quiet = TRUE
+)
+cat(report_eligibility, sep = "\n")
+```
