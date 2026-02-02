@@ -1,5 +1,4 @@
 testthat::test_that("Widget_CrossStudyRiskScore creates an htmlwidget (#71)", {
-
   dfResults <- data.frame(
     MetricID = "Analysis_srs0001",
     Value = 0.75
@@ -37,7 +36,6 @@ testthat::test_that("Widget_CrossStudyRiskScore creates an htmlwidget (#71)", {
 })
 
 testthat::test_that("Widget_CrossStudyRiskScore errors if Analysis_srs0001 is missing (#71)", {
-
   dfResults <- data.frame(
     MetricID = "OtherMetric",
     Value = 1
@@ -64,7 +62,6 @@ testthat::test_that("Widget_CrossStudyRiskScore errors if Analysis_srs0001 is mi
 })
 
 testthat::test_that("Widget_CrossStudyRiskScore validates inputs (#71)", {
-
   dfResults <- data.frame(
     MetricID = "Analysis_srs0001",
     Value = 0.5
@@ -107,4 +104,3 @@ testthat::test_that("Widget_CrossStudyRiskScore validates inputs (#71)", {
     class = "simpleError"
   )
 })
-
