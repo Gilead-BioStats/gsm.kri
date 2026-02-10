@@ -71,7 +71,7 @@ steps:
       dfTransformed: Analysis_Transformed
       strType: AnalysisType
   - output: Analysis_Flagged
-    name: gsm.core::Flag_NormalApprox
+    name: gsm.core::Flag
     params:
       dfAnalyzed: Analysis_Analyzed
       vThreshold: vThreshold
