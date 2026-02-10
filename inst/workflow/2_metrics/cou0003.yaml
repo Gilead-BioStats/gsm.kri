@@ -37,7 +37,7 @@ steps:
       strThreshold: Flag
       bSort: false
   - output: Temp_NONIMPORTANT
-    name: RunQuery
+    name: gsm.core::RunQuery
     params:
       df: Mapped_PD
       strQuery: "SELECT * FROM df WHERE deemedimportant = 'No'"
@@ -58,7 +58,7 @@ steps:
     params:
       dfInput: Analysis_Input
   - output: Analysis_Analyzed
-    name: Analyze_NormalApprox
+    name: gsm.core::Analyze_NormalApprox
     params:
       dfTransformed: Analysis_Transformed
       strType: AnalysisType

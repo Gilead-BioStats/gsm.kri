@@ -8,30 +8,20 @@ meta:
   Denominator: Number of subjects enrolled
   Model: Identity (Numerator)
   Score: Ineligible Participants
-  ScoreCol: Numerator
   AnalysisType: identity
-  Threshold: "1.5, 2.5"
+  Threshold: "1.5,2.5"
   Flag: "0,1,2"
   RiskScoreWeight: "0,8,16"
   AccrualThreshold: 3
   AccrualMetric: Denominator
+  ScoreCol: Numerator
 spec:
   Mapped_EXCLUSION:
-    subjid:
-      type: character
     subjectid:
-      type: character
-    Source:
-      type: character
-    studyid:
-      type: character
-    invid:
       type: character
     country:
       type: character
-    eligibility_criteria:
-      type: character
-    ie_violation:
+    Source:
       type: character
 steps:
   - output: vThreshold
@@ -71,7 +61,7 @@ steps:
     params:
       dfInput: Analysis_Input
   - output: Analysis_Analyzed
-    name: Analyze_Identity
+    name: gsm.core::Analyze_Identity
     params:
       dfTransformed: Analysis_Transformed
       strValueCol: ScoreCol

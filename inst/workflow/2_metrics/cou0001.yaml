@@ -7,8 +7,8 @@ meta:
   Numerator: Adverse Events
   Denominator: Days on Study
   Model: Normal Approximation
-  AnalysisType: rate
   Score: Adjusted Z-Score
+  AnalysisType: rate
   Threshold: -2,-1,2,3
   Flag: "-2,-1,0,1,2"
   AccrualThreshold: 30
@@ -51,7 +51,7 @@ steps:
     params:
       dfInput: Analysis_Input
   - output: Analysis_Analyzed
-    name: Analyze_NormalApprox
+    name: gsm.core::Analyze_NormalApprox
     params:
       dfTransformed: Analysis_Transformed
       strType: AnalysisType

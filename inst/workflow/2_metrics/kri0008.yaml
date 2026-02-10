@@ -44,7 +44,7 @@ steps:
       strThreshold: Flag
       bSort: false
   - output: Temp_QUERY
-    name: RunQuery
+    name: gsm.core::RunQuery
     params:
       df: Mapped_QUERY
       strQuery: "SELECT * FROM df WHERE querystatus IN ('Open','Answered','Closed')"
@@ -64,7 +64,7 @@ steps:
     params:
       dfInput: Analysis_Input
   - output: Analysis_Analyzed
-    name: Analyze_NormalApprox
+    name: gsm.core::Analyze_NormalApprox
     params:
       dfTransformed: Analysis_Transformed
       strType: AnalysisType
