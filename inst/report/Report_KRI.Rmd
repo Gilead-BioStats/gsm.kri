@@ -153,11 +153,35 @@ vMetrics <- unique(params$dfResults$MetricID)[grep("srs", unique(params$dfResult
 
 for (i in vMetrics) {
   lMetric <- params$dfMetrics %>% dplyr::filter(MetricID == i) %>% as.list
+  lMetricCharts <- params$lCharts[[lMetric$MetricID]]
+
+  lSharedPayloadRegistry <- attr(lMetricCharts, "shared_payload_registry", exact = TRUE)
+  if (!is.null(lSharedPayloadRegistry) && length(lSharedPayloadRegistry) > 0) {
+    strSharedPayloadJSON <- jsonlite::toJSON(
+      lSharedPayloadRegistry,
+      null = "null",
+      na = "string",
+      auto_unbox = TRUE
+    )
+
+    print(
+      htmltools::tags$script(
+        htmltools::HTML(
+          paste0(
+            "window.__gsmKriSharedPayloadRegistry = window.__gsmKriSharedPayloadRegistry || {};",
+            "Object.assign(window.__gsmKriSharedPayloadRegistry, ",
+            strSharedPayloadJSON,
+            ");"
+          )
+        )
+      )
+    )
+  }
 
   print(htmltools::h3(lMetric$Metric))
   
   Report_MetricCharts(
-    lCharts = params$lCharts[[lMetric$MetricID]],
+    lCharts = lMetricCharts,
     strMetricID = lMetric$MetricID
   )
   

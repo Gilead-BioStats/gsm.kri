@@ -36,6 +36,8 @@ Widget_TimeSeries <- function(
   lMetric = NULL,
   dfGroups = NULL,
   vThreshold = NULL,
+  strSharedPayloadKey = NULL,
+  vSharedFields = NULL,
   strOutcome = "Score",
   vOutcomeOptions = c("Score", "Metric", "Numerator"),
   bAddGroupSelect = TRUE,
@@ -48,7 +50,7 @@ Widget_TimeSeries <- function(
   ...
 ) {
   gsm.core::stop_if(
-    cnd = !is.data.frame(dfResults),
+    cnd = !(is.data.frame(dfResults) || (!is.null(strSharedPayloadKey) && is.null(dfResults))),
     "dfResults is not a data.frame"
   )
   gsm.core::stop_if(
@@ -58,6 +60,18 @@ Widget_TimeSeries <- function(
   gsm.core::stop_if(
     cnd = !(is.null(dfGroups) || is.data.frame(dfGroups)),
     "dfGroups is not a data.frame"
+  )
+  gsm.core::stop_if(
+    cnd = !(is.null(strSharedPayloadKey) || is.character(strSharedPayloadKey)),
+    "strSharedPayloadKey is not a character"
+  )
+  gsm.core::stop_if(
+    cnd = !is.null(strSharedPayloadKey) && length(strSharedPayloadKey) != 1,
+    "strSharedPayloadKey must be length 1"
+  )
+  gsm.core::stop_if(
+    cnd = !(is.null(vSharedFields) || is.character(vSharedFields)),
+    "vSharedFields is not a character vector"
   )
   gsm.core::stop_if(
     cnd = length(strOutcome) != 1,
@@ -121,6 +135,15 @@ Widget_TimeSeries <- function(
     strShinyGroupSelectID = strShinyGroupSelectID,
     bDebug = bDebug
   )
+
+  if (!is.null(strSharedPayloadKey)) {
+    lInput$strSharedPayloadKey <- strSharedPayloadKey
+  }
+
+  if (!is.null(vSharedFields)) {
+    vSharedFields <- intersect(vSharedFields, names(lInput))
+    lInput[vSharedFields] <- list(NULL)
+  }
 
   # create widget
   lWidget <- htmlwidgets::createWidget(

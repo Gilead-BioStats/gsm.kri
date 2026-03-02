@@ -37,6 +37,8 @@ Widget_ScatterPlot <- function(
   lMetric = NULL,
   dfGroups = NULL,
   dfBounds = NULL,
+  strSharedPayloadKey = NULL,
+  vSharedFields = NULL,
   bAddGroupSelect = TRUE,
   strShinyGroupSelectID = "GroupID",
   strOutputLabel = paste0(
@@ -47,7 +49,7 @@ Widget_ScatterPlot <- function(
   ...
 ) {
   gsm.core::stop_if(
-    cnd = !is.data.frame(dfResults),
+    cnd = !(is.data.frame(dfResults) || (!is.null(strSharedPayloadKey) && is.null(dfResults))),
     "dfResults is not a data.frame"
   )
   gsm.core::stop_if(
@@ -61,6 +63,18 @@ Widget_ScatterPlot <- function(
   gsm.core::stop_if(
     cnd = !(is.null(dfBounds) || is.data.frame(dfBounds)),
     "dfBounds is not a data.frame"
+  )
+  gsm.core::stop_if(
+    cnd = !(is.null(strSharedPayloadKey) || is.character(strSharedPayloadKey)),
+    "strSharedPayloadKey is not a character"
+  )
+  gsm.core::stop_if(
+    cnd = !is.null(strSharedPayloadKey) && length(strSharedPayloadKey) != 1,
+    "strSharedPayloadKey must be length 1"
+  )
+  gsm.core::stop_if(
+    cnd = !(is.null(vSharedFields) || is.character(vSharedFields)),
+    "vSharedFields is not a character vector"
   )
   gsm.core::stop_if(
     cnd = !is.logical(bAddGroupSelect),
@@ -97,6 +111,15 @@ Widget_ScatterPlot <- function(
     ),
     bDebug = bDebug
   )
+
+  if (!is.null(strSharedPayloadKey)) {
+    lWidgetInput$strSharedPayloadKey <- strSharedPayloadKey
+  }
+
+  if (!is.null(vSharedFields)) {
+    vSharedFields <- intersect(vSharedFields, names(lWidgetInput))
+    lWidgetInput[vSharedFields] <- list(NULL)
+  }
 
   # create widget
   lWidget <- htmlwidgets::createWidget(

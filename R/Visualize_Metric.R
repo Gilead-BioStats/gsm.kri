@@ -118,6 +118,15 @@ Visualize_Metric <- function(
 
   # Cross-sectional Charts using most recent snapshot ------------------------
   lCharts <- list()
+  strMetricKey <- if (!is.null(strMetricID)) {
+    strMetricID
+  } else {
+    unique(dfResults$MetricID)[1]
+  }
+
+  strSharedPayloadKeyLatest <- paste0(strMetricKey, "::latest")
+  strSharedPayloadKeyAll <- paste0(strMetricKey, "::all")
+
   dfResults_latest <- FilterByLatestSnapshotDate(dfResults, strSnapshotDate)
   if (is.null(dfBounds)) {
     dfBounds_latest <- NULL
@@ -131,13 +140,26 @@ Visualize_Metric <- function(
       message = "No data found for specified snapshot date: {strSnapshotDate}. No charts will be generated."
     )
   } else {
-    lCharts$scatterPlot <- do.call(
-      "Widget_ScatterPlot",
+    lSharedPayloadRegistry <- list(
       list(
         dfResults = dfResults_latest,
         lMetric = lMetric,
         dfGroups = dfGroups,
         dfBounds = dfBounds_latest,
+        vThreshold = vThreshold
+      )
+    )
+    names(lSharedPayloadRegistry) <- strSharedPayloadKeyLatest
+
+    lCharts$scatterPlot <- do.call(
+      "Widget_ScatterPlot",
+      list(
+        dfResults = NULL,
+        lMetric = lMetric,
+        dfGroups = dfGroups,
+        dfBounds = NULL,
+        strSharedPayloadKey = strSharedPayloadKeyLatest,
+        vSharedFields = c("dfResults", "lMetric", "dfGroups", "dfBounds"),
         bDebug = bDebug,
         ...
       )
@@ -146,10 +168,12 @@ Visualize_Metric <- function(
     lCharts$barChart <- do.call(
       "Widget_BarChart",
       list(
-        dfResults = dfResults_latest,
+        dfResults = NULL,
         lMetric = lMetric,
         dfGroups = dfGroups,
         vThreshold = vThreshold,
+        strSharedPayloadKey = strSharedPayloadKeyLatest,
+        vSharedFields = c("dfResults", "lMetric", "dfGroups", "vThreshold"),
         bDebug = bDebug,
         ...
       )
@@ -173,17 +197,34 @@ Visualize_Metric <- function(
       cli_detail = "alert_info"
     )
   } else {
+    if (!exists("lSharedPayloadRegistry")) {
+      lSharedPayloadRegistry <- list()
+    }
+
+    lSharedPayloadRegistry[[strSharedPayloadKeyAll]] <- list(
+      dfResults = dfResults,
+      lMetric = lMetric,
+      dfGroups = dfGroups,
+      vThreshold = vThreshold
+    )
+
     lCharts$timeSeries <- do.call(
       "Widget_TimeSeries",
       list(
-        dfResults = dfResults,
+        dfResults = NULL,
         lMetric = lMetric,
         dfGroups = dfGroups,
         vThreshold = vThreshold,
+        strSharedPayloadKey = strSharedPayloadKeyAll,
+        vSharedFields = c("dfResults", "lMetric", "dfGroups", "vThreshold"),
         bDebug = bDebug,
         ...
       )
     )
+  }
+
+  if (exists("lSharedPayloadRegistry")) {
+    base::attr(lCharts, "shared_payload_registry") <- lSharedPayloadRegistry
   }
 
   return(lCharts)
