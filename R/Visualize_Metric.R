@@ -154,12 +154,11 @@ Visualize_Metric <- function(
     lCharts$scatterPlot <- do.call(
       "Widget_ScatterPlot",
       list(
-        dfResults = NULL,
+        dfResults = dfResults_latest,
         lMetric = lMetric,
         dfGroups = dfGroups,
-        dfBounds = NULL,
+        dfBounds = dfBounds_latest,
         strSharedPayloadKey = strSharedPayloadKeyLatest,
-        vSharedFields = c("dfResults", "lMetric", "dfGroups", "dfBounds"),
         bDebug = bDebug,
         ...
       )
@@ -168,12 +167,11 @@ Visualize_Metric <- function(
     lCharts$barChart <- do.call(
       "Widget_BarChart",
       list(
-        dfResults = NULL,
+        dfResults = dfResults_latest,
         lMetric = lMetric,
         dfGroups = dfGroups,
         vThreshold = vThreshold,
         strSharedPayloadKey = strSharedPayloadKeyLatest,
-        vSharedFields = c("dfResults", "lMetric", "dfGroups", "vThreshold"),
         bDebug = bDebug,
         ...
       )
@@ -211,12 +209,11 @@ Visualize_Metric <- function(
     lCharts$timeSeries <- do.call(
       "Widget_TimeSeries",
       list(
-        dfResults = NULL,
+        dfResults = dfResults,
         lMetric = lMetric,
         dfGroups = dfGroups,
         vThreshold = vThreshold,
         strSharedPayloadKey = strSharedPayloadKeyAll,
-        vSharedFields = c("dfResults", "lMetric", "dfGroups", "vThreshold"),
         bDebug = bDebug,
         ...
       )

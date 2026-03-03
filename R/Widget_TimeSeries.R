@@ -8,6 +8,8 @@
 #'
 #' @inheritParams shared-params
 #' @param vThreshold `numeric` Threshold value(s).
+#' @param strSharedPayloadKey `character` Optional key used to resolve shared widget payloads.
+#' @param vSharedFields `character` Optional fields to remove from widget payload and resolve via `strSharedPayloadKey`.
 #' @param strOutcome `character` Outcome variable. Default: 'Score'.
 #' @param bAddGroupSelect `logical` Add a dropdown to highlight sites? Default: `TRUE`.
 #' @param strShinyGroupSelectID `character` Element ID of group select in Shiny context. Default: `'GroupID'`.

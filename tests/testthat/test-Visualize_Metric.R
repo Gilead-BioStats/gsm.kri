@@ -124,6 +124,6 @@ test_that("Visualize_Metric stores shared payload registry and widget references
   expect_true("strSharedPayloadKey" %in% names(charts$scatterPlot$x))
   expect_true("strSharedPayloadKey" %in% names(charts$barChart$x))
 
-  expect_null(jsonlite::fromJSON(charts$scatterPlot$x$dfResults))
-  expect_null(jsonlite::fromJSON(charts$barChart$x$dfResults))
+  expect_true(is.data.frame(jsonlite::fromJSON(charts$scatterPlot$x$dfResults)))
+  expect_true(is.data.frame(jsonlite::fromJSON(charts$barChart$x$dfResults)))
 })

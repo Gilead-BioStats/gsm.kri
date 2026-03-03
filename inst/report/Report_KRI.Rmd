@@ -155,6 +155,33 @@ for (i in vMetrics) {
   lMetric <- params$dfMetrics %>% dplyr::filter(MetricID == i) %>% as.list
   lMetricCharts <- params$lCharts[[lMetric$MetricID]]
 
+  lMetricCharts <- purrr::map(
+    lMetricCharts,
+    ~ {
+      lChart <- .x
+      strSharedPayloadKey <- lChart$x$strSharedPayloadKey
+
+      if (!is.null(strSharedPayloadKey)) {
+        vSharedFields <- intersect(
+          c("dfResults", "lMetric", "dfGroups", "dfBounds", "vThreshold"),
+          names(lChart$x)
+        )
+
+        lChart$x[vSharedFields] <- purrr::map(
+          vSharedFields,
+          ~ jsonlite::toJSON(
+            NULL,
+            null = "null",
+            na = "string",
+            auto_unbox = TRUE
+          )
+        )
+      }
+
+      lChart
+    }
+  )
+
   lSharedPayloadRegistry <- attr(lMetricCharts, "shared_payload_registry", exact = TRUE)
   if (!is.null(lSharedPayloadRegistry) && length(lSharedPayloadRegistry) > 0) {
     strSharedPayloadJSON <- jsonlite::toJSON(
@@ -163,6 +190,8 @@ for (i in vMetrics) {
       na = "string",
       auto_unbox = TRUE
     )
+    strSharedPayloadJSON <- gsub("</", "<\\/", strSharedPayloadJSON, fixed = TRUE)
+    strSharedPayloadJSON <- gsub("<", "\\\\u003c", strSharedPayloadJSON, fixed = TRUE)
 
     print(
       htmltools::tags$script(
