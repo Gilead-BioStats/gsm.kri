@@ -14,6 +14,8 @@ Widget_BarChart(
   lMetric = NULL,
   dfGroups = NULL,
   vThreshold = NULL,
+  strSharedPayloadKey = NULL,
+  vSharedFields = NULL,
   strOutcome = "Score",
   vOutcomeOptions = c("Score", "Metric", "Numerator"),
   bAddGroupSelect = TRUE,
@@ -54,6 +56,15 @@ Widget_BarChart(
 - vThreshold:
 
   \`numeric\` Threshold values.
+
+- strSharedPayloadKey:
+
+  \`character\` Optional key used to resolve shared widget payloads.
+
+- vSharedFields:
+
+  \`character\` Optional fields to remove from widget payload and
+  resolve via \`strSharedPayloadKey\`.
 
 - strOutcome:
 

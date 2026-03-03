@@ -6,7 +6,18 @@ const resolveSharedWidgetInput = function(input) {
     }
 
     window.__gsmKriSharedPayloadRegistry = window.__gsmKriSharedPayloadRegistry || {};
-    const sharedPayload = window.__gsmKriSharedPayloadRegistry[ sharedPayloadKey ] || {};
+    const registry = window.__gsmKriSharedPayloadRegistry;
+
+    if (!Object.prototype.hasOwnProperty.call(registry, sharedPayloadKey)) {
+        console.warn(
+            'resolveSharedWidgetInput: shared payload key "' +
+            sharedPayloadKey +
+            '" not found in window.__gsmKriSharedPayloadRegistry; using original input without shared payload.'
+        );
+        return input;
+    }
+
+    const sharedPayload = registry[ sharedPayloadKey ] || {};
 
     const output = { ...input };
 

@@ -13,6 +13,8 @@ Widget_ScatterPlot(
   lMetric = NULL,
   dfGroups = NULL,
   dfBounds = NULL,
+  strSharedPayloadKey = NULL,
+  vSharedFields = NULL,
   bAddGroupSelect = TRUE,
   strShinyGroupSelectID = "GroupID",
   strOutputLabel = paste0(fontawesome::fa("arrow-up-right-dots", fill = "#337ab7"),
@@ -56,6 +58,15 @@ Widget_ScatterPlot(
   \`dfMetrics\` to \[MakeBounds()\]. Expected columns: \`Threshold\`,
   \`Denominator\`, \`Numerator\`, \`Metric\`, \`MetricID\`, \`StudyID\`,
   \`SnapshotDate\`.
+
+- strSharedPayloadKey:
+
+  \`character\` Optional key used to resolve shared widget payloads.
+
+- vSharedFields:
+
+  \`character\` Optional fields to remove from widget payload and
+  resolve via \`strSharedPayloadKey\`.
 
 - bAddGroupSelect:
 

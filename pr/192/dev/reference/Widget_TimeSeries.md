@@ -14,6 +14,8 @@ Widget_TimeSeries(
   lMetric = NULL,
   dfGroups = NULL,
   vThreshold = NULL,
+  strSharedPayloadKey = NULL,
+  vSharedFields = NULL,
   strOutcome = "Score",
   vOutcomeOptions = c("Score", "Metric", "Numerator"),
   bAddGroupSelect = TRUE,
@@ -54,6 +56,15 @@ Widget_TimeSeries(
 - vThreshold:
 
   \`numeric\` Threshold value(s).
+
+- strSharedPayloadKey:
+
+  \`character\` Optional key used to resolve shared widget payloads.
+
+- vSharedFields:
+
+  \`character\` Optional fields to remove from widget payload and
+  resolve via \`strSharedPayloadKey\`.
 
 - strOutcome:
 

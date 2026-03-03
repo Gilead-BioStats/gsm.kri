@@ -65,6 +65,8 @@ on the x-axis and the numerator on the y-axis.</p>
 <span>  lMetric <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  dfGroups <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  dfBounds <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  strSharedPayloadKey <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  vSharedFields <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  bAddGroupSelect <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  strShinyGroupSelectID <span class="op">=</span> <span class="st">"GroupID"</span>,</span>
 <span>  strOutputLabel <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">fontawesome</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/fontawesome/reference/fa.html" class="external-link">fa</a></span><span class="op">(</span><span class="st">"arrow-up-right-dots"</span>, fill <span class="op">=</span> <span class="st">"#337ab7"</span><span class="op">)</span>,</span>
@@ -107,6 +109,14 @@ and lower-bounds across the full range of sample sizes/total exposure
 values for reporting. Created by passing `dfResults` and `dfMetrics` to
 [MakeBounds()]. Expected columns: `Threshold`, `Denominator`, `Numerator`,
 `Metric`, `MetricID`, `StudyID`, `SnapshotDate`.</p></dd>
+
+
+<dt id="arg-strsharedpayloadkey">strSharedPayloadKey<a class="anchor" aria-label="anchor" href="#arg-strsharedpayloadkey"></a></dt>
+<dd><p>`character` Optional key used to resolve shared widget payloads.</p></dd>
+
+
+<dt id="arg-vsharedfields">vSharedFields<a class="anchor" aria-label="anchor" href="#arg-vsharedfields"></a></dt>
+<dd><p>`character` Optional fields to remove from widget payload and resolve via `strSharedPayloadKey`.</p></dd>
 
 
 <dt id="arg-baddgroupselect">bAddGroupSelect<a class="anchor" aria-label="anchor" href="#arg-baddgroupselect"></a></dt>
