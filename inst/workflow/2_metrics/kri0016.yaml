@@ -1,0 +1,103 @@
+meta:
+  Type: Analysis
+  ID: kri0016
+  GroupLevel: Site
+  Abbreviation: DTH3090
+  Metric: Death Rate Between 30-90 Days
+  Numerator: Deaths Between 30-90 Days
+  Denominator: Subjects
+  Model: Identity
+  Score: Numerator
+  AnalysisType: identity
+  Threshold: "1,2"
+  Flag: "0,1,2"
+  RiskScoreWeight: "0,4,8"
+  AccrualThreshold: 1
+  AccrualMetric: Denominator
+spec:
+  Mapped_Death:
+    subjid:
+      type: character
+    death_dt:
+      type: Date
+  Mapped_ENROLL:
+    subjid:
+      type: character
+    enroll_dt:
+      type: Date
+  Mapped_SUBJ:
+    subjid:
+      type: character
+    invid:
+      type: character
+    timeonstudy:
+      type: integer
+steps:
+  - output: vThreshold
+    name: gsm.core::ParseThreshold
+    params:
+      strThreshold: Threshold
+  - output: vRiskScoreWeight
+    name: gsm.core::ParseThreshold
+    params:
+      strThreshold: RiskScoreWeight
+      bSort: false
+  - output: vFlag
+    name: gsm.core::ParseThreshold
+    params:
+      strThreshold: Flag
+      bSort: false
+  - output: Temp_Death_ENROLL
+    name: dplyr::left_join
+    params:
+      x: Mapped_Death
+      "y": Mapped_ENROLL
+      by:
+        - subjid
+  - output: Temp_Death3090
+    name: RunQuery
+    params:
+      df: Temp_Death_ENROLL
+      strQuery: "SELECT *, DATEDIFF('day', enroll_dt, death_dt) as dthdays FROM df WHERE death_dt IS NOT NULL AND DATEDIFF('day', enroll_dt, death_dt) > 30 AND DATEDIFF('day', enroll_dt, death_dt) <= 90"
+  - output: Analysis_Input
+    name: gsm.core::Input_Rate
+    params:
+      dfSubjects: Mapped_SUBJ
+      dfNumerator: Temp_Death3090
+      dfDenominator: Mapped_SUBJ
+      strSubjectCol: subjid
+      strGroupCol: invid
+      strGroupLevel: GroupLevel
+      strNumeratorMethod: Count
+      strDenominatorMethod: Count
+  - output: Analysis_Transformed
+    name: gsm.core::Transform_Rate
+    params:
+      dfInput: Analysis_Input
+  - output: Analysis_Analyzed
+    name: Analyze_Identity
+    params:
+      dfTransformed: Analysis_Transformed
+      strValueCol: Score
+  - output: Analysis_Flagged
+    name: gsm.core::Flag
+    params:
+      dfAnalyzed: Analysis_Analyzed
+      vThreshold: vThreshold
+      vFlag: vFlag
+      vRiskScoreWeight: vRiskScoreWeight
+      nAccrualThreshold: AccrualThreshold
+      strAccrualMetric: AccrualMetric
+  - output: Analysis_Summary
+    name: gsm.core::Summarize
+    params:
+      dfFlagged: Analysis_Flagged
+  - output: lAnalysis
+    name: list
+    params:
+      ID: ID
+      Analysis_Input: Analysis_Input
+      Analysis_Transformed: Analysis_Transformed
+      Analysis_Analyzed: Analysis_Analyzed
+      Analysis_Flagged: Analysis_Flagged
+      Analysis_Summary: Analysis_Summary
