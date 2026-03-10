@@ -30,8 +30,6 @@ spec:
       type: character
     invid:
       type: character
-    timeonstudy:
-      type: integer
 steps:
   - output: vThreshold
     name: gsm.core::ParseThreshold
