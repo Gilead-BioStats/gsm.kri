@@ -51,7 +51,7 @@ Suggests:
     withr,
     yaml
 Remotes:
-    gsm.core=Gilead-BioStats/gsm.core@main,
+    gsm.core=Gilead-BioStats/gsm.core@fix-130,
     gsm.mapping=Gilead-BioStats/gsm.mapping@main,
     gsm.reporting=Gilead-BioStats/gsm.reporting@main,
     gsm.qtl=Gilead-BioStats/gsm.qtl@main
