@@ -3,7 +3,7 @@ meta:
   ID: kri0015
   GroupLevel: Site
   Abbreviation: DTH30
-  Metric: Death Rate in First 30 Days
+  Metric: Deaths in First 30 Days
   Numerator: Deaths in First 30 Days
   Denominator: Subjects
   Model: Identity
