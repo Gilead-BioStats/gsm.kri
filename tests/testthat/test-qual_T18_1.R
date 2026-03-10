@@ -8,7 +8,7 @@ kri_workflows <- MakeWorkflowList(
 outputs <- map(kri_workflows, ~ map_vec(.x$steps, ~ .x$output))
 
 ## Test Code
-testthat::test_that("Qual: Given appropriate raw participant-level data, Death Rate in First 30 Days assessment can be done using the Identity method (kri0015)", {
+testthat::test_that("Qual: Given appropriate raw participant-level data, Deaths in First 30 Days assessment can be done using the Identity method (#193)", {
   TestAtLogLevel("WARN")
   # default ---------------------------------
   test <- map(kri_workflows, ~ robust_runworkflow(.x, mapped_data)) %>%
@@ -32,22 +32,22 @@ testthat::test_that("Qual: Given appropriate raw participant-level data, Death R
     )
   )
 
-  # verify vThreshold was converted to threshold vector of length 4
+  # verify vThreshold was converted to threshold vector of length 2
   walk(
     test,
-    ~ expect_true(is.vector(.x$vThreshold) & length(.x$vThreshold) == 4)
+    ~ expect_true(is.vector(.x$vThreshold) & length(.x$vThreshold) == 2)
   )
   
-  # verify vRiskScoreWeight was converted to weight vector of length 5
+  # verify vRiskScoreWeight was converted to weight vector of length 3
   walk(
     test,
-    ~ expect_true(is.vector(.x$vRiskScoreWeight) & length(.x$vRiskScoreWeight) == 5)
+    ~ expect_true(is.vector(.x$vRiskScoreWeight) & length(.x$vRiskScoreWeight) == 3)
   )
   
-  # verify vFlag was converted to flag vector of length 5
+  # verify vFlag was converted to flag vector of length 3
   walk(
     test,
-    ~ expect_true(is.vector(.x$vFlag) & length(.x$vFlag) == 5)
+    ~ expect_true(is.vector(.x$vFlag) & length(.x$vFlag) == 3)
   )
 
   # verify Analysis_Input contains required columns for rate analysis

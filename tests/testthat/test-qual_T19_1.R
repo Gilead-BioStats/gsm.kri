@@ -8,7 +8,7 @@ kri_workflows <- MakeWorkflowList(
 outputs <- map(kri_workflows, ~ map_vec(.x$steps, ~ .x$output))
 
 ## Test Code
-testthat::test_that("Qual: Given appropriate raw participant-level data, Death Rate Between 30-90 Days assessment can be done using the Identity method (kri0016)", {
+testthat::test_that("Qual: Given appropriate raw participant-level data, Death Rate Between 30-90 Days assessment can be done using the Identity method (#193)", {
   TestAtLogLevel("WARN")
   # default ---------------------------------
   test <- map(kri_workflows, ~ robust_runworkflow(.x, mapped_data)) %>%
