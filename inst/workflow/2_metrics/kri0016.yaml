@@ -3,7 +3,7 @@ meta:
   ID: kri0016
   GroupLevel: Site
   Abbreviation: DTH3090
-  Metric: Death Rate Between 30-90 Days
+  Metric: Deaths Between 30-90 Days
   Numerator: Deaths Between 30-90 Days
   Denominator: Subjects
   Model: Identity
