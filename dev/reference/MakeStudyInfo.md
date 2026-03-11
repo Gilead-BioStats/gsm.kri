@@ -43,20 +43,21 @@ MakeStudyInfo(gsm.core::reportingGroups)
 #> 6                num_plan_subj               1000                 Num Plan Subj
 #> 7                     act_fpfv         2012-01-02                      Act Fpfv
 #> 8                     est_fpfv         2012-01-07                      Est Fpfv
-#> 9                     est_lplv         2012-07-24                      Est Lplv
-#> 10                    est_lpfv         2012-03-26                      Est Lpfv
-#> 11            therapeutic_area           Virology              Therapeutic Area
-#> 12         protocol_indication         Hematology           Protocol Indication
-#> 13                       phase                 P2                         Phase
-#> 14                     product    Product Name 14                       Product
-#> 15                  SiteTarget                150                   Site Target
-#> 16           ParticipantTarget               1000            Participant Target
-#> 17            ParticipantCount                764         Participants Enrolled
-#> 18                   SiteCount                145                Sites Enrolled
-#> 19       PercentSitesActivated               96.7       Percent Sites Activated
-#> 20              SiteActivation  145 / 150 (96.7%)               Site Activation
-#> 21 PercentParticipantsEnrolled               76.4 Percent Participants Enrolled
-#> 22       ParticipantEnrollment 764 / 1000 (76.4%)        Participant Enrollment
+#> 9                     est_lplv         2012-07-22                      Est Lplv
+#> 10                    est_lpfv         2012-03-24                      Est Lpfv
+#> 11                  db_lock_dt         2012-03-29                    Db Lock Dt
+#> 12            therapeutic_area           Virology              Therapeutic Area
+#> 13         protocol_indication         Hematology           Protocol Indication
+#> 14                       phase                 P2                         Phase
+#> 15                     product    Product Name 14                       Product
+#> 16                  SiteTarget                150                   Site Target
+#> 17           ParticipantTarget               1000            Participant Target
+#> 18            ParticipantCount                769         Participants Enrolled
+#> 19                   SiteCount                143                Sites Enrolled
+#> 20       PercentSitesActivated               95.3       Percent Sites Activated
+#> 21              SiteActivation  143 / 150 (95.3%)               Site Activation
+#> 22 PercentParticipantsEnrolled               76.9 Percent Participants Enrolled
+#> 23       ParticipantEnrollment 769 / 1000 (76.9%)        Participant Enrollment
 MakeStudyInfo(gsm.core::reportingGroups, list(SiteCount = "# Sites"))
 #>                          Param              Value                   Description
 #> 1                      studyid     AA-AA-000-0000                       Studyid
@@ -67,18 +68,19 @@ MakeStudyInfo(gsm.core::reportingGroups, list(SiteCount = "# Sites"))
 #> 6                num_plan_subj               1000                 Num Plan Subj
 #> 7                     act_fpfv         2012-01-02                      Act Fpfv
 #> 8                     est_fpfv         2012-01-07                      Est Fpfv
-#> 9                     est_lplv         2012-07-24                      Est Lplv
-#> 10                    est_lpfv         2012-03-26                      Est Lpfv
-#> 11            therapeutic_area           Virology              Therapeutic Area
-#> 12         protocol_indication         Hematology           Protocol Indication
-#> 13                       phase                 P2                         Phase
-#> 14                     product    Product Name 14                       Product
-#> 15                  SiteTarget                150                   Site Target
-#> 16           ParticipantTarget               1000            Participant Target
-#> 17            ParticipantCount                764             Participant Count
-#> 18                   SiteCount                145                       # Sites
-#> 19       PercentSitesActivated               96.7       Percent Sites Activated
-#> 20              SiteActivation  145 / 150 (96.7%)               Site Activation
-#> 21 PercentParticipantsEnrolled               76.4 Percent Participants Enrolled
-#> 22       ParticipantEnrollment 764 / 1000 (76.4%)        Participant Enrollment
+#> 9                     est_lplv         2012-07-22                      Est Lplv
+#> 10                    est_lpfv         2012-03-24                      Est Lpfv
+#> 11                  db_lock_dt         2012-03-29                    Db Lock Dt
+#> 12            therapeutic_area           Virology              Therapeutic Area
+#> 13         protocol_indication         Hematology           Protocol Indication
+#> 14                       phase                 P2                         Phase
+#> 15                     product    Product Name 14                       Product
+#> 16                  SiteTarget                150                   Site Target
+#> 17           ParticipantTarget               1000            Participant Target
+#> 18            ParticipantCount                769             Participant Count
+#> 19                   SiteCount                143                       # Sites
+#> 20       PercentSitesActivated               95.3       Percent Sites Activated
+#> 21              SiteActivation  143 / 150 (95.3%)               Site Activation
+#> 22 PercentParticipantsEnrolled               76.9 Percent Participants Enrolled
+#> 23       ParticipantEnrollment 769 / 1000 (76.9%)        Participant Enrollment
 ```
