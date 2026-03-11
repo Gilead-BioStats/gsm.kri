@@ -8,8 +8,15 @@
 
 library(testthat)
 library(gsm.kri)
-library(gsm.mapping)
-library(gsm.reporting)
+
+# Check if optional packages are available
+if (requireNamespace("gsm.mapping", quietly = TRUE)) {
+  library(gsm.mapping)
+}
+if (requireNamespace("gsm.reporting", quietly = TRUE)) {
+  library(gsm.reporting)
+}
+
 library(gsm.kri)
 library(dplyr)
 library(purrr)

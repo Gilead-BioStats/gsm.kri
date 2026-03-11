@@ -1,3 +1,5 @@
+testthat::skip_if_not_installed("gsm.reporting")
+
 TestAtLogLevel("WARN")
 ## Test Setup
 kri_workflows <- MakeWorkflowList(

@@ -1,5 +1,10 @@
-library(gsm.mapping)
-library(gsm.reporting)
+# Conditionally load optional packages
+if (requireNamespace("gsm.mapping", quietly = TRUE)) {
+  library(gsm.mapping)
+}
+if (requireNamespace("gsm.reporting", quietly = TRUE)) {
+  library(gsm.reporting)
+}
 
 set.seed(123)
 

@@ -41,9 +41,6 @@ Imports:
     tidyr
 Suggests: 
     fontawesome,
-    gsm.mapping,
-    gsm.reporting,
-    gsm.qtl (>= 1.1.0),
     here,
     knitr,
     lubridate,
@@ -51,10 +48,7 @@ Suggests:
     withr,
     yaml
 Remotes:
-    gsm.core=Gilead-BioStats/gsm.core@fix-130,
-    gsm.mapping=Gilead-BioStats/gsm.mapping@main,
-    gsm.reporting=Gilead-BioStats/gsm.reporting@main,
-    gsm.qtl=Gilead-BioStats/gsm.qtl@main
+    gsm.core=Gilead-BioStats/gsm.core@fix-130
 VignetteBuilder: 
     knitr
 Config/Needs/qualification: Gilead-BioStats/gsm.mapping@dev
