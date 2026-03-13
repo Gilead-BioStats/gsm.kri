@@ -1,10 +1,10 @@
 meta:
   Type: Analysis
-  ID: kri0016
-  GroupLevel: Site
-  Abbreviation: DTH3090
-  Metric: Death Rate Between 30-90 Days
-  Numerator: Deaths Between 30-90 Days
+  ID: cou0015
+  GroupLevel: Country
+  Abbreviation: DTH90
+  Metric: Death Rate in First 90 Days
+  Numerator: Deaths in First 90 Days
   Denominator: Subjects
   Model: Identity
   Score: Numerator
@@ -20,10 +20,10 @@ spec:
       type: character
     death_dt:
       type: Date
-  Mapped_ENROLL:
+  Mapped_Randomization:
     subjid:
       type: character
-    enroll_dt:
+    rgmn_dt:
       type: Date
   Mapped_SUBJ:
     subjid:
@@ -45,23 +45,23 @@ steps:
     params:
       strThreshold: Flag
       bSort: false
-  - output: Temp_Death_ENROLL
+  - output: Temp_Death_Rand
     name: dplyr::left_join
     params:
       x: Mapped_Death
-      "y": Mapped_ENROLL
+      "y": Mapped_Randomization
       by:
         - subjid
-  - output: Temp_Death3090
+  - output: Temp_Death90
     name: RunQuery
     params:
-      df: Temp_Death_ENROLL
-      strQuery: "SELECT *, DATEDIFF('day', enroll_dt, death_dt) as dthdays FROM df WHERE death_dt IS NOT NULL AND DATEDIFF('day', enroll_dt, death_dt) > 30 AND DATEDIFF('day', enroll_dt, death_dt) <= 90"
+      df: Temp_Death_Rand
+      strQuery: "SELECT *, DATEDIFF('day', rgmn_dt, death_dt) as dthdays FROM df WHERE death_dt IS NOT NULL AND DATEDIFF('day', rgmn_dt, death_dt) <= 90"
   - output: Analysis_Input
     name: gsm.core::Input_Rate
     params:
       dfSubjects: Mapped_SUBJ
-      dfNumerator: Temp_Death3090
+      dfNumerator: Temp_Death90
       dfDenominator: Mapped_SUBJ
       strSubjectCol: subjid
       strGroupCol: invid

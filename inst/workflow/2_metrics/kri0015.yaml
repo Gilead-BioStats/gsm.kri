@@ -2,9 +2,9 @@ meta:
   Type: Analysis
   ID: kri0015
   GroupLevel: Site
-  Abbreviation: DTH30
-  Metric: Death Rate in First 30 Days
-  Numerator: Deaths in First 30 Days
+  Abbreviation: DTH90
+  Metric: Death Rate in First 90 Days
+  Numerator: Deaths in First 90 Days
   Denominator: Subjects
   Model: Identity
   Score: Numerator
@@ -14,16 +14,20 @@ meta:
   RiskScoreWeight: "0,4,8"
   AccrualThreshold: 1
   AccrualMetric: Denominator
+  ## need randomization date (ask spencer for this)
+  ## keep number of days from randomization til death
+  ## need treatment related deaths
+  ## combine 30 and 90
 spec:
   Mapped_Death:
     subjid:
       type: character
     death_dt:
       type: Date
-  Mapped_ENROLL:
+  Mapped_Randomization:
     subjid:
       type: character
-    enroll_dt:
+    rgmn_dt:
       type: Date
   Mapped_SUBJ:
     subjid:
@@ -45,23 +49,23 @@ steps:
     params:
       strThreshold: Flag
       bSort: false
-  - output: Temp_Death_ENROLL
+  - output: Temp_Death_Rand
     name: dplyr::left_join
     params:
       x: Mapped_Death
-      "y": Mapped_ENROLL
+      "y": Mapped_Randomization
       by:
         - subjid
-  - output: Temp_Death30
+  - output: Temp_Death90
     name: RunQuery
     params:
-      df: Temp_Death_ENROLL
-      strQuery: "SELECT *, DATEDIFF('day', enroll_dt, death_dt) as dthdays FROM df WHERE death_dt IS NOT NULL AND DATEDIFF('day', enroll_dt, death_dt) <= 30"
+      df: Temp_Death_Rand
+      strQuery: "SELECT *, DATEDIFF('day', rgmn_dt, death_dt) as dthdays FROM df WHERE death_dt IS NOT NULL AND DATEDIFF('day', rgmn_dt, death_dt) <= 90"
   - output: Analysis_Input
     name: gsm.core::Input_Rate
     params:
       dfSubjects: Mapped_SUBJ
-      dfNumerator: Temp_Death30
+      dfNumerator: Temp_Death90
       dfDenominator: Mapped_SUBJ
       strSubjectCol: subjid
       strGroupCol: invid
