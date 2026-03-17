@@ -20,11 +20,8 @@ spec:
       type: character
     death_dt:
       type: Date
-  Mapped_Randomization:
-    subjid:
-      type: character
-    rgmn_dt:
-      type: Date
+    death_days:
+      type: numeric
   Mapped_SUBJ:
     subjid:
       type: character
@@ -45,18 +42,11 @@ steps:
     params:
       strThreshold: Flag
       bSort: false
-  - output: Temp_Death_Rand
-    name: dplyr::left_join
-    params:
-      x: Mapped_Death
-      "y": Mapped_Randomization
-      by:
-        - subjid
   - output: Temp_Death90
     name: RunQuery
     params:
-      df: Temp_Death_Rand
-      strQuery: "SELECT *, DATEDIFF('day', rgmn_dt, death_dt) as dthdays FROM df WHERE death_dt IS NOT NULL AND DATEDIFF('day', rgmn_dt, death_dt) <= 90"
+      df: Mapped_Death
+      strQuery: "SELECT * FROM df WHERE death_days <= 90"
   - output: Analysis_Input
     name: gsm.core::Input_Rate
     params:
