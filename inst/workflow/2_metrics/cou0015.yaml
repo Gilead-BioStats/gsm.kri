@@ -9,9 +9,9 @@ meta:
   Model: Identity
   Score: Numerator
   AnalysisType: identity
-  Threshold: "1,2"
-  Flag: "0,1,2"
-  RiskScoreWeight: "0,4,8"
+  Threshold: "1"
+  Flag: "0,2"
+  RiskScoreWeight: "0,8"
   AccrualThreshold: 1
   AccrualMetric: Denominator
 spec:
