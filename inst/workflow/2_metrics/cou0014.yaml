@@ -3,14 +3,15 @@ meta:
   ID: cou0014
   GroupLevel: Country
   Abbreviation: IE
-  Metric: Inclusion/Exclusion Violation Rate
+  Metric: Ineligibility
   Numerator: Number of subjects ineligible
   Denominator: Number of subjects enrolled
-  Model: Normal Approximation
-  Score: Adjusted Z-Score
-  AnalysisType: binary
-  Threshold: -2, 2
-  Flag: "-1,0,1"
+  Model: Identity (Numerator)
+  Score: Ineligible Participants
+  ScoreCol: Numerator
+  AnalysisType: identity
+  Threshold: "1.5, 2.5"
+  Flag: "0,1,2"
   RiskScoreWeight: "0,8,16"
   AccrualThreshold: 3
   AccrualMetric: Denominator
@@ -70,10 +71,10 @@ steps:
     params:
       dfInput: Analysis_Input
   - output: Analysis_Analyzed
-    name: Analyze_NormalApprox
+    name: Analyze_Identity
     params:
       dfTransformed: Analysis_Transformed
-      strType: AnalysisType
+      strValueCol: ScoreCol
   - output: Analysis_Flagged
     name: gsm.core::Flag
     params:

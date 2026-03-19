@@ -1,7 +1,7 @@
 Type: Package
 Package: gsm.kri
 Title: Good Statistical Monitoring KRIs
-Version: 1.4.0
+Version: 1.4.1
 Authors@R: c(
     person("Jeremy", "Wildfire", , "jwildfire@gmail.com", role = c("aut", "cre")),
     person("Laura", "Maxwell", , "lkmaxwell23@gmail.com", role = "aut"),
@@ -59,7 +59,6 @@ Remotes:
     gsm.qtl=Gilead-BioStats/gsm.qtl@main,
     gsm.reporting=Gilead-BioStats/gsm.reporting@main,
     qcthat=Gilead-BioStats/qcthat@dev
-Config/Needs/qualification: Gilead-BioStats/gsm.mapping@dev
 Config/testthat/edition: 3
 Config/testthat/parallel: false
 Encoding: UTF-8
