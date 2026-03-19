@@ -1440,9 +1440,9 @@
           <tr><td headers="Description" class="gt_row gt_left">Status</td>
       <td headers="Value" class="gt_row gt_right">Active</td></tr>
           <tr><td headers="Description" class="gt_row gt_left">Site Activation</td>
-      <td headers="Value" class="gt_row gt_right">145 / 150 (96.7%)</td></tr>
+      <td headers="Value" class="gt_row gt_right">143 / 150 (95.3%)</td></tr>
           <tr><td headers="Description" class="gt_row gt_left">Participant Enrollment</td>
-      <td headers="Value" class="gt_row gt_right">764 / 1000 (76.4%)</td></tr>
+      <td headers="Value" class="gt_row gt_right">769 / 1000 (76.9%)</td></tr>
         </tbody>
         
       </table>
@@ -1917,9 +1917,11 @@
           <tr><td headers="Description" class="gt_row gt_left">Est Fpfv</td>
       <td headers="Value" class="gt_row gt_right">2012-01-07</td></tr>
           <tr><td headers="Description" class="gt_row gt_left">Est Lplv</td>
-      <td headers="Value" class="gt_row gt_right">2012-07-24</td></tr>
+      <td headers="Value" class="gt_row gt_right">2012-07-22</td></tr>
           <tr><td headers="Description" class="gt_row gt_left">Est Lpfv</td>
-      <td headers="Value" class="gt_row gt_right">2012-03-26</td></tr>
+      <td headers="Value" class="gt_row gt_right">2012-03-24</td></tr>
+          <tr><td headers="Description" class="gt_row gt_left">Db Lock Dt</td>
+      <td headers="Value" class="gt_row gt_right">2012-03-29</td></tr>
           <tr><td headers="Description" class="gt_row gt_left">Therapeutic Area</td>
       <td headers="Value" class="gt_row gt_right">Virology</td></tr>
           <tr><td headers="Description" class="gt_row gt_left">Protocol Indication</td>
@@ -1933,17 +1935,17 @@
           <tr><td headers="Description" class="gt_row gt_left">Participant Target</td>
       <td headers="Value" class="gt_row gt_right">1000</td></tr>
           <tr><td headers="Description" class="gt_row gt_left">Participants Enrolled</td>
-      <td headers="Value" class="gt_row gt_right">764</td></tr>
+      <td headers="Value" class="gt_row gt_right">769</td></tr>
           <tr><td headers="Description" class="gt_row gt_left">Sites Enrolled</td>
-      <td headers="Value" class="gt_row gt_right">145</td></tr>
+      <td headers="Value" class="gt_row gt_right">143</td></tr>
           <tr><td headers="Description" class="gt_row gt_left">Percent Sites Activated</td>
-      <td headers="Value" class="gt_row gt_right">96.7</td></tr>
+      <td headers="Value" class="gt_row gt_right">95.3</td></tr>
           <tr><td headers="Description" class="gt_row gt_left">Site Activation</td>
-      <td headers="Value" class="gt_row gt_right">145 / 150 (96.7%)</td></tr>
+      <td headers="Value" class="gt_row gt_right">143 / 150 (95.3%)</td></tr>
           <tr><td headers="Description" class="gt_row gt_left">Percent Participants Enrolled</td>
-      <td headers="Value" class="gt_row gt_right">76.4</td></tr>
+      <td headers="Value" class="gt_row gt_right">76.9</td></tr>
           <tr><td headers="Description" class="gt_row gt_left">Participant Enrollment</td>
-      <td headers="Value" class="gt_row gt_right">764 / 1000 (76.4%)</td></tr>
+      <td headers="Value" class="gt_row gt_right">769 / 1000 (76.9%)</td></tr>
         </tbody>
         
       </table>
