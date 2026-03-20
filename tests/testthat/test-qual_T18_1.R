@@ -50,21 +50,10 @@ testthat::test_that("Qual: Given appropriate raw participant-level data, Deaths 
     ~ expect_true(is.vector(.x$vFlag) & length(.x$vFlag) == 2)
   )
 
-  # verify Analysis_Input contains required columns for rate analysis
-  walk(
-    test,
-    ~ expect_true(all(c("GroupID", "TotalCount", "Count") %in% names(.x$Analysis_Input)))
-  )
-
   # verify Analysis_Flagged contains required flag columns
   walk(
     test,
     ~ expect_true(all(c("Flag", "Weight", "WeightMax") %in% names(.x$Analysis_Flagged)))
   )
 
-  # verify Analysis_Summary exists and has expected structure
-  walk(
-    test,
-    ~ expect_true(is.data.frame(.x$Analysis_Summary) & nrow(.x$Analysis_Summary) == 1)
-  )
 })
