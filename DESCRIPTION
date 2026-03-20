@@ -46,15 +46,17 @@ Suggests:
     here,
     knitr,
     lubridate,
+    qcthat,
     testthat (>= 3.0.0),
     withr,
     yaml
+VignetteBuilder: 
+    knitr
 Remotes:
     gsm.core=Gilead-BioStats/gsm.core@fix-130,
     gsm.mapping=Gilead-BioStats/gsm.mapping@fix-114,
     gsm.reporting=Gilead-BioStats/gsm.reporting@for-gsm.kri-193
-VignetteBuilder: 
-    knitr
+    qcthat=Gilead-BioStats/qcthat@main
 Config/testthat/edition: 3
 Config/testthat/parallel: false
 Encoding: UTF-8
