@@ -38,9 +38,12 @@ testthat::test_that("Qual: Given summarized analytics data, all appropriate aspe
     }
   ) %>%
     bind_rows() %>%
-    group_by(MetricID) %>%
-    summarize(max_WeightMax = max(WeightMax, na.rm = TRUE), .groups = 'drop') %>%
-    pull(max_WeightMax) %>%
+    filter(!is.na(.data$Weight)) %>%
+    summarize(
+      GlobalDenominator = sum(max(WeightMax), na.rm = TRUE),
+      .by = MetricID
+    ) %>%
+    pull(GlobalDenominator) %>%
     sum()
 
   SRS_by_hand <- map2(
@@ -76,14 +79,14 @@ testthat::test_that("Qual: Given summarized analytics data, all appropriate aspe
 
   SRS_auto <- analyzed[[13]]$Analysis_Summary %>%
     arrange(GroupID)
-  
+
   # Diagnostic output for debugging CI failures
   if(any(unique(SRS_by_hand$Denominator) != unique(SRS_auto$Denominator))) {
     cat("DIAGNOSTIC: Denominator mismatch detected\n")
     cat("SRS_by_hand denominators:", paste(unique(SRS_by_hand$Denominator), collapse=", "), "\n")
     cat("SRS_auto denominators:", paste(unique(SRS_auto$Denominator), collapse=", "), "\n")
   }
-  
+
   # Use tolerance for numerical comparisons and check structure first
   expect_equal(dim(SRS_by_hand), dim(SRS_auto))
   expect_equal(names(SRS_by_hand), names(SRS_auto))
