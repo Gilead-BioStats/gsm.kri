@@ -38,6 +38,7 @@ testthat::test_that("Qual: Given summarized analytics data, all appropriate aspe
     }
   ) %>%
     bind_rows() %>%
+    filter(!is.na(.data$Weight)) %>%
     summarize(
       GlobalDenominator = sum(max(WeightMax), na.rm = TRUE),
       .by = MetricID
