@@ -64,15 +64,25 @@ test_that("Enrolled is an integer", {
 })
 
 test_that("Output is expected object", {
-  zero_flags <- c("0X4629", "0X2532")
-  flags <- c("0X9360", "0X5895", "0X9737")
-
-  reportingResults_filt <- gsm.core::reportingResults %>%
+  # Dynamically select sites based on their flag values instead of hard-coding
+  latest_data <- gsm.core::reportingResults %>%
     FilterByLatestSnapshotDate() %>%
-    dplyr::filter(
-      MetricID == unique(gsm.core::reportingResults$MetricID)[[1]],
-      GroupID %in% c(zero_flags, flags)
-    ) %>%
+    dplyr::filter(MetricID == unique(gsm.core::reportingResults$MetricID)[[1]])
+  
+  # Select sites with zero flags (Flag == 0 or is.na(Flag))
+  zero_flags <- latest_data %>%
+    dplyr::filter(Flag == 0 | is.na(Flag)) %>%
+    dplyr::slice_head(n = 2) %>%
+    dplyr::pull(GroupID)
+  
+  # Select sites with non-zero flags
+  flags <- latest_data %>%
+    dplyr::filter(!is.na(Flag) & Flag != 0) %>%
+    dplyr::slice_head(n = 3) %>%
+    dplyr::pull(GroupID)
+
+  reportingResults_filt <- latest_data %>%
+    dplyr::filter(GroupID %in% c(zero_flags, flags)) %>%
     # Add an NA row back for representation.
     dplyr::bind_rows(
       tibble::tibble(
