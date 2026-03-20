@@ -78,7 +78,7 @@ test_that("Runs with just results with NULL group argument", {
   expect_s3_class(result, "gt_tbl")
 })
 
-test_that("Output is expected object", {
+test_that("Output is expected object (#107)", {
   zero_flags <- c("0X003", "0X039")
   red_flags <- c("0X113", "0X025")
   amber_flags <- c("0X119", "0X046")

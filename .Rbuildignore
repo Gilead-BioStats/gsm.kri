@@ -7,3 +7,6 @@
 ^LICENSE\.md$
 ^[.]?air[.]toml$
 ^\.vscode$
+^\.positai$
+^\.claude$
+^AGENTS\.md$
