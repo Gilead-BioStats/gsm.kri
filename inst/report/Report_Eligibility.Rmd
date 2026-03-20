@@ -46,12 +46,13 @@ date: "Snapshot Date: `r latest_snapshot`"
 
 ## Study Overview
 ```{r, echo=FALSE}
-dfResults_Overview <- ResultsProcessor(dfResults = dfResults, dfMetrics = dfMetrics)
-QTL_Overview(dfResults = dfResults_Overview,
-             dSnapshot = latest_snapshot,
-             strNum = "Ineligible Participants",
-             strDenom = "Total Enrolled", 
-             strQTL = "Current Ineligible Enrolled Rate")
+Eligibility_Overview(
+  dfResults = dfResults,
+  dSnapshot = latest_snapshot,
+  strNum = "Ineligible Participants",
+  strDenom = "Total Enrolled", 
+  strQTL = "Current Ineligible Enrolled Rate"
+)
 ```
 
 ## Time Series Chart
@@ -75,7 +76,20 @@ eligibility_groupBar(df = lListings[[1]], varGroupID = invid, strGroupLabel = "S
 
 ### Site (by %)
 ```{r, echo = FALSE, results = 'asis', fig.height=4}
-eligibility_groupBar(df = lListings[[1]], varGroupID = invid, strGroupLabel = "Site", bPercentage = TRUE)
+if ("bPercentage" %in% names(formals(eligibility_groupBar))) {
+  eligibility_groupBar(
+    df = lListings[[1]],
+    varGroupID = invid,
+    strGroupLabel = "Site",
+    bPercentage = TRUE
+  )
+} else {
+  eligibility_groupBar(
+    df = lListings[[1]],
+    varGroupID = invid,
+    strGroupLabel = "Site"
+  )
+}
 ```
 
 ### Country
