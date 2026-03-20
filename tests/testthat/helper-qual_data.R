@@ -75,7 +75,7 @@ GetDefaultKRIPath <- function() {
 }
 
 ## Get Mapped data
-domains <- gsub("Raw_", "", names(lSource))
+domains <- c(gsub("Raw_", "", names(lSource)), "COUNTRY", "EXCLUSION")
 mappings_wf <- MakeWorkflowList(
   strNames = domains,
   strPackage= "gsm.mapping"
@@ -216,7 +216,7 @@ get_data <- function(lWorkflow, data) {
   maps_needed <- names(mapping_output[which(
     mapping_output %in% maps_needed_index
   )])
-  
+
   # Return subset of cached mapped_data instead of re-running workflows
   mapped_needed_data <- mapped_data[intersect(names(mapped_data), c(maps_needed_index, names(data)))]
   return(mapped_needed_data)
