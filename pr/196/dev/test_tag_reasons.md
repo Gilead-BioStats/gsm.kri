@@ -1,0 +1,36 @@
+# Test Tagging Reasons
+
+# Test Tagging Reasons
+
+# Test–Issue Tag Reasoning Log
+
+## test-Report_FlagChange.R
+
+| Test                                                   | Issue                                                        | Reason                                                                                                                                                                                                      |
+|--------------------------------------------------------|--------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| returns NULL if required columns are missing           | [\#75](https://github.com/Gilead-BioStats/gsm.kri/issues/75) | Issue \#75 describes implementing `Report_FlagChange` to render flag changes when delta columns are present; this test verifies the function returns NULL and messages when those delta columns are absent. |
+| GroupLabel and MetricLabel default to IDs when missing | [\#75](https://github.com/Gilead-BioStats/gsm.kri/issues/75) | Issue \#75 specifies the flag-change feature; this test checks fallback label behavior within that feature.                                                                                                 |
+| No output if only change is NA -\> 0 (green)           | [\#75](https://github.com/Gilead-BioStats/gsm.kri/issues/75) | Issue \#75 describes rendering a list of changed flags; this test verifies that NA → 0 (green) transitions are suppressed from output.                                                                      |
+| HTML output is generated for valid changed flags       | [\#75](https://github.com/Gilead-BioStats/gsm.kri/issues/75) | Issue \#75 specifies generating HTML output for flag changes from the previous snapshot; this test checks the HTML is produced correctly.                                                                   |
+
+## test-Report_MetricCharts.R
+
+| Test                              | Issue                                                        | Reason                                                                                                                                         |
+|-----------------------------------|--------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| Handles all supported chart types | [\#53](https://github.com/Gilead-BioStats/gsm.kri/issues/53) | Issue \#53 describes generalizing `Report_MetricCharts` to render any set of charts; this test verifies all standard chart types are rendered. |
+| Handles some missing chart types  | [\#53](https://github.com/Gilead-BioStats/gsm.kri/issues/53) | Issue \#53 specifically says charts “may or may not include the default list”; this test exercises partial chart sets.                         |
+| Handles empty input               | [\#53](https://github.com/Gilead-BioStats/gsm.kri/issues/53) | Issue \#53 requires rendering any set of charts, including an empty set; this test covers the empty-list edge case.                            |
+| Output formatting and no errors   | [\#53](https://github.com/Gilead-BioStats/gsm.kri/issues/53) | Issue \#53 generalizes `Report_MetricCharts`; this test confirms the output structure is correct for a mixed chart list.                       |
+| Handles missing output_label      | [\#53](https://github.com/Gilead-BioStats/gsm.kri/issues/53) | Issue \#53 involves chart metadata (labels/names); this test verifies graceful handling when the `output_label` attribute is absent.           |
+
+## test-Report_MetricTable.R
+
+| Test                      | Issue                                                          | Reason                                                                                                                                                                                           |
+|---------------------------|----------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Output is expected object | [\#107](https://github.com/Gilead-BioStats/gsm.kri/issues/107) | Issue \#107 reports that the metric table isn’t always assigned its label attribute; this test explicitly asserts `output_label` exists and contains “Metric Table”, directly verifying the fix. |
+
+## test-Widget_GroupOverview.R
+
+| Test                                                                             | Issue                                                          | Reason                                                                                                                                                               |
+|----------------------------------------------------------------------------------|----------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Widget_GroupOverview uses correct Group or errors out when strGroupLevel is NULL | [\#125](https://github.com/Gilead-BioStats/gsm.kri/issues/125) | Issue \#125 reports that `strGroupLevel` is no longer propagated to the widget; this test directly verifies the `strGroupLevel` value appears in `widget$x$lConfig`. |
