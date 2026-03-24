@@ -35,19 +35,19 @@ testthat::test_that("Qual: Given appropriate raw participant-level data, Deaths 
   # verify vThreshold was converted to threshold vector of length 2
   walk(
     test,
-    ~ expect_true(is.vector(.x$vThreshold) & length(.x$vThreshold) == 1)
+    ~ expect_true(is.vector(.x$vThreshold) & length(.x$vThreshold) == 2)
   )
 
   # verify vRiskScoreWeight was converted to weight vector of length 3
   walk(
     test,
-    ~ expect_true(is.vector(.x$vRiskScoreWeight) & length(.x$vRiskScoreWeight) == 2)
+    ~ expect_true(is.vector(.x$vRiskScoreWeight) & length(.x$vRiskScoreWeight) == 3)
   )
 
   # verify vFlag was converted to flag vector of length 3
   walk(
     test,
-    ~ expect_true(is.vector(.x$vFlag) & length(.x$vFlag) == 2)
+    ~ expect_true(is.vector(.x$vFlag) & length(.x$vFlag) == 3)
   )
 
   # verify Analysis_Flagged contains required flag columns
