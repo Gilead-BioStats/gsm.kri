@@ -5,7 +5,7 @@ meta:
   Abbreviation: DTH90
   Metric: Death Rate in First 90 Days
   Numerator: Deaths in First 90 Days
-  Denominator: Subjects
+  Denominator: Enrolled Subjects
   Model: Identity
   Score: Numerator
   AnalysisType: identity
