@@ -20,7 +20,7 @@ spec:
       type: character
     death_dt:
       type: Date
-    death_days:
+    death_dy:
       type: numeric
   Mapped_SUBJ:
     subjid:
@@ -46,7 +46,7 @@ steps:
     name: RunQuery
     params:
       df: Mapped_Death
-      strQuery: "SELECT * FROM df WHERE death_days <= 90"
+      strQuery: "SELECT * FROM df WHERE death_dy <= 90"
   - output: Analysis_Input
     name: gsm.core::Input_Rate
     params:
