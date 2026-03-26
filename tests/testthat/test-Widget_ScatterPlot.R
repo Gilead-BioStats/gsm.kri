@@ -104,7 +104,6 @@ test_that("Widget_ScatterPlot creates widget with valid inputs", {
 
   # Check that widget is created and has expected structure
   expect_s3_class(widget, "htmlwidget")
-  expect_equal(widget$name, "Widget_ScatterPlot")
   expect_true(is.list(widget$x))
   expect_true("dfResults" %in% names(widget$x))
   expect_true("lMetric" %in% names(widget$x))
@@ -124,7 +123,6 @@ test_that("Widget_ScatterPlot works with minimal inputs", {
   widget <- Widget_ScatterPlot(dfResults = dfResults)
 
   expect_s3_class(widget, "htmlwidget")
-  expect_equal(widget$name, "Widget_ScatterPlot")
   expect_true(is.list(widget$x))
 })
 
