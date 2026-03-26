@@ -25,7 +25,7 @@ Imports:
     DT,
     ggplot2,
     glue,
-    gsm.core (>= 1.1.7),
+    gsm.core (>= 1.1.8),
     gt,
     htmltools,
     htmlwidgets,
@@ -54,10 +54,10 @@ Suggests:
 VignetteBuilder: 
     knitr
 Remotes:
-    gsm.core=Gilead-BioStats/gsm.core@main,
-    gsm.mapping=Gilead-BioStats/gsm.mapping@main,
-    gsm.qtl=Gilead-BioStats/gsm.qtl@main,
-    gsm.reporting=Gilead-BioStats/gsm.reporting@main,
+    gsm.core=Gilead-BioStats/gsm.core@dev,
+    gsm.mapping=Gilead-BioStats/gsm.mapping@dev,
+    gsm.qtl=Gilead-BioStats/gsm.qtl@dev,
+    gsm.reporting=Gilead-BioStats/gsm.reporting@for-gsm.kri-193,
     qcthat=Gilead-BioStats/qcthat@main
 Config/testthat/edition: 3
 Config/testthat/parallel: false

@@ -37,7 +37,6 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::pkgdown, local::., Gilead-BioStats/gsm.utils@main
-          needs: website
 
       - name: Render examples
         shell: Rscript {0}

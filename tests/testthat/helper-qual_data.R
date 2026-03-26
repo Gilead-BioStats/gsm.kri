@@ -1,5 +1,10 @@
-library(gsm.mapping)
-library(gsm.reporting)
+# Conditionally load optional packages
+if (requireNamespace("gsm.mapping", quietly = TRUE)) {
+  library(gsm.mapping)
+}
+if (requireNamespace("gsm.reporting", quietly = TRUE)) {
+  library(gsm.reporting)
+}
 
 # PERFORMANCE IMPROVEMENT: This file now uses cached test data to speed up load times.
 # The helper-cache.R file contains functions that cache the mapped_data and mapping_output
@@ -48,7 +53,11 @@ lData <- list(
     rename(visit = foldername),
   Raw_IE = lSource$Raw_IE,
   Raw_VISIT = lSource$Raw_VISIT %>%
-    rename(visit = foldername)
+    rename(visit = foldername),
+  Raw_OverallResponse = lSource$Raw_OverallResponse %>%
+    rename(response_folder = foldername),
+  Raw_Death = lSource$Raw_Death,
+  Raw_Randomization = lSource$Raw_Randomization
 )
 
 ## Data with missing values (15% NA's)
