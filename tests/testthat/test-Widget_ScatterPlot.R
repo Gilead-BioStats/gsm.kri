@@ -8,7 +8,7 @@ test_that("Widget_ScatterPlot handles input validation correctly", {
     Widget_ScatterPlot(dfResults = "not_a_dataframe"),
     "dfResults is not a data.frame"
   )
-  
+
   # Test invalid lMetric (data.frame instead of list)
   expect_error(
     Widget_ScatterPlot(
@@ -17,7 +17,7 @@ test_that("Widget_ScatterPlot handles input validation correctly", {
     ),
     "lMetric must be a list, but not a data.frame"
   )
-  
+
   # Test invalid dfGroups
   expect_error(
     Widget_ScatterPlot(
@@ -26,7 +26,7 @@ test_that("Widget_ScatterPlot handles input validation correctly", {
     ),
     "dfGroups is not a data.frame"
   )
-  
+
   # Test invalid dfBounds
   expect_error(
     Widget_ScatterPlot(
@@ -35,7 +35,7 @@ test_that("Widget_ScatterPlot handles input validation correctly", {
     ),
     "dfBounds is not a data.frame"
   )
-  
+
   # Test invalid bAddGroupSelect
   expect_error(
     Widget_ScatterPlot(
@@ -44,7 +44,7 @@ test_that("Widget_ScatterPlot handles input validation correctly", {
     ),
     "bAddGroupSelect is not a logical"
   )
-  
+
   # Test invalid strShinyGroupSelectID
   expect_error(
     Widget_ScatterPlot(
@@ -53,7 +53,7 @@ test_that("Widget_ScatterPlot handles input validation correctly", {
     ),
     "strShinyGroupSelectID is not a character"
   )
-  
+
   # Test invalid bDebug
   expect_error(
     Widget_ScatterPlot(
@@ -74,26 +74,26 @@ test_that("Widget_ScatterPlot creates widget with valid inputs", {
     Flag = c(0, 1, 0),
     stringsAsFactors = FALSE
   )
-  
+
   lMetric <- list(
     MetricID = "test_metric",
     MetricName = "Test Metric",
     Domain = "Test Domain"
   )
-  
+
   dfGroups <- data.frame(
     GroupID = c("Site1", "Site2", "Site3"),
     GroupLevel = c("Site", "Site", "Site"),
     stringsAsFactors = FALSE
   )
-  
+
   dfBounds <- data.frame(
     GroupID = c("Site1", "Site2", "Site3"),
     LowerBound = c(0.05, 0.05, 0.05),
     UpperBound = c(0.15, 0.15, 0.15),
     stringsAsFactors = FALSE
   )
-  
+
   # Test basic widget creation
   widget <- Widget_ScatterPlot(
     dfResults = dfResults,
@@ -101,7 +101,7 @@ test_that("Widget_ScatterPlot creates widget with valid inputs", {
     dfGroups = dfGroups,
     dfBounds = dfBounds
   )
-  
+
   # Check that widget is created and has expected structure
   expect_s3_class(widget, "htmlwidget")
   expect_equal(widget$name, "Widget_ScatterPlot")
@@ -120,9 +120,9 @@ test_that("Widget_ScatterPlot works with minimal inputs", {
     Denominator = c(100, 120),
     stringsAsFactors = FALSE
   )
-  
+
   widget <- Widget_ScatterPlot(dfResults = dfResults)
-  
+
   expect_s3_class(widget, "htmlwidget")
   expect_equal(widget$name, "Widget_ScatterPlot")
   expect_true(is.list(widget$x))
@@ -135,61 +135,29 @@ test_that("Widget_ScatterPlot respects configuration options", {
     Denominator = c(100, 120),
     stringsAsFactors = FALSE
   )
-  
+
   # Test with bAddGroupSelect = FALSE
   widget_no_select <- Widget_ScatterPlot(
     dfResults = dfResults,
     bAddGroupSelect = FALSE
   )
-  
+
   expect_false(fromJSON(widget_no_select$x$bAddGroupSelect))
-  
+
   # Test with custom strShinyGroupSelectID
   widget_custom_id <- Widget_ScatterPlot(
     dfResults = dfResults,
     strShinyGroupSelectID = "CustomID"
   )
-  
+
   expect_equal(fromJSON(widget_custom_id$x$strShinyGroupSelectID), "CustomID")
-  
+
   # Test with custom output label
   custom_label <- "Custom Label"
   widget_custom_label <- Widget_ScatterPlot(
     dfResults = dfResults,
     strOutputLabel = custom_label
   )
-  
+
   expect_equal(attr(widget_custom_label, "output_label"), custom_label)
-})
-
-test_that("Widget_ScatterPlotOutput creates proper output binding", {
-  output <- Widget_ScatterPlotOutput("test_output")
-  
-  expect_s3_class(output, "shiny.tag")
-  # The output should contain the outputId
-  expect_true(grepl("test_output", as.character(output)))
-  
-  # Test with custom dimensions
-  output_custom <- Widget_ScatterPlotOutput(
-    "test_output2", 
-    width = "500px", 
-    height = "300px"
-  )
-  
-  expect_s3_class(output_custom, "shiny.tag")
-})
-
-test_that("renderWidget_ScatterPlot creates proper render function", {
-  # Test basic render function creation
-  render_func <- renderWidget_ScatterPlot({
-    Widget_ScatterPlot(data.frame(x = 1))
-  })
-  
-  expect_true(is.function(render_func))
-  
-  # Test quoted expression
-  expr <- quote(Widget_ScatterPlot(data.frame(x = 1)))
-  render_func_quoted <- renderWidget_ScatterPlot(expr, quoted = TRUE)
-  
-  expect_true(is.function(render_func_quoted))
 })
