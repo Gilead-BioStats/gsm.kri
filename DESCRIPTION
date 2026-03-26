@@ -42,6 +42,7 @@ Imports:
 Suggests: 
     fontawesome,
     gsm.mapping,
+    gsm.qtl (>= 1.0.0)
     gsm.reporting,
     here,
     knitr,
@@ -55,6 +56,7 @@ VignetteBuilder:
 Remotes:
     gsm.core=Gilead-BioStats/gsm.core@fix-130,
     gsm.mapping=Gilead-BioStats/gsm.mapping@fix-114,
+    gsm.qtl=Gilead-BioStats/gsm.qtl@for-gsm.kri-193,
     gsm.reporting=Gilead-BioStats/gsm.reporting@for-gsm.kri-193,
     qcthat=Gilead-BioStats/qcthat@main
 Config/testthat/edition: 3
