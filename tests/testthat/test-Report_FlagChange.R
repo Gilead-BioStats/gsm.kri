@@ -18,20 +18,20 @@ dfResults <- data.frame(
   Metric_Previous = 0.6
 )
 
-test_that("returns NULL if required columns are missing", {
+test_that("returns NULL if required columns are missing (#75)", {
   df <- gsm.core::reportingResults
   output <- capture.output(result <- Report_FlagChange(df))
   expect_null(result)
   expect_true(any(grepl("Missing delta columns", output)))
 })
 
-test_that("GroupLabel and MetricLabel default to IDs when missing", {
+test_that("GroupLabel and MetricLabel default to IDs when missing (#75)", {
   output <- capture.output(Report_FlagChange(dfResults))
   expect_true(any(grepl("G1", output))) # GroupLabel fallback
   expect_true(any(grepl("M1", output))) # MetricLabel fallback
 })
 
-test_that("No output if only change is NA -> 0 (green)", {
+test_that("No output if only change is NA -> 0 (green) (#75)", {
   dfResults <- data.frame(
     StudyID = "S1",
     GroupLevel = "Site",
@@ -58,7 +58,7 @@ test_that("No output if only change is NA -> 0 (green)", {
   expect_true(any(grepl("Found 0 Risk Signals", output)))
 })
 
-test_that("HTML output is generated for valid changed flags", {
+test_that("HTML output is generated for valid changed flags (#75)", {
   output <- capture.output(Report_FlagChange(dfResults))
   expect_true(any(grepl("Flags Changes", output)))
   expect_true(any(grepl("G1", output)))
