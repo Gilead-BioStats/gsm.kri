@@ -3,7 +3,7 @@ meta:
   ID: kri0015
   GroupLevel: Site
   Abbreviation: DTH90
-  Metric: Death Rate in First 90 Days
+  Metric: Premature Death Rate
   Numerator: Deaths in First 90 Days
   Denominator: Enrolled Subjects
   Model: Identity
@@ -18,8 +18,6 @@ spec:
   Mapped_Death:
     subjid:
       type: character
-    death_dt:
-      type: Date
     death_dy:
       type: numeric
   Mapped_SUBJ:
