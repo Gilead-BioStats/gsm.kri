@@ -3,7 +3,7 @@ meta:
   ID: cou0015
   GroupLevel: Country
   Abbreviation: DTH90
-  Metric: Death Rate in First 90 Days
+  Metric: Premature Death Rate
   Numerator: Deaths in First 90 Days
   Denominator: Enrolled Subjects
   Model: Identity
@@ -18,14 +18,12 @@ spec:
   Mapped_Death:
     subjid:
       type: character
-    death_dt:
-      type: Date
     death_dy:
       type: numeric
   Mapped_SUBJ:
     subjid:
       type: character
-    invid:
+    country:
       type: character
 steps:
   - output: vThreshold
@@ -54,7 +52,7 @@ steps:
       dfNumerator: Temp_Death90
       dfDenominator: Mapped_SUBJ
       strSubjectCol: subjid
-      strGroupCol: invid
+      strGroupCol: country
       strGroupLevel: GroupLevel
       strNumeratorMethod: Count
       strDenominatorMethod: Count
