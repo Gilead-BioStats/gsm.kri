@@ -56,7 +56,7 @@ VignetteBuilder:
 Remotes:
     gsm.core=Gilead-BioStats/gsm.core@dev,
     gsm.mapping=Gilead-BioStats/gsm.mapping@dev,
-    gsm.qtl=Gilead-BioStats/gsm.qtl@for-gsm.kri-193,
+    gsm.qtl=Gilead-BioStats/gsm.qtl@dev,
     gsm.reporting=Gilead-BioStats/gsm.reporting@for-gsm.kri-193,
     qcthat=Gilead-BioStats/qcthat@main
 Config/testthat/edition: 3
