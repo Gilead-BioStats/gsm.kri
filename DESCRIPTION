@@ -42,7 +42,7 @@ Imports:
 Suggests: 
     fontawesome,
     gsm.mapping,
-    gsm.qtl (>= 1.0.0),
+    gsm.qtl (>= 1.1.0),
     gsm.reporting,
     here,
     knitr,
