@@ -4,6 +4,8 @@ HTMLWidgets.widget({
     factory: function(el, width, height) {
         return {
             renderValue: function(input) {
+                input = resolveSharedWidgetInput(input);
+
                 if (input.bDebug)
                     console.log(input);
 

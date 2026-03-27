@@ -34,7 +34,7 @@ steps:
     params:
       strThreshold: Flag
   - output: Temp_CHANGED
-    name: RunQuery
+    name: gsm.core::RunQuery
     params:
       df: Mapped_DATACHG
       strQuery: "SELECT * FROM df WHERE n_changes > 0"
@@ -54,12 +54,12 @@ steps:
     params:
       dfInput: Analysis_Input
   - output: Analysis_Analyzed
-    name: Analyze_NormalApprox
+    name: gsm.core::Analyze_NormalApprox
     params:
       dfTransformed: Analysis_Transformed
       strType: AnalysisType
   - output: Analysis_Flagged
-    name: gsm.core::Flag_NormalApprox
+    name: gsm.core::Flag
     params:
       dfAnalyzed: Analysis_Analyzed
       vThreshold: vThreshold

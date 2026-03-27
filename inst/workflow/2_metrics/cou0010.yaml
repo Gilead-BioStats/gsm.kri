@@ -34,7 +34,7 @@ steps:
     params:
       strThreshold: Flag
   - output: Temp_LAG
-    name: RunQuery
+    name: gsm.core::RunQuery
     params:
       df: Mapped_DATAENT
       strQuery: "SELECT * FROM df WHERE data_entry_lag > 10"
@@ -54,12 +54,12 @@ steps:
     params:
       dfInput: Analysis_Input
   - output: Analysis_Analyzed
-    name: Analyze_NormalApprox
+    name: gsm.core::Analyze_NormalApprox
     params:
       dfTransformed: Analysis_Transformed
       strType: AnalysisType
   - output: Analysis_Flagged
-    name: gsm.core::Flag_NormalApprox
+    name: gsm.core::Flag
     params:
       dfAnalyzed: Analysis_Analyzed
       vThreshold: vThreshold

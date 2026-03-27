@@ -24,6 +24,10 @@ dependencies:
     version: 1.0.0
     src: 'htmlwidgets/lib'
     script: 'getCountries.js'
+  - name: resolveSharedWidgetInput
+    version: 1.0.0
+    src: 'htmlwidgets/lib'
+    script: 'resolveSharedWidgetInput.js'
   - name: addOutcomeSelect
     version: 1.0.0
     src: 'htmlwidgets/lib'

@@ -106,3 +106,24 @@ test_that("Visualize_Metric works with bad dfBounds", {
     "Parsed -2,-1,2,3 to numeric vector"
   )
 })
+
+test_that("Visualize_Metric stores shared payload registry and widget references", {
+  charts <- Visualize_Metric(
+    gsm.core::reportingResults,
+    gsm.core::reportingMetrics,
+    gsm.core::reportingGroups,
+    gsm.core::reportingBounds,
+    strMetricID = "Analysis_kri0001"
+  )
+
+  lSharedPayloadRegistry <- attr(charts, "shared_payload_registry", exact = TRUE)
+
+  expect_true(is.list(lSharedPayloadRegistry))
+  expect_true(length(lSharedPayloadRegistry) >= 1)
+
+  expect_true("strSharedPayloadKey" %in% names(charts$scatterPlot$x))
+  expect_true("strSharedPayloadKey" %in% names(charts$barChart$x))
+
+  expect_true(is.data.frame(jsonlite::fromJSON(charts$scatterPlot$x$dfResults)))
+  expect_true(is.data.frame(jsonlite::fromJSON(charts$barChart$x$dfResults)))
+})

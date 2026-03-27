@@ -9,6 +9,8 @@ Widget_BarChart(
   lMetric = NULL,
   dfGroups = NULL,
   vThreshold = NULL,
+  strSharedPayloadKey = NULL,
+  vSharedFields = NULL,
   strOutcome = "Score",
   vOutcomeOptions = c("Score", "Metric", "Numerator"),
   bAddGroupSelect = TRUE,
@@ -38,6 +40,10 @@ passing CTMS site and study data to [MakeLongMeta()]. Expected columns:
 `GroupID`, `GroupLevel`, `Param`, `Value`.}
 
 \item{vThreshold}{`numeric` Threshold values.}
+
+\item{strSharedPayloadKey}{`character` Optional key used to resolve shared widget payloads.}
+
+\item{vSharedFields}{`character` Optional fields to remove from widget payload and resolve via `strSharedPayloadKey`.}
 
 \item{strOutcome}{`character` Outcome variable. Default: 'Score'.}
 

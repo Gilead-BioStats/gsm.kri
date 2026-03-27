@@ -10,6 +10,7 @@ meta:
   Score: Adjusted Z-Score
   AnalysisType: rate
   Threshold: -2,-1,2,3
+  Flag: "-2,-1,0,1,2"
   AccrualThreshold: 30
   AccrualMetric: Denominator
 spec:
@@ -30,8 +31,13 @@ steps:
     name: gsm.core::ParseThreshold
     params:
       strThreshold: Threshold
+  - output: vFlag
+    name: gsm.core::ParseThreshold
+    params:
+      strThreshold: Flag
+      bSort: false
   - output: Temp_SAE
-    name: RunQuery
+    name: gsm.core::RunQuery
     params:
       df: Mapped_AE
       strQuery: "SELECT * FROM df WHERE aeser = 'Y'"
@@ -52,15 +58,16 @@ steps:
     params:
       dfInput: Analysis_Input
   - output: Analysis_Analyzed
-    name: Analyze_NormalApprox
+    name: gsm.core::Analyze_NormalApprox
     params:
       dfTransformed: Analysis_Transformed
       strType: AnalysisType
   - output: Analysis_Flagged
-    name: gsm.core::Flag_NormalApprox
+    name: gsm.core::Flag
     params:
       dfAnalyzed: Analysis_Analyzed
       vThreshold: vThreshold
+      vFlag: vFlag
       nAccrualThreshold: AccrualThreshold
       strAccrualMetric: AccrualMetric
   - output: Analysis_Summary

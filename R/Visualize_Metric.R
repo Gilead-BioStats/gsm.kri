@@ -118,6 +118,15 @@ Visualize_Metric <- function(
 
   # Cross-sectional Charts using most recent snapshot ------------------------
   lCharts <- list()
+  strMetricKey <- if (!is.null(strMetricID)) {
+    strMetricID
+  } else {
+    unique(dfResults$MetricID)[1]
+  }
+
+  strSharedPayloadKeyLatest <- paste0(strMetricKey, "::latest")
+  strSharedPayloadKeyAll <- paste0(strMetricKey, "::all")
+
   dfResults_latest <- FilterByLatestSnapshotDate(dfResults, strSnapshotDate)
   if (is.null(dfBounds)) {
     dfBounds_latest <- NULL
@@ -131,6 +140,17 @@ Visualize_Metric <- function(
       message = "No data found for specified snapshot date: {strSnapshotDate}. No charts will be generated."
     )
   } else {
+    lSharedPayloadRegistry <- list(
+      list(
+        dfResults = dfResults_latest,
+        lMetric = lMetric,
+        dfGroups = dfGroups,
+        dfBounds = dfBounds_latest,
+        vThreshold = vThreshold
+      )
+    )
+    names(lSharedPayloadRegistry) <- strSharedPayloadKeyLatest
+
     lCharts$scatterPlot <- do.call(
       "Widget_ScatterPlot",
       list(
@@ -138,6 +158,7 @@ Visualize_Metric <- function(
         lMetric = lMetric,
         dfGroups = dfGroups,
         dfBounds = dfBounds_latest,
+        strSharedPayloadKey = strSharedPayloadKeyLatest,
         bDebug = bDebug,
         ...
       )
@@ -150,6 +171,7 @@ Visualize_Metric <- function(
         lMetric = lMetric,
         dfGroups = dfGroups,
         vThreshold = vThreshold,
+        strSharedPayloadKey = strSharedPayloadKeyLatest,
         bDebug = bDebug,
         ...
       )
@@ -173,6 +195,17 @@ Visualize_Metric <- function(
       cli_detail = "alert_info"
     )
   } else {
+    if (!exists("lSharedPayloadRegistry")) {
+      lSharedPayloadRegistry <- list()
+    }
+
+    lSharedPayloadRegistry[[strSharedPayloadKeyAll]] <- list(
+      dfResults = dfResults,
+      lMetric = lMetric,
+      dfGroups = dfGroups,
+      vThreshold = vThreshold
+    )
+
     lCharts$timeSeries <- do.call(
       "Widget_TimeSeries",
       list(
@@ -180,10 +213,15 @@ Visualize_Metric <- function(
         lMetric = lMetric,
         dfGroups = dfGroups,
         vThreshold = vThreshold,
+        strSharedPayloadKey = strSharedPayloadKeyAll,
         bDebug = bDebug,
         ...
       )
     )
+  }
+
+  if (exists("lSharedPayloadRegistry")) {
+    base::attr(lCharts, "shared_payload_registry") <- lSharedPayloadRegistry
   }
 
   return(lCharts)

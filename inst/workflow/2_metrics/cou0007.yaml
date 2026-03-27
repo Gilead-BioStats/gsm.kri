@@ -24,8 +24,6 @@ spec:
       type: character
     sdrgyn:
       type: character
-    phase:
-      type: character
 steps:
   - output: vThreshold
     name: gsm.core::ParseThreshold
@@ -36,7 +34,7 @@ steps:
     params:
       strThreshold: Flag
   - output: Temp_DISCONTINUED
-    name: RunQuery
+    name: gsm.core::RunQuery
     params:
       df: Mapped_SDRGCOMP
       strQuery: "SELECT DISTINCT subjid FROM df WHERE sdrgyn = 'N'"
@@ -56,12 +54,12 @@ steps:
     params:
       dfInput: Analysis_Input
   - output: Analysis_Analyzed
-    name: Analyze_NormalApprox
+    name: gsm.core::Analyze_NormalApprox
     params:
       dfTransformed: Analysis_Transformed
       strType: AnalysisType
   - output: Analysis_Flagged
-    name: gsm.core::Flag_NormalApprox
+    name: gsm.core::Flag
     params:
       dfAnalyzed: Analysis_Analyzed
       vThreshold: vThreshold
