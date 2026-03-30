@@ -1,7 +1,7 @@
 Type: Package
 Package: gsm.kri
 Title: Good Statistical Monitoring KRIs
-Version: 1.4.1
+Version: 1.5.0
 Authors@R: c(
     person("Jeremy", "Wildfire", , "jwildfire@gmail.com", role = c("aut", "cre")),
     person("Laura", "Maxwell", , "lkmaxwell23@gmail.com", role = "aut"),
@@ -54,10 +54,10 @@ Suggests:
 VignetteBuilder: 
     knitr
 Remotes:
-    gsm.core=Gilead-BioStats/gsm.core@dev,
-    gsm.mapping=Gilead-BioStats/gsm.mapping@dev,
+    gsm.core=Gilead-BioStats/gsm.core@gsm.core-v1.2.0-rc,
+    gsm.mapping=Gilead-BioStats/gsm.mapping@gsm.mapping-v1.1.3-rc,
     gsm.qtl=Gilead-BioStats/gsm.qtl@dev,
-    gsm.reporting=Gilead-BioStats/gsm.reporting@for-gsm.kri-193,
+    gsm.reporting=Gilead-BioStats/gsm.reporting@gsm.reporting-v1.1.4-rc,
     qcthat=Gilead-BioStats/qcthat@main
 Config/testthat/edition: 3
 Config/testthat/parallel: false
