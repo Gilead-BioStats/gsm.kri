@@ -1,20 +1,21 @@
 test_that("Qual: windowed PK metric flags expected sites using standard workflow output (#200)", {
-  kri_path <- test_path("..", "..", "inst", "workflow", "2_metrics", "kri0016.yaml")
-  qual_path <- test_path("qual_workflows", "2_metrics", "kri0016.yaml")
+  # Verify workflow file exists in the default KRI workflow path.
+  kri_path <- file.path(GetDefaultKRIPath(), "kri0016.yaml")
+  expect_true(file.exists(kri_path), label = paste("KRI workflow file:", kri_path))
 
-  expect_true(file.exists(kri_path))
-  expect_true(file.exists(qual_path))
-
-  # Build a small deterministic mapped dataset with known site-level rates.
+  # Use larger, more realistic sample sizes to avoid accrual-threshold NA flags.
+  # SITE_A: 100 subjects, 92 with 'Y' = 0.92 (flag 0)
+  # SITE_B: 100 subjects, 40 with 'Y' = 0.40 (flag -2)
+  # SITE_C: 100 subjects, 88 with 'Y' = 0.88 (flag -1)
   subjects <- tibble(
-    subjid = sprintf("SUBJ%03d", 1:30),
-    invid = c(rep("SITE_A", 10), rep("SITE_B", 10), rep("SITE_C", 10))
+    subjid = sprintf("SUBJ%03d", 1:300),
+    invid = c(rep("SITE_A", 100), rep("SITE_B", 100), rep("SITE_C", 100))
   )
 
   within_flags <- c(
-    rep("Y", 9), "N",   # SITE_A: 0.9 expected flag 0
-    rep("Y", 5), rep("N", 5), # SITE_B: 0.5 expected flag -2
-    rep("Y", 9), "N"    # SITE_C: 0.9 expected flag 0
+    rep("Y", 92), rep("N", 8),
+    rep("Y", 40), rep("N", 60),
+    rep("Y", 88), rep("N", 12)
   )
 
   mapped_pk <- tibble(
@@ -38,7 +39,6 @@ test_that("Qual: windowed PK metric flags expected sites using standard workflow
         TRUE ~ 0
       )
     )
-
   workflows <- MakeWorkflowList("kri0016", GetDefaultKRIPath())
   result <- robust_runworkflow(
     workflows[[1]],
