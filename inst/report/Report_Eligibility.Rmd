@@ -71,30 +71,23 @@ Widget_TimeSeries(
 
 ### Site
 ```{r, echo = FALSE, results = 'asis', fig.height=4}
-eligibility_groupBar(df = lListings[[1]], varGroupID = invid, strGroupLabel = "Site")
+eligibility_groupBar(dfNum = lListings[[1]] %>% dplyr::filter(Source != "Neither"), dfDenom = lListings[[1]], varGroupID = invid, strGroupLabel = "Site")
 ```
 
 ### Site (by %)
 ```{r, echo = FALSE, results = 'asis', fig.height=4}
-if ("bPercentage" %in% names(formals(eligibility_groupBar))) {
-  eligibility_groupBar(
-    df = lListings[[1]],
-    varGroupID = invid,
-    strGroupLabel = "Site",
-    bPercentage = TRUE
-  )
-} else {
-  eligibility_groupBar(
-    df = lListings[[1]],
-    varGroupID = invid,
-    strGroupLabel = "Site"
-  )
-}
+eligibility_groupBar(
+  dfNum = lListings[[1]] %>% dplyr::filter(Source != "Neither"),
+  dfDenom = lListings[[1]],
+  varGroupID = invid,
+  strGroupLabel = "Site",
+  bPercentage = TRUE
+)
 ```
 
 ### Country
 ```{r, echo = FALSE, results = 'asis', fig.height=4}
-eligibility_groupBar(df = lListings[[1]], varGroupID = country, strGroupLabel = "Country")
+eligibility_groupBar(dfNum = lListings[[1]] %>% dplyr::filter(Source != "Neither"), dfDenom = lListings[[1]], varGroupID = country, strGroupLabel = "Country")
 ```
 
 ### Source
