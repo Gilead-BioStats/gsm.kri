@@ -114,7 +114,7 @@ gsm.qtl::criteria_groupBar(df =  IE_num, varGroupID = country, strGroupLabel = "
 ## Inclusion/Exclusion Listing
 ```{r, echo = FALSE}
 # output the listing on the html
-gsm.qtl::eligibility_listing(df = IE_denom)
+gsm.qtl::eligibility_listing(df = IE_num)
 
 # grab the dataset to download
 x <- gsm.qtl::eligibility_listing(df = IE_denom, download = TRUE)
