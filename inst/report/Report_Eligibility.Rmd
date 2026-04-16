@@ -110,6 +110,7 @@ gsm.qtl::criteria_groupBar(df =  IE_num, varGroupID = invid, strGroupLabel = "Si
 ```{r, echo = FALSE, results = 'asis', fig.height=4}
 gsm.qtl::criteria_groupBar(df =  IE_num, varGroupID = country, strGroupLabel = "Country", bSwapAxes = TRUE)
 ```
+
 ## Inclusion/Exclusion Listing
 ```{r, echo = FALSE}
 # output the listing on the html
