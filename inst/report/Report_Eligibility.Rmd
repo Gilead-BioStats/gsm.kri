@@ -59,7 +59,7 @@ Eligibility_Overview(
 
 ## Time Series Chart
 ```{r, echo=FALSE, results='asis', fig.height=4}
-gsm.qtl::Widget_TimeSeries(
+gsm.kri::Widget_TimeSeries(
   dfResults = dfResults %>% mutate(Flag = NA),
   lMetric = as.list(dfMetrics),
   dfGroups = dfGroups,
