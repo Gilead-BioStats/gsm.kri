@@ -33,6 +33,8 @@ dfResults <- params$dfResults
 dfMetrics <- params$dfMetrics
 dfGroups <- params$dfGroups
 lListings <- params$lListings
+IE_num <- lListings$IE_num
+IE_denom <- lListings$IE_denom
 latest_snapshot = max(dfResults$SnapshotDate)
 ```
 
@@ -57,7 +59,7 @@ Eligibility_Overview(
 
 ## Time Series Chart
 ```{r, echo=FALSE, results='asis', fig.height=4}
-Widget_TimeSeries(
+gsm.qtl::Widget_TimeSeries(
   dfResults = dfResults %>% mutate(Flag = NA),
   lMetric = as.list(dfMetrics),
   dfGroups = dfGroups,
@@ -71,48 +73,42 @@ Widget_TimeSeries(
 
 ### Site
 ```{r, echo = FALSE, results = 'asis', fig.height=4}
-eligibility_groupBar(dfNum = lListings[[1]] %>% dplyr::filter(Source != "Neither"), dfDenom = lListings[[1]], varGroupID = invid, strGroupLabel = "Site")
+gsm.qtl::eligibility_groupBar(dfNum = IE_num, dfDenom = IE_denom, varGroupID = invid, strGroupLabel = "Site")
 ```
 
 ### Site (by %)
 ```{r, echo = FALSE, results = 'asis', fig.height=4}
-eligibility_groupBar(
-  dfNum = lListings[[1]] %>% dplyr::filter(Source != "Neither"),
-  dfDenom = lListings[[1]],
-  varGroupID = invid,
-  strGroupLabel = "Site",
-  bPercentage = TRUE
-)
+gsm.qtl::eligibility_groupBar(dfNum = IE_num, dfDenom = IE_denom, varGroupID = invid, strGroupLabel = "Site", bPercentage = TRUE)
 ```
 
 ### Country
 ```{r, echo = FALSE, results = 'asis', fig.height=4}
-eligibility_groupBar(dfNum = lListings[[1]] %>% dplyr::filter(Source != "Neither"), dfDenom = lListings[[1]], varGroupID = country, strGroupLabel = "Country")
+gsm.qtl::eligibility_groupBar(dfNum = IE_num, dfDenom = IE_denom, varGroupID = country, strGroupLabel = "Country")
 ```
 
 ### Source
 ```{r, echo = FALSE, results = 'asis', fig.height=4}
-eligibility_sourceBar(df = lListings[[1]])
+gsm.qtl::eligibility_sourceBar(df = IE_denom)
 ```
 
 ### Criteria/Site
 ```{r, echo = FALSE, results = 'asis', fig.height=4}
-criteria_groupBar(df = lListings[[1]], varGroupID = invid, strGroupLabel = "Site")
+gsm.qtl::criteria_groupBar(df = IE_denom, varGroupID = invid, strGroupLabel = "Site")
 ```
 
 ### Criteria/Country
 ```{r, echo = FALSE, results = 'asis', fig.height=4}
-criteria_groupBar(df = lListings[[1]], varGroupID = country, strGroupLabel = "Country")
+gsm.qtl::criteria_groupBar(df = IE_denom, varGroupID = country, strGroupLabel = "Country")
 ```
 
 ## Inclusion/Exclusion Listing
 ```{r, echo = FALSE}
 # output the listing on the html
-eligibility_listing(df = lListings[[1]])
+gsm.qtl::eligibility_listing(df = IE_denom)
 
 # grab the dataset to download
-x <- eligibility_listing(df = lListings[[1]], download = TRUE)
-csv_txt <- paste(capture.output(write.csv(x, row.names = FALSE)), collapse = "\n")# turn into a data-URI (single-file HTML friendly)
+x <- gsm.qtl::eligibility_listing(df = IE_denom, download = TRUE)
+csv_txt <- paste(utils::capture.output(utils::write.csv(x, row.names = FALSE)), collapse = "\n")# turn into a data-URI (single-file HTML friendly)
 href <- base64enc::dataURI(charToRaw(csv_txt), mime = "text/csv;charset=utf-8")
 
 knitr::asis_output(
