@@ -88,7 +88,7 @@ gsm.qtl::eligibility_groupBar(dfNum = IE_num, dfDenom = IE_denom, varGroupID = c
 
 ### Source
 ```{r, echo = FALSE, results = 'asis', fig.height=4}
-gsm.qtl::eligibility_sourceBar(df = IE_denom)
+gsm.qtl::eligibility_sourceBar(df = IE_num)
 ```
 
 ### Criteria/Site (EDC I/E data only)
