@@ -35,7 +35,8 @@ dfEXCLUSION <- tibble::tibble(
 )
 
 lListings <- list(
-  IE = dfEXCLUSION
+  IE_num = dfEXCLUSION %>% dplyr::filter(Source != "Neither"),
+  IE_denom = dfEXCLUSION
 )
 
 test_that("Ensure report renders normally {#157}", {
