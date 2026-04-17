@@ -45,7 +45,7 @@ test_that("Widget_GroupOverview returns correct class", {
   expect_s3_class(widgetOutput, c("shiny.tag.list", "list"))
 })
 
-test_that("Widget_GroupOverview uses correct Group or errors out when strGroupLevel is NULL", {
+test_that("Widget_GroupOverview uses correct Group or errors out when strGroupLevel is NULL (#125)", {
   TestAtLogLevel()
   widget <- Widget_GroupOverview(
     gsm.core::reportingResults,

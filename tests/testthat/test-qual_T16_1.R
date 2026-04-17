@@ -9,7 +9,7 @@ analyzed <- RunWorkflows(
   lData = c(mapped_data, list(lWorkflows = kri_workflows))
 ) %>%
   suppressWarnings()
-# Exclude pk/pd since thats not counting to SRS
+# Exclude pk/pd and exclusion since thats not counting to SRS
 
 ## Test Code
 testthat::test_that("Qual: Given summarized analytics data, all appropriate aspects of site risk score are available to calculate it correctly (#159)", {
@@ -38,6 +38,7 @@ testthat::test_that("Qual: Given summarized analytics data, all appropriate aspe
     }
   ) %>%
     bind_rows() %>%
+    filter(!is.na(.data$Weight) & !is.na(.data$WeightMax)) %>%
     summarize(
       GlobalDenominator = sum(max(WeightMax), na.rm = TRUE),
       .by = MetricID
@@ -73,8 +74,21 @@ testthat::test_that("Qual: Given summarized analytics data, all appropriate aspe
       Metric,
       Score,
       Flag
-    )
+    ) %>%
+    arrange(GroupID)
 
-  SRS_auto <- analyzed[[13]]$Analysis_Summary
-  expect_equal(SRS_by_hand, SRS_auto)
+  SRS_auto <- analyzed[[13]]$Analysis_Summary %>%
+    arrange(GroupID)
+
+  # Diagnostic output for debugging CI failures
+  if(any(unique(SRS_by_hand$Denominator) != unique(SRS_auto$Denominator))) {
+    cat("DIAGNOSTIC: Denominator mismatch detected\n")
+    cat("SRS_by_hand denominators:", paste(unique(SRS_by_hand$Denominator), collapse=", "), "\n")
+    cat("SRS_auto denominators:", paste(unique(SRS_auto$Denominator), collapse=", "), "\n")
+  }
+
+  # Use tolerance for numerical comparisons and check structure first
+  expect_equal(dim(SRS_by_hand), dim(SRS_auto))
+  expect_equal(names(SRS_by_hand), names(SRS_auto))
+  expect_equal(SRS_by_hand, SRS_auto, tolerance = 1e-12)
 })

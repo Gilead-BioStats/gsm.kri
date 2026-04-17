@@ -3,10 +3,12 @@
     Code
       MakeMetricTable(reportingResults_filt, gsm.core::reportingGroups)
     Output
-               StudyID GroupID         MetricID        Group SnapshotDate Enrolled
-      1 AA-AA-000-0000  0X4629 Analysis_kri0001 0X4629 (Doe)   2025-04-01        6
-      2 AA-AA-000-0000  0X9737 Analysis_kri0001 0X9737 (Doe)   2025-04-01        7
+               StudyID GroupID         MetricID         Group SnapshotDate Enrolled
+      1 AA-AA-000-0000  0X1748 Analysis_kri0001  0X1748 (Doe)   2025-04-01        7
+      2 AA-AA-000-0000  0X7838 Analysis_kri0001 0X7838 (Deer)   2025-04-01        3
+      3 AA-AA-000-0000   0X958 Analysis_kri0001  0X958 (Deer)   2025-04-01       11
         Numerator Denominator Metric Score Flag
-      1        24         381   0.06 -1.13   -1
-      2        26         404   0.06 -1.08   -1
+      1        26         125   0.21  3.22    2
+      2         8          32   0.25  2.19    1
+      3        32         497   0.06 -1.22   -1
 

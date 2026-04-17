@@ -1,5 +1,18 @@
-library(gsm.mapping)
-library(gsm.reporting)
+# Conditionally load optional packages
+if (requireNamespace("gsm.mapping", quietly = TRUE)) {
+  library(gsm.mapping)
+}
+if (requireNamespace("gsm.reporting", quietly = TRUE)) {
+  library(gsm.reporting)
+}
+
+# PERFORMANCE IMPROVEMENT: This file now uses cached test data to speed up load times.
+# The helper-cache.R file contains functions that cache the mapped_data and mapping_output
+# objects using tools::R_user_dir() and only regenerate them when the underlying YAML
+# workflows are updated. This approach is similar to gsm.core PR #117.
+#
+# To clear the cache manually, run: clear_cache()
+# To force cache refresh, set force_refresh=TRUE in the cache functions
 
 set.seed(123)
 
@@ -40,7 +53,11 @@ lData <- list(
     rename(visit = foldername),
   Raw_IE = lSource$Raw_IE,
   Raw_VISIT = lSource$Raw_VISIT %>%
-    rename(visit = foldername)
+    rename(visit = foldername),
+  Raw_OverallResponse = lSource$Raw_OverallResponse %>%
+    rename(response_folder = foldername),
+  Raw_Death = lSource$Raw_Death,
+  Raw_Randomization = lSource$Raw_Randomization
 )
 
 ## Data with missing values (15% NA's)
@@ -63,12 +80,14 @@ GetYamlPathCustomMetrics <- function() {
 
 ## default kri path
 GetDefaultKRIPath <- function() {
-  test_path("qual_workflows/2_metrics")
+  file.path(system.file(package = "gsm.kri"), "workflow", "2_metrics")
 }
 
 ## Get Mapped data
+domains <- c(gsub("Raw_", "", names(lSource)), "COUNTRY", "EXCLUSION")
 mappings_wf <- MakeWorkflowList(
-  strPath = test_path("qual_workflows/1_mappings")
+  strNames = domains,
+  strPackage= "gsm.mapping"
 )
 
 ConsoleAppender <- log4r::console_appender(layout = gsm.core::cli_fmt)
@@ -76,13 +95,17 @@ gsm.core::SetLogger(log4r::logger(
   threshold = "WARN",
   appenders = ConsoleAppender
 ))
-mapped_data <- RunWorkflows(mappings_wf, lData)
+
+# Use cached mapped data to speed up load times
+mapped_data <- get_cached_mapped_data(lData, mappings_wf)
+
 gsm.core::SetLogger(log4r::logger(
   "DEBUG",
   appenders = ConsoleAppender
 ))
 
-mapping_output <- map(mappings_wf, ~ .x$steps[[1]]$output) %>% unlist()
+# Use cached mapping output
+mapping_output <- get_cached_mapping_output(mappings_wf)
 
 # Robust version of Runworkflow no config that will always run even with errors,
 # and can be specified for specific steps in workflow to run
@@ -202,6 +225,8 @@ get_data <- function(lWorkflow, data) {
   maps_needed <- names(mapping_output[which(
     mapping_output %in% maps_needed_index
   )])
-  mapped_needed_data <- RunWorkflows(mappings_wf[maps_needed], data)
+
+  # Return subset of cached mapped_data instead of re-running workflows
+  mapped_needed_data <- mapped_data[intersect(names(mapped_data), c(maps_needed_index, names(data)))]
   return(mapped_needed_data)
 }

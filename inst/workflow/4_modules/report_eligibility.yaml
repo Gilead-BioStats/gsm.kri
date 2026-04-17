@@ -18,10 +18,16 @@ spec:
     _all:
       required: true
 steps:
+  - output: IE_num
+    name: gsm.core::RunQuery
+    params:
+      df: Mapped_EXCLUSION
+      strQuery: "SELECT * FROM df WHERE Source != 'Neither'"
   - output: reporting_listings
     name: list
     params:
-      'CTQ': Mapped_EXCLUSION
+      'IE_num': IE_num
+      'IE_denom': Mapped_EXCLUSION
   - output: strOutputDir
     name: getwd
   - output: strInputPath
