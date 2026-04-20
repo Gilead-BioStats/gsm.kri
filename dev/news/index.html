@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">gsm.kri</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">1.4.1</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">1.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +48,9 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.4.1" id="gsmkri-v141">gsm.kri v1.4.1<a class="anchor" aria-label="anchor" href="#gsmkri-v141"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.5.0" id="gsmkri-v150">gsm.kri v1.5.0<a class="anchor" aria-label="anchor" href="#gsmkri-v150"></a></h2>
+<p>This minor release includes new workflows/tests and CI automation, plus performance-focused improvements to the qcthat testing infrastructure.</p>
+<p><strong>Changes:</strong> - Add test-data caching helpers and new tests (cache, pipe export, gt utilities), and refactor qual test data setup to use cached mapped data. - Introduce new “Deaths in First 90 Days / Premature Death” KRI workflows (site + country) and expand Cross-Study SRS widget study filtering to multi-select. - Migrate/replace qcthat GitHub Actions workflows. # gsm.kri v1.4.1</p>
 <p>This patch release addresses the following issues:</p>
 <ul><li>Updates bug in cou0014 metric to use Identity method instead of Normal Approximation</li>
 <li>Converts example R scripts to Rmd format with proper indexing for documentation using new gsm.utils implementation</li>
