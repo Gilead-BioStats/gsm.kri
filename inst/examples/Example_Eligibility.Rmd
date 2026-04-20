@@ -59,7 +59,8 @@ lRaw <- map_depth(
 mapped <- map_depth(lRaw, 1, ~ gsm.core::RunWorkflows(mappings_wf, .x))
 
 lListings <- list(
-  IE = mapped[[1]]$Mapped_EXCLUSION
+  IE_num = mapped[[1]]$Mapped_EXCLUSION %>% dplyr::filter(Source != "Neither"),
+  IE_denom = mapped[[1]]$Mapped_EXCLUSION
 )
 ```
 
