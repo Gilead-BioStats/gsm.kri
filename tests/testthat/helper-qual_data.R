@@ -54,8 +54,12 @@ lData <- list(
   Raw_IE = lSource$Raw_IE,
   Raw_VISIT = lSource$Raw_VISIT %>%
     rename(visit = foldername),
-  Raw_OverallResponse = lSource$Raw_OverallResponse %>%
-    rename(response_folder = foldername),
+  Raw_OverallResponse = if (is.null(lSource$Raw_OverallResponse)) {
+    tibble()
+  } else {
+    lSource$Raw_OverallResponse %>%
+      rename(response_folder = foldername)
+  },
   Raw_Death = lSource$Raw_Death,
   Raw_Randomization = lSource$Raw_Randomization
 )
@@ -64,6 +68,9 @@ lData <- list(
 
 ## ONLY USED IN T2_2
 lData_missing_values <- map(lData, function(df) {
+  if (is.null(df) || nrow(df) == 0) {
+    return(df)
+  }
   df %>%
     mutate(
       across(
