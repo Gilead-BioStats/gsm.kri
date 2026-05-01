@@ -63,12 +63,20 @@ Widget_PortfolioOverview <- function(
     dfPerStudyResults <- dfResults
   }
 
-  dfPerStudy <- dfPerStudyResults %>%
-    dplyr::filter(.data$GroupLevel == strGroupLevel) %>%
+  dfPerStudyRaw <- dfPerStudyResults %>%
+    dplyr::filter(.data$GroupLevel == strGroupLevel)
+
+  has_flag <- "Flag" %in% colnames(dfPerStudyRaw)
+
+  dfPerStudy <- dfPerStudyRaw %>%
     dplyr::group_by(.data$StudyID, .data$MetricID) %>%
     dplyr::summarise(
       Numerator = sum(.data$Numerator, na.rm = TRUE),
       Denominator = sum(.data$Denominator, na.rm = TRUE),
+      FlagRed = if (has_flag) sum(abs(.data$Flag) == 2, na.rm = TRUE) else 0L,
+      FlagAmber = if (has_flag) sum(abs(.data$Flag) == 1, na.rm = TRUE) else 0L,
+      FlagGreen = if (has_flag) sum(.data$Flag == 0, na.rm = TRUE) else 0L,
+      FlagNA = if (has_flag) sum(is.na(.data$Flag)) else dplyr::n(),
       .groups = "drop"
     ) %>%
     dplyr::mutate(

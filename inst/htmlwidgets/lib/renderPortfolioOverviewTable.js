@@ -31,6 +31,31 @@ function renderPortfolioOverviewTable(el, input) {
     ? input.vMetricOrder.slice().sort()
     : Array.from(new Set(input.dfSummary.map(function(r) { return r.MetricID; }))).sort();
 
+  // Header label = Abbreviation; tooltip = full metric metadata.
+  var metricLabels = {};
+  var metricTooltips = {};
+  var metricsMeta = Array.isArray(input.dfMetrics) ? input.dfMetrics : [];
+  var tooltipFields = [
+    'MetricID', 'Metric', 'Abbreviation', 'Type', 'GroupLevel',
+    'Numerator', 'Denominator', 'Model', 'AnalysisType', 'Score',
+    'Threshold', 'AccrualThreshold', 'AccrualMetric'
+  ];
+  metricsMeta.forEach(function(m) {
+    if (!m || !m.MetricID) return;
+    metricLabels[m.MetricID] = m.Abbreviation || m.Metric || m.MetricID;
+    var lines = [];
+    tooltipFields.forEach(function(f) {
+      var v = m[f];
+      if (v != null && v !== '' && v !== 'NA') lines.push(f + ': ' + v);
+    });
+    metricTooltips[m.MetricID] = lines.join('\n');
+  });
+  function metricLabel(mid) { return metricLabels[mid] || mid; }
+  function metricTooltip(mid) { return metricTooltips[mid] || mid; }
+  function escAttr(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
   // Study attribute lookup: { StudyID: { Param: Value } }.
   var studyAttrLookup = {};
   studyAttrs.forEach(function(row) {
@@ -55,6 +80,7 @@ function renderPortfolioOverviewTable(el, input) {
   // Tracks which (category|value) bucket rows are currently expanded so a
   // re-render after a filter change preserves user state where possible.
   var expandedBuckets = {};
+  var heatmapOn = false;
 
   function bucketKey(category, value) {
     return category + '||' + value;
@@ -66,13 +92,28 @@ function renderPortfolioOverviewTable(el, input) {
   }
 
   function fmtCell(cell) {
-    if (!cell || cell.Denominator === 0) return '<span class="po-empty">-</span>';
-    return (
-      '<span class="po-num">' + cell.Numerator + '</span>' +
-      ' / ' +
-      '<span class="po-den">' + cell.Denominator + '</span>' +
-      '<br><span class="po-rate">' + fmtRate(cell.Rate) + '</span>'
-    );
+    if (!cell || cell.Denominator === 0) return '<div class="po-heat-cell"><span class="po-empty">-</span></div>';
+    var red = cell.FlagRed || 0;
+    var amber = cell.FlagAmber || 0;
+    var green = cell.FlagGreen || 0;
+    var total = red + amber + green;
+    var tip = cell.Numerator + ' / ' + cell.Denominator;
+    var style = '';
+    if (total > 0) {
+      tip += '\nFlags: ' + green + ' green, ' + amber + ' amber, ' + red + ' red (n=' + total + ')';
+      if (heatmapOn) {
+        var gPct = green / total * 100;
+        var aPct = amber / total * 100;
+        var stops = [
+          'rgba(76,175,80,0.45) 0% ' + gPct + '%',
+          'rgba(255,179,0,0.45) ' + gPct + '% ' + (gPct + aPct) + '%',
+          'rgba(229,57,53,0.45) ' + (gPct + aPct) + '% 100%'
+        ];
+        style = ' style="background: linear-gradient(to right, ' + stops.join(', ') + ');"';
+      }
+    }
+    return '<div class="po-heat-cell"' + style + ' title="' + escAttr(tip) + '">' +
+      '<span class="po-rate">' + fmtRate(cell.Rate) + '</span></div>';
   }
 
   function filteredPerStudy() {
@@ -126,10 +167,13 @@ function renderPortfolioOverviewTable(el, input) {
           ? {
               Numerator: cell.Numerator,
               Denominator: cell.Denominator,
-              Rate: cell.Rate
+              Rate: cell.Rate,
+              FlagRed: cell.FlagRed,
+              FlagAmber: cell.FlagAmber,
+              FlagGreen: cell.FlagGreen
             }
           : null;
-        html += '<td>' + fmtCell(formatted) + '</td>';
+        html += '<td class="po-cell-wrap">' + fmtCell(formatted) + '</td>';
       });
       html += '</tr>';
     });
@@ -140,11 +184,29 @@ function renderPortfolioOverviewTable(el, input) {
     var totalIdx = {};
     var byCategory = {};
 
+    function newAcc() { return { num: 0, den: 0, red: 0, amber: 0, green: 0, studies: new Set() }; }
+    function addRow(acc, r) {
+      acc.num += (r.Numerator || 0);
+      acc.den += (r.Denominator || 0);
+      acc.red += (r.FlagRed || 0);
+      acc.amber += (r.FlagAmber || 0);
+      acc.green += (r.FlagGreen || 0);
+      acc.studies.add(r.StudyID);
+    }
+    function finalize(c) {
+      return {
+        Numerator: c.num,
+        Denominator: c.den,
+        Rate: c.den > 0 ? c.num / c.den : null,
+        FlagRed: c.red,
+        FlagAmber: c.amber,
+        FlagGreen: c.green
+      };
+    }
+
     rows.forEach(function(r) {
-      if (!totalIdx[r.MetricID]) totalIdx[r.MetricID] = { num: 0, den: 0, studies: new Set() };
-      totalIdx[r.MetricID].num += (r.Numerator || 0);
-      totalIdx[r.MetricID].den += (r.Denominator || 0);
-      totalIdx[r.MetricID].studies.add(r.StudyID);
+      if (!totalIdx[r.MetricID]) totalIdx[r.MetricID] = newAcc();
+      addRow(totalIdx[r.MetricID], r);
 
       var attrs = studyAttrLookup[r.StudyID] || {};
       groupParams.forEach(function(cat) {
@@ -152,10 +214,8 @@ function renderPortfolioOverviewTable(el, input) {
         if (val == null) return;
         if (!byCategory[cat]) byCategory[cat] = {};
         if (!byCategory[cat][val]) byCategory[cat][val] = {};
-        if (!byCategory[cat][val][r.MetricID]) byCategory[cat][val][r.MetricID] = { num: 0, den: 0, studies: new Set() };
-        byCategory[cat][val][r.MetricID].num += (r.Numerator || 0);
-        byCategory[cat][val][r.MetricID].den += (r.Denominator || 0);
-        byCategory[cat][val][r.MetricID].studies.add(r.StudyID);
+        if (!byCategory[cat][val][r.MetricID]) byCategory[cat][val][r.MetricID] = newAcc();
+        addRow(byCategory[cat][val][r.MetricID], r);
       });
     });
 
@@ -164,12 +224,7 @@ function renderPortfolioOverviewTable(el, input) {
     rows.forEach(function(r) { allStudiesInScope.add(r.StudyID); });
     var totalRow = { category: 'Total', value: 'Total', numStudies: allStudiesInScope.size, cells: {} };
     Object.keys(totalIdx).forEach(function(mid) {
-      var c = totalIdx[mid];
-      totalRow.cells[mid] = {
-        Numerator: c.num,
-        Denominator: c.den,
-        Rate: c.den > 0 ? c.num / c.den : null
-      };
+      totalRow.cells[mid] = finalize(totalIdx[mid]);
     });
     buckets.push(totalRow);
 
@@ -180,11 +235,7 @@ function renderPortfolioOverviewTable(el, input) {
         var studies = new Set();
         Object.keys(byCategory[cat][val]).forEach(function(mid) {
           var c = byCategory[cat][val][mid];
-          cells[mid] = {
-            Numerator: c.num,
-            Denominator: c.den,
-            Rate: c.den > 0 ? c.num / c.den : null
-          };
+          cells[mid] = finalize(c);
           c.studies.forEach(function(s) { studies.add(s); });
         });
         buckets.push({ category: cat, value: val, numStudies: studies.size, cells: cells });
@@ -198,7 +249,9 @@ function renderPortfolioOverviewTable(el, input) {
     var html = '<table class="po-table"><thead><tr>';
     html += '<th style="text-align:left;">Group</th>';
     html += '<th style="text-align:right;">Studies</th>';
-    metricOrder.forEach(function(mid) { html += '<th>' + mid + '</th>'; });
+    metricOrder.forEach(function(mid) {
+      html += '<th title="' + escAttr(metricTooltip(mid)) + '">' + metricLabel(mid) + '</th>';
+    });
     html += '</tr></thead><tbody>';
 
     var lastCategory = null;
@@ -218,7 +271,7 @@ function renderPortfolioOverviewTable(el, input) {
       html += '<td class="po-bucket-label"><span class="po-caret">' + caret + '</span> ' + b.value + '</td>';
       html += '<td>' + (b.numStudies != null ? b.numStudies : '-') + '</td>';
       metricOrder.forEach(function(mid) {
-        html += '<td>' + fmtCell(b.cells[mid]) + '</td>';
+        html += '<td class="po-cell-wrap">' + fmtCell(b.cells[mid]) + '</td>';
       });
       html += '</tr>';
 
@@ -233,7 +286,17 @@ function renderPortfolioOverviewTable(el, input) {
   }
 
   function buildFilterBar() {
-    var html = '<div class="po-filter-bar" style="background:#f5f5f5; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:4px;">';
+    var btnStyle = 'padding:2px 8px; font-size:12px; border-radius:3px; cursor:pointer;';
+    var html = '<div class="po-filter-bar" style="background:#f5f5f5; padding:8px 12px; margin-bottom:10px; border:1px solid #ddd; border-radius:4px;">';
+    html += '<div style="display:flex; gap:6px; align-items:center;">';
+    html += '<button id="po-toggle-filters" style="' + btnStyle + ' background:#f5f5f5; color:#333; border:1px solid #ccc;">▸ Filters</button>';
+    html += '<div style="flex:1;"></div>';
+    html += '<button id="po-toggle-heatmap" style="' + btnStyle + ' background:#f5f5f5; color:#333; border:1px solid #ccc;">Heatmap: off</button>';
+    html += '<button id="po-reset-filters" style="' + btnStyle + ' background:#2196f3; color:white; border:none;">Reset</button>';
+    html += '<button id="po-expand-all" style="' + btnStyle + ' background:#f5f5f5; color:#333; border:1px solid #ccc;">+ Expand</button>';
+    html += '<button id="po-collapse-all" style="' + btnStyle + ' background:#f5f5f5; color:#333; border:1px solid #ccc;">− Collapse</button>';
+    html += '</div>';
+    html += '<div id="po-filter-controls" style="display:none; margin-top:10px;">';
     html += '<div style="display:flex; gap:16px; flex-wrap:wrap; align-items:flex-start;">';
     filterParams.forEach(function(p) {
       html += '<div style="flex:1; min-width:160px;">';
@@ -251,23 +314,20 @@ function renderPortfolioOverviewTable(el, input) {
       html += '<option value="' + s + '">' + s + '</option>';
     });
     html += '</select></div>';
-    html += '<div style="flex:0; align-self:flex-end; display:flex; gap:6px;">';
-    html += '<button id="po-reset-filters" style="padding:6px 12px; background:#2196f3; color:white; border:none; border-radius:3px; cursor:pointer;">Reset</button>';
-    html += '<button id="po-expand-all" style="padding:6px 12px; background:#f5f5f5; color:#333; border:1px solid #ccc; border-radius:3px; cursor:pointer;">+ Expand All</button>';
-    html += '<button id="po-collapse-all" style="padding:6px 12px; background:#f5f5f5; color:#333; border:1px solid #ccc; border-radius:3px; cursor:pointer;">− Collapse All</button>';
-    html += '</div>';
-    html += '</div></div>';
+    html += '</div></div></div>';
     return html;
   }
 
   var styleHtml = '<style>' +
     '.po-container { font-family: sans-serif; }' +
     '.po-table { width: 100%; border-collapse: collapse; margin-top: 10px; }' +
+    '.po-heat-cell { padding: 6px 8px; text-align: right; min-height: 20px; }' +
     '.po-table th, .po-table td { border: 1px solid #ddd; padding: 6px 8px; vertical-align: top; text-align: right; font-size: 13px; }' +
+    '.po-table td.po-cell-wrap { padding: 0; }' +
     '.po-table th { background: #f5f5f5; text-align: center; }' +
     '.po-table tr.po-total-row { background: #e8eef7; font-weight: bold; }' +
     '.po-table tr.po-category-header td { background: #fafafa; text-align: left; font-weight: bold; color: #555; }' +
-    '.po-table td.po-bucket-label { text-align: left; }' +
+    '.po-table td.po-bucket-label { text-align: left; white-space: nowrap; }' +
     '.po-table tr.po-bucket-row:hover { background: #f9f9f9; }' +
     '.po-rate { color: #2c3e50; }' +
     '.po-empty { color: #aaa; }' +
@@ -314,6 +374,24 @@ function renderPortfolioOverviewTable(el, input) {
       rerender();
     });
   });
+  var toggleBtn = el.querySelector('#po-toggle-filters');
+  var filterControls = el.querySelector('#po-filter-controls');
+  if (toggleBtn && filterControls) {
+    toggleBtn.addEventListener('click', function() {
+      var open = filterControls.style.display !== 'none';
+      filterControls.style.display = open ? 'none' : 'block';
+      toggleBtn.innerHTML = (open ? '▸' : '▾') + ' Filters';
+    });
+  }
+  var heatBtn = el.querySelector('#po-toggle-heatmap');
+  if (heatBtn) {
+    heatBtn.addEventListener('click', function() {
+      heatmapOn = !heatmapOn;
+      heatBtn.textContent = 'Heatmap: ' + (heatmapOn ? 'on' : 'off');
+      heatBtn.style.background = heatmapOn ? '#e8eef7' : '#f5f5f5';
+      rerender();
+    });
+  }
   var resetBtn = el.querySelector('#po-reset-filters');
   if (resetBtn) {
     resetBtn.addEventListener('click', function() {
