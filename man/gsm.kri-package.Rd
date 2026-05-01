@@ -22,7 +22,7 @@ Useful links:
 
 Authors:
 \itemize{
-  \item Laura Maxwell \email{lkmaxwell23@gmail.com}
+  \item Laura Maxwell \email{laura.maxwell@atorusresearch.com}
   \item Spencer Childress \email{spencer.childress@gilead.com} (\href{https://orcid.org/0000-0001-6877-8511}{ORCID})
 }
 

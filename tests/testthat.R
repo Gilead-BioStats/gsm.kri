@@ -7,7 +7,9 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
+library(gsm.core)
 library(gsm.kri)
+library(workr)
 
 # Check if optional packages are available
 if (requireNamespace("gsm.mapping", quietly = TRUE)) {
@@ -15,6 +17,9 @@ if (requireNamespace("gsm.mapping", quietly = TRUE)) {
 }
 if (requireNamespace("gsm.reporting", quietly = TRUE)) {
   library(gsm.reporting)
+}
+if (requireNamespace("gsm.qtl", quietly = TRUE)) {
+  library(gsm.qtl)
 }
 
 library(gsm.kri)
