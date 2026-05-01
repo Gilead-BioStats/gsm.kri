@@ -55,9 +55,9 @@ Suggests:
 VignetteBuilder: 
     knitr
 Remotes:
-    gsm.core=Gilead-BioStats/gsm.core@main,
-    gsm.mapping=Gilead-BioStats/gsm.mapping@main,
-    gsm.qtl=Gilead-BioStats/gsm.qtl@main,
+    gsm.core=Gilead-BioStats/gsm.core@workr-implementation,
+    gsm.mapping=Gilead-BioStats/gsm.mapping@workr-implementation,
+    gsm.qtl=Gilead-BioStats/gsm.qtl@workr-implementation,
     gsm.reporting=Gilead-BioStats/gsm.reporting@main,
     workr=Gilead-BioStats/workr@main,
     qcthat=Gilead-BioStats/qcthat@main
