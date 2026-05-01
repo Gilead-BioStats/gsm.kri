@@ -209,3 +209,94 @@ testthat::test_that("Widget_PortfolioOverview filter params default to therapeut
     c("therapeutic_area", "phase", "status")
   )
 })
+
+# D4: expandable rows. The expand/collapse rendering happens in JS, but the R
+# wrapper builds the per-study contribution table the JS uses to populate the
+# expanded rows. These tests pin down that contract.
+
+testthat::test_that("Widget_PortfolioOverview ships per-study contributions for expand rows (#212, D4)", {
+  captured <- NULL
+  testthat::local_mocked_bindings(
+    createWidget = function(name, x, ...) {
+      captured <<- x
+      structure(list(), class = "htmlwidget")
+    },
+    .package = "htmlwidgets"
+  )
+
+  Widget_PortfolioOverview(
+    dfResults = create_po_test_results(),
+    dfMetrics = data.frame(
+      MetricID = c("kri0001", "kri0002"),
+      MetricName = c("KRI 1", "KRI 2")
+    ),
+    dfGroups = create_po_test_groups()
+  )
+
+  testthat::expect_true("dfPerStudy" %in% names(captured))
+  per_study <- jsonlite::fromJSON(captured$dfPerStudy)
+  testthat::expect_true(all(
+    c("StudyID", "MetricID", "Numerator", "Denominator", "Rate") %in%
+      names(per_study)
+  ))
+  # One row per (StudyID, MetricID) at the latest snapshot.
+  expected_rows <- length(unique(create_po_test_results()$StudyID)) *
+    length(unique(create_po_test_results()$MetricID))
+  testthat::expect_equal(nrow(per_study), expected_rows)
+})
+
+testthat::test_that("Widget_PortfolioOverview per-study Rate matches Numerator/Denominator (#212, D4)", {
+  captured <- NULL
+  testthat::local_mocked_bindings(
+    createWidget = function(name, x, ...) {
+      captured <<- x
+      structure(list(), class = "htmlwidget")
+    },
+    .package = "htmlwidgets"
+  )
+
+  Widget_PortfolioOverview(
+    dfResults = create_po_test_results(),
+    dfMetrics = data.frame(
+      MetricID = c("kri0001", "kri0002"),
+      MetricName = c("KRI 1", "KRI 2")
+    ),
+    dfGroups = create_po_test_groups()
+  )
+
+  per_study <- jsonlite::fromJSON(captured$dfPerStudy)
+  computed_rate <- ifelse(
+    per_study$Denominator > 0,
+    per_study$Numerator / per_study$Denominator,
+    NA_real_
+  )
+  testthat::expect_equal(per_study$Rate, computed_rate)
+})
+
+testthat::test_that("Widget_PortfolioOverview per-study uses latest snapshot only (#212, D4, Q5)", {
+  dfA <- create_po_test_results()
+  dfA$SnapshotDate <- as.Date("2025-05-01")
+  dfA$Numerator <- 999
+  dfB <- create_po_test_results()
+
+  captured <- NULL
+  testthat::local_mocked_bindings(
+    createWidget = function(name, x, ...) {
+      captured <<- x
+      structure(list(), class = "htmlwidget")
+    },
+    .package = "htmlwidgets"
+  )
+
+  Widget_PortfolioOverview(
+    dfResults = dplyr::bind_rows(dfA, dfB),
+    dfMetrics = data.frame(
+      MetricID = c("kri0001", "kri0002"),
+      MetricName = c("KRI 1", "KRI 2")
+    ),
+    dfGroups = create_po_test_groups()
+  )
+
+  per_study <- jsonlite::fromJSON(captured$dfPerStudy)
+  testthat::expect_false(any(per_study$Numerator == 999))
+})
