@@ -1,0 +1,5 @@
+dependencies:
+  - name: Widget_StudyScatterMatrix
+    version: 1.0.0
+    src: htmlwidgets/lib
+    script: renderStudyScatterMatrix.js
