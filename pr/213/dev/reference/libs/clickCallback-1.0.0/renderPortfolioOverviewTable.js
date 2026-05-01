@@ -31,6 +31,31 @@ function renderPortfolioOverviewTable(el, input) {
     ? input.vMetricOrder.slice().sort()
     : Array.from(new Set(input.dfSummary.map(function(r) { return r.MetricID; }))).sort();
 
+  // Header label = Abbreviation; tooltip = full metric metadata.
+  var metricLabels = {};
+  var metricTooltips = {};
+  var metricsMeta = Array.isArray(input.dfMetrics) ? input.dfMetrics : [];
+  var tooltipFields = [
+    'MetricID', 'Metric', 'Abbreviation', 'Type', 'GroupLevel',
+    'Numerator', 'Denominator', 'Model', 'AnalysisType', 'Score',
+    'Threshold', 'AccrualThreshold', 'AccrualMetric'
+  ];
+  metricsMeta.forEach(function(m) {
+    if (!m || !m.MetricID) return;
+    metricLabels[m.MetricID] = m.Abbreviation || m.Metric || m.MetricID;
+    var lines = [];
+    tooltipFields.forEach(function(f) {
+      var v = m[f];
+      if (v != null && v !== '' && v !== 'NA') lines.push(f + ': ' + v);
+    });
+    metricTooltips[m.MetricID] = lines.join('\n');
+  });
+  function metricLabel(mid) { return metricLabels[mid] || mid; }
+  function metricTooltip(mid) { return metricTooltips[mid] || mid; }
+  function escAttr(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
   // Study attribute lookup: { StudyID: { Param: Value } }.
   var studyAttrLookup = {};
   studyAttrs.forEach(function(row) {
@@ -55,6 +80,17 @@ function renderPortfolioOverviewTable(el, input) {
   // Tracks which (category|value) bucket rows are currently expanded so a
   // re-render after a filter change preserves user state where possible.
   var expandedBuckets = {};
+  var heatmapMode = 'none';
+  // Symmetric severity palette for flags -2, -1, 0, 1, 2.
+  var FLAG_COLORS = [
+    'rgba(229,57,53,0.55)',    // -2: red
+    'rgba(255,179,0,0.55)',    // -1: amber
+    'rgba(76,175,80,0.45)',    //  0: green
+    'rgba(255,179,0,0.55)',    //  1: amber
+    'rgba(229,57,53,0.55)'     //  2: red
+  ];
+  var cellMetric = 'rate';
+  var gradientRange = { min: 0, max: 1 };
 
   function bucketKey(category, value) {
     return category + '||' + value;
@@ -65,14 +101,155 @@ function renderPortfolioOverviewTable(el, input) {
     return (rate * 100).toFixed(1) + '%';
   }
 
+  function flagCounts(cell) {
+    return {
+      n2: cell.FlagN2 || 0,
+      n1: cell.FlagN1 || 0,
+      z: cell.Flag0 || 0,
+      p1: cell.FlagP1 || 0,
+      p2: cell.FlagP2 || 0
+    };
+  }
+  function flagTotals(cell) {
+    var f = flagCounts(cell);
+    var red = f.n2 + f.p2;
+    var amber = f.n1 + f.p1;
+    var green = f.z;
+    return { red: red, amber: amber, green: green, total: red + amber + green, parts: f };
+  }
+
+  function cellValue(cell) {
+    if (!cell || cell.Denominator === 0) return null;
+    var t = flagTotals(cell);
+    if (cellMetric === 'count') return cell.Numerator;
+    if (cellMetric === 'flagged-red') return t.total > 0 ? t.red / t.total : null;
+    if (cellMetric === 'flagged-any') return t.total > 0 ? (t.red + t.amber) / t.total : null;
+    return cell.Rate;
+  }
+
+  function fmtValue(v) {
+    if (v === null || v === undefined || isNaN(v)) return '-';
+    if (cellMetric === 'count') return String(v);
+    return (v * 100).toFixed(1) + '%';
+  }
+
+  function cellDisplay(cell) {
+    return fmtValue(cellValue(cell));
+  }
+
+  function computeGradientRange(buckets) {
+    var min = Infinity, max = -Infinity;
+    buckets.forEach(function(b) {
+      Object.keys(b.cells).forEach(function(mid) {
+        var v = cellValue(b.cells[mid]);
+        if (v === null || v === undefined || isNaN(v)) return;
+        if (v < min) min = v;
+        if (v > max) max = v;
+      });
+    });
+    if (!isFinite(min) || !isFinite(max)) { min = 0; max = 1; }
+    if (min === max) max = min + 1e-9;
+    gradientRange = { min: min, max: max };
+  }
+
+  function cellMetricLabel() {
+    if (cellMetric === 'count') return 'Count';
+    if (cellMetric === 'flagged-red') return '% flagged (red)';
+    if (cellMetric === 'flagged-any') return '% flagged (any)';
+    return 'Rate';
+  }
+
+  function renderHeatmapLegend() {
+    var legendEl = el.querySelector('#po-heatmap-legend');
+    if (!legendEl) return;
+    if (heatmapMode === 'flags') {
+      var labels = ['-2', '-1', '0', '1', '2'];
+      var swatches = labels.map(function(lab, i) {
+        return '<span><span style="display:inline-block; width:14px; height:10px; background:' +
+          FLAG_COLORS[i] + '; margin-right:4px; vertical-align:middle;"></span>' + lab + '</span>';
+      }).join('');
+      legendEl.innerHTML =
+        '<div style="display:flex; gap:12px; align-items:center; font-size:12px; color:#444;">' +
+        '<span style="color:#666;">Heatmap (flag distribution):</span>' + swatches +
+        '</div>';
+      return;
+    }
+    if (heatmapMode === 'gradient') {
+      var lo = gradientRange.min;
+      var hi = gradientRange.max;
+      var mid = (lo + hi) / 2;
+      legendEl.innerHTML =
+        '<div style="display:flex; gap:8px; align-items:center; font-size:12px; color:#444;">' +
+        '<span style="color:#666;">Heatmap (' + escAttr(cellMetricLabel()) + '):</span>' +
+        '<span>' + fmtValue(lo) + '</span>' +
+        '<span style="display:inline-block; width:200px; height:10px; background: linear-gradient(to right, ' +
+        gradientColor(lo) + ', ' + gradientColor(mid) + ', ' + gradientColor(hi) + '); border:1px solid #ddd;"></span>' +
+        '<span>' + fmtValue(hi) + '</span>' +
+        '</div>';
+      return;
+    }
+    legendEl.innerHTML = '';
+  }
+
+  function gradientColor(v) {
+    var lo = gradientRange.min;
+    var hi = gradientRange.max;
+    var t = hi > lo ? (v - lo) / (hi - lo) : 0;
+    if (t < 0) t = 0; else if (t > 1) t = 1;
+    // Diverging blue (33,150,243) -> white (255,255,255) -> orange (255,152,0).
+    var r, g, b;
+    if (t < 0.5) {
+      var s = t / 0.5;
+      r = Math.round(33 + (255 - 33) * s);
+      g = Math.round(150 + (255 - 150) * s);
+      b = Math.round(243 + (255 - 243) * s);
+    } else {
+      var s2 = (t - 0.5) / 0.5;
+      r = Math.round(255 + (255 - 255) * s2);
+      g = Math.round(255 + (152 - 255) * s2);
+      b = Math.round(255 + (0 - 255) * s2);
+    }
+    return 'rgba(' + r + ',' + g + ',' + b + ',0.5)';
+  }
+
   function fmtCell(cell) {
-    if (!cell || cell.Denominator === 0) return '<span class="po-empty">-</span>';
-    return (
-      '<span class="po-num">' + cell.Numerator + '</span>' +
-      ' / ' +
-      '<span class="po-den">' + cell.Denominator + '</span>' +
-      '<br><span class="po-rate">' + fmtRate(cell.Rate) + '</span>'
-    );
+    if (!cell || cell.Denominator === 0) return '<div class="po-heat-cell"><span class="po-empty">-</span></div>';
+    var t = flagTotals(cell);
+    var tip = 'Numerator: ' + cell.Numerator +
+      '\nDenominator: ' + cell.Denominator +
+      '\nRate: ' + fmtRate(cell.Rate);
+    if (t.total > 0) {
+      tip += '\nFlags: -2:' + t.parts.n2 + ', -1:' + t.parts.n1 +
+        ', 0:' + t.parts.z + ', 1:' + t.parts.p1 + ', 2:' + t.parts.p2 +
+        ' (n=' + t.total + ')';
+    }
+
+    var style = '';
+    if (heatmapMode === 'flags' && t.total > 0) {
+      var pct = [
+        t.parts.n2 / t.total * 100,
+        t.parts.n1 / t.total * 100,
+        t.parts.z / t.total * 100,
+        t.parts.p1 / t.total * 100,
+        t.parts.p2 / t.total * 100
+      ];
+      var c = FLAG_COLORS;
+      var cum = 0;
+      var stops = [];
+      for (var i = 0; i < 5; i += 1) {
+        var start = cum;
+        cum += pct[i];
+        stops.push(c[i] + ' ' + start + '% ' + cum + '%');
+      }
+      style = ' style="background: linear-gradient(to right, ' + stops.join(', ') + ');"';
+    } else if (heatmapMode === 'gradient') {
+      var v = cellValue(cell);
+      if (v !== null && !isNaN(v)) {
+        style = ' style="background:' + gradientColor(v) + ';"';
+      }
+    }
+    return '<div class="po-heat-cell"' + style + ' title="' + escAttr(tip) + '">' +
+      '<span class="po-rate">' + cellDisplay(cell) + '</span></div>';
   }
 
   function filteredPerStudy() {
@@ -117,8 +294,14 @@ function renderPortfolioOverviewTable(el, input) {
 
     var html = '';
     studyIds.forEach(function(sid) {
+      var attrs = studyAttrLookup[sid] || {};
+      var attrLines = Object.keys(attrs)
+        .filter(function(k) { return attrs[k] != null && attrs[k] !== ''; })
+        .sort()
+        .map(function(k) { return k + ': ' + attrs[k]; });
+      var studyTip = sid + (attrLines.length ? '\n' + attrLines.join('\n') : '');
       html += '<tr class="po-study-row" style="background:#fcfcfc;">';
-      html += '<td class="po-bucket-label" style="padding-left:24px;">↳ ' + sid + '</td>';
+      html += '<td class="po-bucket-label" style="padding-left:24px;" title="' + escAttr(studyTip) + '">↳ ' + sid + '</td>';
       html += '<td>1</td>';
       metricOrder.forEach(function(mid) {
         var cell = byStudy[sid] && byStudy[sid][mid];
@@ -126,10 +309,15 @@ function renderPortfolioOverviewTable(el, input) {
           ? {
               Numerator: cell.Numerator,
               Denominator: cell.Denominator,
-              Rate: cell.Rate
+              Rate: cell.Rate,
+              FlagN2: cell.FlagN2,
+              FlagN1: cell.FlagN1,
+              Flag0: cell.Flag0,
+              FlagP1: cell.FlagP1,
+              FlagP2: cell.FlagP2
             }
           : null;
-        html += '<td>' + fmtCell(formatted) + '</td>';
+        html += '<td class="po-cell-wrap">' + fmtCell(formatted) + '</td>';
       });
       html += '</tr>';
     });
@@ -140,11 +328,33 @@ function renderPortfolioOverviewTable(el, input) {
     var totalIdx = {};
     var byCategory = {};
 
+    function newAcc() { return { num: 0, den: 0, n2: 0, n1: 0, z: 0, p1: 0, p2: 0, studies: new Set() }; }
+    function addRow(acc, r) {
+      acc.num += (r.Numerator || 0);
+      acc.den += (r.Denominator || 0);
+      acc.n2 += (r.FlagN2 || 0);
+      acc.n1 += (r.FlagN1 || 0);
+      acc.z += (r.Flag0 || 0);
+      acc.p1 += (r.FlagP1 || 0);
+      acc.p2 += (r.FlagP2 || 0);
+      acc.studies.add(r.StudyID);
+    }
+    function finalize(c) {
+      return {
+        Numerator: c.num,
+        Denominator: c.den,
+        Rate: c.den > 0 ? c.num / c.den : null,
+        FlagN2: c.n2,
+        FlagN1: c.n1,
+        Flag0: c.z,
+        FlagP1: c.p1,
+        FlagP2: c.p2
+      };
+    }
+
     rows.forEach(function(r) {
-      if (!totalIdx[r.MetricID]) totalIdx[r.MetricID] = { num: 0, den: 0, studies: new Set() };
-      totalIdx[r.MetricID].num += (r.Numerator || 0);
-      totalIdx[r.MetricID].den += (r.Denominator || 0);
-      totalIdx[r.MetricID].studies.add(r.StudyID);
+      if (!totalIdx[r.MetricID]) totalIdx[r.MetricID] = newAcc();
+      addRow(totalIdx[r.MetricID], r);
 
       var attrs = studyAttrLookup[r.StudyID] || {};
       groupParams.forEach(function(cat) {
@@ -152,10 +362,8 @@ function renderPortfolioOverviewTable(el, input) {
         if (val == null) return;
         if (!byCategory[cat]) byCategory[cat] = {};
         if (!byCategory[cat][val]) byCategory[cat][val] = {};
-        if (!byCategory[cat][val][r.MetricID]) byCategory[cat][val][r.MetricID] = { num: 0, den: 0, studies: new Set() };
-        byCategory[cat][val][r.MetricID].num += (r.Numerator || 0);
-        byCategory[cat][val][r.MetricID].den += (r.Denominator || 0);
-        byCategory[cat][val][r.MetricID].studies.add(r.StudyID);
+        if (!byCategory[cat][val][r.MetricID]) byCategory[cat][val][r.MetricID] = newAcc();
+        addRow(byCategory[cat][val][r.MetricID], r);
       });
     });
 
@@ -164,12 +372,7 @@ function renderPortfolioOverviewTable(el, input) {
     rows.forEach(function(r) { allStudiesInScope.add(r.StudyID); });
     var totalRow = { category: 'Total', value: 'Total', numStudies: allStudiesInScope.size, cells: {} };
     Object.keys(totalIdx).forEach(function(mid) {
-      var c = totalIdx[mid];
-      totalRow.cells[mid] = {
-        Numerator: c.num,
-        Denominator: c.den,
-        Rate: c.den > 0 ? c.num / c.den : null
-      };
+      totalRow.cells[mid] = finalize(totalIdx[mid]);
     });
     buckets.push(totalRow);
 
@@ -180,11 +383,7 @@ function renderPortfolioOverviewTable(el, input) {
         var studies = new Set();
         Object.keys(byCategory[cat][val]).forEach(function(mid) {
           var c = byCategory[cat][val][mid];
-          cells[mid] = {
-            Numerator: c.num,
-            Denominator: c.den,
-            Rate: c.den > 0 ? c.num / c.den : null
-          };
+          cells[mid] = finalize(c);
           c.studies.forEach(function(s) { studies.add(s); });
         });
         buckets.push({ category: cat, value: val, numStudies: studies.size, cells: cells });
@@ -198,7 +397,9 @@ function renderPortfolioOverviewTable(el, input) {
     var html = '<table class="po-table"><thead><tr>';
     html += '<th style="text-align:left;">Group</th>';
     html += '<th style="text-align:right;">Studies</th>';
-    metricOrder.forEach(function(mid) { html += '<th>' + mid + '</th>'; });
+    metricOrder.forEach(function(mid) {
+      html += '<th title="' + escAttr(metricTooltip(mid)) + '">' + metricLabel(mid) + '</th>';
+    });
     html += '</tr></thead><tbody>';
 
     var lastCategory = null;
@@ -218,7 +419,7 @@ function renderPortfolioOverviewTable(el, input) {
       html += '<td class="po-bucket-label"><span class="po-caret">' + caret + '</span> ' + b.value + '</td>';
       html += '<td>' + (b.numStudies != null ? b.numStudies : '-') + '</td>';
       metricOrder.forEach(function(mid) {
-        html += '<td>' + fmtCell(b.cells[mid]) + '</td>';
+        html += '<td class="po-cell-wrap">' + fmtCell(b.cells[mid]) + '</td>';
       });
       html += '</tr>';
 
@@ -233,7 +434,29 @@ function renderPortfolioOverviewTable(el, input) {
   }
 
   function buildFilterBar() {
-    var html = '<div class="po-filter-bar" style="background:#f5f5f5; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:4px;">';
+    var btnStyle = 'padding:2px 8px; font-size:12px; border-radius:3px; cursor:pointer;';
+    var html = '<div class="po-filter-bar" style="background:#f5f5f5; padding:8px 12px; margin-bottom:10px; border:1px solid #ddd; border-radius:4px;">';
+    html += '<div style="display:flex; gap:6px; align-items:center;">';
+    html += '<button id="po-toggle-filters" style="' + btnStyle + ' background:#f5f5f5; color:#333; border:1px solid #ccc;">▸ Filters</button>';
+    html += '<label for="po-cell-metric" style="font-size:12px; color:#333;">Show:</label>';
+    html += '<select id="po-cell-metric" style="font-size:12px; padding:2px 4px;">' +
+      '<option value="rate">Rate</option>' +
+      '<option value="count">Count</option>' +
+      '<option value="flagged-red">% flagged (red)</option>' +
+      '<option value="flagged-any">% flagged (any)</option>' +
+      '</select>';
+    html += '<label for="po-heatmap-mode" style="font-size:12px; color:#333;">Heatmap:</label>';
+    html += '<select id="po-heatmap-mode" style="font-size:12px; padding:2px 4px;">' +
+      '<option value="none">None</option>' +
+      '<option value="flags">Flags</option>' +
+      '<option value="gradient">Gradient</option>' +
+      '</select>';
+    html += '<div style="flex:1;"></div>';
+    html += '<button id="po-reset-filters" style="' + btnStyle + ' background:#2196f3; color:white; border:none;">Reset</button>';
+    html += '<button id="po-expand-all" style="' + btnStyle + ' background:#f5f5f5; color:#333; border:1px solid #ccc;">+ Expand</button>';
+    html += '<button id="po-collapse-all" style="' + btnStyle + ' background:#f5f5f5; color:#333; border:1px solid #ccc;">− Collapse</button>';
+    html += '</div>';
+    html += '<div id="po-filter-controls" style="display:none; margin-top:10px;">';
     html += '<div style="display:flex; gap:16px; flex-wrap:wrap; align-items:flex-start;">';
     filterParams.forEach(function(p) {
       html += '<div style="flex:1; min-width:160px;">';
@@ -251,23 +474,20 @@ function renderPortfolioOverviewTable(el, input) {
       html += '<option value="' + s + '">' + s + '</option>';
     });
     html += '</select></div>';
-    html += '<div style="flex:0; align-self:flex-end; display:flex; gap:6px;">';
-    html += '<button id="po-reset-filters" style="padding:6px 12px; background:#2196f3; color:white; border:none; border-radius:3px; cursor:pointer;">Reset</button>';
-    html += '<button id="po-expand-all" style="padding:6px 12px; background:#f5f5f5; color:#333; border:1px solid #ccc; border-radius:3px; cursor:pointer;">+ Expand All</button>';
-    html += '<button id="po-collapse-all" style="padding:6px 12px; background:#f5f5f5; color:#333; border:1px solid #ccc; border-radius:3px; cursor:pointer;">− Collapse All</button>';
-    html += '</div>';
-    html += '</div></div>';
+    html += '</div></div></div>';
     return html;
   }
 
   var styleHtml = '<style>' +
     '.po-container { font-family: sans-serif; }' +
     '.po-table { width: 100%; border-collapse: collapse; margin-top: 10px; }' +
+    '.po-heat-cell { padding: 6px 8px; text-align: right; min-height: 20px; }' +
     '.po-table th, .po-table td { border: 1px solid #ddd; padding: 6px 8px; vertical-align: top; text-align: right; font-size: 13px; }' +
+    '.po-table td.po-cell-wrap { padding: 0; }' +
     '.po-table th { background: #f5f5f5; text-align: center; }' +
     '.po-table tr.po-total-row { background: #e8eef7; font-weight: bold; }' +
     '.po-table tr.po-category-header td { background: #fafafa; text-align: left; font-weight: bold; color: #555; }' +
-    '.po-table td.po-bucket-label { text-align: left; }' +
+    '.po-table td.po-bucket-label { text-align: left; white-space: nowrap; }' +
     '.po-table tr.po-bucket-row:hover { background: #f9f9f9; }' +
     '.po-rate { color: #2c3e50; }' +
     '.po-empty { color: #aaa; }' +
@@ -278,6 +498,7 @@ function renderPortfolioOverviewTable(el, input) {
     '<div class="po-container"><h3>Portfolio Overview</h3>' +
     buildFilterBar() +
     '<div id="po-filter-info" style="margin-bottom:6px; font-size:12px; color:#666;"></div>' +
+    '<div id="po-heatmap-legend" style="margin-bottom:6px;"></div>' +
     '<div id="po-table-container"></div>' +
     '</div>';
 
@@ -291,6 +512,8 @@ function renderPortfolioOverviewTable(el, input) {
     var container = el.querySelector('#po-table-container');
     if (container) {
       var buckets = computeBuckets(rows);
+      computeGradientRange(buckets);
+      renderHeatmapLegend();
       container.innerHTML = buildTable(rows, buckets);
       // Wire expand/collapse for the current pass.
       container.querySelectorAll('tr[data-bucket-key]').forEach(function(tr) {
@@ -314,6 +537,29 @@ function renderPortfolioOverviewTable(el, input) {
       rerender();
     });
   });
+  var toggleBtn = el.querySelector('#po-toggle-filters');
+  var filterControls = el.querySelector('#po-filter-controls');
+  if (toggleBtn && filterControls) {
+    toggleBtn.addEventListener('click', function() {
+      var open = filterControls.style.display !== 'none';
+      filterControls.style.display = open ? 'none' : 'block';
+      toggleBtn.innerHTML = (open ? '▸' : '▾') + ' Filters';
+    });
+  }
+  var cellMetricSel = el.querySelector('#po-cell-metric');
+  if (cellMetricSel) {
+    cellMetricSel.addEventListener('change', function(evt) {
+      cellMetric = evt.target.value;
+      rerender();
+    });
+  }
+  var heatSel = el.querySelector('#po-heatmap-mode');
+  if (heatSel) {
+    heatSel.addEventListener('change', function(evt) {
+      heatmapMode = evt.target.value;
+      rerender();
+    });
+  }
   var resetBtn = el.querySelector('#po-reset-filters');
   if (resetBtn) {
     resetBtn.addEventListener('click', function() {
