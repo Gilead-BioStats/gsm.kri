@@ -59,7 +59,7 @@ Remotes:
     gsm.mapping=Gilead-BioStats/gsm.mapping@workr-implementation,
     gsm.qtl=Gilead-BioStats/gsm.qtl@workr-implementation,
     gsm.reporting=Gilead-BioStats/gsm.reporting@main,
-    workr=Gilead-BioStats/workr@main,
+    workr=Gilead-BioStats/workr,
     qcthat=Gilead-BioStats/qcthat@main
 Config/testthat/edition: 3
 Config/testthat/parallel: false
