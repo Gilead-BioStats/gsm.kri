@@ -1,0 +1,57 @@
+---
+title: "Portfolio Overview Report"
+date: "`r format(Sys.time(), '%Y-%m-%d %H:%M:%S %Z')`"
+index: 5
+output:
+  html_document:
+    toc: false
+    self_contained: true
+    theme: cosmo
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  results = 'hide'
+)
+```
+
+```{r load-packages}
+# Load development version
+devtools::load_all()
+
+library(gsm.core)
+library(dplyr)
+library(htmlwidgets)
+
+# Source utility functions
+source("util/Sim_Studies.R")
+```
+
+```{r simulate-data}
+# Simulate multi-study data using the shared Sim_Studies helper.
+sim_data <- Sim_Studies(
+  dfMetrics = gsm.core::reportingMetrics,
+  n_studies = 10,
+  n_sites = 50,
+  n_sites_per_study = c(8, 15),
+  snapshot_date = as.Date("2025-06-01"),
+  seed = 123
+)
+```
+
+```{r create-widget, results='asis'}
+# Render the portfolio overview widget.
+# D1: total row + drill-down rows by study-level params.
+# D2: filter bar above the table (therapeutic_area, phase, status, study).
+# D4: click a drill-down row to expand per-study contributions.
+portfolio_widget <- Widget_PortfolioOverview(
+  dfResults = sim_data$dfResults,
+  dfMetrics = gsm.core::reportingMetrics,
+  dfGroups = sim_data$dfGroups
+)
+
+portfolio_widget
+```
