@@ -162,7 +162,7 @@ robust_runworkflow <- function(
     # ))
 
     result0 <- purrr::safely(
-      ~ gsm.core::RunStep(
+      ~ workr::RunStep(
         lStep = steps,
         lData = lWorkflow$lData,
         lMeta = lWorkflow$meta
