@@ -151,3 +151,61 @@ testthat::test_that("Widget_PortfolioOverview validates inputs (#212)", {
     )
   )
 })
+
+# D2: filter bar tests. The filter UI lives in JS, but the R wrapper is
+# responsible for assembling the per-study attribute lookup table that backs
+# it. These tests pin down that R-side contract.
+
+testthat::test_that("Widget_PortfolioOverview prepares dfStudyAttrs for the filter bar (#212, D2)", {
+  # Capture the input sent to htmlwidgets::createWidget by mocking the
+  # serializer so we can inspect the assembled lookup table.
+  captured <- NULL
+  testthat::local_mocked_bindings(
+    createWidget = function(name, x, ...) {
+      captured <<- x
+      structure(list(), class = "htmlwidget")
+    },
+    .package = "htmlwidgets"
+  )
+
+  Widget_PortfolioOverview(
+    dfResults = create_po_test_results(),
+    dfMetrics = data.frame(
+      MetricID = c("kri0001", "kri0002"),
+      MetricName = c("KRI 1", "KRI 2")
+    ),
+    dfGroups = create_po_test_groups()
+  )
+
+  testthat::expect_false(is.null(captured))
+  # The widget should expose a study-attributes payload covering both the
+  # group-by params (for D4) and the filter params (for D2).
+  testthat::expect_true("dfStudyAttrs" %in% names(captured))
+  testthat::expect_true("vFilterParams" %in% names(captured))
+})
+
+testthat::test_that("Widget_PortfolioOverview filter params default to therapeutic_area, phase, status (#212, D2)", {
+  captured <- NULL
+  testthat::local_mocked_bindings(
+    createWidget = function(name, x, ...) {
+      captured <<- x
+      structure(list(), class = "htmlwidget")
+    },
+    .package = "htmlwidgets"
+  )
+
+  Widget_PortfolioOverview(
+    dfResults = create_po_test_results(),
+    dfMetrics = data.frame(
+      MetricID = c("kri0001", "kri0002"),
+      MetricName = c("KRI 1", "KRI 2")
+    ),
+    dfGroups = create_po_test_groups()
+  )
+
+  filter_params <- jsonlite::fromJSON(captured$vFilterParams)
+  testthat::expect_setequal(
+    filter_params,
+    c("therapeutic_area", "phase", "status")
+  )
+})
