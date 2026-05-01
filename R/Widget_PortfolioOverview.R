@@ -73,9 +73,11 @@ Widget_PortfolioOverview <- function(
     dplyr::summarise(
       Numerator = sum(.data$Numerator, na.rm = TRUE),
       Denominator = sum(.data$Denominator, na.rm = TRUE),
-      FlagRed = if (has_flag) sum(abs(.data$Flag) == 2, na.rm = TRUE) else 0L,
-      FlagAmber = if (has_flag) sum(abs(.data$Flag) == 1, na.rm = TRUE) else 0L,
-      FlagGreen = if (has_flag) sum(.data$Flag == 0, na.rm = TRUE) else 0L,
+      FlagN2 = if (has_flag) sum(.data$Flag == -2, na.rm = TRUE) else 0L,
+      FlagN1 = if (has_flag) sum(.data$Flag == -1, na.rm = TRUE) else 0L,
+      Flag0 = if (has_flag) sum(.data$Flag == 0, na.rm = TRUE) else 0L,
+      FlagP1 = if (has_flag) sum(.data$Flag == 1, na.rm = TRUE) else 0L,
+      FlagP2 = if (has_flag) sum(.data$Flag == 2, na.rm = TRUE) else 0L,
       FlagNA = if (has_flag) sum(is.na(.data$Flag)) else dplyr::n(),
       .groups = "drop"
     ) %>%
