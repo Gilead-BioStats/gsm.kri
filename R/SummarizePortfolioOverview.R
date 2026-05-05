@@ -75,11 +75,14 @@ SummarizePortfolioOverview <- function(
     ))
   }
 
-  # Latest snapshot only (Q5)
+  # Latest snapshot only (Q5), per-study: studies snapshot on independent
+  # cadences, so a global max would silently drop any study whose most
+  # recent snapshot pre-dates the portfolio max.
   if ("SnapshotDate" %in% colnames(dfResults)) {
-    latest_snapshot <- max(dfResults$SnapshotDate, na.rm = TRUE)
     dfResults <- dfResults %>%
-      dplyr::filter(.data$SnapshotDate == latest_snapshot)
+      dplyr::group_by(.data$StudyID) %>%
+      dplyr::filter(.data$SnapshotDate == max(.data$SnapshotDate, na.rm = TRUE)) %>%
+      dplyr::ungroup()
   }
 
   # Filter to specified group level

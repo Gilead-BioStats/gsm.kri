@@ -56,9 +56,13 @@ Widget_PortfolioOverview <- function(
   # GroupLevel, with study-level group params attached so the JS layer can
   # resolve which studies belong to each drill-down bucket.
   if ("SnapshotDate" %in% colnames(dfResults)) {
-    latest_snapshot <- max(dfResults$SnapshotDate, na.rm = TRUE)
+    # Per-study latest snapshot: studies snapshot on independent cadences,
+    # so a global max would silently drop any study whose most recent
+    # snapshot pre-dates the portfolio max.
     dfPerStudyResults <- dfResults %>%
-      dplyr::filter(.data$SnapshotDate == latest_snapshot)
+      dplyr::group_by(.data$StudyID) %>%
+      dplyr::filter(.data$SnapshotDate == max(.data$SnapshotDate, na.rm = TRUE)) %>%
+      dplyr::ungroup()
   } else {
     dfPerStudyResults <- dfResults
   }

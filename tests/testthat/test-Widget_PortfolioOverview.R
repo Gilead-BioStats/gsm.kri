@@ -109,6 +109,37 @@ testthat::test_that("SummarizePortfolioOverview keeps only the latest snapshot (
   testthat::expect_equal(total_kri0001$Denominator, 600)
 })
 
+testthat::test_that("SummarizePortfolioOverview keeps the latest snapshot per study (#212, Q5)", {
+  # Studies snapshot on independent cadences. STUDY001's latest is 2025-04-01;
+  # STUDY002's latest is 2025-06-01. A global max would drop STUDY001 entirely.
+  base <- create_po_test_results()
+  s1_old <- base[base$StudyID == "STUDY001", ]
+  s1_old$SnapshotDate <- as.Date("2025-03-01")
+  s1_old$Numerator <- 999 # excluded by per-study latest
+  s1_new <- base[base$StudyID == "STUDY001", ]
+  s1_new$SnapshotDate <- as.Date("2025-04-01")
+  s2_old <- base[base$StudyID == "STUDY002", ]
+  s2_old$SnapshotDate <- as.Date("2025-05-01")
+  s2_old$Numerator <- 999 # excluded by per-study latest
+  s2_new <- base[base$StudyID == "STUDY002", ]
+  s2_new$SnapshotDate <- as.Date("2025-06-01")
+  dfResults <- dplyr::bind_rows(s1_old, s1_new, s2_old, s2_new)
+
+  result <- SummarizePortfolioOverview(
+    dfResults = dfResults,
+    dfGroups = create_po_test_groups()
+  )
+
+  total_kri0001 <- result[
+    result$GroupCategory == "Total" & result$MetricID == "kri0001",
+  ]
+  # Both studies should contribute their own latest snapshot, matching the
+  # single-snapshot baseline (100 / 600).
+  testthat::expect_equal(total_kri0001$Numerator, 100)
+  testthat::expect_equal(total_kri0001$Denominator, 600)
+  testthat::expect_equal(total_kri0001$NumStudies, 2)
+})
+
 testthat::test_that("SummarizePortfolioOverview includes all metrics, sorted by MetricID (#212, Q1, Q2)", {
   result <- SummarizePortfolioOverview(
     dfResults = create_po_test_results(),
@@ -298,5 +329,41 @@ testthat::test_that("Widget_PortfolioOverview per-study uses latest snapshot onl
   )
 
   per_study <- jsonlite::fromJSON(captured$dfPerStudy)
+  testthat::expect_false(any(per_study$Numerator == 999))
+})
+
+testthat::test_that("Widget_PortfolioOverview per-study latest is computed per StudyID (#212, D4, Q5)", {
+  # STUDY001 latest = 2025-04-01; STUDY002 latest = 2025-06-01. A global max
+  # would drop STUDY001 from dfPerStudy entirely.
+  base <- create_po_test_results()
+  s1_old <- base[base$StudyID == "STUDY001", ]
+  s1_old$SnapshotDate <- as.Date("2025-03-01")
+  s1_old$Numerator <- 999
+  s1_new <- base[base$StudyID == "STUDY001", ]
+  s1_new$SnapshotDate <- as.Date("2025-04-01")
+  s2 <- base[base$StudyID == "STUDY002", ]
+  s2$SnapshotDate <- as.Date("2025-06-01")
+  dfResults <- dplyr::bind_rows(s1_old, s1_new, s2)
+
+  captured <- NULL
+  testthat::local_mocked_bindings(
+    createWidget = function(name, x, ...) {
+      captured <<- x
+      structure(list(), class = "htmlwidget")
+    },
+    .package = "htmlwidgets"
+  )
+
+  Widget_PortfolioOverview(
+    dfResults = dfResults,
+    dfMetrics = data.frame(
+      MetricID = c("kri0001", "kri0002"),
+      MetricName = c("KRI 1", "KRI 2")
+    ),
+    dfGroups = create_po_test_groups()
+  )
+
+  per_study <- jsonlite::fromJSON(captured$dfPerStudy)
+  testthat::expect_setequal(per_study$StudyID, c("STUDY001", "STUDY002"))
   testthat::expect_false(any(per_study$Numerator == 999))
 })
