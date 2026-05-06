@@ -263,7 +263,8 @@ Cross-Study Risk Score Widget showing site risk summaries across
 multiple studies
 
 For a complete working example, see
-`inst/examples/Example_CrossStudySRS.Rmd`, which demonstrates:
+<https://github.com/Gilead-BioStats/gsm.kri/blob/main/pkgdown/menus/examples/Example_CrossStudySRS.Rmd>,
+which demonstrates:
 
 - Simulating multi-study data with site risk scores
 - Creating the cross-study widget
