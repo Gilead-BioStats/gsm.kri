@@ -108,6 +108,13 @@ Widget_PortfolioOverview <- function(
     )
   }
 
+  # Site-level results for drilldown (one row per StudyID x GroupID x MetricID).
+  dfSiteResults <- dfPerStudyRaw %>%
+    dplyr::select(
+      "StudyID", "GroupID", "MetricID",
+      "Numerator", "Denominator", "Metric", "Score", "Flag"
+    )
+
   # Q2: metric column order is by MetricID ascending.
   vMetricOrder <- sort(unique(dfSummary$MetricID))
 
@@ -115,6 +122,7 @@ Widget_PortfolioOverview <- function(
     dfSummary = dfSummary,
     dfPerStudy = dfPerStudy,
     dfStudyAttrs = dfStudyAttrs,
+    dfSiteResults = dfSiteResults,
     dfMetrics = dfMetrics,
     vMetricOrder = vMetricOrder,
     vGroupParams = vGroupParams,

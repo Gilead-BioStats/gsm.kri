@@ -1,4 +1,8 @@
 dependencies:
+  - name: renderStudyDrilldown
+    version: 1.0.0
+    src: htmlwidgets/lib
+    script: renderStudyDrilldown.js
   - name: Widget_PortfolioOverview
     version: 1.0.0
     src: htmlwidgets/lib

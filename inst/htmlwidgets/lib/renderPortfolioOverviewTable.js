@@ -35,6 +35,7 @@ function renderPortfolioOverviewTable(el, input) {
   var metricLabels = {};
   var metricTooltips = {};
   var metricsMeta = Array.isArray(input.dfMetrics) ? input.dfMetrics : [];
+  var siteData = Array.isArray(input.dfSiteResults) ? input.dfSiteResults : [];
   var tooltipFields = [
     'MetricID', 'Metric', 'Abbreviation', 'Type', 'GroupLevel',
     'Numerator', 'Denominator', 'Model', 'AnalysisType', 'Score',
@@ -301,7 +302,7 @@ function renderPortfolioOverviewTable(el, input) {
         .map(function(k) { return k + ': ' + attrs[k]; });
       var studyTip = sid + (attrLines.length ? '\n' + attrLines.join('\n') : '');
       html += '<tr class="po-study-row" style="background:#fcfcfc;">';
-      html += '<td class="po-bucket-label" style="padding-left:24px;" title="' + escAttr(studyTip) + '">↳ ' + sid + '</td>';
+      html += '<td class="po-bucket-label" style="padding-left:24px;" title="' + escAttr(studyTip) + '">\u21b3 <a href="#" class="po-study-link" data-study-id="' + escAttr(sid) + '" style="color:#1565c0; text-decoration:none;">' + escAttr(sid) + '</a></td>';
       html += '<td>1</td>';
       metricOrder.forEach(function(mid) {
         var cell = byStudy[sid] && byStudy[sid][mid];
@@ -495,12 +496,52 @@ function renderPortfolioOverviewTable(el, input) {
     '</style>';
 
   el.innerHTML = styleHtml +
-    '<div class="po-container"><h3>Portfolio Overview</h3>' +
+    '<div class="po-container">' +
+    '<div id="po-portfolio-view">' +
+    '<h3>Portfolio Overview</h3>' +
     buildFilterBar() +
     '<div id="po-filter-info" style="margin-bottom:6px; font-size:12px; color:#666;"></div>' +
     '<div id="po-heatmap-legend" style="margin-bottom:6px;"></div>' +
     '<div id="po-table-container"></div>' +
+    '</div>' +
+    '<div id="po-drilldown-view" style="display:none;"></div>' +
     '</div>';
+
+  function showDrilldown(studyId) {
+    var portfolioView = el.querySelector('#po-portfolio-view');
+    var drilldownView = el.querySelector('#po-drilldown-view');
+    if (!portfolioView || !drilldownView) return;
+
+    portfolioView.style.display = 'none';
+    drilldownView.style.display = 'block';
+
+    // Compute current portfolio totals for comparison icons.
+    var rows = filteredPerStudy();
+    var portfolioTotals = {};
+    rows.forEach(function(r) {
+      if (!portfolioTotals[r.MetricID]) portfolioTotals[r.MetricID] = { num: 0, den: 0 };
+      portfolioTotals[r.MetricID].num += (r.Numerator || 0);
+      portfolioTotals[r.MetricID].den += (r.Denominator || 0);
+    });
+    Object.keys(portfolioTotals).forEach(function(mid) {
+      var t = portfolioTotals[mid];
+      t.Rate = t.den > 0 ? t.num / t.den : null;
+    });
+
+    renderStudyDrilldown(drilldownView, {
+      studyId: studyId,
+      perStudyData: perStudy,
+      siteData: siteData,
+      studyAttrs: studyAttrLookup[studyId] || {},
+      metricsMeta: metricsMeta,
+      portfolioTotals: portfolioTotals,
+      onBack: function() {
+        drilldownView.style.display = 'none';
+        drilldownView.innerHTML = '';
+        portfolioView.style.display = 'block';
+      }
+    });
+  }
 
   function rerender() {
     var rows = filteredPerStudy();
@@ -525,6 +566,15 @@ function renderPortfolioOverviewTable(el, input) {
             expandedBuckets[key] = true;
           }
           rerender();
+        });
+      });
+      // Wire study drilldown links.
+      container.querySelectorAll('.po-study-link').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          var sid = link.getAttribute('data-study-id');
+          showDrilldown(sid);
         });
       });
     }
