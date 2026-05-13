@@ -1,7 +1,7 @@
 ---
-title: "Cross-Study KRI Report"
+title: "Portfolio Overview Report"
 date: "`r format(Sys.time(), '%Y-%m-%d %H:%M:%S %Z')`"
-index: 4
+index: 5
 output:
   html_document:
     toc: false
@@ -30,9 +30,7 @@ source("util/Sim_Studies.R")
 ```
 
 ```{r simulate-data}
-#### Step 1: Simulate Multi-Study Results and Group Data ####
-
-# Simulate multi-study data using Sim_Studies function
+# Simulate multi-study data using the shared Sim_Studies helper.
 sim_data <- Sim_Studies(
   dfMetrics = gsm.core::reportingMetrics,
   n_studies = 10,
@@ -44,13 +42,15 @@ sim_data <- Sim_Studies(
 ```
 
 ```{r create-widget, results='asis'}
-#### Step 3: Create Cross-Study Widgets ####
-cross_study_widget <- Widget_CrossStudyRiskScore(
+# Render the portfolio overview widget.
+# D1: total row + drill-down rows by study-level params.
+# D2: filter bar above the table (therapeutic_area, phase, status, study).
+# D4: click a drill-down row to expand per-study contributions.
+portfolio_widget <- Widget_PortfolioOverview(
   dfResults = sim_data$dfResults,
   dfMetrics = gsm.core::reportingMetrics,
   dfGroups = sim_data$dfGroups
 )
 
-# Display the widget directly in the document
-cross_study_widget
+portfolio_widget
 ```
