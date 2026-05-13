@@ -20,6 +20,7 @@ details.
 You can install the development version of gsm.kri like so:
 
 ``` r
+
 # install.packages("pak")
 pak::pak("Gilead-BioStats/gsm.kri@dev")
 ```
@@ -32,6 +33,7 @@ visualizations based on reporting outputs from the
 package:
 
 ``` r
+
 library(gsm.kri)
 library(gsm.core)
 
@@ -95,6 +97,7 @@ default x-axis type of `logarithmic` to `linear` for the scatter plot
 widget:
 
 ``` r
+
 ## Filter data to one metric and snapshot
 reportingResults_filter <- gsm.core::reportingResults %>%
   dplyr::filter(MetricID == "Analysis_kri0001" & SnapshotDate == max(SnapshotDate))
@@ -121,6 +124,7 @@ configuration by passing a list of settings to the
 function:
 
 ``` r
+
 lWorkflow <-     yaml::read_yaml(text = '
 steps:
   - output: lCharts

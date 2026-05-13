@@ -37,7 +37,7 @@ the 12 standard `gsm` are shown below.
 | Treatment Discontinuation     |       0 |         0 |         16 |       32 |
 | Study Discontinuation         |       0 |         0 |         16 |       32 |
 
-Flag Weights for Key Risk Indicators
+Flag Weights for Key Risk Indicators {.table}
 
 The `gsm.core::flag()` function is used to calculate site-level flag
 values and associated weights. Three key parameters are used in the
@@ -140,7 +140,7 @@ each KRI. Below is a worked example for one site:
 | Treatment Discontinuation     |    0 |            0 |
 | Study Discontinuation         |    0 |            0 |
 
-Example Site Contributions to Risk Score
+Example Site Contributions to Risk Score {.table}
 
 These weights are added up at the site level and divided by the maximum
 possible score to create a **normalized risk score** between 0 and 100.
@@ -149,6 +149,7 @@ and if desired, any sites above a certain threshold can be flagged for
 further review.
 
 ``` r
+
 normalized_score <- (sum(site_example$Contribution)/178) * 100
 normalized_score
 #> [1] 25.2809
@@ -165,6 +166,7 @@ normalized risk scores automatically.
 #### Basic Usage
 
 ``` r
+
 library(gsm.core)
 library(gsm.kri)
 library(dplyr)
@@ -241,6 +243,7 @@ workflow typically involves:
     create the interactive visualization
 
 ``` r
+
 # Example: Create cross-study risk score widget
 cross_study_widget <- Widget_CrossStudyRiskScore(
   dfResults = multi_study_results,  # Must include Analysis_srs0001
@@ -260,7 +263,8 @@ Cross-Study Risk Score Widget showing site risk summaries across
 multiple studies
 
 For a complete working example, see
-`inst/examples/Example_CrossStudySRS.Rmd`, which demonstrates:
+<https://github.com/Gilead-BioStats/gsm.kri/blob/main/pkgdown/menus/examples/Example_CrossStudySRS.Rmd>,
+which demonstrates:
 
 - Simulating multi-study data with site risk scores
 - Creating the cross-study widget

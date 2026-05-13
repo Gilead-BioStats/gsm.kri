@@ -29,4 +29,5 @@ Visualize_RiskScore(dfResults, dfMetrics, dfGroups, strGroupLevel = "Site")
 
 ## Details
 
-For a working example see inst/examples/Example_CrossStudySRS.R.
+For a working example see \[Cross-Study KRI
+Report\](https://gilead-biostats.github.io/gsm.kri/examples/Example_CrossStudySRS.html).
