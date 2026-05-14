@@ -17,12 +17,22 @@ details.
 
 ## Installation
 
-You can install the development version of gsm.kri like so:
+You can install the latest release of gsm.kri from
+[GitHub](https://github.com/) with:
 
 ``` r
 
 # install.packages("pak")
-pak::pak("Gilead-BioStats/gsm.kri@dev")
+pak::pak("Gilead-BioStats/gsm.kri@*release")
+```
+
+You can install the development version of gsm.kri from
+[GitHub](https://github.com/) with:
+
+``` r
+
+# install.packages("pak")
+pak::pak("Gilead-BioStats/gsm.kri")
 ```
 
 ## Sample Code

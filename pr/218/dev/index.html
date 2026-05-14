@@ -68,6 +68,8 @@
 </h1></div>
 <!-- badges: start -->
 
+
+<!-- badges: end -->
 <p>The {gsm} ecosystem provides a standardized Risk Based Quality Monitoring (RBQM) framework for clinical trials that pairs a flexible data pipeline with robust reports like the one shown below.</p>
 <center>
 <p><img src="reference/figures/gsm_report_screenshot_1.png"></p>
@@ -76,16 +78,22 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version of gsm.kri like so:</p>
+<p>You can install the latest release of gsm.kri from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"Gilead-BioStats/gsm.kri@dev"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"Gilead-BioStats/gsm.kri@*release"</span><span class="op">)</span></span></code></pre></div>
+<div class="pkgdown-devel">
+<p>You can install the development version of gsm.kri from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"Gilead-BioStats/gsm.kri"</span><span class="op">)</span></span></code></pre></div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="sample-code">Sample Code<a class="anchor" aria-label="anchor" href="#sample-code"></a>
 </h2>
 <p>This is a basic example showing how to create interactive widget visualizations based on reporting outputs from the <a href="https://gilead-biostats.github.io/gsm.reporting/" class="external-link">gsm.reporting</a> package:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Gilead-BioStats/gsm.kri" class="external-link">gsm.kri</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gilead-biostats.github.io/gsm.core" class="external-link">gsm.core</a></span><span class="op">)</span></span>
 <span></span>
@@ -137,7 +145,7 @@
 <h2 id="chart-customization">Chart Customization<a class="anchor" aria-label="anchor" href="#chart-customization"></a>
 </h2>
 <p>All widgets can be customized with any configuration setting available via the underlying <a href="https://github.com/Gilead-BioStats/gsm.viz/wiki/API" class="external-link">JavaScript library API</a> at the report, chart, or metric level. Customize a widget by passing any configuration setting as an argument to the widget function. Below we can change the default x-axis type of <code>logarithmic</code> to <code>linear</code> for the scatter plot widget:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Filter data to one metric and snapshot</span></span>
 <span><span class="va">reportingResults_filter</span> <span class="op">&lt;-</span> <span class="fu">gsm.core</span><span class="fu">::</span><span class="va"><a href="https://gilead-biostats.github.io/gsm.core/reference/reportingResults.html" class="external-link">reportingResults</a></span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">MetricID</span> <span class="op">==</span> <span class="st">"Analysis_kri0001"</span> <span class="op">&amp;</span> <span class="va">SnapshotDate</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">SnapshotDate</span><span class="op">)</span><span class="op">)</span></span>
@@ -157,7 +165,7 @@
 <span>  xType <span class="op">=</span> <span class="st">"linear"</span>  <span class="co"># Change x-axis type to linear</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>In the context of a workflow, you can also customize the chart configuration by passing a list of settings to the <code><a href="reference/Report_KRI.html">Report_KRI()</a></code> function:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lWorkflow</span> <span class="op">&lt;-</span>     <span class="fu">yaml</span><span class="fu">::</span><span class="fu"><a href="https://yaml.r-lib.org/reference/read_yaml.html" class="external-link">read_yaml</a></span><span class="op">(</span>text <span class="op">=</span> <span class="st">'</span></span>
 <span><span class="st">steps:</span></span>
 <span><span class="st">  - output: lCharts</span></span>
@@ -230,7 +238,9 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/Gilead-BioStats/gsm.kri/actions" class="external-link"><img src="https://github.com/Gilead-BioStats/gsm.kri/workflows/R-CMD-check-main/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://github.com/Gilead-BioStats/gsm.kri/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/Gilead-BioStats/gsm.kri/actions/workflows/R-CMD-check.yaml/badge.svg?branch=dev" alt="R-CMD-check"></a></li>
+<li><a href="https://github.com/Gilead-BioStats/gsm.kri/actions/workflows/test-coverage.yaml" class="external-link"><img src="https://github.com/Gilead-BioStats/gsm.kri/actions/workflows/test-coverage.yaml/badge.svg?branch=dev" alt="test-coverage"></a></li>
+<li><a href="https://github.com/Gilead-BioStats/gsm.kri/actions/workflows/pkgdown-all.yaml" class="external-link"><img src="https://github.com/Gilead-BioStats/gsm.kri/actions/workflows/pkgdown-all.yaml/badge.svg?branch=dev" alt="pkgdown-all"></a></li>
 </ul>
 </div>
 
