@@ -60,6 +60,7 @@ group-level plot object.
 ## Examples
 
 ``` r
+
 ## Filter sample data to only one metric
 reportingResults_filter <- gsm.core::reportingResults %>%
   dplyr::filter(MetricID == "Analysis_kri0001")

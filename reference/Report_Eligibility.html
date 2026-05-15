@@ -9,7 +9,7 @@ This function generates a Eligibility report based on the provided inputs.'></he
 
     <a class="navbar-brand me-2" href="../index.html">gsm.kri</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,9 +29,6 @@ This function generates a Eligibility report based on the provided inputs.'></he
   <ul class="dropdown-menu" aria-labelledby="dropdown-examples"><li><a class="dropdown-item" href="../examples/Example_SiteReport.html">Site KRI Report</a></li>
     <li><a class="dropdown-item" href="../examples/Example_CountryReport.html">Country KRI Report</a></li>
     <li><a class="dropdown-item" href="../examples/Example_Eligibility.html">Eligibility Report</a></li>
-    <li><a class="dropdown-item" href="../examples/Example_CrossStudySRS.html">Cross-Study KRI Report</a></li>
-    <li><a class="dropdown-item" href="../examples/Cookbook_AdverseEventKRI.html">Cookbook - Adverse Event KRI Report</a></li>
-    <li><a class="dropdown-item" href="../examples/Cookbook_AdverseEventWorkflow.html">Cookbook - Adverse Event Workflow Examples</a></li>
     <li><a class="dropdown-item" href="../examples/Cookbook_ReportingWorkflow.html">Cookbook - Reporting Workflow Examples</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -152,9 +149,8 @@ the report will be named based on the study ID, Group Level and Date.</p></dd>
 <span class="r-in"><span>  lParams <span class="op">=</span> <span class="va">lParams</span>,</span></span>
 <span class="r-in"><span>  strOutputDir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"pkgdown"</span>, <span class="st">"assets"</span>, <span class="st">"examples"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  strOutputFile <span class="op">=</span> <span class="st">"Example_Eligibility.html"</span>,</span></span>
-<span class="r-in"><span>  strInputPath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>    <span class="st">"report/Report_Eligibility.Rmd"</span>,</span></span>
-<span class="r-in"><span>    package <span class="op">=</span> <span class="st">"gsm.kri"</span></span></span>
+<span class="r-in"><span>  strInputPath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"pkgdown"</span>, <span class="st">"menus"</span>, <span class="st">"examples"</span>, <span class="st">"report/Report_Eligibility.Rmd"</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>

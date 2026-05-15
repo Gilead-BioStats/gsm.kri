@@ -21,7 +21,9 @@ Useful links:
 
 Authors:
 
-- Laura Maxwell <lkmaxwell23@gmail.com>
+- Jeremy Wildfire <jwildfire@gmail.com>
+
+- Laura Maxwell <laura.maxwell@atorusresearch.com>
 
 - Spencer Childress <spencer.childress@gilead.com>
   ([ORCID](https://orcid.org/0000-0001-6877-8511))
