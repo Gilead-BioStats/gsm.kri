@@ -1,5 +1,8 @@
 # gsm.kri (development version)
 
+- Added `kri0019` (site) and `cou0019` (country), which report the rate of IP
+  non-starters (subjects Confirmed or Potential-outside-window non-starters)
+  per the upstream `drv_ip_nonstarter_status` derivation (#258).
 - The legacy widget wrappers (`Widget_BarChart`, `Widget_ScatterPlot`, `Widget_TimeSeries`,
   `Widget_GroupOverview`), their Shiny bindings, `MakeChartConfig()`, and the shared
   widget-control JS/CSS moved to gsm.vizr (#291). gsm.kri re-exports every name, so
