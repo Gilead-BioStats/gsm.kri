@@ -3,12 +3,9 @@
 ## gsm.kri (development version)
 
 - Added `kri0019` (site) and `cou0019` (country), which report the rate
-  of IP non-starters — subjects Confirmed or Potential-outside-window
-  non-starters per the upstream `drv_ip_nonstarter_status` derivation
+  of IP non-starters (subjects Confirmed or Potential-outside-window
+  non-starters) per the upstream `drv_ip_nonstarter_status` derivation
   ([\#258](https://github.com/Gilead-Public/gsm.kri/issues/258)).
-  `cou0019` is excluded from the CM Action Log. The double-programmed
-  qualification test (T19) is included but stays skipped until the
-  bundled example data carries the upstream `drv_*` fields.
 - The legacy widget wrappers (`Widget_BarChart`, `Widget_ScatterPlot`,
   `Widget_TimeSeries`, `Widget_GroupOverview`), their Shiny bindings,
   [`MakeChartConfig()`](https://gilead-public.github.io/gsm.vizr/reference/MakeChartConfig.html),
