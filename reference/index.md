@@ -10,8 +10,6 @@
   : Filter out non-flagged rows on FlagOverTime Widget
 - [`FilterByLatestSnapshotDate()`](https://gilead-public.github.io/gsm.kri/reference/FilterByLatestSnapshotDate.md)
   : Filter by Latest Snapshot Date
-- [`MakeChartConfig()`](https://gilead-public.github.io/gsm.kri/reference/MakeChartConfig.md)
-  : Make Chart Config
 - [`MakeCharts()`](https://gilead-public.github.io/gsm.kri/reference/MakeCharts.md)
   : Helper function to create charts for multiple metrics
 - [`MakeMetricTable()`](https://gilead-public.github.io/gsm.kri/reference/MakeMetricTable.md)
@@ -55,11 +53,6 @@
   : Group-level visualization of group-level results
 - [`Visualize_Score()`](https://gilead-public.github.io/gsm.kri/reference/Visualize_Score.md)
   : Group-level visualization of scores.
-- [`Widget_BarChartOutput()`](https://gilead-public.github.io/gsm.kri/reference/Widget_BarChart-shiny.md)
-  [`renderWidget_BarChart()`](https://gilead-public.github.io/gsm.kri/reference/Widget_BarChart-shiny.md)
-  : Shiny bindings for Widget_BarChart
-- [`Widget_BarChart()`](https://gilead-public.github.io/gsm.kri/reference/Widget_BarChart.md)
-  : Bar Chart Widget
 - [`Widget_CrossStudyRiskScoreOutput()`](https://gilead-public.github.io/gsm.kri/reference/Widget_CrossStudyRiskScore-shiny.md)
   [`renderWidget_CrossStudyRiskScore()`](https://gilead-public.github.io/gsm.kri/reference/Widget_CrossStudyRiskScore-shiny.md)
   : Shiny bindings for Widget_CrossStudyRiskScore
@@ -70,27 +63,15 @@
   : Shiny bindings for Widget_FlagOverTime
 - [`Widget_FlagOverTime()`](https://gilead-public.github.io/gsm.kri/reference/Widget_FlagOverTime.md)
   : Flag Over Time Widget
-- [`Widget_GroupOverviewOutput()`](https://gilead-public.github.io/gsm.kri/reference/Widget_GroupOverview-shiny.md)
-  [`renderWidget_GroupOverview()`](https://gilead-public.github.io/gsm.kri/reference/Widget_GroupOverview-shiny.md)
-  : Shiny bindings for Widget_GroupOverview
-- [`Widget_GroupOverview()`](https://gilead-public.github.io/gsm.kri/reference/Widget_GroupOverview.md)
-  : Group Overview Widget
-- [`Widget_ScatterPlotOutput()`](https://gilead-public.github.io/gsm.kri/reference/Widget_ScatterPlot-shiny.md)
-  [`renderWidget_ScatterPlot()`](https://gilead-public.github.io/gsm.kri/reference/Widget_ScatterPlot-shiny.md)
-  : Shiny bindings for Widget_ScatterPlot
-- [`Widget_ScatterPlot()`](https://gilead-public.github.io/gsm.kri/reference/Widget_ScatterPlot.md)
-  : Scatter Plot Widget
-- [`Widget_TimeSeriesOutput()`](https://gilead-public.github.io/gsm.kri/reference/Widget_TimeSeries-shiny.md)
-  [`renderWidget_TimeSeries()`](https://gilead-public.github.io/gsm.kri/reference/Widget_TimeSeries-shiny.md)
-  : Shiny bindings for Widget_TimeSeries
-- [`Widget_TimeSeries()`](https://gilead-public.github.io/gsm.kri/reference/Widget_TimeSeries.md)
-  : Time Series Widget
 - [`add_Groups_metadata()`](https://gilead-public.github.io/gsm.kri/reference/add_Groups_metadata.md)
   : Add group meta data for report
-- [`pd_BucketBar()`](https://gilead-public.github.io/gsm.kri/reference/pd_BucketBar.md)
-  : Premature-death bucket bar chart
+- [`pd_BucketBarSpec()`](https://gilead-public.github.io/gsm.kri/reference/pd_BucketBarSpec.md)
+  : Serializable gsm.viz \`bars\` spec for the premature-death bucket
+  chart
 - [`pd_BucketCounts()`](https://gilead-public.github.io/gsm.kri/reference/pd_BucketCounts.md)
   : Premature-death category counts
+- [`pd_BucketRows()`](https://gilead-public.github.io/gsm.kri/reference/pd_BucketRows.md)
+  : Long-format premature-death bucket rows for gsm.viz \`bars\`
 - [`pd_CategoryColors()`](https://gilead-public.github.io/gsm.kri/reference/pd_CategoryColors.md)
   : Premature-death category colors
 - [`pd_CategoryLevels()`](https://gilead-public.github.io/gsm.kri/reference/pd_CategoryLevels.md)
@@ -115,11 +96,15 @@
   : Randomization-to-event scatter
 - [`pd_ReasonBar()`](https://gilead-public.github.io/gsm.kri/reference/pd_ReasonBar.md)
   : Premature-death reason bar chart
+- [`pd_ReasonBarSpec()`](https://gilead-public.github.io/gsm.kri/reference/pd_ReasonBarSpec.md)
+  : Serializable gsm.viz \`bars\` spec for the reason distribution chart
 - [`pd_ReasonByCountry()`](https://gilead-public.github.io/gsm.kri/reference/pd_ReasonByCountry.md)
   : Premature-death reason counts by country
 - [`pd_ReasonCounts()`](https://gilead-public.github.io/gsm.kri/reference/pd_ReasonCounts.md)
   : Premature-death reason counts
 - [`pd_ReasonDist()`](https://gilead-public.github.io/gsm.kri/reference/pd_ReasonDist.md)
   : Premature-death reason distribution chart
+- [`pd_ReasonRows()`](https://gilead-public.github.io/gsm.kri/reference/pd_ReasonRows.md)
+  : Long rows for the reason bar chart
 - [`pd_SubjectFatalRelatedAE()`](https://gilead-public.github.io/gsm.kri/reference/pd_SubjectFatalRelatedAE.md)
   : Per-subject fatal treatment-related AE flag
